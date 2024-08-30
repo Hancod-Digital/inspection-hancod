@@ -57,6 +57,7 @@ export default function LoginForm() {
             type="email"
             fullWidth
             required
+            className=''
             {...register('email')}
             sx={{
               '& .MuiInputBase-input': {
@@ -74,7 +75,7 @@ export default function LoginForm() {
         <Button
           className="w-full bg-primary hover:border hover:border-primary hover:bg-secondary hover:text-primary"
           type="submit"
-         
+        
         >
           Submit
         </Button>

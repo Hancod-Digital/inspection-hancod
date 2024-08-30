@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 // Main Layout Component
-export default function LoginPage({ children }:{children:any}) {
+export default function Layout({ children }:{children:any}) {
   return (
     <div className="flex h-screen">
       <div className="flex w-1/2 flex-col justify-center p-32">
