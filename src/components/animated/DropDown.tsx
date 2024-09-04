@@ -32,10 +32,11 @@ interface MenuProps extends Ariakit.MenuButtonProps {
   setOpen?: (open: boolean) => void;
   label?: React.ReactNode;
   children: React.ReactNode;
+  component: any
 }
 
 export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(function Menu(
-  { open, setOpen, label, children, ...props },
+  { open, setOpen, label, children,component, ...props },
   ref
 ) {
   const menu = Ariakit.useMenuStore({ open, setOpen })
@@ -52,7 +53,7 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(function Menu(
           {...props}
           className="ml-1 p-1 hover:bg-gray-100 rounded-full"
         >
-          <ChevronDown className="h-4 w-4 text-gray-500" />
+         {component}
         </Ariakit.MenuButton>
       </div>
       <AnimatePresence>

@@ -67,3 +67,82 @@
     @apply bg-background text-foreground;
   }
 }
+.outer-border {
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background-image: linear-gradient(red 50%, white 50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.outer-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.middle-border {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-image: linear-gradient(red 50%, white 50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.middle-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+
+.gradient-wrapper {
+  padding: 5px; /* Adjusted padding to better fit the sizes */
+  border-radius: 50%;
+  display: inline-block;
+  background: rgb(255, 188, 188); /* Fallback color */
+  background: -webkit-linear-gradient(white, rgb(255, 188, 188)); /* Inverted gradient */
+  background: -o-linear-gradient(white, rgb(255, 188, 188)); 
+  background: -moz-linear-gradient(white, rgb(255, 188, 188)); 
+  background: linear-gradient(white, rgb(255, 188, 188)); 
+}
+
+#maincircle {
+  width: 180px;
+  height: 180px;
+  background: #fff; /* White background for the main circle */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.inner-gradient-wrapper {
+  padding: 5px; /* Adjusted padding for inner circle */
+  border-radius: 50%;
+  background: rgb(255, 142, 142); /* Fallback color */
+  background: -webkit-linear-gradient(rgb(255, 142, 142), white); 
+  background: -o-linear-gradient(rgb(255, 142, 142), white); 
+  background: -moz-linear-gradient(rgb(255, 142, 142), white); 
+  background: linear-gradient(rgb(255, 142, 142), white); 
+}
+.z-50 {
+  z-index: 50; /* Ensure the popup is on top */
+}
+#innercircle {
+  width: 160px; /* Smaller inner circle */
+  height: 160px;
+  background: #fff; /* White background for inner circle */
+  border-radius: 50%;
+}
+

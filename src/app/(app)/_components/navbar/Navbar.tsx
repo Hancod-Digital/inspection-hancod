@@ -38,6 +38,7 @@ export default function Component() {
                         label="Options"
                         open={open}
                         setOpen={setOpen}
+                        component={<ChevronDown className="h-4 w-4 text-gray-500" />}
                     >
                         <MenuItem>Edit</MenuItem>
                         <MenuItem>Share</MenuItem>

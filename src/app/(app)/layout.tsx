@@ -8,6 +8,7 @@ export default function Layout({ children }:{children:any}) {
         <div className="flex relative  leading-loose">
 
         <Sidebar />
+         
             {children}
         </div></>
     )

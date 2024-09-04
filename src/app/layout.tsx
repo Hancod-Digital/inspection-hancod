@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   viewport: "width=device-width, initial-scale=1.0", // Adding viewport in metadata
 };
 
+import "@fontsource/roboto"; // Defaults to weight 400
+import "@fontsource/roboto/400.css"; // Specify weight
+import "@fontsource/roboto/400-italic.css"; // Specify weight and style
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -17,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body  style={{fontFamily:"roboto"}}  className={inter.className}>{children}</body>
     </html>
   );
 }

@@ -60,6 +60,16 @@ export default function Sidebar() {
             ),
             subtopics: [
                 {
+                    title: "Equipment",
+                    identifier: "equipment",
+                    icon: <Square
+                    style={{ fill: currentPath =='/masters/equipment'  ? "#962c3d" : "#75829C" }} 
+                     className={`me-2 ${currentPath =='/masters/equipment'  ? "text-primary" : "text-[#75829C]"}`}
+                        size="0.5em"
+                    />,
+                    url: "/masters/equipment",
+                },
+                {
                     title: "Equipment Type",
                     identifier: "equipment-type",
                     icon: <Square
