@@ -11,8 +11,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const equipmentDetailsSchema = object({
-   site: string().nonempty('Site is required'),
-  area: string().nonempty('Area is required'),
+  slNo: z.string().nonempty('Sl. No. is required'),
+  minorCategory: z.string().nonempty('Minor Category is required'),
+  majorCategory: z.string().nonempty('Major Category is required'),
+  standard: z.string().nonempty('Standard is required'),
   status: z.enum(['Active', 'Inactive'], 'Status is required'),
 });
 
@@ -62,25 +64,34 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-                  
-                  
+ 
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                    <Label htmlFor="minorCategory" className="mt-3">Minor Category</Label>
                     <div>
-                      <Input id="site" {...methods.register('site')} />
-                      {errors.site && (
-                        <p className="text-red-500 mt-1">{errors.site.message}</p>
+                      <Input id="minorCategory" {...methods.register('minorCategory')} />
+                      {errors.minorCategory && (
+                        <p className="text-red-500 mt-1">{errors.minorCategory.message}</p>
                       )}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="area" className="mt-3">Area</Label>
+                    <Label htmlFor="majorCategory" className="mt-3">Major Category</Label>
                     <div>
-                      <Input id="area" {...methods.register('area')} />
-                      {errors.area && (
-                        <p className="text-red-500 mt-1">{errors.area.message}</p>
+                      <Input id="majorCategory" {...methods.register('majorCategory')} />
+                      {errors.majorCategory && (
+                        <p className="text-red-500 mt-1">{errors.majorCategory.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                    <Label htmlFor="standard" className="mt-3">Standard</Label>
+                    <div>
+                      <Input id="standard" {...methods.register('standard')} />
+                      {errors.standard && (
+                        <p className="text-red-500 mt-1">{errors.standard.message}</p>
                       )}
                     </div>
                   </div>

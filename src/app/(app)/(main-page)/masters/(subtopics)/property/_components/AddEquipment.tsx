@@ -11,8 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const equipmentDetailsSchema = object({
-   site: string().nonempty('Site is required'),
-  area: string().nonempty('Area is required'),
+  property: z.string().nonempty('Property is required'),
+  propertyType: z.string().nonempty('Property Type is required'),
   status: z.enum(['Active', 'Inactive'], 'Status is required'),
 });
 
@@ -62,25 +62,22 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-                  
-                  
-
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                    <Label htmlFor="property" className="mt-3">Property</Label>
                     <div>
-                      <Input id="site" {...methods.register('site')} />
-                      {errors.site && (
-                        <p className="text-red-500 mt-1">{errors.site.message}</p>
+                      <Input id="property" {...methods.register('property')} />
+                      {errors.property && (
+                        <p className="text-red-500 mt-1">{errors.property.message}</p>
                       )}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="area" className="mt-3">Area</Label>
+                    <Label htmlFor="propertyType" className="mt-3">Property Type</Label>
                     <div>
-                      <Input id="area" {...methods.register('area')} />
-                      {errors.area && (
-                        <p className="text-red-500 mt-1">{errors.area.message}</p>
+                      <Input id="propertyType" {...methods.register('propertyType')} />
+                      {errors.propertyType && (
+                        <p className="text-red-500 mt-1">{errors.propertyType.message}</p>
                       )}
                     </div>
                   </div>

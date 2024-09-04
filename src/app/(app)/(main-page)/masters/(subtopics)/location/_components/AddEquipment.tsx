@@ -11,7 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const equipmentDetailsSchema = object({
-   site: string().nonempty('Site is required'),
+  location: string().nonempty('Location is required'),
+  site: string().nonempty('Site is required'),
   area: string().nonempty('Area is required'),
   status: z.enum(['Active', 'Inactive'], 'Status is required'),
 });
@@ -63,7 +64,17 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
                   
-                  
+                   
+
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <div>
+                      <Input id="location" {...methods.register('location')} />
+                      {errors.location && (
+                        <p className="text-red-500 mt-1">{errors.location.message}</p>
+                      )}
+                    </div>
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>

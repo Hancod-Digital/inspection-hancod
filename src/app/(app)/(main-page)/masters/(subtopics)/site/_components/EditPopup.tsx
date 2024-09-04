@@ -11,8 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const equipmentDetailsSchema = object({
-  slNo: z.number().min(1, 'Sl. No. is required'),
-  site: string().nonempty('Site is required'),
+   site: string().nonempty('Site is required'),
   area: string().nonempty('Area is required'),
   status: z.enum(['Active', 'Inactive'], 'Status is required'),
 });
@@ -64,20 +63,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
                   
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="slNo" className="mt-3">Sl. No.</Label>
-                    <div>
-                      <Input
-                        id="slNo"
-                        type="number"
-                        defaultValue={1}
-                        {...methods.register('slNo', { valueAsNumber: true })}
-                      />
-                      {errors.slNo && (
-                        <p className="text-red-500 mt-1">{errors.slNo.message}</p>
-                      )}
-                    </div>
-                  </div>
+                  
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
