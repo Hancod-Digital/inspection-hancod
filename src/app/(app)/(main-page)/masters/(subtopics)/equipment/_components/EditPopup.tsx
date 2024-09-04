@@ -36,7 +36,7 @@ const equipmentDetailsSchema = object({
   testInspFrequencyMonths: string().nonempty("Test inspection frequency in months is required"),
   lastThoroughDate: string().nonempty("Last thorough date required"),
   nextThoroughDate: string().nonempty("Last thorough date is required"),
-  description: string().nonempty("Last thorough date is required"),
+  description: string().nonempty("Description is required"),
 });
 import dynamic from 'next/dynamic';
 
