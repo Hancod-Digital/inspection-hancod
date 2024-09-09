@@ -18,7 +18,8 @@ const ownerDetailsSchema = z.object({
   owner: z.string().nonempty('Owner is required'),
   address: z.string().nonempty('Address is required'),
   code: z.string().nonempty('Code is required'),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
+  
+  status: z.string().nonempty('Status is required'),
 
   qpFooter: z.string().nonempty("Description is required"),
   nonQpFooter: z.string().nonempty("Description is required"),

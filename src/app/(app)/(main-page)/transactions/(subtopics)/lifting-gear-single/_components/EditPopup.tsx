@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import dynamic from 'next/dynamic';
+import Table from './AnnexureTable'
 import 'react-quill/dist/quill.snow.css';
 const equipmentDetailsSchema = object({
   inspectionDate: string().nonempty('Inspection Date is required'),
@@ -30,6 +31,7 @@ const equipmentDetailsSchema = object({
   surveyor: string().nonempty('Surveyor is required'),
   workOrderNo: string().nonempty('Work Order No. is required'),
   ownerName: string().nonempty('Owner Name is required'),
+  description: string().nonempty('Description Date is required'),
   ownerAddress: string().nonempty('Owner Address is required'),
   manufacturer: string().nonempty('Manufacturer is required'),
   testedStandard: string().nonempty('Tested Standard is required'),
@@ -212,7 +214,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid gap-4 grid-cols-1">
                     <div className="w-full">
                       <Label htmlFor="description">Description</Label>
-                      <div>
+                      <div> 
                         <Controller
                           name="description"
                           control={control}
@@ -358,8 +360,13 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 mt-1">{errors.testedStandard.message}</p>
                     )}
                   </div>
-                  <h2 className="text-base font-bold">CERTIFICATE For Lifting Gear</h2>
+                
 
+                </div>
+                <div className="grid gap-4 grid-cols-1">
+                 <Table onFunction={function (): void {
+                    throw new Error('Function not implemented.');
+                  } } /> 
                 </div>
 
                 <div className="flex justify-end gap-4">

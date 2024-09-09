@@ -8,38 +8,39 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
+
 import FormTable from './FormTable'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
 import AnnexureTable from './AnnexureTable'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 const equipmentDetailsSchema = object({
   
-  equipmentNo: z.enum(['2', 'Inactive'], 'Status is required'),
-  
+  equipmentNo: z.string().nonempty('Equipment Number is required'), 
   title: string().nonempty('Title is required'),
   authority: string().nonempty('Authority is required'),
-  placeOfInspection: z.enum(['2', 'Inactive'], 'Status is required'),
-  typeOfExam: z.enum(['2', 'Inactive'], 'Status is required'),
-  area: z.enum(['2', 'Inactive'], 'Status is required'),
-  surveyor: z.enum(['2', 'Inactive'], 'Status is required'),
+  placeOfInspection: z.string().nonempty('Place of inspection is required'),
+  typeOfExam: z.string().nonempty('Type of Exam is required'),
+  area: z.string().nonempty('Area is required'),
+  surveyor: z.string().nonempty('Surveyor is required'),
   requestedByOwner: string().nonempty('Field is required'),
-  referenceStandard: z.enum(['2', 'Inactive'], 'Status is required'),
+  workOrderNo: z.string().nonempty('Work order number is required'),
+  referenceStandard: z.string().nonempty('Reference Standard is required'),
   yearOfManufacture: string().nonempty('Field is required'),
   serialNo: string().nonempty('Field is required'),
   ownerAddress: string().nonempty('Field is required'),
   ownerName: string().nonempty('Field is required'),
   testCertCOCNo: string().nonempty('Field is required'),
   model: string().nonempty('Field is required'),
-  manufacturer: z.enum(['2', 'Inactive'], 'Status is required'),
+  manufacturer:z.string().nonempty('Manufacturer is required'),
   inspectionDate: string().nonempty('Field is required'),
   lastTestDate: string().nonempty('Field is required'),
   nextTestDate: string().nonempty('Field is required'),
   description: string().nonempty('Field is required'),
   lastThoroughDate: string().nonempty('Field is required'),
   nextThoroughDate: string().nonempty('Field is required'),
-  jobOrderNo: z.enum(['2', 'Inactive'], 'Status is required'),
+  jobOrderNo: z.string().nonempty('Job Order Number is required'),
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;

@@ -14,9 +14,10 @@ const surveyorDetailsSchema = object({
    surveyor: z.string().nonempty('Surveyor is required'),
   qualification: z.string().nonempty('Qualification is required'),
   code: z.string().nonempty('Code is required'),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
+  status: z.string().nonempty('Status is required'),
   user: z.string().nonempty('User is required'),
 });
+import SurveyorCompetencyPopup from './Popup'
 
 type SurveyorDetailsInput = TypeOf<typeof surveyorDetailsSchema>;
 
@@ -26,7 +27,7 @@ interface SurveyorDetailsFormProps {
 
 export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const [isPopupOpen, setIsPopupOpen] = useState(false)
   const methods = useForm<SurveyorDetailsInput>({
     resolver: zodResolver(surveyorDetailsSchema),
   });
@@ -133,11 +134,16 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
                   <div className="grid w-full gap-4">
                   
                     
-                      <FormTable />
+                      <FormTable onFunction={()=>setIsPopupOpen(true)} />
                      
                     </div>
 
                 </div>
+                {isPopupOpen && (
+        <SurveyorCompetencyPopup
+           
+        />
+      )}
 
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">

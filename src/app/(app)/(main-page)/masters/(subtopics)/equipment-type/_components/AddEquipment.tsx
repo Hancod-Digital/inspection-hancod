@@ -13,8 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 const equipmentDetailsSchema = object({
   category: string().nonempty('Category is required'),
   equipmentType: string().nonempty('Equipment Type is required'),
-  status: zEnum(['swivel-hoist-ring', 'dumb-shutter']),
-});
+  status: string().nonempty('Status is required')});
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 

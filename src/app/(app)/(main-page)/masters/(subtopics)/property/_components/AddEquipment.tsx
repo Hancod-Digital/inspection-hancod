@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 const equipmentDetailsSchema = object({
   property: z.string().nonempty('Property is required'),
   propertyType: z.string().nonempty('Property Type is required'),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
+  status: z.string().nonempty('Status is required')
 });
 import dynamic from 'next/dynamic';
 

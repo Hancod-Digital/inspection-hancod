@@ -12,8 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 const equipmentDetailsSchema = object({
   annexure: string().nonempty('Annexure is required'),
-  status: zEnum(['Inactive', 'Active'], 'Status is required'),
-});
+  status: string().nonempty('Status is required')
+}); 
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 

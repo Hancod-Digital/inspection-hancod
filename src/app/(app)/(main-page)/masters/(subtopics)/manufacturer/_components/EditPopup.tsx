@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 const manufacturerDetailsSchema = object({
   manufacturer: z.string().nonempty('Manufacturer is required'),
   address: z.string().nonempty('Address is required'),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
+  status: z.string().nonempty('Status is required')
 });
 
 type ManufacturerDetailsInput = z.infer<typeof manufacturerDetailsSchema>;

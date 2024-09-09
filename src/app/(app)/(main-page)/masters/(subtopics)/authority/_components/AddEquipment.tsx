@@ -13,8 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 const authorityDetailsSchema = object({
   authority: z.string().nonempty('Authority is required'),
   designation: z.string().nonempty('Designation is required'),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
-});
+  status: z.string().nonempty('Status is required')});
 
 type AuthorityDetailsInput = TypeOf<typeof authorityDetailsSchema>;
 

@@ -14,7 +14,7 @@ const equipmentDetailsSchema = object({
   standard: z.string().nonempty('Standard is required'),
   standardType: z.string().nonempty('Standard Type is required'),
   remarks: z.string().optional(),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
+  status: z.string().nonempty('Status is required')
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;

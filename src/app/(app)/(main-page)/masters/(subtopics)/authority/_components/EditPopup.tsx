@@ -13,8 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 const authorityDetailsSchema = object({
   authority: z.string().nonempty('Authority is required'),
   designation: z.string().nonempty('Designation is required'),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
-});
+  status: z.string().nonempty('Status is required')});
 
 type AuthorityDetailsInput = TypeOf<typeof authorityDetailsSchema>;
 
@@ -51,8 +50,7 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="w-full border-0 p-0 hover:bg-white">
-        <CardContent>
+     
           <FormProvider {...methods}>
             <form
               className="space-y-4"
@@ -120,8 +118,7 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
               </div>
             </form>
           </FormProvider>
-        </CardContent>
-      </Card>
+        
     </motion.div>
   );
 }

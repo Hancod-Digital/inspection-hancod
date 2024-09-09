@@ -14,7 +14,7 @@ const surveyorDetailsSchema = object({
    surveyor: z.string().nonempty('Surveyor is required'),
   qualification: z.string().nonempty('Qualification is required'),
   code: z.string().nonempty('Code is required'),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
+  status: z.string().nonempty('Status is required'),
   user: z.string().nonempty('User is required'),
 });
 import SurveyorCompetencyPopup from './Popup'
@@ -141,9 +141,7 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
                 </div>
                 {isPopupOpen && (
         <SurveyorCompetencyPopup
-          open={isPopupOpen}
-          onOpenChange={setIsPopupOpen}
-          
+           
         />
       )}
 

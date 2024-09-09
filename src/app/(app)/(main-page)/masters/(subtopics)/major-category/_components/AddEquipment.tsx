@@ -14,7 +14,7 @@ const equipmentDetailsSchema = object({
   slNo: z.string().nonempty('Sl. No. is required'),
   majorCategory: string().nonempty('Major Category is required'),
   equipmentType: string().nonempty('Equipment Type is required'),
-  status: z.enum(['Active', 'Inactive'], 'Status is required'),
+  status: z.string().nonempty('Status is required')
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
