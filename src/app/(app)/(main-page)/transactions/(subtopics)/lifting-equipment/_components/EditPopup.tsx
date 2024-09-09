@@ -8,10 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
+
 import FormTable from './FormTable'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
 import AnnexureTable from './AnnexureTable'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 const equipmentDetailsSchema = object({

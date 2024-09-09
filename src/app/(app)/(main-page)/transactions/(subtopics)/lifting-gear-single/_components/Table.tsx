@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
-
+import EditPopup from './EditPopup' 
 interface EquipmentData {
     slNo: number;
     equipmentID: string;
@@ -105,7 +105,7 @@ export default function EquipmentTable() {
                                         transition={{ duration: 0.2 }}
                                     >
                                         <TableCell colSpan={5}>
-                                            {/* Add your edit component here */}
+                                        <EditPopup onClose={handleCloseEdit} />
                                         </TableCell>
                                     </motion.tr>
                                 )}
