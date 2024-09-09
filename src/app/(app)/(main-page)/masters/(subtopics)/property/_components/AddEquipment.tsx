@@ -15,6 +15,10 @@ const equipmentDetailsSchema = object({
   propertyType: z.string().nonempty('Property Type is required'),
   status: z.enum(['Active', 'Inactive'], 'Status is required'),
 });
+import dynamic from 'next/dynamic';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import 'react-quill/dist/quill.snow.css';
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
@@ -105,6 +109,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       )}
                     </div>
                   </div>
+                  
                 </div>
 
                 <div className="flex justify-end gap-4">
