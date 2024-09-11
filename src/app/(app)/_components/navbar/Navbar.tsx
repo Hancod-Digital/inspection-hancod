@@ -1,26 +1,60 @@
-'use client'
-import React from 'react'
-import Link from "next/link"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ChevronDown } from "lucide-react"
-import { Menu, MenuItem } from '@/components/animated/DropDown'
+import React, { useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ChevronDown } from "lucide-react";
+import { Menu, MenuItem } from '@/components/animated/DropDown';
+import { AuthService } from '@/services/api/auth-service';
+import { makeApiCall } from '@/lib/apicaller';
+import { toast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import Spinner from '@/components/animated/Spinner';
 
-export function generateFallbackAvatar(name: string): string {
-    if (!name) return "";
-    return name
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase())
-        .join("");
-}
+// Fetch user active status function
+const fetchUserActiveStatus = async () => {
+    const service = new AuthService();
+    const response = await service.getActiveUser();
+     
+    return response.session?.user;
+};
 
 export default function Component() {
-    const userName = "Fathima Ebrahim"
-    const userEmail = "fathima@qube.com"
-    const fallbackAvatar = generateFallbackAvatar(userName)
-    const [open, setOpen] = React.useState(false)
-    return (
+    const router = useRouter();
+    const [open, setOpen] = useState(false);
 
-        <header className="flex h-16 px-10 items-center justify-between border-b bg-white ">
+    // Using React Query to fetch user active status with object syntax (v5+)
+    const { data: userDetails, isLoading, isError } = useQuery({
+        queryKey: ['userDetails'],
+        queryFn: fetchUserActiveStatus,
+    });
+    console.log(isError);
+    
+
+    const userName = userDetails?.email?.split('@')[0] ;
+   
+    
+    const userEmail = userDetails?.email || "unknown@example.com";
+    const fallbackAvatar = generateFallbackAvatar(userName);
+
+    const handleLogout = () => {
+        const service = new AuthService();
+        makeApiCall(
+            () => service.userLogout(),
+            {
+                toastContent: "Logout Successful",
+                toast,
+                afterSuccess: () => {
+                    router.push('/login');
+                    router.refresh();
+                },
+            }
+        );
+    };
+
+    if (isLoading) return <Spinner />;
+    if (isError) return <div>Error loading user data</div>;
+
+    return (
+        <header className="flex h-16 px-10 items-center justify-between border-b bg-white">
             <div className="flex items-center gap-4">
                 <img src="/images/logo.svg" alt="" />
             </div>
@@ -40,17 +74,20 @@ export default function Component() {
                         setOpen={setOpen}
                         component={<ChevronDown className="h-4 w-4 text-gray-500" />}
                     >
-                        <MenuItem>Edit</MenuItem>
-                        <MenuItem>Share</MenuItem>
-                        <MenuItem>Delete</MenuItem>
-                        <MenuItem>Report</MenuItem>
+                        <a href="/profile"><MenuItem>Profile</MenuItem></a>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
                 </div>
             </div>
         </header>
-    )
+    );
 }
 
-
-
-
+// Helper function to generate fallback avatar from user's name
+export function generateFallbackAvatar(name: string | undefined) {
+    if (!name) return "";
+    return name
+        .split(" ")
+        .map((word: string) => word.charAt(0).toUpperCase())
+        .join("");
+}

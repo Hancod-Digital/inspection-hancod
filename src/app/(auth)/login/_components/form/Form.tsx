@@ -7,6 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Input } from '@mui/material';
+import { AuthService } from '@/services/api/auth-service';
+import { makeApiCall } from '@/lib/apicaller';
+import { useRouter } from 'next/navigation';
+import { toast } from '@/components/ui/use-toast';
 
 // Validation schema using Zod
 const loginSchema = object({
@@ -22,7 +26,7 @@ type LoginInput = TypeOf<typeof loginSchema>;
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter()
   const methods = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
   });
@@ -40,10 +44,25 @@ export default function LoginForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful]);
-
+  
   const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
     console.log(values);
-    // Handle login logic here
+    const service = new AuthService();
+    makeApiCall(
+        () =>
+            service
+                .userLogin(values.email,values.password),
+        {   
+            toastContent:"Login successful!",
+            toast,
+          
+            afterSuccess: () => {
+                router.push('/dashboard')
+                router.refresh()       
+            },
+            
+        }
+    );
   };
 
   return (
@@ -79,7 +98,7 @@ export default function LoginForm() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            <a href="/forgot-password"><Button className="p-0 text-primary ml-auto" variant="link">
+            <a href="/forgot-password"><Button type='button' className="p-0 text-primary ml-auto" variant="link">
               Forgot Password
             </Button></a>
           </div>
