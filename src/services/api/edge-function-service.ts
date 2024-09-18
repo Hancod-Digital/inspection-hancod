@@ -7,7 +7,7 @@ export class EdgeFunctionService extends Service {
         super(config);
     }
     changePassword({ id,password }: { id: string,password:string }) {
-        this.url = new BuildUrl().supabase('/change-password')
+        this.url = new BuildUrl().supabase('/reset-password')
     
         this.axiosPost({id,newPassword:password}); 
         return this;

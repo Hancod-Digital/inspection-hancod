@@ -11,49 +11,17 @@ import {
 } from "@/components/ui/table";
 import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
 
-interface ManufacturerData {
-    slNo: number;
-    manufacturer: string;
-    address: string;
-    status: string;
-}
-
 import ManufacturerDetailsForm from './EditPopup';
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
-
-const manufacturerData: ManufacturerData[] = [
-    {
-        slNo: 1,
-        manufacturer: 'OWL BUSINESS GROUP',
-        address: 'DOHA, STATE OF QATAR',
-        status: 'Active',
-    },
-    {
-        slNo: 2,
-        manufacturer: 'OWL BUSINESS GROUP',
-        address: 'DOHA, STATE OF QATAR',
-        status: 'Active',
-    },
-    {
-        slNo: 3,
-        manufacturer: 'OWL BUSINESS GROUP',
-        address: 'DOHA, STATE OF QATAR',
-        status: 'Active',
-    },
-    {
-        slNo: 4,
-        manufacturer: 'OWL BUSINESS GROUP',
-        address: 'DOHA, STATE OF QATAR',
-        status: 'Active',
-    }
-];
+import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function ManufacturerTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
+    const { data, isLoading, error } = useSubtopic();
 
-    const handleEditClick = (slNo: number) => {
-        setEditingRow(slNo === editingRow ? null : slNo);
+    const handleEditClick = (idx: number) => {
+        setEditingRow(idx === editingRow ? null : idx);
     };
 
     const handleCloseEdit = () => {
@@ -62,55 +30,61 @@ export default function ManufacturerTable() {
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            <Table className="w-full">
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="py-4">Sl. No.</TableHead>
-                        <TableHead className="py-4">Manufacturer</TableHead>
-                        <TableHead className="py-4">Address</TableHead>
-                        <TableHead className="py-4">Status</TableHead>
-                        <TableHead className="py-4"></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {manufacturerData.map((item) => (
-                        <React.Fragment key={item.slNo}>
-                            <TableRow>
-                                <TableCell className="py-4">{item.slNo}</TableCell>
-                                <TableCell className="py-4">{item.manufacturer}</TableCell>
-                                <TableCell className="py-4">{item.address}</TableCell>
-                                <TableCell className="py-4">{item.status}</TableCell>
-                                <TableCell className="py-4 flex-[1]">
-                                    <div className="flex space-x-2">
-                                        <button onClick={() => handleEditClick(item.slNo)} className="text-red-500">
-                                            <EditIcon/>
-                                        </button>
-                                        <button className="text-red-500">
-                                            <DeleteIcon/>
-                                        </button>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                            <AnimatePresence>
-                                {editingRow === item.slNo && (
-                                    <motion.tr
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <TableCell colSpan={5}>
-                                            <div className="overflow-hidden">
-                                                <ManufacturerDetailsForm onClose={handleCloseEdit} />
-                                            </div>
-                                        </TableCell>
-                                    </motion.tr>
-                                )}
-                            </AnimatePresence>
-                        </React.Fragment>
-                    ))}
-                </TableBody>
-            </Table>
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : error ? (
+                <div>Error loading data</div>
+            ) : (
+                <Table className="w-full">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="py-4">Sl. No.</TableHead>
+                            <TableHead className="py-4">Manufacturer</TableHead>
+                            <TableHead className="py-4">Address</TableHead>
+                            <TableHead className="py-4">Status</TableHead>
+                            <TableHead className="py-4">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {data?.map((item, idx) => (
+                            <React.Fragment key={idx + 1}>
+                                <TableRow>
+                                    <TableCell className="py-4">{idx + 1}</TableCell>
+                                    <TableCell className="py-4">{item.manufacturer}</TableCell>
+                                    <TableCell className="py-4">{item.address}</TableCell>
+                                    <TableCell className="py-4">{item.status}</TableCell>
+                                    <TableCell className="py-4">
+                                        <div className="flex space-x-2">
+                                            <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
+                                                <EditIcon/>
+                                            </button>
+                                            <button className="text-red-500">
+                                                <DeleteIcon/>
+                                            </button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                                <AnimatePresence>
+                                    {editingRow === idx + 1 && (
+                                        <motion.tr
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <TableCell colSpan={5}>
+                                                <div className="overflow-hidden">
+                                                    <ManufacturerDetailsForm onClose={handleCloseEdit} id={item.id} />
+                                                </div>
+                                            </TableCell>
+                                        </motion.tr>
+                                    )}
+                                </AnimatePresence>
+                            </React.Fragment>
+                        ))}
+                    </TableBody>
+                </Table>
+            )}
         </div>
     );
 }

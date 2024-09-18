@@ -19,6 +19,7 @@ import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
@@ -28,7 +29,7 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const { addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
@@ -41,10 +42,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await addRecord(values)
     setLoading(false);
   };
 
@@ -98,8 +99,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

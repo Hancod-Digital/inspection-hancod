@@ -27,10 +27,10 @@ export class BuildUrl {
     supabase(endpoint: string) {
         
         
-        if (!process.env.SUPABASE_SERVICE_URL) {
+        if (!process.env.NEXT_PUBLIC_SUPABASE_SERVICE_URL) {
             throw new Error("Missing Supabase Service URL");
         }
-        const url = process.env.SUPABASE_SERVICE_URL;
+        const url = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_URL;
         return  url + endpoint;
     }
 
@@ -43,8 +43,7 @@ export class Supabase {
 
     constructor() {
         // Console log to debug and ensure values are being captured
-        console.log("Supabase URL:",CLIENT_SUPABASE_URL);
-        console.log("Supabase Key:",CLIENT_SUPABASE_KEY);
+   
         
         // Assign environment variables to class properties
         this.supabaseUrl =  CLIENT_SUPABASE_URL! || SUPABASE_URL!;

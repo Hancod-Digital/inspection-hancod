@@ -13,6 +13,7 @@ import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const ownerDetailsSchema = z.object({ 
   owner: z.string().nonempty('Owner is required'),
@@ -36,7 +37,7 @@ interface OwnerDetailsFormProps {
 
 export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const { addRecord } = useSubtopic();
   const methods = useForm<OwnerDetailsInput>({
     resolver: zodResolver(ownerDetailsSchema),
   });
@@ -49,11 +50,12 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<OwnerDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<OwnerDetailsInput> = async(values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+   await addRecord(values)
     setLoading(false);
+    onClose()
   };
 
   return (
@@ -119,8 +121,8 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

@@ -18,15 +18,18 @@ import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  id: number
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose,  id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const { updateRecord, findRecordById } = useSubtopic();
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -40,10 +43,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true);
-    console.log(values);
-    // Handle form submission logic here
+    await updateRecord(id,values)
     setLoading(false);
   };
 
@@ -97,8 +99,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

@@ -9,22 +9,26 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
+ 
+import { useQuery } from '@tanstack/react-query';
 
 const equipmentDetailsSchema = object({
   category: string().nonempty('Category is required'),
   equipmentType: string().nonempty('Equipment Type is required'),
-  status: string().nonempty('Status is required')
-});
+  status: string().nonempty('Status is required')});
 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
-
+  type EquipmentDetailsSchemaType = TypeOf<typeof equipmentDetailsSchema>;
+  type EquipmentDetailsInput = EquipmentDetailsSchemaType & { id: number };
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  id:number
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const { updateRecord } = useSubtopic();
+ 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
@@ -37,11 +41,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
-    setLoading(true);
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
+    setLoading(true)
     console.log(values);
-    // Handle form submission logic here
-    setLoading(false);
+    await updateRecord(id,values)
+    setLoading(false) 
   };
 
   return (
@@ -60,9 +64,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               autoComplete="off"
               onSubmit={handleSubmit(onSubmitHandler)}
             >
-              
+              <CardHeader>
+                <CardTitle className="text-md">Equipment Details</CardTitle>
+              </CardHeader>
 
-              <div className="space-y-4 pt-10">
+              <div className="space-y-4">
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                     <Label htmlFor="equipmentType">Equipment Type</Label>
@@ -96,8 +102,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="swivel-hoist-ring">Swivel Hoist Ring</SelectItem>
-                              <SelectItem value="dumb-shutter">Dumb Shutter</SelectItem>
+                              <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                              <SelectItem value="INACTIVE">INACTIVE</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
@@ -113,7 +119,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:border hover:border-primary hover:text-primary" type="submit"  disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

@@ -13,8 +13,43 @@ export class AuthService extends Supabase {
         const { data, error } = await this.supabase.rpc('verify_user_password', { password })
         if (error) {
             return false
-        } 
-          return true
+        }
+         
+        
+        return data
+    }
+    async reset_password(email: string) {
+        const { data, error } = await this.supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: 'http://localhost:3000/new-password', // URL to handle password reset
+          });
+          if (error) {
+            console.log(error);
+            
+            throw new Error("An Error Occured")
+        }
+        return data
+    }
+    async change_authenticated_password(password: string){
+        const { data, error } = await this.supabase.auth.updateUser({
+            password
+          })
+          console.log(password,"ppaaaaaaaaaaaaaaaaaaaa");
+          
+          if (error) {
+            throw new Error("An Error Occured")
+          } 
+          return data
+          
+    }
+    async change_password(password: string, accessToken: string){
+        const { error } = await this.supabase.auth.updateUser({
+            password,
+           
+          });
+      
+          if (error) {
+            throw new Error("An Error Occured")
+          } 
     }
     async userVerify(email: string) {
         const { data, error } = await this.supabase
@@ -51,21 +86,42 @@ export class AuthService extends Supabase {
     }
 
     async isUserActive() {
-        const {session} = (await this.supabase.auth.getSession()).data
-   
-         
-        
-        return session 
+        const { session } = (await this.supabase.auth.getSession()).data
+        return session
     }
     async getActiveUser() {
         const result = (await this.supabase.auth.getSession()).data
-   
-         
-        
-        return result 
+        return result
     }
     async getUserId() {
         const { session } = (await this.supabase.auth.getSession()).data
         return session?.user.id
     }
+    async getUserDetails(id: string) {
+        const { data, error } = await this.supabase
+            .from('user')
+            .select('*')
+            .eq('id', id)
+            .single()
+        return data
+    }
+    async uploadImage(email: string) {
+
+    }
+}
+
+export const fetchUserActiveStatus = async () => {
+    const service = new AuthService();
+    const response = await service.getActiveUser();
+
+
+    return response.session?.user;
+};
+
+export const fetchUserDetails = async () => {
+    const service = new AuthService();
+
+    const response = await service.getUserDetails((await service.getActiveUser()).session?.user.id!)
+
+    return response
 }

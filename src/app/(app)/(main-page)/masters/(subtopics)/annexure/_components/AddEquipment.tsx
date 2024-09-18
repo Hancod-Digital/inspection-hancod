@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentDetailsSchema = object({
   annexure: string().nonempty('Annexure is required'),
@@ -23,7 +24,7 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const { addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
@@ -36,11 +37,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await addRecord(values)
     setLoading(false);
+    onClose()
   };
 
   return (

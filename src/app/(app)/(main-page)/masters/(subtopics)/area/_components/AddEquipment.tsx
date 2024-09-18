@@ -9,9 +9,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentDetailsSchema = object({
-  annexure: string().nonempty('Annexure is required'),
+  thumbnail: string().nonempty('Thumbnail is required'),
   status: string().nonempty('Status is required')
 });
 
@@ -23,7 +24,7 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const { addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
@@ -36,11 +37,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await addRecord(values)
     setLoading(false);
+    onClose()
   };
 
   return (
@@ -63,16 +65,18 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                 <div className="grid gap-4 grid-cols-1">
                   
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="annexure"  className='mt-3'>Annexure</Label>
-                   
-                      <Input id="annexure" {...methods.register('annexure')} />
-                      {errors.annexure && (
-                        <p className="text-red-500 mt-1">{errors.annexure.message}</p>
+                    <Label htmlFor="thumbnail"  className='mt-3'>Thumbnail</Label>
+                    <div>
+
+                      <Input id="thumbnail" {...methods.register('thumbnail')} />
+                      {errors.thumbnail && (
+                        <p className="text-red-500 mt-1">{errors.thumbnail.message}</p>
                       )}
+                      </div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr]  w-1/2 gap-4">
-                    <Label htmlFor="status"  className='mt-3'>Status</Label>
+                    <Label htmlFor="status" className='mt-3'>Status</Label>
                     <div>
                       <Controller
                         name="status"
@@ -83,8 +87,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
-                              <SelectItem value="Active">Active</SelectItem>
+                              
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

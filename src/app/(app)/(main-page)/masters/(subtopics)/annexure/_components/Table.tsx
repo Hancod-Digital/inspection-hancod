@@ -9,43 +9,16 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { PencilIcon, TrashIcon } from '@heroicons/react/outline'; // Assuming you're using heroicons
-
-interface EquipmentData {
-    slNo: number;
-    annexure: string;
-    status: string;
-}
+import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
 
 import EditPopup from './EditPopup';
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
-
-const equipmentData: EquipmentData[] = [
-    {
-        slNo: 1,
-        annexure: 'Runway Beam and Hoist - QE 2022',
-        status: 'Active'
-    },
-    {
-        slNo: 2,
-        annexure: 'Runway Beam and Hoist - QE 2022',
-        status: 'Active'
-    },
-    {
-        slNo: 3,
-        annexure: 'Runway Beam and Hoist - QE 2022',
-        status: 'Active'
-    },
-    {
-        slNo: 4,
-        annexure: 'Runway Beam and Hoist - QE 2022',
-        status: 'Active'
-    }
-];
+import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
+    const { data, isLoading, error } = useSubtopic();
 
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
@@ -59,33 +32,33 @@ export default function EquipmentTable() {
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
             <Table className="w-full">
                 <TableHeader>
-                    <TableRow className='flex justify-start'>
-                        <TableHead className="py-4 flex-[1]">Sl. No.</TableHead>
-                        <TableHead className="py-4 flex-[4]">Annexure</TableHead> {/* Updated to match the image */}
-                        <TableHead className="py-4 flex-[2]">Status</TableHead>
-                        <TableHead className="py-4 flex-[1]"></TableHead>
+                    <TableRow>
+                        <TableHead className="py-4">Sl. No.</TableHead>
+                        <TableHead className="py-4">Annexure</TableHead>
+                        <TableHead className="py-4">Status</TableHead>
+                        <TableHead className="py-4">Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {equipmentData.map((item) => (
-                        <React.Fragment key={item.slNo}>
-                            <TableRow className='flex '>
-                                <TableCell className="py-4 flex-[1]">{item.slNo}</TableCell>
-                                <TableCell className="py-4 flex-[4]">{item.annexure}</TableCell> {/* Updated to match the image */}
-                                <TableCell className="py-4 flex-[2]">{item.status}</TableCell>
-                                <TableCell className="py-4 flex-[1]">
+                    {data?.map((item, idx) => (
+                        <React.Fragment key={idx + 1}>
+                            <TableRow>
+                                <TableCell className="py-4">{idx + 1}</TableCell>
+                                <TableCell className="py-4">{item?.annexure}</TableCell>
+                                <TableCell className="py-4">{item?.status}</TableCell>
+                                <TableCell className="py-4">
                                     <div className="flex space-x-2">
-                                        <button onClick={() => handleEditClick(item.slNo)} className="text-red-500">
-                                            <EditIcon/>
+                                        <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
+                                            <EditIcon />
                                         </button>
                                         <button className="text-red-500">
-                                            <DeleteIcon/>
+                                            <DeleteIcon />
                                         </button>
                                     </div>
                                 </TableCell>
                             </TableRow>
                             <AnimatePresence>
-                                {editingRow === item.slNo && (
+                                {editingRow === idx + 1 && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
@@ -94,7 +67,7 @@ export default function EquipmentTable() {
                                     >
                                         <TableCell colSpan={4}>
                                             <div className="overflow-hidden">
-                                                <EditPopup onClose={handleCloseEdit} />
+                                                <EditPopup onClose={handleCloseEdit} id={item.id} />
                                             </div>
                                         </TableCell>
                                     </motion.tr>

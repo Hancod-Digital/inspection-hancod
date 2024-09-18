@@ -12,44 +12,14 @@ import {
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
-
-interface EquipmentData {
-    slNo: number;
-    majorCategory: string;
-    equipmentType: string;
-    status: string;
-}
-
-const equipmentData: EquipmentData[] = [
-    {
-        slNo: 1,
-        majorCategory: 'Lift cart',
-        equipmentType: 'Lifting Equipment',
-        status: 'Active',
-    },
-    {
-        slNo: 2,
-        majorCategory: 'Industrial Truck',
-        equipmentType: 'Lifting Equipment',
-        status: 'Active',
-    },
-    {
-        slNo: 3,
-        majorCategory: 'Hydraulic Cylinder',
-        equipmentType: 'Lifting Equipment',
-        status: 'Active',
-    },
-    {
-        slNo: 4,
-        majorCategory: 'Beam Trolley',
-        equipmentType: 'Lifting Equipment',
-        status: 'Active',
-    },
-];
+import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-
+    const { isLoading, error,FetchMajorCategory } = useSubtopic();
+    const { data } = FetchMajorCategory()
+    console.log(data);
+    
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
     };
@@ -60,55 +30,61 @@ export default function EquipmentTable() {
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            <Table className="w-full">
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="py-4">Sl. No.</TableHead>
-                        <TableHead className="py-4">Major Category</TableHead>
-                        <TableHead className="py-4">Equipment Type</TableHead>
-                        <TableHead className="py-4">Status</TableHead>
-                        <TableHead className="py-4"></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {equipmentData.map((item) => (
-                        <React.Fragment key={item.slNo}>
-                            <TableRow>
-                                <TableCell className="py-4">{item.slNo}</TableCell>
-                                <TableCell className="py-4">{item.majorCategory}</TableCell>
-                                <TableCell className="py-4">{item.equipmentType}</TableCell>
-                                <TableCell className="py-4">{item.status}</TableCell>
-                                <TableCell className="py-4">
-                                    <div className="flex space-x-2">
-                                        <button onClick={() => handleEditClick(item.slNo)} className="text-red-500">
-                                            <EditIcon />
-                                        </button>
-                                        <button className="text-red-500">
-                                            <DeleteIcon />
-                                        </button>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                            <AnimatePresence>
-                                {editingRow === item.slNo && (
-                                    <motion.tr
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <TableCell colSpan={5}>
-                                            <div className="overflow-hidden">
-                                                <EditPopup onClose={handleCloseEdit} />
-                                            </div>
-                                        </TableCell>
-                                    </motion.tr>
-                                )}
-                            </AnimatePresence>
-                        </React.Fragment>
-                    ))}
-                </TableBody>
-            </Table>
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : error ? (
+                <div>Error loading data</div>
+            ) : (
+                <Table className="w-full">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="py-4">Sl. No.</TableHead>
+                            <TableHead className="py-4">Major Category</TableHead>
+                            <TableHead className="py-4">Equipment Type</TableHead>
+                            <TableHead className="py-4">Status</TableHead>
+                            <TableHead className="py-4">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {data?.map((item: { major_category: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; equipment_type: { equipmentType: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; status: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; id: number; }, idx: number) => (
+                            <React.Fragment key={idx + 1}>
+                                <TableRow>
+                                    <TableCell className="py-4">{idx + 1}</TableCell>
+                                    <TableCell className="py-4">{item.major_category.name}</TableCell>
+                                    <TableCell className="py-4">{item.equipment_type.equipmentType}</TableCell>
+                                    <TableCell className="py-4">{item.status}</TableCell>
+                                    <TableCell className="py-4">
+                                        <div className="flex space-x-2">
+                                            <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
+                                                <EditIcon />
+                                            </button>
+                                            <button className="text-red-500">
+                                                <DeleteIcon />
+                                            </button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                                <AnimatePresence>
+                                    {editingRow === idx + 1 && (
+                                        <motion.tr
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <TableCell colSpan={5}>
+                                                <div className="overflow-hidden">
+                                                    <EditPopup onClose={handleCloseEdit} id={item.id} />
+                                                </div>
+                                            </TableCell>
+                                        </motion.tr>
+                                    )}
+                                </AnimatePresence>
+                            </React.Fragment>
+                        ))}
+                    </TableBody>
+                </Table>
+            )}
         </div>
     );
 }

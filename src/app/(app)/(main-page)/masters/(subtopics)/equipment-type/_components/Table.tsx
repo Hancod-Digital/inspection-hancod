@@ -15,42 +15,44 @@ import { PencilIcon, TrashIcon } from '@heroicons/react/outline'; // Assuming yo
 interface EquipmentData {
     slNo: number;
     equipmentType: string;
-    categoryName: string;
+    category: string;
     status: string;
 }
 import EditPopup from './EditPopup'
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentData: EquipmentData[] = [
     {
         slNo: 1,
         equipmentType: 'DUMP CHUTE',
-        categoryName: 'Lifting Gear',
+        category: 'Lifting Gear',
         status: 'Inactive'
     },
     {
         slNo: 2,
         equipmentType: 'Container',
-        categoryName: 'Lifting Gear',
+        category: 'Lifting Gear',
         status: 'Inactive'
     },
     {
         slNo: 3,
         equipmentType: 'Container',
-        categoryName: 'Lifting Gear',
+        category: 'Lifting Gear',
         status: 'Active'
     },
     {
         slNo: 4,
         equipmentType: 'Container',
-        categoryName: 'Lifting Gear',
+        category: 'Lifting Gear',
         status: 'Active'
     }
 ];
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
+    const { data, isLoading, error } = useSubtopic();
 
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
@@ -73,16 +75,16 @@ export default function EquipmentTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {equipmentData.map((item) => (
-                        <React.Fragment key={item.slNo}>
+                    {data?.map((item,idx) => (
+                        <React.Fragment key={idx+1}>
                             <TableRow>
-                                <TableCell className="py-4">{item.slNo}</TableCell>
-                                <TableCell className="py-4">{item.equipmentType}</TableCell>
-                                <TableCell className="py-4">{item.categoryName}</TableCell>
-                                <TableCell className="py-4">{item.status}</TableCell>
+                                <TableCell className="py-4">{idx+1}</TableCell>
+                                <TableCell className="py-4">{item?.equipmentType}</TableCell>
+                                <TableCell className="py-4">{item?.category}</TableCell>
+                                <TableCell className="py-4">{item?.status}</TableCell>
                                 <TableCell className="py-4">
                                     <div className="flex space-x-2">
-                                        <button onClick={() => handleEditClick(item.slNo)} className="text-red-500">
+                                        <button onClick={() => handleEditClick(idx+1)} className="text-red-500">
                                             <EditIcon/>
                                         </button>
                                         <button className="text-red-500">
@@ -92,7 +94,7 @@ export default function EquipmentTable() {
                                 </TableCell>
                             </TableRow>
                             <AnimatePresence>
-                            {editingRow === item.slNo && (
+                            {editingRow === idx+1 && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
@@ -101,7 +103,7 @@ export default function EquipmentTable() {
                                     >
                                         <TableCell colSpan={9}>
                                             <div className="overflow-hidden">
-                                                <EditPopup onClose={handleCloseEdit} />
+                                                <EditPopup onClose={handleCloseEdit} id={item.id} />
                                             </div>
                                         </TableCell>
                                     </motion.tr>

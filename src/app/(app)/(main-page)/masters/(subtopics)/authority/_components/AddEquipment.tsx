@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const authorityDetailsSchema = object({
   authority: z.string().nonempty('Authority is required'),
@@ -23,7 +24,7 @@ interface AuthorityDetailsFormProps {
 
 export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const { addRecord } = useSubtopic();
   const methods = useForm<AuthorityDetailsInput>({
     resolver: zodResolver(authorityDetailsSchema),
   });
@@ -36,11 +37,12 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<AuthorityDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<AuthorityDetailsInput> = async(values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await addRecord(values)
     setLoading(false);
+    onClose()
   };
 
   return (
@@ -94,8 +96,8 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

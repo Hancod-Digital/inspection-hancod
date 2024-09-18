@@ -1,48 +1,86 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, z } from 'zod';
+import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
+import { Site } from './AddEquipment';
 
 const equipmentDetailsSchema = object({
   location: string().nonempty('Location is required'),
   site: string().nonempty('Site is required'),
   area: string().nonempty('Area is required'),
-  status: z.string().nonempty('Status is required')
+  status: string().nonempty('Status is required'),
 });
 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+type EquipmentDetailsSchemaType = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  id: number;
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const { updateRecord, findRecordById, getAllSingleSubtopic,UseMergedDataQuery } = useSubtopic();
 
-  const methods = useForm<EquipmentDetailsInput>({
+  // Fetch the sites asynchronously (this is an example, adjust it to match your actual fetching logic)
+  const [sites, setSites] = useState<Site[]>([]);
+ 
+  useEffect(() => {
+    const fetchSites = async () => {
+      const siteData:any = await getAllSingleSubtopic("site");
+      
+      setSites(siteData);
+    };  
+
+    fetchSites();
+  }, []);
+
+  // Get existing data synchronously
+  const data = findRecordById(id);
+
+  const methods = useForm<EquipmentDetailsSchemaType>({
     resolver: zodResolver(equipmentDetailsSchema),
+    defaultValues: {
+      location: data?.location || '',
+      site: data?.site || '',
+      area: data?.area || '',
+      status: data?.status || '',
+    },
   });
 
-  const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const {
+    reset,
+    handleSubmit,
+    control,
+    formState: { isSubmitSuccessful, errors },
+  } = methods;
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
+      onClose();
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, reset, onClose]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsSchemaType> = async (values) => {
     setLoading(true);
-    console.log(values);
-    // Handle form submission logic here
+    await updateRecord(id, values);
     setLoading(false);
+    onClose(); // Close the form after saving
   };
 
   return (
@@ -53,6 +91,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       transition={{ duration: 0.3 }}
     >
       <Card className="w-full border-0 p-0 hover:bg-white">
+        <CardHeader>
+          <CardTitle className="text-md">Equipment Details</CardTitle>
+        </CardHeader>
         <CardContent>
           <FormProvider {...methods}>
             <form
@@ -61,13 +102,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               autoComplete="off"
               onSubmit={handleSubmit(onSubmitHandler)}
             >
-              <div className="space-y-4 pt-10">
+              <div className="space-y-4">
                 <div className="grid gap-4 grid-cols-1">
-                  
-                   
-
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="location" className="mt-3">Location</Label>
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <Label htmlFor="location">Location</Label>
                     <div>
                       <Input id="location" {...methods.register('location')} />
                       {errors.location && (
@@ -76,28 +114,35 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <Label htmlFor="site">Site</Label>
                     <div>
-                      <Input id="site" {...methods.register('site')} />
+                      <Controller
+                        name="site"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="site">
+                              <SelectValue placeholder="Select site" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {sites?.map((site, index) => (
+                                <SelectItem key={index} value={""+site?.id}>
+                                  {site?.site}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                       {errors.site && (
                         <p className="text-red-500 mt-1">{errors.site.message}</p>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="area" className="mt-3">Area</Label>
-                    <div>
-                      <Input id="area" {...methods.register('area')} />
-                      {errors.area && (
-                        <p className="text-red-500 mt-1">{errors.area.message}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
-                    <Label htmlFor="status" className="mt-3">Status</Label>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="status">Status</Label>
                     <div>
                       <Controller
                         name="status"
@@ -108,8 +153,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

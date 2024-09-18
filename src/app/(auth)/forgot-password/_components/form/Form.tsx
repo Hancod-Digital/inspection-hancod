@@ -7,6 +7,9 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@radix-ui/react-label';
 import { Input } from '@mui/material';
+import { makeApiCall } from '@/lib/apicaller';
+import { AuthService } from '@/services/api/auth-service';
+import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 
 // Validation schema using Zod
 const loginSchema = object({
@@ -38,7 +41,16 @@ export default function LoginForm() {
 
   const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
     console.log(values);
-    // Handle login logic here
+    makeApiCall(
+      () => new AuthService().reset_password(values.email),{
+        afterSuccess:()=>{
+          toastWithTimeout(ToastVariant.Success,"Password reseted")
+        },
+        afterError: () => {
+          toastWithTimeout(ToastVariant.Destructive,"Password Error")
+        }
+      }
+    )
   };
 
   return (

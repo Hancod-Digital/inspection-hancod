@@ -1,60 +1,52 @@
-'use client'
+'use client';
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { AuthService } from '@/services/api/auth-service';
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Spinner from '@/components/animated/Spinner';
 
-// Function to fetch user authentication status
 const fetchAuthStatus = async () => {
     const service = new AuthService();
     const response = await service.isUserActive();
-    return response; // Should return an object like { isAuthenticated: true/false }
+    return response;  
 };
 
-// Main Layout Component with Protected Route
 export default function Layout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
+    const pathname = usePathname();  // Use usePathname instead of useRouter().pathname
 
-    // Use React Query to validate user authentication status
     const { data: authStatus, isLoading, isError } = useQuery({
         queryKey: ['authStatus'],
         queryFn: fetchAuthStatus,
-        refetchOnWindowFocus: true,   // Refetch whenever the window regains focus
-        refetchOnMount: true,         // Refetch every time the component is mounted
-        refetchOnReconnect: true,     // Refetch when the user reconnects to the internet
+        refetchOnWindowFocus: true,    
+        refetchOnMount: true,         
+        refetchOnReconnect: true,
     });
 
     useEffect(() => {
-        if (!isLoading && authStatus ) {
-            // If not authenticated, redirect to login page
+        if (!isLoading && authStatus && pathname !== '/new-password') {
+            // Redirect to dashboard if authenticated and not on /new-password
             router.push('/dashboard');
         }
-    }, [isLoading, authStatus, router]);
+    }, [isLoading, authStatus, router, pathname]);
 
-    // Block rendering until the authentication status is determined
-    if (isLoading ) {
-        return <Spinner />; // Display a loading screen until auth is confirmed
+    if (isLoading) {
+        return <Spinner />;
     }
 
     if (isError) {
         return <div>Error fetching authentication status</div>;
     }
 
-    // Render the protected content only if authenticated
-    if (!authStatus) {
+    // Check if user is not authenticated, or if they are on the /new-password page
+    if (!authStatus || pathname === '/new-password') {
         return (
             <div className="flex h-screen">
                 <div className="flex w-1/2 flex-col justify-center p-32">
                     <div className="mb-8 flex items-center">
                         <img src="/images/logo.svg" alt="Logo" />
                     </div>
-                    {/* Render the children (protected content) */}
                     {children}
                 </div>
                 <div className="relative w-1/2">
@@ -68,8 +60,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         );
     }
 
-    // If not authenticated, don't render anything while redirecting to login
     return <Spinner />;
-} 
-
- 
+}

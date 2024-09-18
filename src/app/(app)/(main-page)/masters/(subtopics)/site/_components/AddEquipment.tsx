@@ -9,9 +9,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentDetailsSchema = object({
-   site: string().nonempty('Site is required'),
+  site: string().nonempty('Site is required'),
   area: string().nonempty('Area is required'),
   status: z.string().nonempty('Status is required')
 });
@@ -24,12 +25,32 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const [areaOptions, setAreaOptions] = useState<any[]>([]); // State to hold the area options
+  const { addRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
+    defaultValues: {
+      site: '',  // Default values can be set as empty or pre-populated
+      area: '',
+      status: ''
+    },
   });
 
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+
+  // Fetch areas and set them to state
+  useEffect(() => {
+    const fetchAreas = async () => {
+      const data = await getAllSingleSubtopic("area"); // Fetch the areas
+      if (data) {
+        console.log("arfe",data);
+         
+        setAreaOptions(data); // Set the area options to the fetched data
+      }
+    };
+    fetchAreas();
+  }, [getAllSingleSubtopic]); // Runs once on component mount
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -37,11 +58,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await addRecord(values);  // Assuming you're adding a new record
     setLoading(false);
+    onClose();
   };
 
   return (
@@ -63,8 +85,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
                   
-                  
-
+                  {/* Site Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <div>
@@ -75,16 +96,48 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     </div>
                   </div>
 
+                  {/* Area Field with dynamic dropdown */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="area" className="mt-3">Area</Label>
                     <div>
-                      <Input id="area" {...methods.register('area')} />
+                     <Controller
+  name="area"
+  control={control}
+  render={({ field }) => (
+    <Select
+      onValueChange={(value) => {
+        // `value` will be the `id` of the selected area
+        field.onChange(value); // Pass the `id` to the field's `onChange` method
+      }}
+      value={field.value}
+    >
+      <SelectTrigger id="area">
+        <SelectValue placeholder="Select area" />
+      </SelectTrigger>
+      <SelectContent>
+        {areaOptions?.length > 0 ? (
+          areaOptions?.map((area: any, index: number) => (
+            <SelectItem key={index} value={""+area?.id}>
+              {area?.thumbnail}
+            </SelectItem>
+          ))
+        ) : (
+          <SelectItem disabled value="No areas available">
+            No areas available
+          </SelectItem>
+        )}
+      </SelectContent>
+    </Select>
+  )}
+/>
+
                       {errors.area && (
                         <p className="text-red-500 mt-1">{errors.area.message}</p>
                       )}
                     </div>
                   </div>
 
+                  {/* Status Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
                     <Label htmlFor="status" className="mt-3">Status</Label>
                     <div>
@@ -97,8 +150,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
@@ -110,6 +163,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                 </div>
 
+                {/* Buttons */}
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

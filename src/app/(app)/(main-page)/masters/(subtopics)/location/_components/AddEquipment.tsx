@@ -9,11 +9,26 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
+// Define TypeScript interfaces for type safety
+export interface Site {
+  id: number;
+  site: string; // Adjust based on your site object structure
+  area:Area
+}
+
+export interface Area {
+  id: number;
+  
+  thumbnail: string; // Adjust based on your area object structure
+}
+
+// Define the Zod schema with validation
 const equipmentDetailsSchema = object({
   location: string().nonempty('Location is required'),
   site: string().nonempty('Site is required'),
-  area: string().nonempty('Area is required'),
+  // area: string().nonempty('Area is required'),
   status: z.string().nonempty('Status is required')
 });
 
@@ -25,24 +40,101 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const [siteOptions, setSiteOptions] = useState<Site[]>([]); // State for site options
+  const [areaOptions, setAreaOptions] = useState<Area[]>([]); // State for area options
+  const [isFetchingAreas, setIsFetchingAreas] = useState(false); // Loading state for areas
+  const { addRecord, getAllSingleSubtopic } = useSubtopic(); // Ensure getAreasBySite is implemented
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
+    defaultValues: {
+      location: '',
+      site: '',
+      // area: '',
+      status: ''
+    },
   });
 
-  const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const { reset, handleSubmit, control, watch, setValue, formState: { isSubmitSuccessful, errors } } = methods;
 
+  const selectedSite = watch('site'); // Watch the 'site' field for changes
+  console.log("Selected Site ID:", selectedSite);
+
+  // Fetch site options on component mount
+  useEffect(() => {
+    const fetchSites = async () => {
+      try {
+        const data = await getAllSingleSubtopic("site"); // Fetch sites
+        if (data) {
+          console.log("Fetched Sites:", data);
+          setSiteOptions(data);
+        }
+      } catch (error) {
+        console.error("Error fetching sites:", error);
+        // Optionally, handle the error (e.g., show a notification)
+      }
+    };
+    fetchSites();
+  }, [getAllSingleSubtopic]);
+
+  useEffect(() => {
+    const fetchAreas = async () => {
+      if (!selectedSite) {
+        setAreaOptions([]); // Reset areas if no site is selected
+        return;
+      }
+      setIsFetchingAreas(true);
+      try {
+        const data = await getAllSingleSubtopic('area');
+  
+        if (data && Array.isArray(data)) {
+          const filteredAreas = data.filter((area: Area) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
+
+           
+          setAreaOptions(filteredAreas);
+        } else {
+          console.warn(`No areas found for Site ID: ${selectedSite}`);
+          setAreaOptions([]);
+        }
+      } catch (error) {
+        console.error("Error fetching areas:", error);
+        setAreaOptions([]);
+        // Optionally, handle the error (e.g., show a notification)
+      } finally {
+        setIsFetchingAreas(false);
+      }
+    };
+    fetchAreas();
+  }, [getAllSingleSubtopic, selectedSite,siteOptions]);
+  
+
+  // Reset area field when the selected site changes
+  useEffect(() => {
+    setValue('area', '');
+  }, [selectedSite, setValue]);
+
+  // Reset form on successful submission
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
+      setAreaOptions([]); // Optionally, reset areas after submission
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
+    console.log("------------------------------------------------------");
+    
     setLoading(true);
-    console.log(values);
-    // Handle form submission logic here
-    setLoading(false);
+    console.log("Form Values:", values);
+    try {
+      await addRecord(values); // Add new record
+    } catch (error) {
+      console.error("Error adding record:", error);
+      // Optionally, handle the error (e.g., show a notification)
+    } finally {
+      setLoading(false);
+      onClose();
+    }
   };
 
   return (
@@ -63,9 +155,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-                  
-                   
 
+                  {/* Location Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="location" className="mt-3">Location</Label>
                     <div>
@@ -76,26 +167,90 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     </div>
                   </div>
 
+                  {/* Site Field with dynamic dropdown */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <div>
-                      <Input id="site" {...methods.register('site')} />
+                      <Controller
+                        name="site"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            onValueChange={(value) => {
+                              field.onChange(value); // Update form state with selected value
+                            }}
+                            value={field.value}
+                          >
+                            <SelectTrigger id="site">
+                              <SelectValue placeholder="Select site" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {siteOptions.length > 0 ? (
+                                siteOptions.map((site: Site) => (
+                                  <SelectItem key={site.id} value={String(site.id)}>
+                                    {site.site} {/* Adjust based on your site object structure */}
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem disabled value="No sites available">
+                                  No sites available
+                                </SelectItem>
+                              )}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                       {errors.site && (
                         <p className="text-red-500 mt-1">{errors.site.message}</p>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  {/* Area Field with dynamic dropdown based on selected site */}
+                  {/* <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="area" className="mt-3">Area</Label>
                     <div>
-                      <Input id="area" {...methods.register('area')} />
+                      <Controller
+                        name="area"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                            }}
+                            value={field.value}
+                            disabled={!selectedSite || isFetchingAreas}  
+                          >
+                            <SelectTrigger id="area">
+                              <SelectValue placeholder={isFetchingAreas ? "Loading areas..." : "Select area"} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {isFetchingAreas ? (
+                                <SelectItem value="loading" disabled>
+                                  Loading...
+                                </SelectItem>
+                              ) : areaOptions.length > 0 ? (
+                                areaOptions.map((filteredArea: Area) => (
+                                  <SelectItem key={filteredArea.id} value={String(filteredArea.id)}>
+                                    {filteredArea.thumbnail}  
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem disabled value="No areas available">
+                                  No areas available
+                                </SelectItem>
+                              )}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                       {errors.area && (
                         <p className="text-red-500 mt-1">{errors.area.message}</p>
                       )}
                     </div>
-                  </div>
+                  </div> */}
 
+                  {/* Status Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
                     <Label htmlFor="status" className="mt-3">Status</Label>
                     <div>
@@ -108,8 +263,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
@@ -121,6 +276,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                 </div>
 
+                {/* Buttons */}
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

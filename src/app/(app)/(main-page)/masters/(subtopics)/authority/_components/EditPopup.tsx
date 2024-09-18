@@ -5,42 +5,66 @@ import { z, object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const authorityDetailsSchema = object({
   authority: z.string().nonempty('Authority is required'),
   designation: z.string().nonempty('Designation is required'),
-  status: z.string().nonempty('Status is required')});
+  status: z.string().nonempty('Status is required'),
+});
 
-type AuthorityDetailsInput = TypeOf<typeof authorityDetailsSchema>;
+type AuthorityDetailsSchemaType = TypeOf<typeof authorityDetailsSchema>;
 
 interface AuthorityDetailsFormProps {
   onClose: () => void;
+  id: number;
 }
 
-export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormProps) {
+export default function AuthorityDetailsForm({ onClose, id }: AuthorityDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const { updateRecord, findRecordById } = useSubtopic();
 
-  const methods = useForm<AuthorityDetailsInput>({
+  // Get existing data synchronously
+  const data = findRecordById(id);
+
+  const methods = useForm<AuthorityDetailsSchemaType>({
     resolver: zodResolver(authorityDetailsSchema),
+    defaultValues: {
+      authority: data?.authority || '',
+      designation: data?.designation || '',
+      status: data?.status || '',
+    },
   });
 
-  const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const {
+    reset,
+    handleSubmit,
+    control,
+    formState: { isSubmitSuccessful, errors },
+  } = methods;
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
+      onClose();
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, reset, onClose]);
 
-  const onSubmitHandler: SubmitHandler<AuthorityDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<AuthorityDetailsSchemaType> = async (values) => {
     setLoading(true);
-    console.log(values);
-    // Handle form submission logic here
+    await updateRecord(id, values);
     setLoading(false);
+    onClose(); // Close the form after saving
   };
 
   return (
@@ -50,7 +74,11 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
     >
-     
+      <Card className="w-full border-0 p-0 hover:bg-white">
+        <CardHeader>
+          <CardTitle className="text-md">Authority Details</CardTitle>
+        </CardHeader>
+        <CardContent>
           <FormProvider {...methods}>
             <form
               className="space-y-4"
@@ -58,11 +86,10 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
               autoComplete="off"
               onSubmit={handleSubmit(onSubmitHandler)}
             >
-              <div className="space-y-4 pt-10">
-                <div className="grid gap-4 grid-cols-1">
-
-                  <div className="grid grid-cols-[150px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="authority" className="mt-3">Authority</Label>
+              <div className="space-y-4">
+                <div className="grid gap-4">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <Label htmlFor="authority">Authority</Label>
                     <div>
                       <Input id="authority" {...methods.register('authority')} />
                       {errors.authority && (
@@ -71,8 +98,8 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[150px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="designation" className="mt-3">Designation</Label>
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <Label htmlFor="designation">Designation</Label>
                     <div>
                       <Input id="designation" {...methods.register('designation')} />
                       {errors.designation && (
@@ -81,8 +108,8 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[150px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="status" className="mt-3">Status</Label>
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <Label htmlFor="status">Status</Label>
                     <div>
                       <Controller
                         name="status"
@@ -93,8 +120,8 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
@@ -104,7 +131,6 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
                       )}
                     </div>
                   </div>
-
                 </div>
 
                 <div className="flex justify-end gap-4">
@@ -118,7 +144,8 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
               </div>
             </form>
           </FormProvider>
-        
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }

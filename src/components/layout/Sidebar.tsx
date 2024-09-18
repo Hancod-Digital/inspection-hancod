@@ -329,8 +329,7 @@ function SidebarItems({ options, className, currentActiveDiv, setCurrentActiveDi
 
                         if (hasSubtopics) {
                             toggleExpanded(opt.identifier || '');
-                        }
-                        console.log("setting current active div", opt.identifier);
+                        } 
                         if (opt.identifier != "transactions" && opt.identifier != "masters") {
                             setCurrentActiveDiv(opt.identifier!)
                             setLoading(true);
@@ -393,8 +392,7 @@ function SidebarItems({ options, className, currentActiveDiv, setCurrentActiveDi
                                             <Button
                                                 onClick={() => {
                                                     setLoading(true);
-                                                    console.log("settting active div", opt.identifier!);
-                                                    setTimeout(() => {
+                                                     setTimeout(() => {
                                                         setLoading(false);
                                                     }, 500);
                                                     return setCurrentActiveDiv(opt.identifier!)

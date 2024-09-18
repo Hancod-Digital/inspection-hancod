@@ -12,43 +12,11 @@ import {
 import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import EditPopup from './EditPopup';
-
-interface EquipmentData {
-    slNo: number;
-    equipmentID: string;
-    title: string;
-    equipmentType: string;
-    lastThroughDate: string;
-    nextThroughDate: string;
-    lastTestDate: string;
-    status: string;
-}
-
-const equipmentData: EquipmentData[] = [
-    {
-        slNo: 1,
-        equipmentID: 'K 3527',
-        title: 'SWIVEL LOAD RING',
-        equipmentType: 'Lifting Gear',
-        lastThroughDate: '05-08-2023',
-        nextThroughDate: '05-08-2023',
-        lastTestDate: '05-08-2023',
-        status: 'Active'
-    },
-    {
-        slNo: 2,
-        equipmentID: 'K 3527',
-        title: 'SWIVEL LOAD RING',
-        equipmentType: 'Lifting Gear',
-        lastThroughDate: '05-08-2023',
-        nextThroughDate: '05-08-2023',
-        lastTestDate: '05-08-2023',
-        status: 'Active'
-    }
-];
+import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function Component() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
+    const { data, isLoading, error } = useSubtopic();
 
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
@@ -62,7 +30,7 @@ export default function Component() {
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
             <Table className="w-full">
                 <TableHeader>
-                    <TableRow className="w-full">
+                    <TableRow>
                         <TableHead>Sl. No.</TableHead>
                         <TableHead className="py-4">Equipment ID</TableHead>
                         <TableHead className="py-4">Title</TableHead>
@@ -75,17 +43,17 @@ export default function Component() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {equipmentData.map((item) => (
-                        <React.Fragment key={item.slNo}>
-                            <TableRow className="w-full">
-                                <TableCell className="py-4">{item.slNo}</TableCell>
-                                <TableCell className="py-4">{item.equipmentID}</TableCell>
-                                <TableCell className="py-4">{item.title}</TableCell>
-                                <TableCell className="py-4">{item.equipmentType}</TableCell>
-                                <TableCell className="py-4">{item.lastThroughDate}</TableCell>
-                                <TableCell className="py-4">{item.nextThroughDate}</TableCell>
-                                <TableCell className="py-4">{item.lastTestDate}</TableCell>
-                                <TableCell className="py-4">{item.status}</TableCell>
+                    {data?.map((item, idx) => (
+                        <React.Fragment key={idx + 1}>
+                            <TableRow>
+                                <TableCell className="py-4">{idx + 1}</TableCell>
+                                <TableCell className="py-4">{item?.equipmentID}</TableCell>
+                                <TableCell className="py-4">{item?.title}</TableCell>
+                                <TableCell className="py-4">{item?.equipmentType}</TableCell>
+                                <TableCell className="py-4">{item?.lastThroughDate}</TableCell>
+                                <TableCell className="py-4">{item?.nextThroughDate}</TableCell>
+                                <TableCell className="py-4">{item?.lastTestDate}</TableCell>
+                                <TableCell className="py-4">{item?.status}</TableCell>
                                 <TableCell className="py-4">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
@@ -94,14 +62,14 @@ export default function Component() {
                                             </button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => handleEditClick(item.slNo)}>Edit</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleEditClick(idx + 1)}>Edit</DropdownMenuItem>
                                             <DropdownMenuItem>Delete</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>
                             </TableRow>
                             <AnimatePresence>
-                                {editingRow === item.slNo && (
+                                {editingRow === idx + 1 && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
@@ -110,7 +78,7 @@ export default function Component() {
                                     >
                                         <TableCell colSpan={9}>
                                             <div className="overflow-hidden">
-                                                <EditPopup onClose={handleCloseEdit} />
+                                                <EditPopup onClose={handleCloseEdit} id={item.id} />
                                             </div>
                                         </TableCell>
                                     </motion.tr>

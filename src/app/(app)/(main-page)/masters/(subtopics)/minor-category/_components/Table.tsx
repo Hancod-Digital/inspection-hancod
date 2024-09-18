@@ -12,51 +12,14 @@ import {
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
-
-interface EquipmentData {
-    slNo: number;
-    minorCategory: string;
-    majorCategory: string;
-    standard: string;
-    status: string;
-}
-
-const equipmentData: EquipmentData[] = [
-    {
-        slNo: 1,
-        minorCategory: 'Suspended Baskets',
-        majorCategory: 'Man Basket',
-        standard: 'BS EN 14502-1:2010',
-        status: 'Active',
-    },
-    {
-        slNo: 2,
-        minorCategory: 'Suspended Baskets',
-        majorCategory: 'Man Basket',
-        standard: 'BS EN 14502-1:2010',
-        status: 'Active',
-    },
-    {
-        slNo: 3,
-        minorCategory: 'Suspended Baskets',
-        majorCategory: 'Man Basket',
-        standard: 'BS EN 14502-1:2010',
-        status: 'Active',
-    },
-    {
-        slNo: 4,
-        minorCategory: 'Suspended Baskets',
-        majorCategory: 'Man Basket',
-        standard: 'BS EN 14502-1:2010',
-        status: 'Active',
-    },
-];
+import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
+    const { data, isLoading, error } = useSubtopic();
 
-    const handleEditClick = (slNo: number) => {
-        setEditingRow(slNo === editingRow ? null : slNo);
+    const handleEditClick = (idx: number) => {
+        setEditingRow(idx === editingRow ? null : idx);
     };
 
     const handleCloseEdit = () => {
@@ -65,57 +28,63 @@ export default function EquipmentTable() {
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            <Table className="w-full">
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="py-4">Sl. No.</TableHead>
-                        <TableHead className="py-4">Minor Category</TableHead>
-                        <TableHead className="py-4">Major Category</TableHead>
-                        <TableHead className="py-4">Standard</TableHead>
-                        <TableHead className="py-4">Status</TableHead>
-                        <TableHead className="py-4"></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {equipmentData.map((item) => (
-                        <React.Fragment key={item.slNo}>
-                            <TableRow>
-                                <TableCell className="py-4">{item.slNo}</TableCell>
-                                <TableCell className="py-4">{item.minorCategory}</TableCell>
-                                <TableCell className="py-4">{item.majorCategory}</TableCell>
-                                <TableCell className="py-4">{item.standard}</TableCell>
-                                <TableCell className="py-4">{item.status}</TableCell>
-                                <TableCell className="py-4">
-                                    <div className="flex space-x-2">
-                                        <button onClick={() => handleEditClick(item.slNo)} className="text-red-500">
-                                            <EditIcon />
-                                        </button>
-                                        <button className="text-red-500">
-                                            <DeleteIcon />
-                                        </button>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                            <AnimatePresence>
-                                {editingRow === item.slNo && (
-                                    <motion.tr
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <TableCell colSpan={6}>
-                                            <div className="overflow-hidden">
-                                                <EditPopup onClose={handleCloseEdit} />
-                                            </div>
-                                        </TableCell>
-                                    </motion.tr>
-                                )}
-                            </AnimatePresence>
-                        </React.Fragment>
-                    ))}
-                </TableBody>
-            </Table>
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : error ? (
+                <div>Error loading data</div>
+            ) : (
+                <Table className="w-full">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="py-4">Sl. No.</TableHead>
+                            <TableHead className="py-4">Minor Category</TableHead>
+                            <TableHead className="py-4">Major Category</TableHead>
+                            <TableHead className="py-4">Standard</TableHead>
+                            <TableHead className="py-4">Status</TableHead>
+                            <TableHead className="py-4">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {data?.map((item, idx) => (
+                            <React.Fragment key={idx + 1}>
+                                <TableRow>
+                                    <TableCell className="py-4">{idx + 1}</TableCell>
+                                    <TableCell className="py-4">{item.minorCategory}</TableCell>
+                                    <TableCell className="py-4">{item.majorCategory}</TableCell>
+                                    <TableCell className="py-4">{item.standard}</TableCell>
+                                    <TableCell className="py-4">{item.status}</TableCell>
+                                    <TableCell className="py-4">
+                                        <div className="flex space-x-2">
+                                            <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
+                                                <EditIcon />
+                                            </button>
+                                            <button className="text-red-500">
+                                                <DeleteIcon />
+                                            </button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                                <AnimatePresence>
+                                    {editingRow === idx + 1 && (
+                                        <motion.tr
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <TableCell colSpan={6}>
+                                                <div className="overflow-hidden">
+                                                    <EditPopup onClose={handleCloseEdit} id={item.id} />
+                                                </div>
+                                            </TableCell>
+                                        </motion.tr>
+                                    )}
+                                </AnimatePresence>
+                            </React.Fragment>
+                        ))}
+                    </TableBody>
+                </Table>
+            )}
         </div>
     );
 }

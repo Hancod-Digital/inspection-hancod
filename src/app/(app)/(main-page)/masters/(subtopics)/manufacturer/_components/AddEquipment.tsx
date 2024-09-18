@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const manufacturerDetailsSchema = object({
  
@@ -25,7 +26,7 @@ interface ManufacturerDetailsFormProps {
 
 export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const { addRecord } = useSubtopic();
   const methods = useForm<ManufacturerDetailsInput>({
     resolver: zodResolver(manufacturerDetailsSchema),
   });
@@ -38,11 +39,12 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<ManufacturerDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<ManufacturerDetailsInput> = async(values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await addRecord(values)
     setLoading(false);
+    onClose()
   };
 
   return (
@@ -98,8 +100,8 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

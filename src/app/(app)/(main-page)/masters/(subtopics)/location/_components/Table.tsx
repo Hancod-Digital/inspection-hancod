@@ -12,57 +12,24 @@ import {
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
-
-interface EquipmentData {
-    slNo: number;
-    location: string;
-    site: string;
-    area: string;
-    status: string;
-}
-
-const equipmentData: EquipmentData[] = [
-    {
-        slNo: 1,
-        location: 'RAS LAFFAN',
-        site: 'GDI RIG WEST TUCANA',
-        area: 'OFFSHORE',
-        status: 'Active',
-    },
-    {
-        slNo: 2,
-        location: 'RAS LAFFAN',
-        site: 'RGA OFFSHORE',
-        area: 'OFFSHORE',
-        status: 'Active',
-    },
-    {
-        slNo: 3,
-        location: 'RAS LAFFAN',
-        site: 'RIG AL KHOR',
-        area: 'OFFSHORE',
-        status: 'Active',
-    },
-    {
-        slNo: 4,
-        location: 'RAS LAFFAN',
-        site: 'JV-1 RIG LOVANDA',
-        area: 'OFFSHORE',
-        status: 'Active',
-    },
-];
+import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-
+    const { FetchLocationDetails } = useSubtopic(); // Assuming this is a hook from your context
+ const {data,error} =  FetchLocationDetails()
+    // Call the hook directly at the top level of the component
+     console.log(data,"loko",error);
+      
     const handleEditClick = (slNo: number) => {
-        setEditingRow(slNo === editingRow ? null : slNo);
+        setEditingRow(slNo === editingRow ? null : slNo); 
     };
 
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
 
+    
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
             <Table className="w-full">
@@ -73,21 +40,21 @@ export default function EquipmentTable() {
                         <TableHead className="py-4">Site</TableHead>
                         <TableHead className="py-4">Area</TableHead>
                         <TableHead className="py-4">Status</TableHead>
-                        <TableHead className="py-4"></TableHead>
+                        <TableHead className="py-4">Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {equipmentData.map((item) => (
-                        <React.Fragment key={item.slNo}>
+                    {data?.map((item: { id: number; location: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; status: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; site: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; area: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; }, idx: number) => (
+                        <React.Fragment key={item.id}> 
                             <TableRow>
-                                <TableCell className="py-4">{item.slNo}</TableCell>
-                                <TableCell className="py-4">{item.location}</TableCell>
-                                <TableCell className="py-4">{item.site}</TableCell>
-                                <TableCell className="py-4">{item.area}</TableCell>
-                                <TableCell className="py-4">{item.status}</TableCell>
+                                <TableCell className="py-4">{idx + 1}</TableCell>
+                                <TableCell className="py-4">{item?.location.name}</TableCell>
+                                <TableCell className="py-4">{item?.site.name}</TableCell>
+                                <TableCell className="py-4">{item?.area.name}</TableCell>
+                                <TableCell className="py-4">{item?.location.status}</TableCell>
                                 <TableCell className="py-4">
                                     <div className="flex space-x-2">
-                                        <button onClick={() => handleEditClick(item.slNo)} className="text-red-500">
+                                        <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
                                             <EditIcon />
                                         </button>
                                         <button className="text-red-500">
@@ -97,7 +64,7 @@ export default function EquipmentTable() {
                                 </TableCell>
                             </TableRow>
                             <AnimatePresence>
-                                {editingRow === item.slNo && (
+                                {editingRow === idx + 1 && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
@@ -106,7 +73,7 @@ export default function EquipmentTable() {
                                     >
                                         <TableCell colSpan={6}>
                                             <div className="overflow-hidden">
-                                                <EditPopup onClose={handleCloseEdit} />
+                                                <EditPopup onClose={handleCloseEdit} id={item.id!} />
                                             </div>
                                         </TableCell>
                                     </motion.tr>

@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{ fontFamily: "roboto" }} className={inter.className}>
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider  client={queryClient}>
           <ReduxProvider>
           <LoadingProvider>
             {children}  </LoadingProvider>

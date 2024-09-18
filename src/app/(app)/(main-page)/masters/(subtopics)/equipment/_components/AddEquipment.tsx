@@ -44,6 +44,7 @@ import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
@@ -54,6 +55,7 @@ interface EditPopupProps {
 
 export default function EquipmentDetailsForm({ onClose }:{onClose: () => void})  {
   const [loading, setLoading] = useState(false);
+  const { addRecord } = useSubtopic();
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -74,11 +76,12 @@ export default function EquipmentDetailsForm({ onClose }:{onClose: () => void}) 
     }
   }, [isSubmitSuccessful]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true)
     console.log(values);
-    // Handle form submission logic here
-    setLoading(false)
+    await addRecord(values)
+    setLoading(false) 
+    onClose()
   };
 
   return (

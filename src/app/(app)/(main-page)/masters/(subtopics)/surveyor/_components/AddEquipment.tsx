@@ -18,6 +18,7 @@ const surveyorDetailsSchema = object({
   user: z.string().nonempty('User is required'),
 });
 import SurveyorCompetencyPopup from './Popup'
+import { useSubtopic } from '@/context/SubtopicContext';
 
 type SurveyorDetailsInput = TypeOf<typeof surveyorDetailsSchema>;
 
@@ -28,6 +29,7 @@ interface SurveyorDetailsFormProps {
 export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const { addRecord } = useSubtopic();
   const methods = useForm<SurveyorDetailsInput>({
     resolver: zodResolver(surveyorDetailsSchema),
   });
@@ -40,10 +42,10 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<SurveyorDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<SurveyorDetailsInput> = async(values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await addRecord(values)
     setLoading(false);
   };
 
@@ -120,8 +122,8 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

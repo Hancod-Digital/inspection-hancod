@@ -9,11 +9,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentDetailsSchema = object({
-  slNo: z.string().nonempty('Sl. No. is required'),
-  majorCategory: string().nonempty('Major Category is required'),
-  equipmentType: string().nonempty('Equipment Type is required'),
+  major_category: string().nonempty('Major Category is required'),
+  equipment_type: string().nonempty('Equipment Type is required'),
   status: z.string().nonempty('Status is required')
 });
 
@@ -25,7 +25,9 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-
+  const [data, setData] = useState<any[]>([]); // State to hold fetched data
+  const { addRecord, getAllSingleSubtopic } = useSubtopic();
+  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
@@ -33,16 +35,28 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
 
   useEffect(() => {
+    const fetchSubtopics = async () => {
+      const subtopics = await getAllSingleSubtopic('equipment_type');
+      console.log(subtopics,"sjdsidjsdjsldjlsdksjmdk");
+
+      setData(subtopics || []); // Store the fetched data in state
+    };
+
+    fetchSubtopics(); // Call the function to fetch data when component mounts
+  }, [getAllSingleSubtopic]);
+
+  useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await addRecord(values);
     setLoading(false);
+    onClose();
   };
 
   return (
@@ -63,33 +77,39 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="slNo" className="mt-3">Sl. No.</Label>
+                    <Label htmlFor="major_category" className="mt-3">Major Category</Label>
                     <div>
-                      <Input id="slNo" {...methods.register('slNo')} />
-                      {errors.slNo && (
-                        <p className="text-red-500 mt-1">{errors.slNo.message}</p>
+                      <Input id="major_category" {...methods.register('major_category')} />
+                      {errors.major_category && (
+                        <p className="text-red-500 mt-1">{errors.major_category.message}</p>
                       )}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="majorCategory" className="mt-3">Major Category</Label>
+                    <Label htmlFor="equipment_type" className="mt-3">Equipment Type</Label>
                     <div>
-                      <Input id="majorCategory" {...methods.register('majorCategory')} />
-                      {errors.majorCategory && (
-                        <p className="text-red-500 mt-1">{errors.majorCategory.message}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="equipmentType" className="mt-3">Equipment Type</Label>
-                    <div>
-                      <Input id="equipmentType" {...methods.register('equipmentType')} />
-                      {errors.equipmentType && (
-                        <p className="text-red-500 mt-1">{errors.equipmentType.message}</p>
+                      <Controller
+                        name="equipment_type"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="equipment_type">
+                              <SelectValue placeholder="Select equipment type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {data?.map((item) => (
+                                <SelectItem key={item.id} value={""+item.id}>
+                                  {item.equipment_type}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.equipment_type && (
+                        <p className="text-red-500 mt-1">{errors.equipment_type.message}</p>
                       )}
                     </div>
                   </div>
@@ -106,8 +126,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

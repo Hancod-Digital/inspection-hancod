@@ -13,35 +13,39 @@ import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { useSubtopic } from '@/context/SubtopicContext';
 
-const ownerDetailsSchema = z.object({ 
+const ownerDetailsSchema = z.object({
   owner: z.string().nonempty('Owner is required'),
   address: z.string().nonempty('Address is required'),
   code: z.string().nonempty('Code is required'),
-  
   status: z.string().nonempty('Status is required'),
-
-  qpFooter: z.string().nonempty("Description is required"),
-  nonQpFooter: z.string().nonempty("Description is required"),
-  clientSpecification: z.string().nonempty("Description is required"),
-
-
+  qpFooter: z.string().nonempty('Qp Footer is required'),
+  nonQpFooter: z.string().nonempty('Non-Qp Footer is required'),
+  clientSpecification: z.string().nonempty('Client Specification is required'),
 });
 
 type OwnerDetailsInput = z.infer<typeof ownerDetailsSchema>;
 
 interface OwnerDetailsFormProps {
   onClose: () => void;
+  id: number;
 }
 
-export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
+export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const { updateRecord, findRecordById } = useSubtopic();
 
   const methods = useForm<OwnerDetailsInput>({
     resolver: zodResolver(ownerDetailsSchema),
   });
 
-  const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const {
+    reset,
+    handleSubmit,
+    control,
+    formState: { isSubmitSuccessful, errors },
+  } = methods;
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -49,11 +53,11 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<OwnerDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<OwnerDetailsInput> = async (values) => {
     setLoading(true);
-    console.log(values);
-    // Handle form submission logic here
+    await updateRecord(id, values); // Perform form submission logic
     setLoading(false);
+    onClose(); // Close form after save
   };
 
   return (
@@ -75,14 +79,12 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
 
-                  
-
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="owner" className="mt-3">Owner</Label>
                     <div>
                       <Input id="owner" {...methods.register('owner')} />
                       {errors.owner && (
-                        <p className="text-red-500 mt-1">{errors.owner?.message}</p>
+                        <p className="text-red-500 mt-1">{errors.owner.message}</p>
                       )}
                     </div>
                   </div>
@@ -92,7 +94,7 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
                     <div>
                       <Input id="address" {...methods.register('address')} />
                       {errors.address && (
-                        <p className="text-red-500 mt-1">{errors.address?.message}</p>
+                        <p className="text-red-500 mt-1">{errors.address.message}</p>
                       )}
                     </div>
                   </div>
@@ -102,12 +104,12 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
                     <div>
                       <Input id="code" {...methods.register('code')} />
                       {errors.code && (
-                        <p className="text-red-500 mt-1">{errors.code?.message}</p>
+                        <p className="text-red-500 mt-1">{errors.code.message}</p>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="status" className="mt-3">Status</Label>
                     <div>
                       <Controller
@@ -119,90 +121,87 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
                       />
                       {errors.status && (
-                        <p className="text-red-500 mt-1">{errors.status?.message}</p>
+                        <p className="text-red-500 mt-1">{errors.status.message}</p>
                       )}
                     </div>
                   </div>
+
+                  {/* ReactQuill Editors */}
                   <div className="grid gap-4 grid-cols-1 pt-5">
-                <div className="w-full ">
-                <Label htmlFor="qpFooter" >Qp Footer</Label>
-                <div>
-                <Controller
-                      name="qpFooter"
-                      control={control}
-                      render={({ field }) => (
-                        <ReactQuill
-                          theme="snow"
-                          className='mt-3'
-                          {...field}
+                    <div className="w-full">
+                      <Label htmlFor="qpFooter">Qp Footer</Label>
+                      <div>
+                        <Controller
+                          name="qpFooter"
+                          control={control}
+                          render={({ field }) => (
+                            <ReactQuill
+                              theme="snow"
+                              className="mt-3"
+                              {...field}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                    {errors.qpFooter && (
-                      <p className="text-red-500 text-[8px] mt-1">{errors.qpFooter.message}</p>
-                    )}
-                </div>
-              </div>
-              
-              
-              </div>
+                        {errors.qpFooter && (
+                          <p className="text-red-500 text-[8px] mt-1">{errors.qpFooter.message}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="grid gap-4 grid-cols-1 pt-5">
-                <div className="w-full ">
-                <Label htmlFor="nonQpFooter" >Non-Qp Footer</Label>
-                <div>
-                <Controller
-                      name="nonQpFooter"
-                      control={control}
-                      render={({ field }) => (
-                        <ReactQuill
-                          theme="snow"
-                          className='mt-3'
-                          {...field}
+                  <div className="grid gap-4 grid-cols-1 pt-5">
+                    <div className="w-full">
+                      <Label htmlFor="nonQpFooter">Non-Qp Footer</Label>
+                      <div>
+                        <Controller
+                          name="nonQpFooter"
+                          control={control}
+                          render={({ field }) => (
+                            <ReactQuill
+                              theme="snow"
+                              className="mt-3"
+                              {...field}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                    {errors.nonQpFooter && (
-                      <p className="text-red-500 text-[8px] mt-1">{errors.nonQpFooter.message}</p>
-                    )}
-                </div>
-              </div>
-              
-              
-              </div>     <div className="grid gap-4 grid-cols-1 pt-5">
-                <div className="w-full ">
-                <Label htmlFor="clientSpecification" >Client Specification</Label>
-                <div>
-                <Controller
-                      name="clientSpecification"
-                      control={control}
-                      render={({ field }) => (
-                        <ReactQuill
-                          theme="snow"
-                          className='mt-3'
-                          {...field}
+                        {errors.nonQpFooter && (
+                          <p className="text-red-500 text-[8px] mt-1">{errors.nonQpFooter.message}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 grid-cols-1 pt-5">
+                    <div className="w-full">
+                      <Label htmlFor="clientSpecification">Client Specification</Label>
+                      <div>
+                        <Controller
+                          name="clientSpecification"
+                          control={control}
+                          render={({ field }) => (
+                            <ReactQuill
+                              theme="snow"
+                              className="mt-3"
+                              {...field}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                    {errors.clientSpecification && (
-                      <p className="text-red-500 text-[8px] mt-1">{errors.clientSpecification.message}</p>
-                    )}
-                </div>
-              </div>
-              
-              
-              </div>
-
-
+                        {errors.clientSpecification && (
+                          <p className="text-red-500 text-[8px] mt-1">{errors.clientSpecification.message}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
+                {/* Action buttons */}
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

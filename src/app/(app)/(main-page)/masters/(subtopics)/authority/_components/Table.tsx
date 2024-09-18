@@ -11,34 +11,14 @@ import {
 } from "@/components/ui/table";
 import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
 
-interface AuthorityData {
-    slNo: number;
-    authority: string;
-    designation: string;
-    status: string;
-}
-
 import SurveyorDetailsForm from './EditPopup';
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
-
-const authorityData: AuthorityData[] = [
-    {
-        slNo: 1,
-        authority: 'Jerin Thomas',
-        designation: 'Authorized Signatory',
-        status: 'Active',
-    },
-    {
-        slNo: 2,
-        authority: 'Jerin Thomas',
-        designation: 'Authorized Signatory',
-        status: 'Active',
-    },
-];
+import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function AuthorityTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
+    const { data, isLoading, error } = useSubtopic();
 
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
@@ -52,42 +32,49 @@ export default function AuthorityTable() {
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
             <Table className="w-full">
                 <TableHeader>
-                    <TableRow className='flex justify-start'>
-                        <TableHead className="py-4 flex-[1]">Sl. No.</TableHead>
-                        <TableHead className="py-4 flex-[3]">Authority</TableHead>
-                        <TableHead className="py-4 flex-[3]">Designation</TableHead>
-                        <TableHead className="py-4 flex-[2]">Status</TableHead>
-                        <TableHead className="py-4 flex-[1]"></TableHead>
+                    <TableRow>
+                        <TableHead className="py-4">Sl. No.</TableHead>
+                        <TableHead className="py-4">Authority</TableHead>
+                        <TableHead className="py-4">Designation</TableHead>
+                        <TableHead className="py-4">Status</TableHead>
+                        <TableHead className="py-4">Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {authorityData.map((item) => (
-                        <React.Fragment key={item.slNo}>
-                            <TableRow className='flex'>
-                                <TableCell className="py-4 flex-[1]">{item.slNo}</TableCell>
-                                <TableCell className="py-4 flex-[3]">{item.authority}</TableCell>
-                                <TableCell className="py-4 flex-[3]">{item.designation}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item.status}</TableCell>
-                                <TableCell className="py-4 flex-[1]">
-                                    <div className="flex ">
-                                        <button onClick={() => handleEditClick(item.slNo)} className="text-red-500">
-                                            <EditIcon/>
+                    {data?.map((item, idx) => (
+                        <React.Fragment key={idx + 1}>
+                            <TableRow>
+                                <TableCell className="py-4">{idx + 1}</TableCell>
+                                <TableCell className="py-4">{item?.authority}</TableCell>
+                                <TableCell className="py-4">{item?.designation}</TableCell>
+                                <TableCell className="py-4">{item?.status}</TableCell>
+                                <TableCell className="py-4">
+                                    <div className="flex space-x-2">
+                                        <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
+                                            <EditIcon />
                                         </button>
                                         <button className="text-red-500">
-                                            <DeleteIcon/>
+                                            <DeleteIcon />
                                         </button>
                                     </div>
                                 </TableCell>
                             </TableRow>
-                            {editingRow === item.slNo && (
-                                <TableRow>
-                                    <TableCell colSpan={7} className="">
-                                        <AnimatePresence>
-                                            <SurveyorDetailsForm onClose={handleCloseEdit} />
-                                        </AnimatePresence>
-                                    </TableCell>
-                                </TableRow>
-                            )}
+                            <AnimatePresence>
+                                {editingRow === idx + 1 && (
+                                    <motion.tr
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <TableCell colSpan={5}>
+                                            <div className="overflow-hidden">
+                                                <SurveyorDetailsForm onClose={handleCloseEdit} id={item.id} />
+                                            </div>
+                                        </TableCell>
+                                    </motion.tr>
+                                )}
+                            </AnimatePresence>
                         </React.Fragment>
                     ))}
                 </TableBody>

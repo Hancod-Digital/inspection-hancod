@@ -18,15 +18,18 @@ const surveyorDetailsSchema = object({
   user: z.string().nonempty('User is required'),
 });
 import SurveyorCompetencyPopup from './Popup'
+import { useSubtopic } from '@/context/SubtopicContext';
 
 type SurveyorDetailsInput = TypeOf<typeof surveyorDetailsSchema>;
 
 interface SurveyorDetailsFormProps {
   onClose: () => void;
+  id: number
 }
 
-export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProps) {
+export default function SurveyorDetailsForm({ onClose,id }: SurveyorDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const { updateRecord, findRecordById } = useSubtopic();
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const methods = useForm<SurveyorDetailsInput>({
     resolver: zodResolver(surveyorDetailsSchema),
@@ -40,10 +43,10 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<SurveyorDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<SurveyorDetailsInput> = async(values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    await updateRecord(id,values)
     setLoading(false);
   };
 

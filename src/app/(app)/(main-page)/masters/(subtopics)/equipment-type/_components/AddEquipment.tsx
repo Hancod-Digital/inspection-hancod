@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentDetailsSchema = object({
   category: string().nonempty('Category is required'),
@@ -23,6 +24,7 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const { addRecord } = useSubtopic();
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -36,11 +38,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
-    setLoading(true);
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
+    setLoading(true)
     console.log(values);
-    // Handle form submission logic here
-    setLoading(false);
+    await addRecord(values)
+    setLoading(false) 
+    onClose()
   };
 
   return (
@@ -97,8 +100,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="swivel-hoist-ring">Swivel Hoist Ring</SelectItem>
-                              <SelectItem value="dumb-shutter">Dumb Shutter</SelectItem>
+                              <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                              <SelectItem value="INACTIVE">INACTIVE</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
@@ -114,7 +117,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10  hover:bg-secondary hover:border hover:border-primary hover:text-primary" type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

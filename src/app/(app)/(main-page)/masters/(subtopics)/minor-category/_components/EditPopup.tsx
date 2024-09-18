@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, z } from 'zod';
+import { object, string, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -9,41 +9,63 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
+// Update the schema with new fields
 const equipmentDetailsSchema = object({
   slNo: z.string().nonempty('Sl. No. is required'),
   minorCategory: z.string().nonempty('Minor Category is required'),
   majorCategory: z.string().nonempty('Major Category is required'),
   standard: z.string().nonempty('Standard is required'),
-  status: z.string().nonempty('Status is required')
+  status: z.string().nonempty('Status is required'),
 });
 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+type EquipmentDetailsInput = z.infer<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  id: number;
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({
+  onClose,
+  id,
+}: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const { updateRecord, findRecordById } = useSubtopic();
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
+    defaultValues: {
+      slNo: '',
+      minorCategory: '',
+      majorCategory: '',
+      standard: '',
+      status: '',
+    },
   });
 
-  const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const {
+    reset,
+    handleSubmit,
+    control,
+    formState: { isSubmitSuccessful, errors },
+  } = methods;
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
+      onClose();
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, reset, onClose]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     console.log(values);
-    // Handle form submission logic here
+    // Perform save operation (updateRecord logic can be added here)
+    await updateRecord(id, values);
     setLoading(false);
+    onClose(); // Close form after save
   };
 
   return (
@@ -64,7 +86,15 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
- 
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                    <Label htmlFor="slNo" className="mt-3">Sl. No.</Label>
+                    <div>
+                      <Input id="slNo" {...methods.register('slNo')} />
+                      {errors.slNo && (
+                        <p className="text-red-500 mt-1">{errors.slNo.message}</p>
+                      )}
+                    </div>
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="minorCategory" className="mt-3">Minor Category</Label>
@@ -108,8 +138,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

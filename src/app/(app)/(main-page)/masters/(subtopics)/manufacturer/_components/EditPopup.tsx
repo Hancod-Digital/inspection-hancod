@@ -5,43 +5,69 @@ import { object, string, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const manufacturerDetailsSchema = object({
   manufacturer: z.string().nonempty('Manufacturer is required'),
   address: z.string().nonempty('Address is required'),
-  status: z.string().nonempty('Status is required')
+  status: z.string().nonempty('Status is required'),
 });
 
 type ManufacturerDetailsInput = z.infer<typeof manufacturerDetailsSchema>;
 
 interface ManufacturerDetailsFormProps {
   onClose: () => void;
+  id: number;
 }
 
-export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetailsFormProps) {
+export default function ManufacturerDetailsForm({
+  onClose,
+  id,
+}: ManufacturerDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const { updateRecord, findRecordById } = useSubtopic();
+
+  // Get existing data synchronously
+  const data = findRecordById(id);
 
   const methods = useForm<ManufacturerDetailsInput>({
     resolver: zodResolver(manufacturerDetailsSchema),
+    defaultValues: {
+      manufacturer: data?.manufacturer || '',
+      address: data?.address || '',
+      status: data?.status || '',
+    },
   });
 
-  const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const {
+    reset,
+    handleSubmit,
+    control,
+    formState: { isSubmitSuccessful, errors },
+  } = methods;
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
+      onClose();
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, reset, onClose]);
 
-  const onSubmitHandler: SubmitHandler<ManufacturerDetailsInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<ManufacturerDetailsInput> = async (values) => {
     setLoading(true);
-    console.log(values);
-    // Handle form submission logic here
+    await updateRecord(id, values);
     setLoading(false);
+    onClose(); // Close the form after saving
   };
 
   return (
@@ -52,6 +78,9 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
       transition={{ duration: 0.3 }}
     >
       <Card className="w-full border-0 p-0 hover:bg-white">
+        <CardHeader>
+          <CardTitle className="text-md">Manufacturer Details</CardTitle>
+        </CardHeader>
         <CardContent>
           <FormProvider {...methods}>
             <form
@@ -60,13 +89,10 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
               autoComplete="off"
               onSubmit={handleSubmit(onSubmitHandler)}
             >
-              <div className="space-y-4 pt-10">
-                <div className="grid gap-4 grid-cols-1">
-
-                  
-
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
+              <div className="space-y-4">
+                <div className="grid gap-4">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <Label htmlFor="manufacturer">Manufacturer</Label>
                     <div>
                       <Input id="manufacturer" {...methods.register('manufacturer')} />
                       {errors.manufacturer && (
@@ -75,8 +101,8 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="address" className="mt-3">Address</Label>
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <Label htmlFor="address">Address</Label>
                     <div>
                       <Input id="address" {...methods.register('address')} />
                       {errors.address && (
@@ -85,8 +111,8 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
-                    <Label htmlFor="status" className="mt-3">Status</Label>
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <Label htmlFor="status">Status</Label>
                     <div>
                       <Controller
                         name="status"
@@ -97,8 +123,8 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

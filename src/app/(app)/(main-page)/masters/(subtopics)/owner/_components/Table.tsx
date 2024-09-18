@@ -11,40 +11,17 @@ import {
 } from "@/components/ui/table";
 import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
 
-interface OwnerData {
-    slNo: number;
-    owner: string;
-    address: string;
-    code: string;
-    status: string;
-}
-
 import OwnerDetailsForm from './EditPopup';
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
-
-const ownerData: OwnerData[] = [
-    {
-        slNo: 1,
-        owner: 'DOLPHIN ENERGY LIMITED',
-        address: 'Doha, Qatar',
-        code: '198',
-        status: 'Active',
-    },
-    {
-        slNo: 2,
-        owner: 'DOLPHIN ENERGY LIMITED',
-        address: 'Doha, Qatar',
-        code: '198',
-        status: 'Active',
-    }
-];
+import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function OwnerTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
+    const { data, isLoading, error } = useSubtopic();
 
-    const handleEditClick = (slNo: number) => {
-        setEditingRow(slNo === editingRow ? null : slNo);
+    const handleEditClick = (idx: number) => {
+        setEditingRow(idx === editingRow ? null : idx);
     };
 
     const handleCloseEdit = () => {
@@ -53,50 +30,63 @@ export default function OwnerTable() {
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            <Table className="w-full">
-                <TableHeader>
-                    <TableRow className='flex justify-start'>
-                        <TableHead className="py-4 flex-[1]">Sl. No.</TableHead>
-                        <TableHead className="py-4 flex-[3]">Owner</TableHead>
-                        <TableHead className="py-4 flex-[3]">Address</TableHead>
-                        <TableHead className="py-4 flex-[2]">Code</TableHead>
-                        <TableHead className="py-4 flex-[2]">Status</TableHead>
-                        <TableHead className="py-4 flex-[1]"></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {ownerData.map((item) => (
-                        <React.Fragment key={item.slNo}>
-                            <TableRow className='flex'>
-                                <TableCell className="py-4 flex-[1]">{item.slNo}</TableCell>
-                                <TableCell className="py-4 flex-[3]">{item.owner}</TableCell>
-                                <TableCell className="py-4 flex-[3]">{item.address}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item.code}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item.status}</TableCell>
-                                <TableCell className="py-4 flex-[1]">
-                                    <div className="flex space-x-2">
-                                        <button onClick={() => handleEditClick(item.slNo)} className="text-red-500">
-                                            <EditIcon/>
-                                        </button>
-                                        <button className="text-red-500">
-                                            <DeleteIcon/>
-                                        </button>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                            {editingRow === item.slNo && (
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : error ? (
+                <div>Error loading data</div>
+            ) : (
+                <Table className="w-full">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="py-4">Sl. No.</TableHead>
+                            <TableHead className="py-4">Owner</TableHead>
+                            <TableHead className="py-4">Address</TableHead>
+                            <TableHead className="py-4">Code</TableHead>
+                            <TableHead className="py-4">Status</TableHead>
+                            <TableHead className="py-4">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {data?.map((item, idx) => (
+                            <React.Fragment key={idx + 1}>
                                 <TableRow>
-                                    <TableCell colSpan={6} className="p-0">
-                                        <AnimatePresence>
-                                            <OwnerDetailsForm onClose={handleCloseEdit} />
-                                        </AnimatePresence>
+                                    <TableCell className="py-4">{idx + 1}</TableCell>
+                                    <TableCell className="py-4">{item.owner}</TableCell>
+                                    <TableCell className="py-4">{item.address}</TableCell>
+                                    <TableCell className="py-4">{item.code}</TableCell>
+                                    <TableCell className="py-4">{item.status}</TableCell>
+                                    <TableCell className="py-4">
+                                        <div className="flex space-x-2">
+                                            <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
+                                                <EditIcon />
+                                            </button>
+                                            <button className="text-red-500">
+                                                <DeleteIcon />
+                                            </button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
-                            )}
-                        </React.Fragment>
-                    ))}
-                </TableBody>
-            </Table>
+                                <AnimatePresence>
+                                    {editingRow === idx + 1 && (
+                                        <motion.tr
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <TableCell colSpan={6}>
+                                                <div className="overflow-hidden">
+                                                    <OwnerDetailsForm onClose={handleCloseEdit} id={item.id} />
+                                                </div>
+                                            </TableCell>
+                                        </motion.tr>
+                                    )}
+                                </AnimatePresence>
+                            </React.Fragment>
+                        ))}
+                    </TableBody>
+                </Table>
+            )}
         </div>
     );
 }

@@ -2,20 +2,15 @@ import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronDown } from "lucide-react";
 import { Menu, MenuItem } from '@/components/animated/DropDown';
-import { AuthService } from '@/services/api/auth-service';
+import { AuthService, fetchUserActiveStatus, fetchUserDetails } from '@/services/api/auth-service';
 import { makeApiCall } from '@/lib/apicaller';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Spinner from '@/components/animated/Spinner';
+import Link from 'next/link';
 
-// Fetch user active status function
-const fetchUserActiveStatus = async () => {
-    const service = new AuthService();
-    const response = await service.getActiveUser();
-     
-    return response.session?.user;
-};
+
 
 export default function Component() {
     const router = useRouter();
@@ -24,15 +19,16 @@ export default function Component() {
     // Using React Query to fetch user active status with object syntax (v5+)
     const { data: userDetails, isLoading, isError } = useQuery({
         queryKey: ['userDetails'],
-        queryFn: fetchUserActiveStatus,
+        queryFn: fetchUserDetails,
     });
-    console.log(isError);
+   
+    console.log(userDetails);
     
 
-    const userName = userDetails?.email?.split('@')[0] ;
+    const userName = userDetails?.name != "" ? userDetails?.name : userDetails?.email?.split('@')[0] ;
    
-    
-    const userEmail = userDetails?.email || "unknown@example.com";
+     
+    const userEmail = userDetails?.email;
     const fallbackAvatar = generateFallbackAvatar(userName);
 
     const handleLogout = () => {
@@ -74,7 +70,7 @@ export default function Component() {
                         setOpen={setOpen}
                         component={<ChevronDown className="h-4 w-4 text-gray-500" />}
                     >
-                        <a href="/profile"><MenuItem>Profile</MenuItem></a>
+                        <Link href="/profile"><MenuItem>Profile</MenuItem></Link>
                         <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
                 </div>
