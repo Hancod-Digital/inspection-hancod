@@ -5,7 +5,7 @@ import Header from './_components/Header'
 import AddForm from './_components/AddEquipment'
 import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
-const JobOrders = () => {
+const LiftingGearMulti = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
 
     const handleCloseAdd = () => {
@@ -28,8 +28,9 @@ const JobOrders = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-               Job Orders
-            </motion.h2>     
+               User Details
+            </motion.h2>
+            
             <AnimatePresence mode="wait">
                 {!isAdd && (
                     <motion.div
@@ -71,4 +72,4 @@ const JobOrders = () => {
     )
 }
 
-export default JobOrders
+export default LiftingGearMulti

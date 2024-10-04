@@ -22,9 +22,9 @@ const ownerDetailsSchema = z.object({
   
   status: z.string().nonempty('Status is required'),
 
-  qpFooter: z.string().nonempty("Description is required"),
-  nonQpFooter: z.string().nonempty("Description is required"),
-  clientSpecification: z.string().nonempty("Description is required"),
+  qp_footer: z.string().nonempty("Description is required"),
+  non_qp_footer: z.string().nonempty("Description is required"),
+  client_specification: z.string().nonempty("Description is required"),
 
 
 });
@@ -134,10 +134,10 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
                   </div>
                   <div className="grid gap-4 grid-cols-1 pt-5">
                 <div className="w-full ">
-                <Label htmlFor="qpFooter" >Qp Footer</Label>
+                <Label htmlFor="qp_footer" >Qp Footer</Label>
                 <div>
                 <Controller
-                      name="qpFooter"
+                      name="qp_footer"
                       control={control}
                       render={({ field }) => (
                         <ReactQuill
@@ -147,8 +147,8 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
                         />
                       )}
                     />
-                    {errors.qpFooter && (
-                      <p className="text-red-500 text-[8px] mt-1">{errors.qpFooter.message}</p>
+                    {errors.qp_footer && (
+                      <p className="text-red-500 text-[8px] mt-1">{errors.qp_footer.message}</p>
                     )}
                 </div>
               </div>
@@ -158,10 +158,10 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
 
               <div className="grid gap-4 grid-cols-1 pt-5">
                 <div className="w-full ">
-                <Label htmlFor="nonQpFooter" >Non-Qp Footer</Label>
+                <Label htmlFor="non_qp_footer" >Non-Qp Footer</Label>
                 <div>
                 <Controller
-                      name="nonQpFooter"
+                      name="non_qp_footer"
                       control={control}
                       render={({ field }) => (
                         <ReactQuill
@@ -171,8 +171,8 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
                         />
                       )}
                     />
-                    {errors.nonQpFooter && (
-                      <p className="text-red-500 text-[8px] mt-1">{errors.nonQpFooter.message}</p>
+                    {errors.non_qp_footer && (
+                      <p className="text-red-500 text-[8px] mt-1">{errors.non_qp_footer.message}</p>
                     )}
                 </div>
               </div>
@@ -180,10 +180,10 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
               
               </div>     <div className="grid gap-4 grid-cols-1 pt-5">
                 <div className="w-full ">
-                <Label htmlFor="clientSpecification" >Client Specification</Label>
+                <Label htmlFor="client_specification" >Client Specification</Label>
                 <div>
                 <Controller
-                      name="clientSpecification"
+                      name="client_specification"
                       control={control}
                       render={({ field }) => (
                         <ReactQuill
@@ -193,8 +193,8 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
                         />
                       )}
                     />
-                    {errors.clientSpecification && (
-                      <p className="text-red-500 text-[8px] mt-1">{errors.clientSpecification.message}</p>
+                    {errors.client_specification && (
+                      <p className="text-red-500 text-[8px] mt-1">{errors.client_specification.message}</p>
                     )}
                 </div>
               </div>

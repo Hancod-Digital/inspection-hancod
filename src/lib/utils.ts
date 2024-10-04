@@ -13,8 +13,25 @@ export function replaceHyphen(str: string) {
   }
 }
 
+export function getSubTopicOne(str: string) {
+  // Split the string by "/"
+  console.log(str);
+  
+  const parts = str.split('/');
+  
+  // Check if there are at least 3 parts to ensure the second slash exists and has a word after it
+  if (parts.length > 1) {
+    
+      return replaceHyphen(parts[1]); // The word after the second slash
+  } else {
+      return null; // Return null if the word after the second slash doesn't exist
+  }
+}
+
 export function getSubTopic(str: string) {
   // Split the string by "/"
+  console.log(str);
+  
   const parts = str.split('/');
   
   // Check if there are at least 3 parts to ensure the second slash exists and has a word after it

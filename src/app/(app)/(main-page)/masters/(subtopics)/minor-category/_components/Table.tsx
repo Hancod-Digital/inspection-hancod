@@ -16,8 +16,9 @@ import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { data, isLoading, error } = useSubtopic();
-
+    const {   FetchMinorCategory } = useSubtopic();
+    const { data } = FetchMinorCategory()
+    console.log(data);
     const handleEditClick = (idx: number) => {
         setEditingRow(idx === editingRow ? null : idx);
     };
@@ -28,11 +29,7 @@ export default function EquipmentTable() {
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            {isLoading ? (
-                <div>Loading...</div>
-            ) : error ? (
-                <div>Error loading data</div>
-            ) : (
+            
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
@@ -45,14 +42,14 @@ export default function EquipmentTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.map((item, idx) => (
+                        {data?.map((item: { minor_category: {status:string, name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; major_category: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; standard: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; status: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; id: number; }, idx: number) => (
                             <React.Fragment key={idx + 1}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
-                                    <TableCell className="py-4">{item.minorCategory}</TableCell>
-                                    <TableCell className="py-4">{item.majorCategory}</TableCell>
-                                    <TableCell className="py-4">{item.standard}</TableCell>
-                                    <TableCell className="py-4">{item.status}</TableCell>
+                                    <TableCell className="py-4">{item?.minor_category?.name}</TableCell>
+                                    <TableCell className="py-4">{item?.major_category?.name}</TableCell>
+                                    <TableCell className="py-4">{item?.standard?.name}</TableCell>
+                                    <TableCell className="py-4">{item?.minor_category?.status}</TableCell>
                                     <TableCell className="py-4">
                                         <div className="flex space-x-2">
                                             <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
@@ -84,7 +81,7 @@ export default function EquipmentTable() {
                         ))}
                     </TableBody>
                 </Table>
-            )}
+        
         </div>
     );
 }

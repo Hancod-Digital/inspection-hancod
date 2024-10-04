@@ -1,4 +1,6 @@
-import { Button } from "@/components/ui/button"
+// components/FormTable.tsx
+
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -6,14 +8,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 
-export default function Component({onFunction}:{onFunction: ()=>void}) {
+interface FormTableProps {
+  onFunction: () => void;
+}
+
+export default function FormTable({ onFunction }: FormTableProps) {
   return (
     <div className="w-full mx-auto py-5">
       <div className="flex justify-between items-center mb-4">
         <span className="font-bold">Properties</span>
-        <span onClick={onFunction} className="text-red-600 cursor-pointer">New</span>
+        <Button variant="secondary" onClick={onFunction}>
+          New
+        </Button>
       </div>
       <Table className="border border-gray-200">
         <TableHeader>
@@ -25,12 +33,24 @@ export default function Component({onFunction}:{onFunction: ()=>void}) {
         <TableBody>
           {[...Array(4)].map((_, index) => (
             <TableRow key={index} className="border-b">
-              <TableCell className="border-r p-2 h-12 w-1/2"></TableCell>
-              <TableCell className="p-2 h-12 w-1/2"></TableCell>
+              <TableCell className="border-r p-2 h-12 w-1/2">
+                <input
+                  type="text"
+                  className="w-full border rounded px-2 py-1"
+                  placeholder="Enter Test Load"
+                />
+              </TableCell>
+              <TableCell className="p-2 h-12 w-1/2">
+                <input
+                  type="text"
+                  className="w-full border rounded px-2 py-1"
+                  placeholder="Enter SWL"
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

@@ -1,4 +1,6 @@
-import { Button } from "@/components/ui/button"
+// components/AnnexureTable.tsx
+
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -6,14 +8,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 
-export default function Component({onFunction}:{onFunction: ()=>void}) {
+interface AnnexureTableProps {
+  onFunction: () => void;
+}
+
+export default function AnnexureTable({ onFunction }: AnnexureTableProps) {
   return (
     <div className="w-full mx-auto py-5">
       <div className="flex justify-between items-center mb-4">
         <span className="font-bold">Annexures</span>
-        <span onClick={onFunction} className="text-red-600 cursor-pointer">Reset</span>
+        <Button variant="secondary" onClick={onFunction}>
+          Add Annexure
+        </Button>
       </div>
       <Table className="border border-gray-200">
         <TableHeader>
@@ -32,5 +40,5 @@ export default function Component({onFunction}:{onFunction: ()=>void}) {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

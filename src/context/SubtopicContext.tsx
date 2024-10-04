@@ -13,6 +13,7 @@ interface SubtopicContextType {
   UseMergedDataQuery: (subtopic: string, from: string, to: string) => { data: any, isLoading: boolean, error: any };
   FetchLocationDetails: () => { data: any, isLoading: boolean, error: any };
   FetchMajorCategory:() => { data: any, isLoading: boolean, error: any };
+  FetchMinorCategory:() => { data: any, isLoading: boolean, error: any };
 }
 
 const SubtopicContext = createContext<SubtopicContextType | undefined>(undefined);
@@ -61,7 +62,13 @@ const FetchMajorCategory = () => {
       staleTime: 5 * 60 * 1000, // Set stale time (5 minutes)
     });
   };
-
+ const FetchMinorCategory = () => {
+    return useQuery({
+        queryKey: ['minorCategoryDetails'],
+        queryFn: () => masterService.getMinorCategoryDetails(),
+        staleTime: 5 * 60 * 1000, // Set stale time (5 minutes)
+      });
+ }
   // Use React Query to fetch merged data
   const UseMergedDataQuery = (subtopic: string, from: string, to: string) => {
     return useQuery({
@@ -111,7 +118,8 @@ const FetchMajorCategory = () => {
         getAllSingleSubtopic,
         UseMergedDataQuery,
         FetchLocationDetails,  // Added fetchLocationDetails to the context
-        FetchMajorCategory
+        FetchMajorCategory,
+        FetchMinorCategory
       }}
     >
       {children}

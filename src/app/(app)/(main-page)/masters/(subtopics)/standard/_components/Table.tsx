@@ -30,11 +30,7 @@ export default function EquipmentTable() {
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            {isLoading ? (
-                <div>Loading...</div>
-            ) : error ? (
-                <div>Error loading data</div>
-            ) : (
+             
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
@@ -52,7 +48,7 @@ export default function EquipmentTable() {
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
                                     <TableCell className="py-4">{item.standard}</TableCell>
-                                    <TableCell className="py-4">{item.standardType}</TableCell>
+                                    <TableCell className="py-4">{item.standard_type}</TableCell>
                                     <TableCell className="py-4">{item.remarks}</TableCell>
                                     <TableCell className="py-4">{item.status}</TableCell>
                                     <TableCell className="py-4">
@@ -89,7 +85,7 @@ export default function EquipmentTable() {
                         ))}
                     </TableBody>
                 </Table>
-            )}
+             
         </div>
     );
 }

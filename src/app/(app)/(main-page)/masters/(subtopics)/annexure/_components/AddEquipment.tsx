@@ -85,8 +85,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
-                              <SelectItem value="Active">Active</SelectItem>
+                            <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+
+                              <SelectItem value="INACTIVE">INACTIVE</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

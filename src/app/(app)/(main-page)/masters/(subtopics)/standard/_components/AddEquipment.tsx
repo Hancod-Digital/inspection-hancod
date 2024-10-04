@@ -13,7 +13,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentDetailsSchema = object({ 
   standard: z.string().nonempty('Standard is required'),
-  standardType: z.string().nonempty('Standard Type is required'),
+  standard_type: z.string().nonempty('Standard Type is required'),
   remarks: z.string().optional(),
   status: z.string().nonempty('Status is required')
 });
@@ -42,7 +42,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true);
     await addRecord(values)
-    setLoading(false);
+    setLoading(false); onClose()
   };
 
   return (
@@ -77,11 +77,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="standardType" className="mt-3">Standard Type</Label>
+                    <Label htmlFor="standard_type" className="mt-3">Standard Type</Label>
                     <div>
-                      <Input id="standardType" {...methods.register('standardType')} />
-                      {errors.standardType && (
-                        <p className="text-red-500 mt-1">{errors.standardType.message}</p>
+                      <Input id="standard_type" {...methods.register('standard_type')} />
+                      {errors.standard_type && (
+                        <p className="text-red-500 mt-1">{errors.standard_type.message}</p>
                       )}
                     </div>
                   </div>

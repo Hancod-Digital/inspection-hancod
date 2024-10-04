@@ -207,7 +207,7 @@ export default function Sidebar() {
         },
         {
             title: "Transactions",
-            url: "/transactions",
+        
             identifier: "transactions",
             icon: (
                 <ChartNoAxesCombined
@@ -265,6 +265,12 @@ export default function Sidebar() {
             title: "Job Orders",
             url: "/job-orders",
             identifier: "job-orders",
+            icon: <JobOrdersIcon isLive={currentPath === "/job-orders"} />,
+        },
+        {
+            title: "Print Cards",
+            url: "/print-cards",
+            identifier: "print-cards",
             icon: <JobOrdersIcon isLive={currentPath === "/job-orders"} />,
         },
     ];

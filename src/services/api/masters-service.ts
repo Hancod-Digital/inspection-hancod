@@ -60,7 +60,19 @@ export class MasterService extends Supabase {
     }
     async getMajorCategoryDetails(){
         const { data, error } = await this.supabase
-        .rpc('get_major_category_details');  // Calling the SQL function
+        .rpc('get_major_category_data');  // Calling the SQL function
+         
+        console.log(data,"ss");
+         
+
+        if (error) {
+            throw new Error(error.message);
+        }
+        return data;
+    }
+    async getMinorCategoryDetails(){
+        const { data, error } = await this.supabase
+        .rpc('get_minor_category_data');  // Calling the SQL function
          
         console.log(data,"ss");
          

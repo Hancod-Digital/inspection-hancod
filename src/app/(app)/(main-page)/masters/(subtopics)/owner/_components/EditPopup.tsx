@@ -20,9 +20,9 @@ const ownerDetailsSchema = z.object({
   address: z.string().nonempty('Address is required'),
   code: z.string().nonempty('Code is required'),
   status: z.string().nonempty('Status is required'),
-  qpFooter: z.string().nonempty('Qp Footer is required'),
-  nonQpFooter: z.string().nonempty('Non-Qp Footer is required'),
-  clientSpecification: z.string().nonempty('Client Specification is required'),
+  qp_footer: z.string().nonempty('Qp Footer is required'),
+  non_qp_Footer: z.string().nonempty('Non-Qp Footer is required'),
+  client_specification: z.string().nonempty('Client Specification is required'),
 });
 
 type OwnerDetailsInput = z.infer<typeof ownerDetailsSchema>;
@@ -136,10 +136,10 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
                   {/* ReactQuill Editors */}
                   <div className="grid gap-4 grid-cols-1 pt-5">
                     <div className="w-full">
-                      <Label htmlFor="qpFooter">Qp Footer</Label>
+                      <Label htmlFor="qp_footer">Qp Footer</Label>
                       <div>
                         <Controller
-                          name="qpFooter"
+                          name="qp_footer"
                           control={control}
                           render={({ field }) => (
                             <ReactQuill
@@ -149,8 +149,8 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
                             />
                           )}
                         />
-                        {errors.qpFooter && (
-                          <p className="text-red-500 text-[8px] mt-1">{errors.qpFooter.message}</p>
+                        {errors.qp_footer && (
+                          <p className="text-red-500 text-[8px] mt-1">{errors.qp_footer.message}</p>
                         )}
                       </div>
                     </div>
@@ -158,10 +158,10 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
 
                   <div className="grid gap-4 grid-cols-1 pt-5">
                     <div className="w-full">
-                      <Label htmlFor="nonQpFooter">Non-Qp Footer</Label>
+                      <Label htmlFor="non_qp_Footer">Non-Qp Footer</Label>
                       <div>
                         <Controller
-                          name="nonQpFooter"
+                          name="non_qp_Footer"
                           control={control}
                           render={({ field }) => (
                             <ReactQuill
@@ -171,8 +171,8 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
                             />
                           )}
                         />
-                        {errors.nonQpFooter && (
-                          <p className="text-red-500 text-[8px] mt-1">{errors.nonQpFooter.message}</p>
+                        {errors.non_qp_Footer && (
+                          <p className="text-red-500 text-[8px] mt-1">{errors.non_qp_Footer.message}</p>
                         )}
                       </div>
                     </div>
@@ -180,10 +180,10 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
 
                   <div className="grid gap-4 grid-cols-1 pt-5">
                     <div className="w-full">
-                      <Label htmlFor="clientSpecification">Client Specification</Label>
+                      <Label htmlFor="client_specification">Client Specification</Label>
                       <div>
                         <Controller
-                          name="clientSpecification"
+                          name="client_specification"
                           control={control}
                           render={({ field }) => (
                             <ReactQuill
@@ -193,8 +193,8 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
                             />
                           )}
                         />
-                        {errors.clientSpecification && (
-                          <p className="text-red-500 text-[8px] mt-1">{errors.clientSpecification.message}</p>
+                        {errors.client_specification && (
+                          <p className="text-red-500 text-[8px] mt-1">{errors.client_specification.message}</p>
                         )}
                       </div>
                     </div>

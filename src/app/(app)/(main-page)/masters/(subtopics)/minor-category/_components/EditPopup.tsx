@@ -13,7 +13,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 
 // Update the schema with new fields
 const equipmentDetailsSchema = object({
-  slNo: z.string().nonempty('Sl. No. is required'),
+   
   minorCategory: z.string().nonempty('Minor Category is required'),
   majorCategory: z.string().nonempty('Major Category is required'),
   standard: z.string().nonempty('Standard is required'),
@@ -37,7 +37,7 @@ export default function EquipmentDetailsForm({
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      slNo: '',
+     
       minorCategory: '',
       majorCategory: '',
       standard: '',
@@ -86,15 +86,7 @@ export default function EquipmentDetailsForm({
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="slNo" className="mt-3">Sl. No.</Label>
-                    <div>
-                      <Input id="slNo" {...methods.register('slNo')} />
-                      {errors.slNo && (
-                        <p className="text-red-500 mt-1">{errors.slNo.message}</p>
-                      )}
-                    </div>
-                  </div>
+                 
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="minorCategory" className="mt-3">Minor Category</Label>
