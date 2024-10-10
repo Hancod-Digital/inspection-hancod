@@ -552,12 +552,12 @@ export default function EditEquipmentDetailsForm({
 
                 {/* FormTable Component */}
                 <div className="grid w-full gap-4">
-                  <FormTable onFunction={() => setIsPopupOpen(true)} />
+                  {/* <FormTable onFunction={() => setIsPopupOpen(true)} /> */}
                 </div>
 
                 {/* AnnexureTable Component */}
                 <div className="grid w-full gap-4">
-                  <AnnexureTable onFunction={() => setIsPopupOpen(true)} />
+                  {/* <AnnexureTable onFunction={() => setIsPopupOpen(true)} /> */}
                 </div>
 
                 {/* Description with ReactQuill */}

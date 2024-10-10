@@ -19,7 +19,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 
 export default function EquipmentTable() {
   const [editingRow, setEditingRow] = useState<number | null>(null);
-  const { data, isLoading, error, deleteRecord } = useSubtopic();
+  const { data, isLoading, error,  } = useSubtopic();
 
   const handleEditClick = (id: number) => {
     setEditingRow(id === editingRow ? null : id);
@@ -32,7 +32,7 @@ export default function EquipmentTable() {
   const handleDeleteClick = async (id: number) => {
     if (confirm('Are you sure you want to delete this record?')) {
       try {
-        await deleteRecord(id);
+        // await deleteRecord(id);
       } catch (error) {
         console.error('Error deleting record:', error);
         // Optionally, display an error message to the user
