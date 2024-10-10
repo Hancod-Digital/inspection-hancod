@@ -88,7 +88,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         const data = await getAllSingleSubtopic('area');
   
         if (data && Array.isArray(data)) {
-          const filteredAreas = data.filter((area: Area) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
+          const filteredAreas = data.filter((area: any) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
 
            
           setAreaOptions(filteredAreas);
