@@ -9,17 +9,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useState } from 'react';
 
-interface AnnexureTableProps {
-  onFunction: () => void;
-}
+ 
 
-export default function AnnexureTable({ onFunction }: AnnexureTableProps) {
+export default function AnnexureTable() {
+  const [open,setOpen] = useState(false)
   return (
     <div className="w-full mx-auto py-5">
       <div className="flex justify-between items-center mb-4">
         <span className="font-bold">Annexures</span>
-        <Button variant="secondary" onClick={onFunction}>
+        <Button variant="secondary" onClick={()=>setOpen(true)}>
           Add Annexure
         </Button>
       </div>

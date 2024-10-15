@@ -22,8 +22,7 @@ export default function Component() {
         queryFn: fetchUserDetails,
     });
    
-    console.log(userDetails);
-    
+     
 
     const userName = userDetails?.name != "" ? userDetails?.name : userDetails?.email?.split('@')[0] ;
    

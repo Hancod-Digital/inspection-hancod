@@ -39,12 +39,16 @@ export class UserService extends Supabase {
     const { data, error } = await this.supabase
       .storage
       .from(bucket)
-      .upload(`/${filename}`, file);
+      .upload(`/${"filename"+filename}`, file);
       console.log(error);
       
     if (error) {
-      throw new Error();
+      console.log(error,"loplplplp");
+      
+      throw new Error(error.message);
     }
+    console.log(data);
+    
     return error || data;
   }
 

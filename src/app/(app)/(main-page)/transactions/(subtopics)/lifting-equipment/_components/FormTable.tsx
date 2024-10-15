@@ -1,5 +1,4 @@
-// components/FormTable.tsx
-
+'use client'
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -9,17 +8,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useState } from 'react';
 
-interface FormTableProps {
-  onFunction: () => void;
-}
 
-export default function FormTable({ onFunction }: FormTableProps) {
+export default function FormTable() {
+  const [open,setOpen] = useState(false)
   return (
     <div className="w-full mx-auto py-5">
       <div className="flex justify-between items-center mb-4">
         <span className="font-bold">Properties</span>
-        <Button variant="secondary" onClick={onFunction}>
+        <Button variant="secondary" onClick={()=>setOpen(true)}>
           New
         </Button>
       </div>

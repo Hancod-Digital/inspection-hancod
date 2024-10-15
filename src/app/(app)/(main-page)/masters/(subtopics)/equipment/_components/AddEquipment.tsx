@@ -1,7 +1,6 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 
-
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
 import { object, string, TypeOf, boolean } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,61 +10,113 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { CalendarIcon, PlusIcon } from 'lucide-react';
 
-// Validation schema using Zod
-const equipmentDetailsSchema = object({
-  minorCategory: string().nonempty('Minor Category is required'),
-  equipmentNo: string().nonempty("Equipment No is required"),
-  ownerIdTagNo: string().nonempty("Owner Id Tag Number is required"),
-  registrationNo: string().nonempty("Reg no is required"),
-  modelNo: string().nonempty("Model no is required"),
-  supplierManufacturer: string().nonempty("Supplier is required"),
-  testCertificateNo: string().nonempty("Test certificate No is required"),
-  location: string().nonempty('Location is required'),
-  title: string().nonempty("Title is required"),
-  standard: string().nonempty("standard is required"),
-  serialNo: string().nonempty("Serial No is required"),
-  annexure: string().nonempty("Annexure is required"),
-  yearOfManufacture: string().nonempty("Year of manufacture is required"),
-  active: boolean(),
-  safeWorkingLoad: string().nonempty("Safe working load is required"),
-  lastTestDate: string().nonempty("Last test date is required"),
-  proofLoad: string().nonempty("Proof load is required"),
-  nextTestDate: string().nonempty("Next test date is required"),
-  testInspFrequency: string().nonempty("Test inspection frequency is required"),
-  testInspFrequencyMonths: string().nonempty("Test inspection frequency in months is required"),
-  lastThoroughDate: string().nonempty("Last thorough date required"),
-  nextThoroughDate: string().nonempty("Last thorough date is required"),
-  description: string().nonempty("Last thorough date is required"),
-});
 import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 import { useSubtopic } from '@/context/SubtopicContext';
 
+// Validation schema using Zod
+const equipmentDetailsSchema = object({
+  minor_category: string().nonempty('Minor Category is required'),
+  equipment_no: string().nonempty('Equipment No is required'),
+  owner_id: string().nonempty('Owner ID  is required'),
+  registration_no: string().nonempty('Registration No is required'),
+  model_no: string().nonempty('Model No is required'),
+  manufacturer: string().nonempty('Supplier is required'),
+  test_certificate_no: string().nonempty('Test Certificate No is required'),
+  location: string().nonempty('Location is required'),
+  title: string().nonempty('Title is required'),
+  standard: string().nonempty('Standard is required'),
+  serial_no: string().nonempty('Serial No is required'),
+  annexure: string().nonempty('Annexure is required'),
+  year_of_manufacture: string().nonempty('Year of manufacture is required'),
+  status: boolean(),
+  safe_working_load: string().nonempty('Safe working load is required'),
+  last_test_date: string().nonempty('Last test date is required'),
+  proof_load: string().nonempty('Proof load is required'),
+  next_test_date: string().nonempty('Next test date is required'),
+  
+  test_insp_frequency_months: string().nonempty('Test inspection frequency in months is required'),
+  last_thorough_date: string().nonempty('Last thorough date is required'),
+  next_thorough_date: string().nonempty('Next thorough date is required'),
+  description: string().nonempty('Description is required'),
+});
+
+
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
-interface EditPopupProps {
-    onClose: () => void;
-  }
-  
+interface EquipmentDetailsFormProps {
+  onClose: () => void;
+}
 
-export default function EquipmentDetailsForm({ onClose }:{onClose: () => void})  {
+export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const { addRecord } = useSubtopic();
+  const { addRecord, getAllSingleSubtopic } = useSubtopic();
+
+  // State variables for select options
+  const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
+  const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
+  const [standardOptions, setStandardOptions] = useState<any[]>([]);
+  const [annexureOptions, setAnnexureOptions] = useState<any[]>([]);
+  const [locationOptions, setLocationOptions] = useState<any[]>([]);
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
- ;
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        // Fetch minor category options
+        const minorCategories = await getAllSingleSubtopic('minor_category');
+        if (minorCategories) {
+          setMinorCategoryOptions(minorCategories);
+        }
+
+        // Fetch supplier options
+        const suppliers = await getAllSingleSubtopic('manufacturer');
+        if (suppliers) {
+          setSupplierOptions(suppliers);
+        }
+
+        // Fetch standard options
+        const standards = await getAllSingleSubtopic('standard');
+        if (standards) {
+          setStandardOptions(standards);
+        }
+
+        // Fetch annexure options
+        const annexures = await getAllSingleSubtopic('annexure');
+        if (annexures) {
+          setAnnexureOptions(annexures);
+        }
+
+        // Fetch location options
+        const locations = await getAllSingleSubtopic('location');
+        if (locations) {
+          setLocationOptions(locations);
+        }
+      } catch (error) {
+        console.error('Error fetching options:', error);
+        // Optionally, handle the error (e.g., show a notification)
+      }
+    };
+    fetchOptions();
+  }, [getAllSingleSubtopic]);
 
   const {
     reset,
     handleSubmit,
-    register,
     control,
     formState: { isSubmitSuccessful, errors },
   } = methods;
@@ -74,391 +125,559 @@ export default function EquipmentDetailsForm({ onClose }:{onClose: () => void}) 
     if (isSubmitSuccessful) {
       reset();
     }
-  }, [isSubmitSuccessful]);
+  }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
-    setLoading(true)
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
+    setLoading(true);
     console.log(values);
-    await addRecord(values)
-    setLoading(false) 
-    onClose()
+    await addRecord({
+      ...values,
+      status: values.status === true ? "ACTIVE" : "INACTIVE"
+    });
+        setLoading(false);
+    onClose();
   };
 
   return (
     <AnimatePresence>
-  <motion.div
-    initial={{ opacity: 20, y: 0 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 20, y: 0 }}
-    transition={{ duration: 0.3 }}
-  >
-    <Card className="w-full border-0 p-0  hover:bg-white">
-  <CardContent>
-    <FormProvider {...methods}>
-      <form
-        className="space-y-4"
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit(onSubmitHandler)}
+      <motion.div
+        initial={{ opacity: 20, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 20, y: 0 }}
+        transition={{ duration: 0.3 }}
       >
-          <CardHeader>
-            <CardTitle className="text-md">Equipment Details</CardTitle>
-          </CardHeader>
-        
-            <div className="space-y-4">
-              <div className="grid gap-4 grid-cols-2">
-                {/* Minor Category and Equipment No */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="minorCategory">Minor Category:*</Label>
-                  <div>
-                    <Select {...register('minorCategory')}>
-                      <SelectTrigger id="minorCategory">
-                        <SelectValue placeholder="Swivel Hoist Ring" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="swivel-hoist-ring">Swivel Hoist Ring</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.minorCategory && (
-                      <p className="text-red-500 mt-1 ">{errors.minorCategory.message}</p>
-                    )}
+        <Card className="w-full border-0 p-0 hover:bg-white">
+          <CardContent>
+            <FormProvider {...methods}>
+              <form
+                className="space-y-4"
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit(onSubmitHandler)}
+              >
+                <CardHeader>
+                  <CardTitle className="text-md">Equipment Details</CardTitle>
+                </CardHeader>
+
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-2">
+                    {/* Minor Category and Equipment No */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="minor_category">Minor Category:*</Label>
+                      <div>
+                        <Controller
+                          name="minor_category"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="minor_category">
+                                <SelectValue placeholder="Select Minor Category" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {minorCategoryOptions.map((option: any) => (
+                                  <SelectItem key={option.id} value={option.minor_category}>
+                                    {option.minor_category}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.minor_category && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.minor_category.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Equipment No */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="equipment_no">Equipment No</Label>
+                      <div>
+                        <Controller
+                          name="equipment_no"
+                          control={control}
+                          render={({ field }) => <Input id="equipment_no" {...field} />}
+                        />
+                        {errors.equipment_no && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.equipment_no.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Owner ID/Tag No */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="owner_id">Owner ID/Tag No</Label>
+                      <div>
+                        <Controller
+                          name="owner_id"
+                          control={control}
+                          render={({ field }) => <Input id="owner_id" {...field} />}
+                        />
+                        {errors.owner_id && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.owner_id.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Registration No./Plate No. */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="registration_no">Registration No./Plate No.</Label>
+                      <div>
+                        <Controller
+                          name="registration_no"
+                          control={control}
+                          render={({ field }) => <Input id="registration_no" {...field} />}
+                        />
+                        {errors.registration_no && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.registration_no.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Model No */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="model_no">Model No</Label>
+                      <div>
+                        <Controller
+                          name="model_no"
+                          control={control}
+                          render={({ field }) => <Input id="model_no" {...field} />}
+                        />
+                        {errors.model_no && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.model_no.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Supplier/Manufacturer */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="manufacturer">Supplier/Manufacturer</Label>
+                      <div className="relative">
+                        <Controller
+                          name="manufacturer"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="manufacturer">
+                                <SelectValue placeholder="Select Supplier" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {supplierOptions?.map((option: any) => (
+                                  <SelectItem key={option.id} value={option.manufacturer}>
+                                    {option.manufacturer}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                        {errors.manufacturer && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.manufacturer.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Test Certificate No./COC No. */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="test_certificate_no">Test Certificate No./COC No.</Label>
+                      <div>
+                        <Controller
+                          name="test_certificate_no"
+                          control={control}
+                          render={({ field }) => <Input id="test_certificate_no" {...field} />}
+                        />
+                        {errors.test_certificate_no && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.test_certificate_no.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Location */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="location">Location:*</Label>
+                      <div className="relative">
+                        <Controller
+                          name="location"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="location">
+                                <SelectValue placeholder="Select Location" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {locationOptions?.map((option: any) => (
+                                  <SelectItem key={option.id} value={option.location}>
+                                    {option.location}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                        {errors.location && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.location.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="title">Title</Label>
+                      <div>
+                        <Controller
+                          name="title"
+                          control={control}
+                          render={({ field }) => <Input id="title" {...field} />}
+                        />
+                        {errors.title && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.title.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Standard */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="standard">Standard</Label>
+                      <div>
+                        <Controller
+                          name="standard"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="standard">
+                                <SelectValue placeholder="Select Standard" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {standardOptions?.map((option: any) => (
+                                  <SelectItem key={option.id} value={option.standard}>
+                                    {option.standard}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.standard && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.standard.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Serial No. */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="serial_no">Serial No.</Label>
+                      <div>
+                        <Controller
+                          name="serial_no"
+                          control={control}
+                          render={({ field }) => <Input id="serial_no" {...field} />}
+                        />
+                        {errors.serial_no && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.serial_no.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Annexure */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="annexure">Annexure</Label>
+                      <div>
+                        <Controller
+                          name="annexure"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="annexure">
+                                <SelectValue placeholder="Select Annexure" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {annexureOptions.map((option: any) => (
+                                  <SelectItem key={option.id} value={option.annexure}>
+                                    {option.annexure}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.annexure && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.annexure.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Year of Manufacture */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="year_of_manufacture">Year of Manufacture</Label>
+                      <div>
+                        <Controller
+                          name="year_of_manufacture"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="year_of_manufacture" type="date" {...field} />
+                          )}
+                        />
+                        {errors.year_of_manufacture && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.year_of_manufacture.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Active */}
+                    <div className="grid grid-cols-[200px_1fr] items-center gap-4">
+                      <Label htmlFor="status">Active</Label>
+                      <div>
+                        <Controller
+                          name="status"
+                          control={control}
+                          render={({ field }) => (
+                            <Checkbox
+                              id="status"
+                              checked={field.value}
+                              onCheckedChange={(checked) => field.onChange(checked)}
+                            />
+                          )}
+                        />
+                        {errors.status && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.status.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="equipmentNo">Equipment No</Label>
-                  <div>
-                    <Input id="equipmentNo" {...register('equipmentNo')} />
-                    {errors.equipmentNo && (
-                      <p className="text-red-500 mt-1">{errors.equipmentNo.message}</p>
-                    )}
+                <CardHeader>
+                  <CardTitle className="text-md w-full">Certificate Details</CardTitle>
+                </CardHeader>
+                <div className="space-y-4 ">
+                  <div className="grid gap-4 grid-cols-2">
+                    {/* Safe Working Load */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="safe_working_load">Safe Working Load</Label>
+                      <div>
+                        <Controller
+                          name="safe_working_load"
+                          control={control}
+                          render={({ field }) => <Input id="safe_working_load" {...field} />}
+                        />
+                        {errors.safe_working_load && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.safe_working_load.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Last Test Date */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="last_test_date">Last Test Date</Label>
+                      <div>
+                        <Controller
+                          name="last_test_date"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="last_test_date" type="date" {...field} />
+                          )}
+                        />
+                        {errors.last_test_date && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.last_test_date.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Proof Load */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="proof_load">Proof Load</Label>
+                      <div>
+                        <Controller
+                          name="proof_load"
+                          control={control}
+                          render={({ field }) => <Input id="proof_load" {...field} />}
+                        />
+                        {errors.proof_load && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.proof_load.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Next Test Date */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="next_test_date">Next Test Date</Label>
+                      <div>
+                        <Controller
+                          name="next_test_date"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="next_test_date" type="date" {...field} />
+                          )}
+                        />
+                        {errors.next_test_date && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.next_test_date.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                     
+
+                    {/* Test Insp. Frequency (Months) */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="test_insp_frequency_months">
+                        Test Insp. Frequency (Months)
+                      </Label>
+                      <div>
+                        <Controller
+                          name="test_insp_frequency_months"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="test_insp_frequency_months" {...field} />
+                          )}
+                        />
+                        {errors.test_insp_frequency_months && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.test_insp_frequency_months.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Last Thorough Examination Date */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="last_thorough_date">Last Thorough Examination Date</Label>
+                      <div>
+                        <Controller
+                          name="last_thorough_date"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="last_thorough_date" type="date" {...field} />
+                          )}
+                        />
+                        {errors.last_thorough_date && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.last_thorough_date.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Next Thorough Examination Date */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="next_thorough_date">Next Thorough Examination Date</Label>
+                      <div>
+                        <Controller
+                          name="next_thorough_date"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="next_thorough_date" type="date" {...field} />
+                          )}
+                        />
+                        {errors.next_thorough_date && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.next_thorough_date.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Owner ID/Tag No and Registration No./Plate No. */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="ownerIdTagNo">Owner ID/Tag No</Label>
-                  <div>
-                    <Input id="ownerIdTagNo" {...register('ownerIdTagNo')} />
-                    {errors.ownerIdTagNo && (
-                      <p className="text-red-500 mt-1">{errors.ownerIdTagNo.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="registrationNo">Registration No./Plate No.</Label>
-                  <div>
-                    <Input id="registrationNo" {...register('registrationNo')} />
-                    {errors.registrationNo && (
-                      <p className="text-red-500 mt-1">{errors.registrationNo.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Model No and Supplier/Manufacturer */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="modelNo">Model No</Label>
-                  <div>
-                    <Input id="modelNo" {...register('modelNo')} />
-                    {errors.modelNo && (
-                      <p className="text-red-500 mt-1">{errors.modelNo.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="supplierManufacturer">Supplier/Manufacturer</Label>
-                  <div className="relative">
-                    <Select {...register('supplierManufacturer')}>
-                      <SelectTrigger id="supplierManufacturer">
-                        <SelectValue placeholder="RUD" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="rud">RUD</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button size="icon" variant="outline" className="absolute bg-primary text-white font-bold right-0 top-0">
-                      <PlusIcon className="h-4 w-4" />
-                    </Button>
-                    {errors.supplierManufacturer && (
-                      <p className="text-red-500 mt-1">{errors.supplierManufacturer.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Test Certificate No./COC No. and Location */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="testCertificateNo">Test Certificate No./COC No.</Label>
-                  <div>
-                    <Input id="testCertificateNo" {...register('testCertificateNo')} />
-                    {errors.testCertificateNo && (
-                      <p className="text-red-500 mt-1">{errors.testCertificateNo.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="location">Location:*</Label>
-                  <div className="relative">
-                    <Select {...register('location')}>
-                      <SelectTrigger id="location">
-                        <SelectValue placeholder="Schlumberger Yard, Ind. Area" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="schlumberger">Schlumberger Yard, Ind. Area</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button size="icon" variant="outline" className="absolute bg-primary text-white font-bold right-0 top-0">
-                      <PlusIcon className="h-4 w-4" />
-                    </Button>
-                    {errors.location && (
-                      <p className="text-red-500 mt-1">{errors.location.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Title and Standard */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="title">Title</Label>
-                  <div>
-                    <Select {...register('title')}>
-                      <SelectTrigger id="title">
-                        <SelectValue placeholder="Swivel Hoist Ring" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="swivel-hoist-ring">Swivel Hoist Ring</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.title && (
-                      <p className="text-red-500 mt-1">{errors.title.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="standard">Standard</Label>
-                  <div>
-                    <Select {...register('standard')}>
-                      <SelectTrigger id="standard">
-                        <SelectValue placeholder="EN 14452" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="en-14452">EN 14452</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.standard && (
-                      <p className="text-red-500 mt-1">{errors.standard.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Serial No. and Annexure */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="serialNo">Serial No.</Label>
-                  <div>
-                    <Input id="serialNo" {...register('serialNo')} />
-                    {errors.serialNo && (
-                      <p className="text-red-500 mt-1">{errors.serialNo.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="annexure">Annexure</Label>
-                  <div>
-                    <Input id="annexure" {...register('annexure')} />
-                    {errors.annexure && (
-                      <p className="text-red-500 mt-1">{errors.annexure.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Year of Manufacture and Active */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="yearOfManufacture">Year of Manufacture</Label>
-                  <div>
-                    
-                    <Input id="yearOfManufacture" type='date'  {...register('yearOfManufacture')} />
-                    {errors.yearOfManufacture && (
-                      <p className="text-red-500 mt-1">{errors.yearOfManufacture.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="active">Active</Label>
-                  <div>
-                    <Checkbox id="active" {...register('active')} />
-                    {errors.active && (
-                      <p className="text-red-500 mt-1">{errors.active.message}</p>
-                    )}
-                  </div>
-                </div>
-                </div>
-            </div>
-       
-           <CardHeader>
-            <CardTitle className="text-md   w-full ">Certificate Details</CardTitle>
-          </CardHeader>
-            <div className="space-y-4 ">
-              <div className="grid gap-4 grid-cols-2">
-                {/* Safe Working Load and Last Test Date */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="safeWorkingLoad">Safe Working Load</Label>
-                  <div>
-                    <Input id="safeWorkingLoad" {...register('safeWorkingLoad')} />
-                    {errors.safeWorkingLoad && (
-                      <p className="text-red-500 mt-1">{errors.safeWorkingLoad.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="lastTestDate">Last Test Date</Label>
-                  <div>
-                    <Input
-                      id="lastTestDate"
-                      type="date"
-                       
-                      {...register('lastTestDate')}
-                    />
-                    {errors.lastTestDate && (
-                      <p className="text-red-500 mt-1">{errors.lastTestDate.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Proof Load and Next Test Date */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="proofLoad">Proof Load</Label>
-                  <div>
-                    <Input id="proofLoad" {...register('proofLoad')} />
-                    {errors.proofLoad && (
-                      <p className="text-red-500 mt-1">{errors.proofLoad.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="nextTestDate">Next Test Date</Label>
-                  <div>
-                    <Input
-                      id="nextTestDate"
-                      type="date"
-                    
-                      {...register('nextTestDate')}
-                    />
-                    {errors.nextTestDate && (
-                      <p className="text-red-500 mt-1">{errors.nextTestDate.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Test Insp. Frequency and Test Insp. Frequency (Months) */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="testInspFrequency">Test Insp. Frequency</Label>
-                  <div>
-                    <Input id="testInspFrequency" {...register('testInspFrequency')} />
-                    {errors.testInspFrequency && (
-                      <p className="text-red-500 mt-1">{errors.testInspFrequency.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="testInspFrequencyMonths">Test Insp. Frequency (Months)</Label>
-                  <div>
-                    <Input id="testInspFrequencyMonths" {...register('testInspFrequencyMonths')} />
-                    {errors.testInspFrequencyMonths && (
-                      <p className="text-red-500 mt-1">{errors.testInspFrequencyMonths.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Last Thorough Examination Date and Next Thorough Examination Date */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="lastThoroughDate">Last Thorough Examination Date</Label>
-                  <div>
-                    <Input
-                      id="lastThoroughDate"
-                      type="date"
-                      
-                      {...register('lastThoroughDate')}
-                    />
-                    {errors.lastThoroughDate && (
-                      <p className="text-red-500 mt-1">{errors.lastThoroughDate.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label htmlFor="nextThoroughDate">Next Thorough Examination Date</Label>
-                  <div>
-                    <Input
-                      id="nextThoroughDate"
-                      type="date"
-                   
-                      {...register('nextThoroughDate')}
-                    />
-                    {errors.nextThoroughDate && (
-                      <p className="text-red-500 mt-1">{errors.nextThoroughDate.message}</p>
-                    )}
-                  </div>
-                </div>
-                </div>
-            </div>
-          {/* </CardContent>
-        </Card>
-                <Card className="w-full border-0 p-0 hover:bg-white">
-           
-          <CardContent> */}
-           <motion.div
+                <motion.div
                   initial={{ opacity: 20, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-            <div className="space-y-4 ">
-              <div className="grid gap-4 grid-cols-1">
-                <div className="w-full ">
-                <Label htmlFor="description" >Description</Label>
-                <div>
-                <Controller
-                      name="description"
-                      control={control}
-                      render={({ field }) => (
-                        <ReactQuill
-                          theme="snow"
-                          className='mt-3'
-                          {...field}
-                        />
-                      )}
-                    />
-                    {errors.description && (
-                      <p className="text-red-500 mt-1">{errors.description.message}</p>
-                    )}
-                </div>
-              </div>
-              </div>
-            </div>
-            </motion.div>
-            <motion.div
-                  className='flex justify-end gap-4'
+                  <div className="space-y-4 ">
+                    <div className="grid gap-4 grid-cols-1">
+                      <div className="w-full ">
+                        <Label htmlFor="description">Description</Label>
+                        <div>
+                          <Controller
+                            name="description"
+                            control={control}
+                            render={({ field }) => (
+                              <ReactQuill theme="snow" className="mt-3" {...field} />
+                            )}
+                          />
+                          {errors.description && (
+                            <p className="text-red-500 mt-1 text-[13px] ">
+                              {errors.description.message}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+                <motion.div
+                  className="flex justify-end gap-4"
                   initial={{ opacity: 20, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-        <Button type="reset" className='px-10' onClick={onClose} variant={'outline'} >
-          Cancel
-        </Button>
-        <Button className='px-10' type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Save'}
-        </Button></motion.div>
-      </form>
-    </FormProvider>
-    </CardContent>
+                  <Button
+                    type="reset"
+                    className="px-10"
+                    onClick={onClose}
+                    variant={'outline'}
+                  >
+                    Cancel
+                  </Button>
+                  <Button className="px-10" type="submit" disabled={loading}>
+                    {loading ? 'Saving...' : 'Save'}
+                  </Button>
+                </motion.div>
+              </form>
+            </FormProvider>
+          </CardContent>
         </Card>
-        </motion.div>
-</AnimatePresence>
+      </motion.div>
+    </AnimatePresence>
   );
 }

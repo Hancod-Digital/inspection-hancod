@@ -498,12 +498,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                 {/* FormTable Component */}
                 <div className="grid w-full gap-4">
-                  {/* <FormTable onFunction={() => setIsPopupOpen(true)} /> */}
+                  <FormTable  />
                 </div>
 
                 {/* AnnexureTable Component */}
                 <div className="grid w-full gap-4">
-                  {/* <AnnexureTable onFunction={() => setIsPopupOpen(true)} /> */}
+                  <AnnexureTable  />
                 </div>
 
                 {/* Description with ReactQuill */}

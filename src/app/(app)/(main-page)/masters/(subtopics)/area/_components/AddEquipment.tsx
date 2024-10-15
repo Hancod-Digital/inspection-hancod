@@ -109,6 +109,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>
+                
               </div>
             </form>
           </FormProvider>
