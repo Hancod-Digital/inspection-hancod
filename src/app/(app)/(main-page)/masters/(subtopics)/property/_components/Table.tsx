@@ -12,44 +12,13 @@ import {
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
+import DeleteDialogue from '@/components/ui/delete-dialog';
+import { useSubtopic } from '@/context/SubtopicContext';
 
-interface EquipmentData {
-    slNo: number;
-    property: string;
-    propertyType: string;
-    status: string;
-}
 
-const equipmentData: EquipmentData[] = [
-    {
-        slNo: 1,
-        property: 'Power Unit',
-        propertyType: 'Annexure',
-        status: 'Active',
-    },
-    {
-        slNo: 2,
-        property: 'Power Unit',
-        propertyType: 'Annexure',
-        status: 'Active',
-    },
-    {
-        slNo: 3,
-        property: 'Power Unit',
-        propertyType: 'Annexure',
-        status: 'Active',
-    },
-    {
-        slNo: 4,
-        property: 'Power Unit',
-        propertyType: 'Annexure',
-        status: 'Active',
-    },
-];
-
-export default function EquipmentTable() {
+export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-
+    const {deleteRecord,data}= useSubtopic()
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
     };
@@ -57,7 +26,15 @@ export default function EquipmentTable() {
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
-
+    const rearrangedData = data
+    ? [...data].sort((a, b) => {
+        const aMatch = a.property.toLowerCase().includes(searchValue.toLowerCase());
+        const bMatch = b.property.toLowerCase().includes(searchValue.toLowerCase());
+        if (aMatch && !bMatch) return -1;
+        if (!aMatch && bMatch) return 1;
+        return 0;
+      })
+    : [];
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
             <Table className="w-full">
@@ -71,21 +48,26 @@ export default function EquipmentTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {equipmentData.map((item,idx:number) => (
+                    {rearrangedData.map((item,idx:number) => (
                         <React.Fragment key={idx+1}>
                             <TableRow>
                                 <TableCell className="py-4">{idx+1}</TableCell>
                                 <TableCell className="py-4">{item.property}</TableCell>
-                                <TableCell className="py-4">{item.propertyType}</TableCell>
+                                <TableCell className="py-4">{item.property_type}</TableCell>
                                 <TableCell className="py-4">{item.status}</TableCell>
                                 <TableCell className="py-4">
                                     <div className="flex space-x-2">
                                         <button onClick={() => handleEditClick(idx+1)} className="text-red-500">
                                             <EditIcon />
                                         </button>
-                                        <button className="text-red-500">
-                                            <DeleteIcon />
-                                        </button>
+                                        <DeleteDialogue
+                                                onConfirm={async () => await deleteRecord(item.id)}
+                                                triggerButton={
+                                                    <button className="text-red-500">
+                                                        <DeleteIcon />
+                                                    </button>
+                                                }
+                                            />
                                     </div>
                                 </TableCell>
                             </TableRow>

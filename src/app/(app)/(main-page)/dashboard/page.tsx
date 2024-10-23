@@ -10,7 +10,7 @@ import Approval from './_components/Approval'
 
 export default function Component() {
   return (
-    <div className="p-6 space-y-6 w-full bg-[#fafbfb]">
+    <div className="p-6 space-y-6 w-full bg-[#fafbfb] min-h-screen">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard value={12} label="Certified" color="text-blue-500" />
         <StatCard value={570} label="Defect" color="text-yellow-500" />

@@ -16,12 +16,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
-import { Site } from './AddEquipment';
+import { flushSync } from 'react-dom'; // Import flushSync for synchronous state updates
+import { locationDataRange } from '@/lib/utils';
 
+// Define the Zod schema for form validation (Area removed)
 const equipmentDetailsSchema = object({
   location: string().nonempty('Location is required'),
   site: string().nonempty('Site is required'),
-  area: string().nonempty('Area is required'),
   status: string().nonempty('Status is required'),
 });
 
@@ -34,31 +35,17 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const { updateRecord, findRecordById, getAllSingleSubtopic,UseMergedDataQuery } = useSubtopic();
+  const [siteData, setSiteData] = useState<any[]>([]); // State for site dropdown options
+  const [data, setData] = useState<any>(null); // State for existing record data
 
-  // Fetch the sites asynchronously (this is an example, adjust it to match your actual fetching logic)
-  const [sites, setSites] = useState<Site[]>([]);
- 
-  useEffect(() => {
-    const fetchSites = async () => {
-      const siteData:any = await getAllSingleSubtopic("site");
-      
-      setSites(siteData);
-    };  
-
-    fetchSites();
-  }, []);
-
-  // Get existing data synchronously
-  const data = findRecordById(id);
+  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic,FetchLocationDetails } = useSubtopic();
 
   const methods = useForm<EquipmentDetailsSchemaType>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      location: data?.location || '',
-      site: data?.site || '',
-      area: data?.area || '',
-      status: data?.status || '',
+      location: '',
+      site: '',
+      status: '',
     },
   });
 
@@ -69,6 +56,44 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     formState: { isSubmitSuccessful, errors },
   } = methods;
 
+  // Fetch existing record data when the component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const {data,error} =  FetchLocationDetails()
+        let recordData;
+        console.log('Fetched Data:', data);
+        flushSync(() => {
+          setData(recordData);
+          reset({
+            location: recordData?.location || '',
+            site: String(recordData?.site?.id) || '',
+            status: recordData?.status || '',
+          });
+        });
+      } catch (error) {
+        console.error('Error fetching record:', error);
+      }
+    };
+
+    fetchData();
+  }, [id, findRecordByIdWithReference, reset]);
+
+  // Fetch site dropdown options when the component mounts
+  useEffect(() => {
+    const fetchSites = async () => {
+      try {
+        const sites = await getAllSingleSubtopic('site');
+        setSiteData(sites || []);
+      } catch (error) {
+        console.error('Error fetching sites:', error);
+      }
+    };
+
+    fetchSites();
+  }, [getAllSingleSubtopic]);
+
+  // Reset the form and close the modal upon successful submission
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -76,11 +101,28 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     }
   }, [isSubmitSuccessful, reset, onClose]);
 
+  // Handle form submission
   const onSubmitHandler: SubmitHandler<EquipmentDetailsSchemaType> = async (values) => {
     setLoading(true);
-    await updateRecord(id, values);
-    setLoading(false);
-    onClose(); // Close the form after saving
+    console.log('Form Values:', values);
+
+    // Prepare the updated data
+    const updatedData = {
+      ...data,
+      location: values.location,
+      site: Number(values.site),
+      status: values.status,
+    };
+
+    try {
+      await updateRecord(id, updatedData);
+    } catch (error) {
+      console.error('Error updating record:', error);
+      // Optionally, handle the error (e.g., show a notification)
+    } finally {
+      setLoading(false);
+      onClose();
+    }
   };
 
   return (
@@ -104,6 +146,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
             >
               <div className="space-y-4">
                 <div className="grid gap-4 grid-cols-1">
+                  {/* Location Field */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                     <Label htmlFor="location">Location</Label>
                     <div>
@@ -114,6 +157,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                     </div>
                   </div>
 
+                  {/* Site Dropdown */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                     <Label htmlFor="site">Site</Label>
                     <div>
@@ -126,9 +170,9 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                               <SelectValue placeholder="Select site" />
                             </SelectTrigger>
                             <SelectContent>
-                              {sites?.map((site, index) => (
-                                <SelectItem key={index} value={""+site?.id}>
-                                  {site?.site}
+                              {siteData.map((site) => (
+                                <SelectItem key={site.id} value={String(site.id)}>
+                                  {site.site}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -141,6 +185,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                     </div>
                   </div>
 
+                  {/* Status Dropdown */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="status">Status</Label>
                     <div>
@@ -166,6 +211,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                   </div>
                 </div>
 
+                {/* Form Actions */}
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

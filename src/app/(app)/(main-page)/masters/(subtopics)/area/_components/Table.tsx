@@ -15,10 +15,11 @@ import EditPopup from './EditPopup';
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
+import DeleteDialogue from '@/components/ui/delete-dialog';
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { data, isLoading, error } = useSubtopic();
+    const { data, isLoading, error, deleteRecord } = useSubtopic();
 
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
@@ -51,9 +52,17 @@ export default function EquipmentTable() {
                                         <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
                                             <EditIcon />
                                         </button>
-                                        <button className="text-red-500">
-                                            <DeleteIcon />
-                                        </button>
+                                        <DeleteDialogue
+                                            onConfirm={async () => await deleteRecord(item?.id)}
+                                            triggerButton={
+
+                                                <button className="text-red-500">
+                                                    <DeleteIcon />
+
+                                                </button>
+                                            }
+                                        />
+
                                     </div>
                                 </TableCell>
                             </TableRow>

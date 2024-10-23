@@ -13,7 +13,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentDetailsSchema = object({
   category: string().nonempty('Category is required'),
-  equipmentType: string().nonempty('Equipment Type is required'),
+  equipment_type: string().nonempty('Equipment Type is required'),
   status: string().nonempty('Status is required')});
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
@@ -69,11 +69,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               <div className="space-y-4">
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                    <Label htmlFor="equipmentType">Equipment Type</Label>
+                    <Label htmlFor="equipment_type">Equipment Type</Label>
                     <div>
-                      <Input id="equipmentType" {...methods.register('equipmentType')} />
-                      {errors.equipmentType && (
-                        <p className="text-red-500 mt-1">{errors.equipmentType.message}</p>
+                      <Input id="equipment_type" {...methods.register('equipment_type')} />
+                      {errors.equipment_type && (
+                        <p className="text-red-500 mt-1">{errors.equipment_type.message}</p>
                       )}
                     </div>
                   </div>

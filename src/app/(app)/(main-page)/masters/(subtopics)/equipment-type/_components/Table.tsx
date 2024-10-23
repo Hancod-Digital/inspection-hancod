@@ -22,37 +22,13 @@ import EditPopup from './EditPopup'
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
+import DeleteDialogue from '@/components/ui/delete-dialog';
 
-const equipmentData: EquipmentData[] = [
-    {
-        slNo: 1,
-        equipmentType: 'DUMP CHUTE',
-        category: 'Lifting Gear',
-        status: 'Inactive'
-    },
-    {
-        slNo: 2,
-        equipmentType: 'Container',
-        category: 'Lifting Gear',
-        status: 'Inactive'
-    },
-    {
-        slNo: 3,
-        equipmentType: 'Container',
-        category: 'Lifting Gear',
-        status: 'Active'
-    },
-    {
-        slNo: 4,
-        equipmentType: 'Container',
-        category: 'Lifting Gear',
-        status: 'Active'
-    }
-];
+
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { data, isLoading, error } = useSubtopic();
+    const { data, isLoading, error,deleteRecord } = useSubtopic();
 
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
@@ -79,7 +55,7 @@ export default function EquipmentTable() {
                         <React.Fragment key={idx+1}>
                             <TableRow>
                                 <TableCell className="py-4">{idx+1}</TableCell>
-                                <TableCell className="py-4">{item?.equipmentType}</TableCell>
+                                <TableCell className="py-4">{item?.equipment_type}</TableCell>
                                 <TableCell className="py-4">{item?.category}</TableCell>
                                 <TableCell className="py-4">{item?.status}</TableCell>
                                 <TableCell className="py-4">
@@ -87,9 +63,15 @@ export default function EquipmentTable() {
                                         <button onClick={() => handleEditClick(idx+1)} className="text-red-500">
                                             <EditIcon/>
                                         </button>
-                                        <button className="text-red-500">
-                                        <DeleteIcon/>
-                                        </button>
+                                        <DeleteDialogue
+                                                onConfirm={async () => await deleteRecord(item.id)}
+                                                triggerButton={
+                                                    <button className="text-red-500">
+                                                        <DeleteIcon />
+                                                    </button>
+                                                }
+                                            />
+ 
                                     </div>
                                 </TableCell>
                             </TableRow>

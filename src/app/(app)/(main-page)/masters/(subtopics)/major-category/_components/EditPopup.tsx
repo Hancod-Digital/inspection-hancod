@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
+import { majorCategoryDataRange } from '@/lib/utils';
+import { flushSync } from 'react-dom';
 
 const equipmentDetailsSchema = object({
   major_category: string().nonempty('Major Category is required'),
@@ -33,17 +35,15 @@ interface EquipmentDetailsFormProps {
 export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [equipmentData, setEquipmentData] = useState<any[]>([]); // Fetch and store equipment types
-  const { updateRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
-
-  // Get existing data synchronously
-  const data = findRecordById(id);
+  const [data, setData] = useState<any>(null);
+  const { updateRecord, findRecordByIdWithReference,getAllSingleSubtopic, getMergedData } = useSubtopic();
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      major_category: data?.major_category || '',
-      equipment_type: data?.equipment_type || '',
-      status: data?.status || '',
+      major_category:  '',
+      equipment_type:  '',
+      status:  '',
     },
   });
 
@@ -53,6 +53,25 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     control,
     formState: { isSubmitSuccessful, errors },
   } = methods;
+
+  useEffect(() => {
+    // Fetch existing data when the component mounts
+    const fetchData = async () => {
+      const recordData = await findRecordByIdWithReference(id, majorCategoryDataRange);
+      console.log("-----",recordData?.id?.equipment_type);
+      flushSync(()=>{
+        setData(recordData);
+        reset({
+          major_category: recordData?.major_category || '',
+          equipment_type: String(recordData?.equipment_type?.id) || 'xcxcc  ',
+          status: recordData?.status || '',
+        });
+      })
+      
+    };
+
+    fetchData();
+  }, [id, findRecordByIdWithReference, reset]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -69,11 +88,13 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     };
 
     fetchEquipmentTypes();
-  }, [getAllSingleSubtopic]);
+  }, [getAllSingleSubtopic, getMergedData]);
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-    await updateRecord(id, values);
+    console.log(id,"---------------------------------------------this is idd");
+    
+    await updateRecord(id, {...data,equipment_type:Number(values?.equipment_type)});
     setLoading(false);
     onClose(); // Close the form after saving
   };
@@ -99,8 +120,6 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
             >
               <div className="space-y-4">
                 <div className="grid gap-4 grid-cols-1">
-                   
-
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                     <Label htmlFor="major_category">Major Category</Label>
                     <div>
@@ -118,13 +137,13 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                         name="equipment_type"
                         control={control}
                         render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select onValueChange={field.onChange} value={String(field.value)}>
                             <SelectTrigger id="equipment_type">
                               <SelectValue placeholder="Select equipment type" />
                             </SelectTrigger>
                             <SelectContent>
                               {equipmentData?.map((item) => (
-                                <SelectItem key={item.id} value={"" + item.id}>
+                                <SelectItem key={item.id} value={String(item.id)}>
                                   {item.equipment_type}
                                 </SelectItem>
                               ))}

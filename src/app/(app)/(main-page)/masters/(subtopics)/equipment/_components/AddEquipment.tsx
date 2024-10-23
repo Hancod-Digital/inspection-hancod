@@ -29,6 +29,8 @@ import { useSubtopic } from '@/context/SubtopicContext';
 const equipmentDetailsSchema = object({
   minor_category: string().nonempty('Minor Category is required'),
   equipment_no: string().nonempty('Equipment No is required'),
+  equipment_type: string().nonempty('Equipment Type is required'),
+
   owner_id: string().nonempty('Owner ID  is required'),
   registration_no: string().nonempty('Registration No is required'),
   model_no: string().nonempty('Model No is required'),
@@ -69,6 +71,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [standardOptions, setStandardOptions] = useState<any[]>([]);
   const [annexureOptions, setAnnexureOptions] = useState<any[]>([]);
   const [locationOptions, setLocationOptions] = useState<any[]>([]);
+  const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -77,6 +80,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   useEffect(() => {
     const fetchOptions = async () => {
       try {
+        // Fetch Equipment Type category options
+        const equipmentType = await getAllSingleSubtopic('equipment_type');
+        if (equipmentType) {
+          setMinorCategoryOptions(equipmentType);
+        }
+        
         // Fetch minor category options
         const minorCategories = await getAllSingleSubtopic('minor_category');
         if (minorCategories) {
@@ -106,6 +115,13 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         if (locations) {
           setLocationOptions(locations);
         }
+        // Fetch owner options
+        const owners = await getAllSingleSubtopic('owner');
+        if (owners) {
+          setOwnerOptions(owners);
+        }
+
+      
       } catch (error) {
         console.error('Error fetching options:', error);
         // Optionally, handle the error (e.g., show a notification)
@@ -175,7 +191,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               </SelectTrigger>
                               <SelectContent>
                                 {minorCategoryOptions.map((option: any) => (
-                                  <SelectItem key={option.id} value={option.minor_category}>
+                                  <SelectItem key={option.id} value={String(option.id)}>
                                     {option.minor_category}
                                   </SelectItem>
                                 ))}
@@ -212,10 +228,52 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                       <Label htmlFor="owner_id">Owner ID/Tag No</Label>
                       <div>
-                        <Controller
+                      <Controller
                           name="owner_id"
                           control={control}
-                          render={({ field }) => <Input id="owner_id" {...field} />}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="owner_id">
+                                <SelectValue placeholder="Select owner_id" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {ownerOptions?.map((option: any) => (
+                                  <SelectItem key={option.id} value={String(option.id)}>
+                                    {option.owner}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.owner_id && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.owner_id.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="equipment_type">Equipment Type</Label>
+                      <div>
+                      <Controller
+                          name="equipment_type"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="equipment_type">
+                                <SelectValue placeholder="Select equipment_type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {ownerOptions?.map((option: any) => (
+                                  <SelectItem key={option.id} value={String(option.id)}>
+                                    {option.owner}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
                         />
                         {errors.owner_id && (
                           <p className="text-red-500 mt-1 text-[13px] ">
@@ -273,7 +331,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               </SelectTrigger>
                               <SelectContent>
                                 {supplierOptions?.map((option: any) => (
-                                  <SelectItem key={option.id} value={option.manufacturer}>
+                                  <SelectItem key={option.id} value={String(option.id)}>
                                     {option.manufacturer}
                                   </SelectItem>
                                 ))}
@@ -327,7 +385,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               </SelectTrigger>
                               <SelectContent>
                                 {locationOptions?.map((option: any) => (
-                                  <SelectItem key={option.id} value={option.location}>
+                                  <SelectItem key={option.id} value={String(option.id)}>
                                     {option.location}
                                   </SelectItem>
                                 ))}
@@ -381,7 +439,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               </SelectTrigger>
                               <SelectContent>
                                 {standardOptions?.map((option: any) => (
-                                  <SelectItem key={option.id} value={option.standard}>
+                                  <SelectItem key={option.id} value={String(option.id)}>
                                     {option.standard}
                                   </SelectItem>
                                 ))}
@@ -428,7 +486,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               </SelectTrigger>
                               <SelectContent>
                                 {annexureOptions.map((option: any) => (
-                                  <SelectItem key={option.id} value={option.annexure}>
+                                  <SelectItem key={option.id} value={String(option.id)}>
                                     {option.annexure}
                                   </SelectItem>
                                 ))}

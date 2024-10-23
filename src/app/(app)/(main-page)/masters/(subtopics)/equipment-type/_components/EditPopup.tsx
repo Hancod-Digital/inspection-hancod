@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 
 const equipmentDetailsSchema = object({
   category: string().nonempty('Category is required'),
-  equipmentType: string().nonempty('Equipment Type is required'),
+  equipment_type: string().nonempty('Equipment Type is required'),
   status: string().nonempty('Status is required')});
 
   type EquipmentDetailsSchemaType = TypeOf<typeof equipmentDetailsSchema>;
@@ -27,10 +27,17 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const { updateRecord } = useSubtopic();
- 
+  const { updateRecord ,findRecordById } = useSubtopic();
+  const data = findRecordById(id)
+  console.log(data);
+  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
+    defaultValues: {
+      category: data?.category||"",
+      equipment_type: data?.equipment_type || "",
+      status: data?.status 
+    }
   });
 
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
@@ -45,6 +52,7 @@ export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFor
     setLoading(true)
     console.log(values);
     await updateRecord(id,values)
+    onClose()
     setLoading(false) 
   };
 
@@ -71,11 +79,11 @@ export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFor
               <div className="space-y-4">
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                    <Label htmlFor="equipmentType">Equipment Type</Label>
+                    <Label htmlFor="equipment_type">Equipment Type</Label>
                     <div>
-                      <Input id="equipmentType" {...methods.register('equipmentType')} />
-                      {errors.equipmentType && (
-                        <p className="text-red-500 mt-1">{errors.equipmentType.message}</p>
+                      <Input id="equipment_type" {...methods.register('equipment_type')} />
+                      {errors.equipment_type && (
+                        <p className="text-red-500 mt-1">{errors.equipment_type.message}</p>
                       )}
                     </div>
                   </div>

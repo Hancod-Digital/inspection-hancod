@@ -48,10 +48,10 @@ export default function EquipmentTable() {
                         <React.Fragment key={item.id}> 
                             <TableRow>
                                 <TableCell className="py-4">{idx + 1}</TableCell>
-                                <TableCell className="py-4">{item?.location.name}</TableCell>
-                                <TableCell className="py-4">{item?.site.name}</TableCell>
-                                <TableCell className="py-4">{item?.area.name}</TableCell>
-                                <TableCell className="py-4">{item?.location.status}</TableCell>
+                                <TableCell className="py-4">{item?.location?.name}</TableCell>
+                                <TableCell className="py-4">{item?.site?.name}</TableCell>
+                                <TableCell className="py-4">{item?.area?.name}</TableCell>
+                                <TableCell className="py-4">{item?.location?.status}</TableCell>
                                 <TableCell className="py-4">
                                     <div className="flex space-x-2">
                                         <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">

@@ -16,10 +16,18 @@ import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditIcon from '@/components/icons/EditIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
 
-export default function EquipmentTable() {
+export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { data, isLoading, error } = useSubtopic();
-
+    const rearrangedData = data
+    ? [...data].sort((a:any, b:any) => {
+        const aMatch = a.standard.toLowerCase().includes(searchValue.toLowerCase());
+        const bMatch = b.standard.toLowerCase().includes(searchValue.toLowerCase());
+        if (aMatch && !bMatch) return -1;
+        if (!aMatch && bMatch) return 1;
+        return 0;
+      })
+    : [];
     const handleEditClick = (idx: number) => {
         setEditingRow(idx === editingRow ? null : idx);
     };
@@ -43,7 +51,7 @@ export default function EquipmentTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.map((item, idx) => (
+                        {rearrangedData.map((item, idx) => (
                             <React.Fragment key={idx + 1}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>

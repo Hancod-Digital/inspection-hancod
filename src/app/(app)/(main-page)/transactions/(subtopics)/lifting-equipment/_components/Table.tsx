@@ -70,12 +70,12 @@ export default function EquipmentTable() {
               <React.Fragment key={item.id}>
                 <TableRow>
                   <TableCell className="py-4">{idx + 1}</TableCell>
-                  <TableCell className="py-4">{item.equipmentNo}</TableCell>
-                  <TableCell className="py-4">{item.title}</TableCell>
-                  <TableCell className="py-4">{item.equipmentType}</TableCell>
-                  <TableCell className="py-4">{item.lastThoroughDate}</TableCell>
-                  <TableCell className="py-4">{item.nextThoroughDate}</TableCell>
-                  <TableCell className="py-4">{item.inspectionDate}</TableCell>
+                  <TableCell className="py-4">{item?.equipmentNo}</TableCell>
+                  <TableCell className="py-4">{item?.title}</TableCell>
+                  <TableCell className="py-4">{item?.equipmentType}</TableCell>
+                  <TableCell className="py-4">{item?.lastThoroughDate}</TableCell>
+                  <TableCell className="py-4">{item?.nextThoroughDate}</TableCell>
+                  <TableCell className="py-4">{item?.inspectionDate}</TableCell>
                   <TableCell
                     className={`py-4 ${
                       item.status.toLowerCase() === 'approved'

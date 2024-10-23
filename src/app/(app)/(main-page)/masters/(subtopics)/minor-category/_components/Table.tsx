@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Table,
@@ -12,24 +12,61 @@ import {
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
+import DeleteDialogue from '@/components/ui/delete-dialog';
 import { useSubtopic } from '@/context/SubtopicContext';
+import { minorCategoryDataRange } from '@/lib/utils';
 
-export default function EquipmentTable() {
+// Define the TypeScript interface for better type safety
+ 
+export default function MinorCategory({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const {   FetchMinorCategory } = useSubtopic();
-    const { data } = FetchMinorCategory()
-    console.log(data);
-    const handleEditClick = (idx: number) => {
-        setEditingRow(idx === editingRow ? null : idx);
+    const { isLoading, error, getMergedData, deleteRecord } = useSubtopic();
+    const [minorCategories, setMinorCategories] = useState<any>([]);
+
+    useEffect(() => {
+        async function fetchMinorCategories() {
+            try {
+                const data = await getMergedData(minorCategoryDataRange, 'minor_category');
+                console.log(data);
+                
+                setMinorCategories(data);
+            } catch (error) {
+                console.error("Error fetching minor categories:", error);
+            }
+        }
+
+        fetchMinorCategories();
+    }, [getMergedData]);
+
+    const handleEditClick = (slNo: number) => {
+        setEditingRow(slNo === editingRow ? null : slNo);
     };
 
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
 
+    const handleDeleteClick = (id: number) => {
+        deleteRecord(id);
+    };
+
+    const rearrangedData = minorCategories
+    ? [...minorCategories].sort((a:any, b:any) => {
+        const aMatch = a.minor_category.toLowerCase().includes(searchValue.toLowerCase());
+        const bMatch = b.minor_category.toLowerCase().includes(searchValue.toLowerCase());
+        if (aMatch && !bMatch) return -1;
+        if (!aMatch && bMatch) return 1;
+        return 0;
+      })
+    : [];
+
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : error ? (
+                <div>Error loading data</div>
+            ) : (
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
@@ -42,22 +79,30 @@ export default function EquipmentTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.map((item: { minor_category: {status:string, name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; major_category: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; standard: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; status: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; id: number; }, idx: number) => (
-                            <React.Fragment key={idx + 1}>
+                        {rearrangedData.map((item:any, idx:number) => (
+                            <React.Fragment key={item.id}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
-                                    <TableCell className="py-4">{item?.minor_category?.name}</TableCell>
-                                    <TableCell className="py-4">{item?.major_category?.name}</TableCell>
-                                    <TableCell className="py-4">{item?.standard?.name}</TableCell>
-                                    <TableCell className="py-4">{item?.minor_category?.status}</TableCell>
+                                    <TableCell className="py-4">{item?.minor_category}</TableCell>
+                                    <TableCell className="py-4">{item?.major_category?.major_category}</TableCell>
+                                    <TableCell className="py-4">{item?.standard?.standard}</TableCell>
+                                    <TableCell className="py-4">{item?.status}</TableCell>
                                     <TableCell className="py-4">
                                         <div className="flex space-x-2">
-                                            <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
+                                            <button
+                                                onClick={() => handleEditClick(idx + 1)}
+                                                className="text-red-500"
+                                            >
                                                 <EditIcon />
                                             </button>
-                                            <button className="text-red-500">
-                                                <DeleteIcon />
-                                            </button>
+                                            <DeleteDialogue
+                                                onConfirm={() => handleDeleteClick(item.id)}
+                                                triggerButton={
+                                                    <button className="text-red-500">
+                                                        <DeleteIcon />
+                                                    </button>
+                                                }
+                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -81,7 +126,7 @@ export default function EquipmentTable() {
                         ))}
                     </TableBody>
                 </Table>
-        
+            )}
         </div>
     );
 }

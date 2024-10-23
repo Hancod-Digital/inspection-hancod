@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Table,
@@ -13,17 +13,48 @@ import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
+import { siteDataRange } from '@/lib/utils';
+import DeleteDialogue from '@/components/ui/delete-dialog';
 
-export default function EquipmentTable() {
+export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { data, isLoading, error } = useSubtopic();
+    const { isLoading, error, getMergedData, deleteRecord } = useSubtopic();
+    const [subtopics, setSubtopics] = useState<any[]>([]); // Define the type as needed
 
-    const handleEditClick = (idx: number) => {
-        setEditingRow(idx === editingRow ? null : idx);
+    useEffect(() => {
+        async function fetchSubtopics() {
+            try {
+                const site = await getMergedData(siteDataRange, 'site');
+                setSubtopics(site);
+            } catch (error) {
+                console.error("Error fetching subtopics:", error);
+            }
+        }
+
+        fetchSubtopics();
+    }, [getMergedData]);
+
+    const rearrangedData = subtopics
+        ? [...subtopics].sort((a: any, b: any) => {
+            const aMatch = a.site.toLowerCase().includes(searchValue.toLowerCase());
+            const bMatch = b.site.toLowerCase().includes(searchValue.toLowerCase());
+            if (aMatch && !bMatch) return -1;
+            if (!aMatch && bMatch) return 1;
+            return 0;
+          })
+        : [];
+
+    const handleEditClick = (slNo: number) => {
+        setEditingRow(slNo === editingRow ? null : slNo);
     };
 
     const handleCloseEdit = () => {
         setEditingRow(null);
+    };
+
+    const handleDeleteClick = (item: any) => {
+        // You can add any additional logic before deleting
+        // For example, confirming deletion is handled by DeleteAlertDialog
     };
 
     return (
@@ -37,19 +68,19 @@ export default function EquipmentTable() {
                     <TableHeader>
                         <TableRow>
                             <TableHead className="py-4">Sl. No.</TableHead>
-                            <TableHead className="py-4">Site</TableHead>
+                            <TableHead className="py-4">Major Category</TableHead>
                             <TableHead className="py-4">Area</TableHead>
                             <TableHead className="py-4">Status</TableHead>
                             <TableHead className="py-4">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.map((item, idx) => (
-                            <React.Fragment key={idx + 1}>
+                        {rearrangedData.map((item: any, idx: number) => (
+                            <React.Fragment key={item.id}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
                                     <TableCell className="py-4">{item.site}</TableCell>
-                                    <TableCell className="py-4">{item.area}</TableCell>
+                                    <TableCell className="py-4">{item.area?.thumbnail}</TableCell>
                                     <TableCell className="py-4">{item.status}</TableCell>
                                     <TableCell className="py-4">
                                         <div className="flex space-x-2">
@@ -59,9 +90,14 @@ export default function EquipmentTable() {
                                             >
                                                 <EditIcon />
                                             </button>
-                                            <button className="text-red-500">
-                                                <DeleteIcon />
-                                            </button>
+                                            <DeleteDialogue
+                                                onConfirm={async () => await deleteRecord(item.id)}
+                                                triggerButton={
+                                                    <button className="text-red-500">
+                                                        <DeleteIcon />
+                                                    </button>
+                                                }
+                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>

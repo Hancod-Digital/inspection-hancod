@@ -25,7 +25,6 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any[]>([]); // State to hold fetched data
   const { addRecord, getAllSingleSubtopic } = useSubtopic();
   
   const methods = useForm<EquipmentDetailsInput>({
@@ -33,17 +32,17 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   });
 
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const [equipmentTypeOptions, setEquipmentTypeOptions] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchSubtopics = async () => {
       const subtopics = await getAllSingleSubtopic('equipment_type');
-      console.log(subtopics,"sjdsidjsdjsldjlsdksjmdk");
-
-      setData(subtopics || []); // Store the fetched data in state
+       
+      setEquipmentTypeOptions(subtopics); // Store the fetched data in state
     };
 
     fetchSubtopics(); // Call the function to fetch data when component mounts
-  }, [getAllSingleSubtopic]);
+  }, [equipmentTypeOptions, getAllSingleSubtopic]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -99,9 +98,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select equipment type" />
                             </SelectTrigger>
                             <SelectContent>
-                              {data?.map((item) => (
-                                <SelectItem key={item.id} value={""+item.id}>
-                                  {item.equipment_type}
+                              {equipmentTypeOptions?.map((item) => (
+                                <SelectItem key={item.id} value={String(item.id)}>
+                                  {item?.equipment_type}
                                 </SelectItem>
                               ))}
                             </SelectContent>

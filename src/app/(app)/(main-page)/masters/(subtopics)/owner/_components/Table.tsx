@@ -15,10 +15,21 @@ import OwnerDetailsForm from './EditPopup';
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
+import DeleteDialogue from '@/components/ui/delete-dialog';
 
-export default function OwnerTable() {
+export default function OwnerTable({searchValue}:{searchValue:string}   ) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { data, isLoading, error } = useSubtopic();
+    const { data, isLoading, error,deleteRecord } = useSubtopic();
+
+    const rearrangedData = data
+    ? [...data].sort((a:any, b:any) => {
+        const aMatch = a.owner.toLowerCase().includes(searchValue.toLowerCase());
+        const bMatch = b.owner.toLowerCase().includes(searchValue.toLowerCase());
+        if (aMatch && !bMatch) return -1;
+        if (!aMatch && bMatch) return 1;
+        return 0;
+      })
+    : [];
 
     const handleEditClick = (idx: number) => {
         setEditingRow(idx === editingRow ? null : idx);
@@ -47,7 +58,7 @@ export default function OwnerTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.map((item, idx) => (
+                        {rearrangedData.map((item, idx) => (
                             <React.Fragment key={idx + 1}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
@@ -60,9 +71,14 @@ export default function OwnerTable() {
                                             <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
                                                 <EditIcon />
                                             </button>
-                                            <button className="text-red-500">
-                                                <DeleteIcon />
-                                            </button>
+                                            <DeleteDialogue
+                                                onConfirm={async () => await deleteRecord(item.id)}
+                                                triggerButton={
+                                                    <button className="text-red-500">
+                                                        <DeleteIcon />
+                                                    </button>
+                                                }
+                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>

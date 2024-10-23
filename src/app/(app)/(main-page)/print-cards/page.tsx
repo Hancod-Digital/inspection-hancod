@@ -25,7 +25,7 @@ const LiftingGearMulti = () => {
   };
 
   useEffect(() => {
-    makeApiCall(() => new StudentService().getStudents(activeTab === "User Details" || activeTab === "Certificate" ? false : true), {
+    makeApiCall(() => new StudentService().getStudents(activeTab === "User Details" ? true : false,activeTab === "Certificate" && true), {
       afterSuccess: (data:any) => {
         setData(data);
       },

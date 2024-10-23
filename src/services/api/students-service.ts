@@ -30,12 +30,21 @@ export class StudentService extends Supabase {
         return data;
     }
      
-    async getStudents(is_card:boolean) {
+    async getStudents(is_card:boolean, is_qrl?:boolean) {
         await this.ensureAuthenticated();
         if(is_card){
             const { data, error } = await this.supabase
             .from('students_credentials')
             .select('*')
+            if (error) {
+                return false;
+            }
+            return data;
+        }else if(is_qrl){
+            const { data, error } = await this.supabase
+            .from('students_credentials')
+            .select('*')
+            .not('qr_url', 'is', null); // Replace 'card' with your field name
             if (error) {
                 return false;
             }
@@ -60,7 +69,7 @@ export class StudentService extends Supabase {
     
         const { data, error } = await this.supabase
             .from("students_credentials")
-            .update({ card_qr_url:qr_url }) // Update only the qr_url field
+            .update({ qr_url:qr_url }) // Update only the qr_url field
             .eq("id", Number(id))
             .select(); // Optional: Returns the updated record(s)
     

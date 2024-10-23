@@ -15,10 +15,11 @@ import ManufacturerDetailsForm from './EditPopup';
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
+import DeleteDialogue from '@/components/ui/delete-dialog';
 
-export default function ManufacturerTable() {
+export default function ManufacturerTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { data, isLoading, error } = useSubtopic();
+    const { data, isLoading, error,deleteRecord } = useSubtopic();
 
     const handleEditClick = (idx: number) => {
         setEditingRow(idx === editingRow ? null : idx);
@@ -27,6 +28,16 @@ export default function ManufacturerTable() {
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
+
+    const rearrangedData = data
+    ? [...data].sort((a:any, b:any) => {
+        const aMatch = a.manufacturer.toLowerCase().includes(searchValue.toLowerCase());
+        const bMatch = b.manufacturer.toLowerCase().includes(searchValue.toLowerCase());
+        if (aMatch && !bMatch) return -1;
+        if (!aMatch && bMatch) return 1;
+        return 0;
+      })
+    : [];
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
@@ -46,7 +57,7 @@ export default function ManufacturerTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.map((item, idx) => (
+                            {rearrangedData.map((item, idx) => (
                             <React.Fragment key={idx + 1}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
@@ -58,9 +69,14 @@ export default function ManufacturerTable() {
                                             <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
                                                 <EditIcon/>
                                             </button>
-                                            <button className="text-red-500">
-                                                <DeleteIcon/>
-                                            </button>
+                                            <DeleteDialogue
+                                                onConfirm={async () => await deleteRecord(item.id)}
+                                                triggerButton={
+                                                    <button className="text-red-500">
+                                                        <DeleteIcon />
+                                                    </button>
+                                                }
+                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>

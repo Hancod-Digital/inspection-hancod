@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -22,6 +22,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import AnimateButton from "../animated/AnimateButton";
 import { LoadingProvider } from '@/context/LoadingContext';
+import { flushSync } from 'react-dom';
 
 type Option = {
     type?: string;
@@ -37,7 +38,17 @@ export default function Sidebar() {
     const currentPath = router;
     const [currentActiveDiv, setCurrentActiveDiv] = useState(currentPath.split('/')[1])
     const { setLoading } = useLoading();  // Access setLoading from the context
-
+    useLayoutEffect(() => {
+           
+            setLoading(false);
+      
+    }, [currentActiveDiv]);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+          setLoading(false);
+        }, 0);
+        return () => clearTimeout(timer);
+      }, [currentActiveDiv]);
     const options: Option[] = [
         {
             title: "Dashboard",
@@ -289,12 +300,12 @@ export default function Sidebar() {
                         options={options}
                         currentActiveDiv={currentActiveDiv}
                         setCurrentActiveDiv={setCurrentActiveDiv}
-                    />
+                    /> 
                 </SheetContent>
             </Sheet>
             <SidebarItems
                 className="sticky top-0 z-50 hidden h-[90vh] min-w-72 sm:block"
-                options={options}
+                options={options} 
                 currentActiveDiv={currentActiveDiv}
                 setCurrentActiveDiv={setCurrentActiveDiv}
             />
@@ -309,144 +320,160 @@ interface SidebarItemsProps {
     currentActiveDiv: string
     setCurrentActiveDiv: React.Dispatch<React.SetStateAction<string>>
 }
-function SidebarItems({ options, className, currentActiveDiv, setCurrentActiveDiv }: SidebarItemsProps) {
-    const currentPathname = usePathname();
-    const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({});
 
-    const toggleExpanded = (identifier: string) => {
-        setExpandedItems(prev => ({ ...prev, [identifier]: !prev[identifier] }));
+const AnimateButtons= ({ children }:any) => (
+  <motion.div
+    initial={{ opacity: 0, y: -10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    {children}
+  </motion.div>
+);
 
-    };
-    const { isLoadingOne, setLoading } = useLoading();  // Access loading state and setter
+const SubtopicButton = ({ subtopic, currentPathname, onClick, isActive }:any) => (
+  <motion.div
+    initial={{ x: -20, opacity: 0 }}
+    animate={{ x: 0, opacity: 1 }}
+    exit={{ x: -20, opacity: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <Link href={subtopic.url || '#'} passHref>
+      <Button
+        onClick={onClick}
+        variant="ghost"
+        className={cn(
+          "flex w-full justify-start shadow-sm pl-8",
+          isActive && "font-bold text-primary"
+        )}
+      >
+        {subtopic.icon}
+        <span className="text-start">{subtopic.title}</span>
+      </Button>
+    </Link>
+  </motion.div>
+);
 
-    const renderNavigationButton = (opt: Option) => {
-        const isActive = currentPathname === opt.url;
-        const hasSubtopics = opt.subtopics && opt.subtopics.length > 0;
-        const isExpanded = expandedItems[opt.identifier || ''];
+const NavigationButton = ({ opt, isActive, isExpanded, onClick, hasSubtopics }:any) => (
+  <AnimateButtons>
+    {opt.url ? (
+      <Link href={opt.url} passHref>
+        <Button
+          onClick={onClick}
+          variant="ghost"
+          className={cn(
+            "flex w-full justify-start shadow-sm rounded-none",
+            isActive && "font-bold text-primary border-r-[3px] border-primary"
+          )}
+        >
+          {opt.icon}
+          <span className="text-start flex-grow">{opt.title}</span>
+          {hasSubtopics && isExpanded && <ChevronDown size={16} />}
+        </Button>
+      </Link>
+    ) : (
+      <Button
+        onClick={onClick}
+        variant="ghost"
+        className={cn(
+          "flex w-full justify-start shadow-sm rounded-none",
+          isActive && "font-bold text-primary border-r-[3px] border-primary"
+        )}
+      >
+        {opt.icon}
+        <span className="text-start flex-grow">{opt.title}</span>
+        {hasSubtopics && isExpanded && <ChevronDown size={16} />}
+      </Button> 
+    )}
+  </AnimateButtons>
+);
 
-        const buttonContent = (
-            <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-            >
-                <Button
-                    onClick={() => {
+function SidebarItems({ options, className, currentActiveDiv, setCurrentActiveDiv }:any) {
+  const currentPathname = usePathname();
+  const [expandedItems, setExpandedItems] = useState<any>({});
+  const { isLoadingOne, setLoading } = useLoading(); 
 
-                        if (hasSubtopics) {
-                            toggleExpanded(opt.identifier || '');
-                        } 
-                        if (opt.identifier != "transactions" && opt.identifier != "masters") {
-                            setCurrentActiveDiv(opt.identifier!)
-                            setLoading(true);
-                            setTimeout(() => {
-                                setLoading(false);
-                            }, 500);
-                        }
-                    }}
-                    variant="ghost"
+  const toggleExpanded = useCallback((identifier: string | number) => {
+    setExpandedItems((prev:any) => ({ ...prev, [identifier]: !prev[identifier] }));
+  }, []);
 
+  const handleItemClick = useCallback((opt: { subtopics: string | any[]; identifier: string; }) => {
+    const hasSubtopics = opt.subtopics && opt.subtopics.length > 0;
+    if (hasSubtopics) {
+      toggleExpanded(opt.identifier || '');
+    }
+    if (opt.identifier !== "transactions" && opt.identifier !== "masters") {
+      setCurrentActiveDiv(opt.identifier);
+      setLoading(true);
+      setTimeout(() => setLoading(false), 500);
+    }
+    console.log(opt);
+    
+  }, [setCurrentActiveDiv, setLoading, toggleExpanded]);
 
-                    className={cn(
-                        "flex w-full justify-start shadow-sm rounded-none",
-                        currentActiveDiv === opt.identifier && "font-bold text-primary ",
-                        currentActiveDiv === opt.identifier && "border-r-[3px] border-primary"
-                    )}
-
-
-                >
-                    {opt.icon}
-                    <span className="text-start flex-grow">
-
-                        {opt.title}
-                    </span>
-                    {hasSubtopics && (
-                        isExpanded && <ChevronDown size={16} />
-                    )}
-                </Button>
-            </motion.div>
-        );
-
-        return (
-            <React.Fragment key={opt.identifier}>
-                {opt.url ? (
-                    <AnimateButton>
-                        <Link href={opt.url} legacyBehavior>
-                            {buttonContent}
-                        </Link></AnimateButton>
-                ) : buttonContent}
-                <AnimatePresence initial={false}>
-                    {hasSubtopics && isExpanded && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="ml-4 overflow-hidden"
-                        >
-
-                            {opt.subtopics?.map(subtopic => (
-                                <motion.div
-                                    key={subtopic.identifier}
-                                    initial={{ x: -20, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    exit={{ x: -20, opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <AnimateButton>
-                                        <Link href={subtopic.url || '#'} legacyBehavior>
-                                            <Button
-                                                onClick={() => {
-                                                    setLoading(true);
-                                                     setTimeout(() => {
-                                                        setLoading(false);
-                                                    }, 500);
-                                                    return setCurrentActiveDiv(opt.identifier!)
-                                                }}
-                                                variant="ghost"
-                                                className={cn(
-                                                    "flex w-full justify-start shadow-sm pl-8",
-                                                    currentPathname === subtopic.url && "font-bold text-primary"
-                                                )}
-                                            >
-                                                {subtopic.icon}
-                                                <span className="text-start">
-                                                    {subtopic.title}
-                                                </span>
-                                            </Button>
-                                        </Link>
-
-                                    </AnimateButton>
-                                </motion.div>
-                            ))}
-
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </React.Fragment>
-        );
-    };
+  const renderNavigationButton = useCallback((opt: any) => {
+    const isActive = currentActiveDiv === opt.identifier;
+    const hasSubtopics = opt.subtopics && opt.subtopics.length > 0;
+    const isExpanded = expandedItems[opt.identifier || ''];
 
     return (
-        <aside className={cn("border border-t-0 bg-secondary p-2 py-8 backdrop-blur-lg", className)}>
-            <div className="grid gap-2">
-                {options.map((opt) => (
-                    <div
-                        key={opt.identifier}
-
-                    >
-                        {opt.type === "separator" ? (
-                            <div className="px-2">
-                                <Separator />
-                            </div>
-                        ) : (
-
-                            renderNavigationButton(opt)
-                        )}
-                    </div>
-                ))}
-
-            </div>
-        </aside>
+      <React.Fragment key={opt.identifier}>
+        <NavigationButton
+          opt={opt}
+          isActive={isActive}
+          isExpanded={isExpanded}
+          onClick={() => handleItemClick(opt)}
+          hasSubtopics={hasSubtopics}
+        />
+        <AnimatePresence initial={false}>
+          {hasSubtopics && isExpanded && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="ml-4 overflow-hidden"
+            >
+              {opt.subtopics?.map((subtopic: any) => (
+                <SubtopicButton
+                  key={subtopic.identifier}
+                  subtopic={subtopic}
+                  currentPathname={currentPathname}
+                  onClick={() => {
+                    flushSync(() => {
+                      setLoading(true);
+                      setCurrentActiveDiv(opt.identifier);
+                      setLoading(false);
+                    });
+                  
+                  }}
+                  isActive={currentPathname === subtopic.url}
+                />
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </React.Fragment>
     );
+  }, [currentActiveDiv, expandedItems, currentPathname, handleItemClick, setLoading]);
+
+  return (
+    <aside className={cn("border border-t-0 bg-secondary p-2 py-8 backdrop-blur-lg", className)}>
+      <div className="grid gap-2">
+        {options.map((opt: { identifier: React.Key | null | undefined; type: string; }) => (
+          <div key={opt.identifier}>
+            {opt.type === "separator" ? (
+              <div className="px-2">
+                <Separator />
+              </div>
+            ) : (
+              renderNavigationButton(opt)
+            )}
+          </div>
+        ))}
+      </div>
+    </aside>
+  );
 }
+
+ 

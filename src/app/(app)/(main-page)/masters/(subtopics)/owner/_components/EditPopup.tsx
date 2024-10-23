@@ -10,10 +10,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import dynamic from 'next/dynamic';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
-import { useSubtopic } from '@/context/SubtopicContext';
 
 const ownerDetailsSchema = z.object({
   owner: z.string().nonempty('Owner is required'),
@@ -21,7 +21,7 @@ const ownerDetailsSchema = z.object({
   code: z.string().nonempty('Code is required'),
   status: z.string().nonempty('Status is required'),
   qp_footer: z.string().nonempty('Qp Footer is required'),
-  non_qp_Footer: z.string().nonempty('Non-Qp Footer is required'),
+  non_qp_footer: z.string().nonempty('Non-Qp Footer is required'),
   client_specification: z.string().nonempty('Client Specification is required'),
 });
 
@@ -32,12 +32,25 @@ interface OwnerDetailsFormProps {
   id: number;
 }
 
-export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps) {
+export default function OwnerDetailsForm({ onClose, id }: OwnerDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const { updateRecord, findRecordById } = useSubtopic();
 
+  // Get existing data synchronously
+  const data = findRecordById(id);
+console.log(data);
+
   const methods = useForm<OwnerDetailsInput>({
     resolver: zodResolver(ownerDetailsSchema),
+    defaultValues: {
+      owner: data?.owner || '',
+      address: data?.address || '',
+      code: data?.code || '',
+      status: data?.status || '',
+      qp_footer: data?.qp_footer || '',
+      non_qp_footer: data?.non_qp_footer || '',
+      client_specification: data?.client_specification || '',
+    },
   });
 
   const {
@@ -78,7 +91,6 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="owner" className="mt-3">Owner</Label>
                     <div>
@@ -121,7 +133,7 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
                               <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
@@ -158,10 +170,10 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
 
                   <div className="grid gap-4 grid-cols-1 pt-5">
                     <div className="w-full">
-                      <Label htmlFor="non_qp_Footer">Non-Qp Footer</Label>
+                      <Label htmlFor="non_qp_footer">Non-Qp Footer</Label>
                       <div>
                         <Controller
-                          name="non_qp_Footer"
+                          name="non_qp_footer"
                           control={control}
                           render={({ field }) => (
                             <ReactQuill
@@ -171,8 +183,8 @@ export default function OwnerDetailsForm({ onClose,  id }: OwnerDetailsFormProps
                             />
                           )}
                         />
-                        {errors.non_qp_Footer && (
-                          <p className="text-red-500 text-[8px] mt-1">{errors.non_qp_Footer.message}</p>
+                        {errors.non_qp_footer && (
+                          <p className="text-red-500 text-[8px] mt-1">{errors.non_qp_footer.message}</p>
                         )}
                       </div>
                     </div>

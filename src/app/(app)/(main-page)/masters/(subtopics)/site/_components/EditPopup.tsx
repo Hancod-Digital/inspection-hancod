@@ -8,43 +8,101 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
+import { flushSync } from 'react-dom';
+import { siteDataRange } from '@/lib/utils';
 
 const equipmentDetailsSchema = object({
-   site: string().nonempty('Site is required'),
+  site: string().nonempty('Site is required'),
   area: string().nonempty('Area is required'),
-  status: z.string().nonempty('Status is required')
+  status: z.string().nonempty('Status is required'),
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
-  id: number
+  id: number;
 }
 
-export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const { updateRecord, findRecordById } = useSubtopic();
+  const [areaData, setAreaData] = useState<any[]>([]);
+  const [data, setData] = useState<any>(null);
+  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic } = useSubtopic();
+
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
+    defaultValues: {
+      site: '',
+      area: '',
+      status: '',
+    },
   });
 
-  const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const {
+    reset,
+    handleSubmit,
+    control,
+    formState: { isSubmitSuccessful, errors },
+  } = methods;
+
+  // Fetch existing data when the component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      const recordData = await findRecordByIdWithReference(id, siteDataRange);
+      console.log('Fetched Data:', recordData);
+      flushSync(() => {
+        setData(recordData);
+        reset({
+          site: recordData?.site || '',
+          area: String(recordData?.area?.id) || "",
+          status: recordData?.status || '',
+        });
+      });
+    };
+
+    fetchData();
+  }, [id, findRecordByIdWithReference, reset]);
+
+  // Fetch area options when the component mounts
+  useEffect(() => {
+    const fetchAreaData = async () => {
+      const areas = await getAllSingleSubtopic('area');
+      setAreaData(areas || []);
+    };
+    fetchAreaData();
+  }, [getAllSingleSubtopic]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
+      onClose();
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful, reset, onClose]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-    console.log(values);
-   await updateRecord(id,values)
+    console.log('Form Values:', values);
+
+    // Prepare the updated data
+    const updatedData = {
+      ...data,
+      site: values.site,
+      area: Number(values.area),
+      status: values.status,
+    };
+
+    await updateRecord(id, updatedData);
     setLoading(false);
-    onClose()
+    onClose();
   };
 
   return (
@@ -65,11 +123,10 @@ export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFor
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-                  
-                  
-
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                    <Label htmlFor="site" className="mt-3">
+                      Site
+                    </Label>
                     <div>
                       <Input id="site" {...methods.register('site')} />
                       {errors.site && (
@@ -79,9 +136,28 @@ export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFor
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="area" className="mt-3">Area</Label>
+                    <Label htmlFor="area" className="mt-3">
+                      Area
+                    </Label>
                     <div>
-                      <Input id="area" {...methods.register('area')} />
+                      <Controller
+                        name="area"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={String(field.value)}>
+                            <SelectTrigger id="area">
+                              <SelectValue placeholder="Select area" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {areaData?.map((item) => (
+                                <SelectItem key={item.id} value={String(item.id)}>
+                                  {item.thumbnail}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                       {errors.area && (
                         <p className="text-red-500 mt-1">{errors.area.message}</p>
                       )}
@@ -89,7 +165,9 @@ export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFor
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
-                    <Label htmlFor="status" className="mt-3">Status</Label>
+                    <Label htmlFor="status" className="mt-3">
+                      Status
+                    </Label>
                     <div>
                       <Controller
                         name="status"
@@ -100,7 +178,7 @@ export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFor
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
                               <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>

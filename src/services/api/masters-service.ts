@@ -29,22 +29,34 @@ export class MasterService extends Supabase {
         if (error) {
             throw new Error(error.message);
         }
+        console.log(data,"major_data");
+        
         return data;
     }
     
-    async getMergedDataOfSingleDoc(subtopic: string, from: string, to: string) {
+    async getMergedDataOfSingleDoc(subtopic: string, references: { from: string, to: string }[]) {
 
         await this.ensureAuthenticated();
+        console.log(references);
+        
+    console.log("sdsd");
+    
+        // Build the select string dynamically by looping through the references
+        const referencesSelect = references.map(ref => `${ref.to}:${ref.from} (*)`).join(', ');
+    
+        // Build the query
         const { data, error } = await this.supabase
             .from(subtopic)
-            .select(`*, ${to}:${from} (*)`)
-
-
+            .select(`*, ${referencesSelect}`);
+    console.log(data,error);
+    
         if (error) {
             throw new Error(error.message);
         }
+    
         return data;
     }
+    
 
     async getLocationDetails(){
         const { data, error } = await this.supabase
@@ -82,18 +94,35 @@ export class MasterService extends Supabase {
         }
         return data;
     }
-    
-    async addRecordToSubtopic(subtopic: string, record: object) {
+    async addRecordToSubtopic(subtopic: string, record: object, surveyorCompetency?: any) {
         await this.ensureAuthenticated();
-        const { data, error } = await this.supabase
-            .from(subtopic)
-            .insert(record)
-            .select(); // Optional: Returns the inserted record(s)
 
-        if (error) {
-            throw new Error(error.message);
+        try {
+            let surveyorId: string | undefined;
+
+            if (surveyorCompetency) {
+                const { data: competencyData, error: competencyError } = await this.supabase
+                    .from("surveyor_competency")
+                    .insert(surveyorCompetency)
+                    .select();
+
+                if (competencyError) throw competencyError;
+                surveyorId = competencyData[0]?.surveyor_id;
+            }
+
+            const { data, error } = await this.supabase
+                .from(subtopic)
+                .insert(surveyorId ? { ...record, surveyor_id: surveyorId } : record)
+                .select();
+
+            if (error) throw error;
+
+            console.log(data);
+            return data;
+        } catch (error) {
+            console.error('Error in addRecordToSubtopic:', error);
+            throw error instanceof Error ? error : new Error('An unknown error occurred');
         }
-        return data;
     }
 
     async updateSubtopicDetails(subtopic: string, id: number, updates: object) {
@@ -124,4 +153,6 @@ export class MasterService extends Supabase {
         }
         return data;
     }
+
+    
 }

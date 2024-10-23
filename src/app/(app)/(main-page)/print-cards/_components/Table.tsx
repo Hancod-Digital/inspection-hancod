@@ -17,13 +17,14 @@ import EditPopup from './EditPopup';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import QRCode from 'qrcode';
 import { UserService } from '@/services/api/user-service';
-import { toPng } from 'html-to-image';
+import { toPng, toJpeg, toSvg } from 'html-to-image';
+import html2canvas from 'html2canvas';
 
-export default function EquipmentTable({ data, setChanged,changed }:{data:any,setChanged:any,changed:boolean}) {
+export default function EquipmentTable({ data, setChanged, changed }: { data: any, setChanged: any, changed: boolean }) {
     const [editingRow, setEditingRow] = useState<any>(null);
-    
 
- 
+
+
 
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo!);
@@ -32,24 +33,43 @@ export default function EquipmentTable({ data, setChanged,changed }:{data:any,se
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
+    async function loadImages(element: any) {
+        const images = element.getElementsByTagName('img');
+        const promises = [];
 
-    const generateQr = async (id: number, name: any) => {
-        // Create an HTML element with the student's name
-        const htmlElement = document.createElement('div');
-        htmlElement.style.width = '400px';
-        htmlElement.style.height = '200px';
-        htmlElement.style.display = 'flex';
-        htmlElement.style.alignItems = 'center';
-        htmlElement.style.justifyContent = 'center';
-        htmlElement.style.backgroundColor = '#f0f0f0';
-        htmlElement.innerHTML = `<h1>${name}</h1>`;
+        for (let img of images) {
+            if (!img.complete) {
+                promises.push(
+                    new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                    })
+                );
+            }
+        }
 
-        // Append the element to the body (necessary for html-to-image)
-        document.body.appendChild(htmlElement);
+        await Promise.all(promises);
+    }
 
+    const generateQr = async (item:any) => {
         try {
-            // Convert the HTML element to an image (Data URL)
-            const dataUrl = await toPng(htmlElement);
+           
+            // Create an HTML template for the card
+            const htmlElement = document.createElement('div');
+            htmlElement.innerHTML = await fetchHtml(item);
+
+            // Append the element to the body temporarily
+            document.body.appendChild(htmlElement);
+            await loadImages(htmlElement);
+
+            console.log(htmlElement.outerHTML);
+
+            // Convert the HTML element to a PNG image
+            const dataUrl = await toPng(htmlElement, {
+                quality: 0.95,
+                width: htmlElement.offsetWidth,
+                height: htmlElement.offsetHeight,
+            });
 
             // Remove the temporary element
             document.body.removeChild(htmlElement);
@@ -63,7 +83,7 @@ export default function EquipmentTable({ data, setChanged,changed }:{data:any,se
             if (cardImageUrl) {
                 // Update the student's card_url in the database
                 await makeApiCall(
-                    () => new StudentService().updateStudentCardUrl(id, cardImageUrl),
+                    () => new StudentService().updateStudentCardUrl(item?.id, cardImageUrl),
                     {
                         afterSuccess: (data: any) => {
                             console.log('Card image URL updated:', data);
@@ -86,7 +106,7 @@ export default function EquipmentTable({ data, setChanged,changed }:{data:any,se
                 if (qrImageUrl) {
                     // Update the student's card_qr_url in the database
                     await makeApiCall(
-                        () => new StudentService().updateStudentQRUrl(id, qrImageUrl),
+                        () => new StudentService().updateStudentQRUrl(item?.id, qrImageUrl),
                         {
                             afterSuccess: (data: any) => {
                                 console.log('QR code image URL updated:', data);
@@ -94,8 +114,8 @@ export default function EquipmentTable({ data, setChanged,changed }:{data:any,se
                         }
                     );
 
-                    setChanged(!changed)
-                    toastWithTimeout(ToastVariant.Success, "QR code created");
+                    setChanged(!changed);
+                    toastWithTimeout(ToastVariant.Success, "Card and QR code created successfully.");
                 } else {
                     toastWithTimeout(ToastVariant.Error, "Failed to upload QR image.");
                 }
@@ -104,13 +124,307 @@ export default function EquipmentTable({ data, setChanged,changed }:{data:any,se
             }
         } catch (error) {
             console.error("Error generating QR code:", error);
-            toastWithTimeout(ToastVariant.Error, "An Error Occurred");
-        } finally {
-            // Ensure the temporary element is removed
-            if (document.body.contains(htmlElement)) {
-                document.body.removeChild(htmlElement);
-            }
+            toastWithTimeout(ToastVariant.Error, "An error occurred while generating the QR code.");
         }
+    };
+
+    const fetchHtml = async (item:any) => {
+        const htmlString = `
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Generated by Codia AI</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
+<style>
+:root {
+--default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+"Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
+"Source Han Sans CN", sans-serif;
+}
+
+.main-container {
+overflow: hidden;
+}
+
+.main-container,
+.main-container * {
+box-sizing: border-box;
+}
+
+input,
+select,
+textarea,
+button {
+outline: 0;
+}
+
+.main-container {
+position: relative;
+width: 595px;
+height: 842px;
+margin: 0 auto;
+background: #ffffff;
+overflow: hidden;
+}
+.rectangle {
+position: absolute;
+width: 43.224px;
+height: 883.813px;
+top: -16.328px;
+left: 0;
+background: #8d1b3d;
+z-index: 11;
+}
+.whatsapp-image {
+position: absolute;
+width: 178.444px;
+height: 50.344px;
+top: 78.535px;
+left: 67.5px;
+background: url(/blank_certificate/images/8c6dea95de03a5cdcee3820f6ffcd969fa994d12.png)
+no-repeat center;
+background-size: cover;
+z-index: 10;
+}
+.qr-code-verification-report {
+position: absolute;
+width: 514.973px;
+height: 34px;
+top: 155.484px;
+left: 71.944px;
+font-family: Inter, var(--default-font-family);
+font-size: 16px;
+font-weight: 400;
+line-height: 22px;
+text-align: left;
+letter-spacing: -0.64px;
+z-index: 4;
+}
+.qr-code-verification-report-1 {
+position: relative;
+color: #171717;
+font-family: Inter, var(--default-font-family);
+font-size: 16px;
+font-weight: 700;
+line-height: 22px;
+text-align: left;
+letter-spacing: -0.64px;
+}
+.qr-code-authenticated-results {
+position: relative;
+color: #171717;
+font-family: Inter, var(--default-font-family);
+font-size: 16px;
+font-weight: 400;
+line-height: 22px;
+text-align: left;
+letter-spacing: -0.64px;
+}
+.profile-photo {
+position: absolute;
+width: 17.31%;
+height: 13.06%;
+top: 27.34%;
+left: 12.09%;
+background: url(${item?.avatar})
+no-repeat center;
+background-size: cover;
+z-index: 9;
+border-radius: 15px;
+}
+.sheik-hameed-khan {
+display: flex;
+align-items: flex-start;
+justify-content: flex-start;
+position: absolute;
+height: 3.09%;
+top: 43.57%;
+left: 12.09%;
+color: #171717;
+font-family: Inter, var(--default-font-family);
+font-size: 24px;
+font-weight: 600;
+line-height: 26px;
+text-align: center;
+white-space: nowrap;
+z-index: 8;
+}
+.nome {
+display: flex;
+align-items: flex-start;
+flex-wrap: nowrap;
+gap: 15.485px;
+position: absolute;
+width: 174px;
+height: 157px;
+top: 50%;
+left: 50%;
+transform: translate(-129.63%, -7.14%);
+}
+.apparicio-junior {
+display: flex;
+align-items: flex-start;
+justify-content: flex-start;
+flex-shrink: 0;
+position: relative;
+width: 174px;
+height: 157px;
+color: #171717;
+font-family: Inter, var(--default-font-family);
+font-size: 20px;
+font-weight: 500;
+line-height: 71.233px;
+text-align: left;
+text-overflow: initial;
+letter-spacing: -0.8px;
+z-index: 1;
+overflow: hidden;
+}
+.qube-inspection-basic {
+display: flex;
+align-items: flex-start;
+justify-content: flex-start;
+position: absolute;
+width: 201.257px;
+height: 132px;
+top: 468.398px;
+left: 259.973px;
+color: #171717;
+font-family: Inter, var(--default-font-family);
+font-size: 16px;
+font-weight: 400;
+line-height: 30px;
+text-align: left;
+letter-spacing: -0.64px;
+z-index: 3;
+}
+.qatar-id-company {
+display: flex;
+align-items: flex-start;
+justify-content: flex-start;
+position: absolute;
+width: 163.029px;
+height: 132px;
+top: calc(50% - -47.4px);
+left: calc(50% - 225.56px);
+color: rgba(0, 0, 0, 0.5);
+font-family: Inter, var(--default-font-family);
+font-size: 16px;
+font-weight: 400;
+line-height: 30px;
+text-align: left;
+letter-spacing: -0.64px;
+z-index: 2;
+}
+.line {
+position: absolute;
+width: 62.71%;
+height: 0.18%;
+top: 70.29%;
+left: 12.09%;
+background: url(/blank_certificate/images/ed1ac0da-e9fe-4b76-b073-cc9e922ba016.png)
+no-repeat center;
+background-size: 100% 100%;
+z-index: 5;
+}
+.issued-expiry {
+display: flex;
+align-items: flex-start;
+justify-content: flex-start;
+position: absolute;
+height: 5.23%;
+top: 75.55%;
+left: 12.09%;
+color: rgba(0, 0, 0, 0.5);
+font-family: Inter, var(--default-font-family);
+font-size: 16px;
+font-weight: 400;
+line-height: 32px;
+text-align: left;
+white-space: nowrap;
+letter-spacing: -0.64px;
+z-index: 6;
+}
+.date {
+display: flex;
+align-items: flex-start;
+justify-content: flex-start;
+position: absolute;
+height: 5.23%;
+top: 75.55%;
+left: 43.69%;
+color: #171717;
+font-family: Inter, var(--default-font-family);
+font-size: 16px;
+font-weight: 400;
+line-height: 32px;
+text-align: left;
+white-space: nowrap;
+letter-spacing: -0.64px;
+z-index: 7;
+}
+.contact-info {
+display: flex;
+align-items: flex-start;
+justify-content: flex-end;
+position: absolute;
+width: 104.24%;
+height: 2.02%;
+top: 95.93%;
+left: -8.43%;
+color: #8d1b3d;
+font-family: Inter, var(--default-font-family);
+font-size: 12px;
+font-weight: 500;
+line-height: 17px;
+text-align: right;
+white-space: nowrap;
+letter-spacing: 0.24px;
+z-index: 12;
+}
+
+</style>
+</head>
+<body>
+<div class="main-container">
+<div class="rectangle"></div>
+<div class="whatsapp-image"></div>
+<div class="qr-code-verification-report">
+<span class="qr-code-verification-report-1"
+  >QR Code Verification Report<br /></span
+><span class="qr-code-authenticated-results"
+  >This QR code is authenticated and the results are as below</span
+>
+</div>
+<div class="profile-photo"></div>
+<span class="sheik-hameed-khan">${item?.name}</span>
+<div class="nome">
+<span class="apparicio-junior">${item?.certificate_no}<br /><br /></span>
+</div>
+<span class="qube-inspection-basic"
+>${item?.id_no}<br />${item?.company}<br />${item?.designation}<br />${item?.model_level}<br />${item?.course_duration+" " || 2+" "}day</span
+><span class="qatar-id-company"
+>Qatar ID/ ID No.: <br />Company name:<br />Designation:<br />Model/
+Level:<br />Course Duration:</span
+>
+<div class="line"></div>
+<span class="issued-expiry">Issued Date: <br />Expiry Date:</span
+><span class="date">${item?.issued_on}<br />${item?.valid_untill}</span
+><span class="contact-info"
+>+974 31499334 | Info@qubeinspection.com | www.qubeinspection.com</span
+>
+</div>
+<!-- Generated by Codia AI - https://codia.ai/ -->
+</body>
+</html>
+
+        `
+        console.log(htmlString, "htmlString");
+        
+        return htmlString;
     };
 
     const dataURLtoBlob = (dataUrl: string) => {
@@ -127,7 +441,7 @@ export default function EquipmentTable({ data, setChanged,changed }:{data:any,se
 
         return new Blob([u8arr], { type: mime });
     };
-    
+
     const uploadImage = async (imageBlob: string | Blob) => {
         if (!imageBlob) return null;
 
@@ -135,16 +449,16 @@ export default function EquipmentTable({ data, setChanged,changed }:{data:any,se
         formData.append('file', imageBlob);
 
         try {
-            let res:any;
+            let res: any;
             const result = await makeApiCall(
                 () => new UserService().uploadFile(formData, `${Date.now()}`, 'students'),
                 {
                     afterSuccess: (data: any) => {
-                        res=data
+                        res = data
                     },
                 }
             );
-console.log(res,"data is sreerag");
+            console.log(res, "data is sreerag");
 
             return res?.fullPath
                 ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
@@ -181,7 +495,7 @@ console.log(res,"data is sreerag");
                                 </TableCell>
                                 <TableCell className="py-4">{item.added_by}</TableCell>
                                 <TableCell className="py-4">
-                                    <img src={item.image} alt="profile" className="w-16 h-16 rounded-full" />
+                                    <img src={item.avatar} alt="profile" className="w-16 h-16 rounded-full" />
                                 </TableCell>
                                 <TableCell className="py-4">
                                     <div>ID No: {item.id_number}</div>
@@ -190,12 +504,12 @@ console.log(res,"data is sreerag");
                                     <div>Company: {item.company}</div>
                                 </TableCell>
                                 <TableCell className="py-4">
-                                    {item.card_qr_url ? (
-                                        <img src={item.card_qr_url} alt="QR code" className="w-16 h-16" />
+                                    {item.qr_url ? (
+                                        <img src={item.qr_url} alt="QR code" className="w-16 h-16" />
                                     ) : (
                                         <button
-                                            onClick={() => generateQr(item.id, item.name)}
-                                            className="bg-white p-1 px-2  flex rounded-md w-[78%] border-primary border text-primary"
+                                            onClick={() => generateQr(item)}
+                                            className="bg-white p-1 px-2 flex rounded-md w-[78%] border-primary border text-primary"
                                         >
                                             Generate QR
                                         </button>

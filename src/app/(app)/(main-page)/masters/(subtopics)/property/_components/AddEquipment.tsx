@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 const equipmentDetailsSchema = object({
   property: z.string().nonempty('Property is required'),
-  propertyType: z.string().nonempty('Property Type is required'),
+  property_type: z.string().nonempty('Property Type is required'),
   status: z.string().nonempty('Status is required')
 });
 import dynamic from 'next/dynamic';
@@ -78,11 +78,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="propertyType" className="mt-3">Property Type</Label>
+                    <Label htmlFor="property_type" className="mt-3">Property Type</Label>
                     <div>
-                      <Input id="propertyType" {...methods.register('propertyType')} />
-                      {errors.propertyType && (
-                        <p className="text-red-500 mt-1">{errors.propertyType.message}</p>
+                      <Input id="property_type" {...methods.register('property_type')} />
+                      {errors.property_type && (
+                        <p className="text-red-500 mt-1">{errors.property_type.message}</p>
                       )}
                     </div>
                   </div>

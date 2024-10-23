@@ -42,7 +42,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     // Check if user is not authenticated, or if they are on the /new-password page
     if (!authStatus || pathname === '/new-password') {
         return (
-            <div className="flex h-screen">
+            <div className="flex min-h-screen">
                 <div className="flex w-1/2 flex-col justify-center p-32">
                     <div className="mb-8 flex items-center">
                         <img src="/images/logo.svg" alt="Logo" />
