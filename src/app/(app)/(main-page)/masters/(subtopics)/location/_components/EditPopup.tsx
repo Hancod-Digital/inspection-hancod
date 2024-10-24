@@ -61,7 +61,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     const fetchData = async () => {
       try {
         const {data,error} =  FetchLocationDetails()
-        let recordData;
+        let recordData:any;
         console.log('Fetched Data:', data);
         flushSync(() => {
           setData(recordData);
