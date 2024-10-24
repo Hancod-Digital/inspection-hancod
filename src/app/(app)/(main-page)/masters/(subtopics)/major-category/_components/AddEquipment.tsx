@@ -32,11 +32,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   });
 
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
-  const [equipmentTypeOptions, setEquipmentTypeOptions] = useState<any[]>([]);
+  const [equipmentTypeOptions, setEquipmentTypeOptions] = useState<any>([]);
 
   useEffect(() => {
     const fetchSubtopics = async () => {
-      const subtopics = await getAllSingleSubtopic('equipment_type');
+      const subtopics:any = await getAllSingleSubtopic('equipment_type');
        
       setEquipmentTypeOptions(subtopics); // Store the fetched data in state
     };
@@ -98,7 +98,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select equipment type" />
                             </SelectTrigger>
                             <SelectContent>
-                              {equipmentTypeOptions?.map((item) => (
+                              {equipmentTypeOptions?.map((item:any) => (
                                 <SelectItem key={item.id} value={String(item.id)}>
                                   {item?.equipment_type}
                                 </SelectItem>
