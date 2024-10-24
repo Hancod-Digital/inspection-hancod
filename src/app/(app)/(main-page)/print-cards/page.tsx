@@ -119,7 +119,7 @@ const LiftingGearMulti = () => {
             {activeTab === "User Details" ? (
               <Table data={rearrangedData} setChanged={setChanged} changed={changed} />
             ) : activeTab === "Print Cards" ? (
-              <PrintCardTable data={rearrangedData} changed={changed} />
+              <PrintCardTable data={rearrangedData} changed={changed} setChanged={setChanged} />
             ) : (
               <CertificateTable data={rearrangedData} setChanged={setChanged} changed={changed} />
             )}

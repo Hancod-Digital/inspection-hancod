@@ -154,4 +154,20 @@ export class StudentService extends Supabase {
         }
         return data;
     }
+    async editStudent(id: number, updatedRecord: any) {
+        await this.ensureAuthenticated(); // Ensures the user is authenticated
+        console.log(updatedRecord, "updatedRecord");
+    
+        const { data, error } = await this.supabase
+            .from("students_credentials")
+            .update(updatedRecord) // Update the record with new data
+            .eq("id", id) // Match the student by their ID
+            .select(); // Optional: Returns the updated record(s)
+    
+        if (error) {
+            throw new Error(error.message);
+        }
+        return data;
+    }
+    
 }  

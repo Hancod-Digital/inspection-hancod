@@ -1,8 +1,38 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useSubtopic } from "@/context/SubtopicContext";
+import { siteDataRange } from "@/lib/utils";
 import { PlusIcon, Search } from "lucide-react"
+import { useEffect, useState } from 'react';
+    import * as XLSX from 'xlsx';
 
 export default function Component({ onOpen, onSearchChange }:{onOpen: () => void, onSearchChange: (value: string) => void}) {
+    const [subtopics, setSubtopics] = useState<any[]>([]); // Define the type as needed
+    const { getMergedData } = useSubtopic()
+    useEffect(() => {
+        async function fetchSubtopics() {
+            try {
+                const site = await getMergedData(siteDataRange, 'site');
+                setSubtopics(site);
+            } catch (error) {
+                console.error("Error fetching subtopics:", error);
+            }
+        }
+
+        fetchSubtopics();
+    }, [getMergedData]);
+
+    const exportToExcel = () => {
+        
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(subtopics.map((item: any) => ({
+            "Site": item.site,
+            "Area": item.area?.thumbnail,
+            "Status": item.status
+        })));
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sites");
+        XLSX.writeFile(workbook, "sites_export.xlsx");
+    };
     return (
         <div className="flex items-center space-x-4 w-full p-4">
             <div className="flex w-full space-x-3">
@@ -22,7 +52,7 @@ export default function Component({ onOpen, onSearchChange }:{onOpen: () => void
                 <PlusIcon className="h-4 w-4 mr-1" />
   New
                 </Button>
-                <Button className="flex-[1] hover:bg-secondary hover:text-primary hover:border-primary  bg-primary text-primary-foreground">
+                <Button onClick={exportToExcel} className="flex-[1] hover:bg-secondary hover:text-primary hover:border-primary  bg-primary text-primary-foreground">
                     Export
                 </Button>
             </div>

@@ -13,10 +13,11 @@ import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
+import DeleteDialogue from '@/components/ui/delete-dialog';
 
 export default function EquipmentTable() {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { FetchLocationDetails } = useSubtopic(); // Assuming this is a hook from your context
+    const { FetchLocationDetails , deleteRecord} = useSubtopic(); // Assuming this is a hook from your context
  const {data,error} =  FetchLocationDetails()
     // Call the hook directly at the top level of the component
      console.log(data,"loko",error);
@@ -57,9 +58,9 @@ export default function EquipmentTable() {
                                         <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
                                             <EditIcon />
                                         </button>
-                                        <button className="text-red-500">
+                                        <DeleteDialogue onConfirm={() => deleteRecord(item.id)} triggerButton={<button className="text-red-500">
                                             <DeleteIcon />
-                                        </button>
+                                        </button>} />
                                     </div>
                                 </TableCell>
                             </TableRow>

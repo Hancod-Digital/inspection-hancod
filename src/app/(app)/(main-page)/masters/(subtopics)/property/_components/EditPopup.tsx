@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, z } from 'zod';
+import { object, string, TypeOf,z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -9,30 +9,36 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+import { useSubtopic } from '@/context/SubtopicContext';
 
 const equipmentDetailsSchema = object({
   property: z.string().nonempty('Property is required'),
-  propertyType: z.string().nonempty('Property Type is required'),  status: z.string().nonempty('Status is required')
+  property_type: z.string().nonempty('Property Type is required'),
+  status: z.string().nonempty('Status is required'),
 });
-import dynamic from 'next/dynamic';
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css';
-import { useSubtopic } from '@/context/SubtopicContext';
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
-  id: number
+  id: number;
 }
 
-export default function EquipmentDetailsForm({ onClose,  id }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const { updateRecord, findRecordById } = useSubtopic();
+  const data = findRecordById(id);
+  console.log('Editing Record Data:', data); // Debugging line
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
+    defaultValues: {
+      property: data?.property || '',
+      property_type: data?.property_type || '',
+      status: data?.status || '',
+    },
   });
 
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
@@ -43,10 +49,12 @@ export default function EquipmentDetailsForm({ onClose,  id }: EquipmentDetailsF
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-    await updateRecord(id,values)
+    console.log('Submitting Updated Record:', values); // Debugging line
+    await updateRecord(id, values);
     setLoading(false);
+    onClose();
   };
 
   return (
@@ -67,6 +75,7 @@ export default function EquipmentDetailsForm({ onClose,  id }: EquipmentDetailsF
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
+                  {/* Property Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="property" className="mt-3">Property</Label>
                     <div>
@@ -77,16 +86,32 @@ export default function EquipmentDetailsForm({ onClose,  id }: EquipmentDetailsF
                     </div>
                   </div>
 
+                  {/* Property Type Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="propertyType" className="mt-3">Property Type</Label>
+                    <Label htmlFor="property_type" className="mt-3">Property Type</Label>
                     <div>
-                      <Input id="propertyType" {...methods.register('propertyType')} />
-                      {errors.propertyType && (
-                        <p className="text-red-500 mt-1">{errors.propertyType.message}</p>
+                      <Controller
+                        name="property_type"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="property_type">
+                              <SelectValue placeholder="Select property type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Annexure">Annexure</SelectItem>
+                              <SelectItem value="Equipment">Equipment</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.property_type && (
+                        <p className="text-red-500 mt-1">{errors.property_type.message}</p>
                       )}
                     </div>
                   </div>
 
+                  {/* Status Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
                     <Label htmlFor="status" className="mt-3">Status</Label>
                     <div>
@@ -99,7 +124,7 @@ export default function EquipmentDetailsForm({ onClose,  id }: EquipmentDetailsF
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                            <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
                               <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
@@ -112,6 +137,7 @@ export default function EquipmentDetailsForm({ onClose,  id }: EquipmentDetailsF
                   </div>
                 </div>
 
+                {/* Form Buttons */}
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

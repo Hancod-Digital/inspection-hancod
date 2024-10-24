@@ -8,12 +8,12 @@ export interface DateRange {
   to: string;
 }
 
-interface SubtopicContextType {
+interface SubtopicContextType { 
   data: any[] | undefined;
   isLoading: boolean;
   error: any;
   addRecord: (record: object,surveyor_competency?:any) => Promise<void>;
-  updateRecord: (id: number, updates: object) => Promise<void>;
+  updateRecord: (id: number, updates: object,surveyor_competency?:any) => Promise<void>;
   findRecordById: (id: number) => any;
   getAllSingleSubtopic: (subtopic: string) => Promise<any[] | undefined>;
   UseMergedDataQuery: (subtopic: string, from: string, to: string) => { data: any, isLoading: boolean, error: any };
@@ -76,7 +76,7 @@ console.log(subtopic);
       });
     }
   console.log(data);
-  
+    
     return data;
   };
 
@@ -85,15 +85,15 @@ console.log(subtopic);
     return useQuery({
       queryKey: ['locationDetails'],
       queryFn: () => masterService.getLocationDetails(),
-      staleTime: 5 * 60 * 1000, // Set stale time (5 minutes)
+      staleTime: 5 * 60 * 1000, 
     });
   };
-// Fetch location details using React Query
-const FetchMajorCategory = () => {
+
+  const FetchMajorCategory = () => {
     return useQuery({
       queryKey: ['majorCategoryDetails'],
       queryFn: () => masterService.getMajorCategoryDetails(),
-      staleTime: 5 * 60 * 1000, // Set stale time (5 minutes)
+      staleTime: 5 * 60 * 1000, 
     });
   };
  const FetchMinorCategory = () => {
@@ -113,7 +113,9 @@ const FetchMajorCategory = () => {
   };
 
   const addRecordMutation = useMutation({
-    mutationFn: async (newRecord: object,surveyor_competency?:any) => await masterService.addRecordToSubtopic(subtopic, newRecord,surveyor_competency),
+    mutationFn: async ({ newRecord, surveyor_competency }: { newRecord: object; surveyor_competency?: any }) => {
+      return await masterService.addRecordToSubtopic(subtopic, newRecord, surveyor_competency);
+  },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(majorCategoryDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(siteDataRange), subtopic] });
@@ -131,8 +133,8 @@ const FetchMajorCategory = () => {
   });
 
   const updateRecordMutation = useMutation({
-    mutationFn: async ({ id, updates }: { id: number; updates: object }) =>
-      await masterService.updateSubtopicDetails(subtopic, id, updates),
+    mutationFn: async ({ id, updates,surveyor_competency }: { id: number; updates: object,surveyor_competency?:any }) =>
+      await masterService.updateSubtopicDetails(subtopic, id, updates,surveyor_competency),
     onSuccess: () => {
       console.log("---invalidating");
       
@@ -173,7 +175,9 @@ const FetchMajorCategory = () => {
   
 
   const addRecord = async (record: object,surveyor_competency?:any) => {
-    await addRecordMutation.mutateAsync(record,surveyor_competency);
+    console.log("-----------Reached hereee-----------",record,surveyor_competency);
+    
+    await addRecordMutation.mutateAsync({ newRecord: record, surveyor_competency });
   };
 
   
@@ -185,12 +189,16 @@ const FetchMajorCategory = () => {
   };
 
   const findRecordById = (id: number) => {
+    console.log(data,id);
+
     if (!data) return undefined;
+    console.log(data);
+    
     return data.find((record: any) => record.id === id);
   };
 
-  const updateRecord = async (id: number, updates: object) => {
-    await updateRecordMutation.mutateAsync({ id, updates });
+  const updateRecord = async (id: number, updates: object, surveyor_competency?:any) => {
+    await updateRecordMutation.mutateAsync({ id, updates, surveyor_competency });
   };
   const deleteRecord = async (id: number) => {
     await deleteRecordMutation.mutateAsync({id})

@@ -40,7 +40,7 @@ const Annexure = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Header onOpen={handleOpenAdd} />
+                        <Header onOpen={handleOpenAdd}  />
                     </motion.div>
                 )}
             </AnimatePresence>

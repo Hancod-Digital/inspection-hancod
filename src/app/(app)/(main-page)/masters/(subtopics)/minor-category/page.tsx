@@ -28,7 +28,7 @@ const MinorCategory = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-               MinorCategory
+               Minor Category
             </motion.h2>
             
             <AnimatePresence mode="wait">

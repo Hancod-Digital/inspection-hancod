@@ -1,8 +1,31 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PlusIcon, Search } from "lucide-react"
+import { useSubtopic } from "@/context/SubtopicContext";
+import * as XLSX from 'xlsx';
+import { majorCategoryDataRange } from '@/lib/utils';
 
 export default function Component({ onOpen, onSearchChange }:{onOpen: () => void, onSearchChange: (value: string) => void}) {
+
+    const { getMergedData } = useSubtopic();
+
+    const exportToExcel = async () => {
+        try {
+            const majorCategoryData = await getMergedData(majorCategoryDataRange, 'major_category');
+            if (majorCategoryData) {
+                const worksheet = XLSX.utils.json_to_sheet(majorCategoryData.map((item: any) => ({
+                    'Major Category': item.major_category,
+                    'Equipment Type': item.equipment_type?.equipment_type,
+                    'Status': item.status
+                })));
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Major Categories");
+                XLSX.writeFile(workbook, "major_categories.xlsx");
+            }
+        } catch (error) {
+            console.error("Error exporting to Excel:", error);
+        }
+    };
     return (
         <div className="flex items-center space-x-4 w-full p-4">
             <div className="flex w-full space-x-3">
@@ -22,7 +45,7 @@ export default function Component({ onOpen, onSearchChange }:{onOpen: () => void
                 <PlusIcon className="h-4 w-4 mr-1" />
   New
                 </Button>
-                <Button className="flex-[1] hover:bg-secondary hover:text-primary hover:border-primary  bg-primary text-primary-foreground">
+                <Button onClick={exportToExcel} className="flex-[1] hover:bg-secondary hover:text-primary hover:border-primary  bg-primary text-primary-foreground">
                     Export
                 </Button>
             </div>

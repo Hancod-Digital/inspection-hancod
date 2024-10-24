@@ -47,6 +47,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     console.log(values);
     await addRecord(values)
     setLoading(false);
+    onClose()
   };
 
   return (
@@ -80,7 +81,21 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="property_type" className="mt-3">Property Type</Label>
                     <div>
-                      <Input id="property_type" {...methods.register('property_type')} />
+                      <Controller
+                        name="property_type"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="property_type">
+                              <SelectValue placeholder="Select property type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Annexure">Annexure</SelectItem>
+                              <SelectItem value="Equipment">Annexure</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                       {errors.property_type && (
                         <p className="text-red-500 mt-1">{errors.property_type.message}</p>
                       )}

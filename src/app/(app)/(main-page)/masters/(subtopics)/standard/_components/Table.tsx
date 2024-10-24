@@ -15,10 +15,11 @@ import EditPopup from './EditPopup';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditIcon from '@/components/icons/EditIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
+import DeleteDialogue from '@/components/ui/delete-dialog';
 
 export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { data, isLoading, error } = useSubtopic();
+    const { data, isLoading, error ,deleteRecord} = useSubtopic();
     const rearrangedData = data
     ? [...data].sort((a:any, b:any) => {
         const aMatch = a.standard.toLowerCase().includes(searchValue.toLowerCase());
@@ -67,9 +68,14 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                                             >
                                                 <EditIcon />
                                             </button>
-                                            <button className="text-red-500">
-                                                <DeleteIcon />
-                                            </button>
+                                            <DeleteDialogue
+                                                onConfirm={async () => await deleteRecord(item.id)}
+                                                triggerButton={
+                                                    <button className="text-red-500">
+                                                        <DeleteIcon />
+                                                    </button>
+                                                }
+                                            />
                                         </div>
                                     </TableCell>
                                 </TableRow>

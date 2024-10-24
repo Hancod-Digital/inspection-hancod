@@ -2,50 +2,164 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import QRCode from 'qrcode';
+
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { Button } from '@/components/ui/button';
 import { makeApiCall } from '@/lib/apicaller';
 import { StudentService } from '@/services/api/students-service';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
+import { dataURLtoBlob, fetchHtml, loadImages } from '@/lib/utils';
+import { toPng } from 'html-to-image';
+import { UserService } from '@/services/api/user-service';
+import TableSpinner from '@/components/animated/TableSpinner';
 
-export default function PrintCardTable({data,changed}:{data:any,changed:boolean}) {
-    const [editingRow, setEditingRow] = useState<number | null>(null);
-   
+export default function PrintCardTable({ data, changed , setChanged}: { data: any, changed: boolean, setChanged: any }) {
+  const [editingRow, setEditingRow] = useState<number | null>(null);
+  const [isGenerating, setIsGenerating] = useState<number | null>(null);
 
-    const staticData = [
-        {
-            id: 5491,
-            name: 'Ajad Miya Mansuri',
-            address: 'Z',
-            designation: 'Work at Height',
-            addedBy: 'Munsheer',
-            idNumber: '30035613413',
-            cardNumber: 'QB-OPR-24-136042',
-            modelLevel: 'Safety Training',
-            company: 'Abraj Qatar Group',
-            issueDate: '16-09-2024',
-            validUntil: '15-09-2026',
-            qrImage: '/path/to/qr.png',
-        },
-        // Add more rows here if needed
-    ];
 
-    const handleEditClick = (item: any) => {
-        const htmlContent = item?.card_html; // Assuming your HTML content is stored here
-      console.log(item);
-      
-        // Open a new window
-        const printWindow = window.open('', '_blank', 'width=600,height=600');
-       const cssString = () => {
-         return `
+  const staticData = [
+    {
+      id: 5491,
+      name: 'Ajad Miya Mansuri',
+      address: 'Z',
+      designation: 'Work at Height',
+      addedBy: 'Munsheer',
+      idNumber: '30035613413',
+      cardNumber: 'QB-OPR-24-136042',
+      modelLevel: 'Safety Training',
+      company: 'Abraj Qatar Group',
+      issueDate: '16-09-2024',
+      validUntil: '15-09-2026',
+      qrImage: '/path/to/qr.png',
+    },
+    // Add more rows here if needed
+  ];
+  const uploadImage = async (imageBlob: string | Blob) => {
+    if (!imageBlob) return null;
+
+    const formData = new FormData();
+    formData.append('file', imageBlob);
+
+    try {
+        let res: any;
+        const result = await makeApiCall(
+            () => new UserService().uploadFile(formData, `${Date.now()}`, 'students'),
+            {
+                afterSuccess: (data: any) => {
+                    res = data
+                },
+            }
+        );
+        console.log(res, "data is sreerag");
+
+        return res?.fullPath
+            ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
+            : null;
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        return null;
+    }
+};
+
+  const generateQr = async (item: any) => {
+    setIsGenerating(item.id);
+    try {
+
+      // Create an HTML template for the card
+      const htmlElement = document.createElement('div');
+      htmlElement.innerHTML = await fetchHtml(item);
+
+      // Append the element to the body temporarily
+      document.body.appendChild(htmlElement);
+      await loadImages(htmlElement);
+
+      console.log(htmlElement.outerHTML);
+
+      // Convert the HTML element to a PNG image
+      const dataUrl = await toPng(htmlElement, {
+        quality: 0.95,
+        width: htmlElement.offsetWidth,
+        height: htmlElement.offsetHeight,
+      });
+
+      // Remove the temporary element
+      document.body.removeChild(htmlElement);
+
+      // Convert Data URL to Blob
+      const imageBlob = dataURLtoBlob(dataUrl);
+
+      // Upload the card image and get its URL
+      const cardImageUrl = await uploadImage(imageBlob);
+
+      if (cardImageUrl) {
+        // Update the student's card_url in the database
+        await makeApiCall(
+          () => new StudentService().updateStudentCardUrl(item?.id, cardImageUrl),
+          {
+            afterSuccess: (data: any) => {
+              console.log('Card image URL updated:', data);
+            },
+          }
+        );
+
+        // Now generate a QR code that points to the card image URL
+        const qrDataUrl = await QRCode.toDataURL(cardImageUrl, {
+          width: 300,
+          errorCorrectionLevel: 'H',
+        });
+
+        // Convert QR code Data URL to Blob
+        const qrImageBlob = dataURLtoBlob(qrDataUrl);
+
+        // Upload the QR code image and get its URL
+        const qrImageUrl = await uploadImage(qrImageBlob);
+
+        if (qrImageUrl) {
+          // Update the student's card_qr_url in the database
+          await makeApiCall(
+            () => new StudentService().updateStudentQRUrl(item?.id, qrImageUrl),
+            {
+              afterSuccess: (data: any) => {
+                console.log('QR code image URL updated:', data);
+              },
+            }
+          );
+
+          setChanged(!changed);
+          toastWithTimeout(ToastVariant.Success, "Card and QR code created successfully.");
+        } else {
+          toastWithTimeout(ToastVariant.Error, "Failed to upload QR image.");
+        }
+      } else {
+        toastWithTimeout(ToastVariant.Error, "Failed to upload card image.");
+      }
+    } catch (error) {
+      console.error("Error generating QR code:", error);
+      toastWithTimeout(ToastVariant.Error, "An error occurred while generating the QR code.");
+    } finally {
+      setIsGenerating(null);
+    }
+  };
+
+  const handleEditClick = (item: any) => {
+    console.log(item);
+
+    // Open a new window
+    const printWindow = window.open('', '_blank', 'width=600,height=600');
+    const cssString = () => {
+      return `
                    :root {
   --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
@@ -257,7 +371,7 @@ button {
   height: 104.348px;
   top: 0;
   left: 267.5px;
-  background: url("https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/students/filename1729676276487")
+  background: url("${item?.qr_url}")
   no-repeat center;
   background-size: cover;
   z-index: 9999999;
@@ -4120,10 +4234,10 @@ button {
 }
               
          `
-       }
-        if (printWindow) {
-          printWindow.document.open();
-          printWindow.document.write(`
+    }
+    if (printWindow) {
+      printWindow.document.open();
+      printWindow.document.write(`
             <!DOCTYPE html>
             <html>
             <head>
@@ -4140,12 +4254,12 @@ ${cssString()}
                 <span class="sheik-hameed-khan">${item?.name}</span>
                 <div class="flex-row-cf">
                   <div class="name">
-                    <span class="apparicio-junior">${item?.certifcate_no||"jkkkkk"}<br /><br /></span>
+                    <span class="apparicio-junior">${item?.certificate_no}<br /><br /></span>
                   </div>
                   <div class="line"></div>
                   <div class="bio">
                     <span class="qatar-id">Qatar ID/ ID No.: <br />Company name:<br />Course Details:<br />Model/ Level:</span>
-                    <span class="qube-inspection">${item?.id_number}<br />${item.company}<br />${item.designation}<br />${item.model_level}</span>
+                    <span class="qube-inspection">${item?.id_no}<br />${item.company}<br />${item.designation}<br />${item.model_level}</span>
                   </div>
                 </div>
                 <div class="line-1"></div>
@@ -4167,83 +4281,95 @@ ${cssString()}
             </body>
             </html>
           `);
-          printWindow.document.close();
-        } else {
-          alert('Please allow pop-ups for this website to print the content.');
-        }
-      };
-      
+      printWindow.document.close();
+    } else {
+      alert('Please allow pop-ups for this website to print the content.');
+    }
+  };
 
-    const handleCloseEdit = () => {
-        setEditingRow(null);
-    };
 
-    return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            <Table className="w-full">
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="py-4">ID</TableHead>
-                        <TableHead className="py-4">Name</TableHead>
-                        <TableHead className="py-4">Added_By</TableHead>
-                        <TableHead className="py-4">Card/Model/Level</TableHead>
-                        <TableHead className="py-4">QR Image</TableHead>
-                        <TableHead className="py-4">Action</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {data?.map((item: any, idx: number) => (
-                        <React.Fragment key={idx + 1}>
-                            <TableRow>
-                                <TableCell className="py-4">{idx}</TableCell>
-                                <TableCell className="py-4">
-                                    {item?.name}
-                                    <div>Address: {item?.address}</div>
-                                    <div>Designation: {item?.designation}</div>
-                                </TableCell>
-                                <TableCell className="py-4">{item?.added_by}</TableCell>
-                                <TableCell className="py-4">
-                                    <div>ID No: {item?.id_number}</div>
-                                    <div>Card No: {item?.card_number}</div>
-                                    <div>Model/Level: {item?.model_level}</div>
-                                    <div>Company: {item?.company}</div>
-                                    <div>Issued on: {item?.issued_on}</div>
-                                    <div>Valid Until: {item?.valid_untill}</div>
-                                </TableCell>
-                                <TableCell className="py-4">
-                                    <img src={item?.qr_url} alt="QR code" className="w-16 h-16" />
-                                </TableCell>
-                                <TableCell className="py-4">
-                                    <div className="flex space-x-2">
-                                    <button onClick={() => handleEditClick(item)} className="text-red-500">
-                    <EditIcon />
-                  </button>
-                                        <button className="text-red-500">
-                                            <DeleteIcon />
-                                        </button>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                            <AnimatePresence>
-                                {editingRow === idx + 1 && (
-                                    <motion.tr
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <TableCell colSpan={6}>
-                                            <div className="overflow-hidden">
-                                                {/* Insert the EditPopup component with relevant props here */}
-                                            </div>
-                                        </TableCell>
-                                    </motion.tr>
-                                )}
-                            </AnimatePresence>
-                        </React.Fragment>
-                    ))}
-                </TableBody>
-            </Table>
-        </div>
-    );
+  const handleCloseEdit = () => {
+    setEditingRow(null);
+  };
+
+  return (
+    <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+      <Table className="w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="py-4">ID</TableHead>
+            <TableHead className="py-4">Name</TableHead>
+            <TableHead className="py-4">Added_By</TableHead>
+            <TableHead className="py-4">Card/Model/Level</TableHead>
+            <TableHead className="py-4">QR Image</TableHead>
+            <TableHead className="py-4">Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data?.map((item: any, idx: number) => (
+            <React.Fragment key={idx + 1}>
+              <TableRow>
+                <TableCell className="py-4">{idx}</TableCell>
+                <TableCell className="py-4">
+                  {item?.name}
+                  <div>Address: {item?.address}</div>
+                  <div>Designation: {item?.designation}</div>
+                </TableCell>
+                <TableCell className="py-4">{item?.added_by}</TableCell>
+                <TableCell className="py-4">
+                  <div>ID No: {item?.id_number}</div>
+                  <div>Card No: {item?.card_number}</div>
+                  <div>Model/Level: {item?.model_level}</div>
+                  <div>Company: {item?.company}</div>
+                  <div>Issued on: {item?.issued_on}</div>
+                  <div>Valid Until: {item?.valid_untill}</div>
+                </TableCell>
+                <TableCell className="py-4">
+                  {isGenerating === item.id ? <TableSpinner /> : <img src={item?.qr_url} alt="QR code" className="w-16 h-16" />}
+                </TableCell>
+                <TableCell className="py-4">
+                   
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button>
+                        <ActionButtonIcon />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => handleEditClick(item)}>
+
+                        Print
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => generateQr(item)}>
+
+                        Recreate QR
+                      </DropdownMenuItem>
+
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+              <AnimatePresence>
+                {editingRow === idx + 1 && (
+                  <motion.tr
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <TableCell colSpan={6}>
+                      <div className="overflow-hidden">
+                        {/* Insert the EditPopup component with relevant props here */}
+                      </div>
+                    </TableCell>
+                  </motion.tr>
+                )}
+              </AnimatePresence>
+            </React.Fragment>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
 }

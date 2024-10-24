@@ -15,13 +15,15 @@ import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import QRCode from 'qrcode';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import { UserService } from '@/services/api/user-service';
+import TableSpinner from '@/components/animated/TableSpinner';
 
 export default function CertificateTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const [htmlContent, setHtmlContent] = useState('');
+    const [isGenerating, setIsGenerating] = useState(false);
 
    
-        const fetchHtml = async (profile_url:string,qr_url:string,name:string,id_no:string,company:string,designation:string) => {
+        const fetchHtml = async (profile_url:string,qr_url:string,name:string,id_no:string,company:string,designation:string,issued_on:string,valid_untill:string,course_duration:string) => {
             
                 const response = await fetch('/blank_certificate/certificate.html'); // Replace with the correct path
                 let htmlString = await response.text();
@@ -35,6 +37,9 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                 
                 // Replace the placeholder name in the span
                 htmlString = htmlString.replace(/<span class="name-text">.*?<\/span>/, `<span class="name-text">${name}</span>`);
+                htmlString = htmlString.replace(/<span class="date">.*?<br\s*\/>.*?<\/span>/, `<span class="date">${issued_on}<br />${valid_untill}</span>`);
+                htmlString = htmlString.replace(/<span\s*class="day">.*?<\/span>/, `<span class="day">${course_duration} ${parseInt(course_duration) > 1 ? " days" : "day"}</span>`);
+
                 console.log(htmlString);
 
                 setHtmlContent(htmlString);
@@ -68,10 +73,11 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
 
     const generateCertificate = async (item:any) => {
         try {
+            setIsGenerating(true);
             // Create an HTML template for the certificate
             const htmlElement = document.createElement('div');
 
-            htmlElement.innerHTML = await fetchHtml(item?.avatar,item?.qr_url,item?.name,item?.id_no,item?.company,item?.designation)
+            htmlElement.innerHTML = await fetchHtml(item?.avatar,item?.qr_url,item?.name,item?.id_no,item?.company,item?.designation,item?.issued_on,item?.valid_untill,item?.course_duration)
 
             // Append the element to the body temporarily
             document.body.appendChild(htmlElement);
@@ -144,6 +150,8 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
         } catch (error) {
             console.error("Error generating certificate:", error);
             toastWithTimeout(ToastVariant.Error, "An error occurred while generating the certificate.");
+        } finally {
+            setIsGenerating(false);
         }
     };
 
@@ -245,26 +253,34 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                     <div>Valid Until: {item?.valid_untill}</div>
                                 </TableCell>
                                 <TableCell className="py-4">
-                                    {!item?.qr_url ? "QR not found" : <img src={item?.qr_url} alt="QR code" className="w-16 h-16" />}
-
+                                    {isGenerating ? (
+                                        <TableSpinner />
+                                    ) : (
+                                        !item?.qr_url ? "QR not found" : <img src={item?.qr_url} alt="QR code" className="w-16 h-16" />
+                                    )}
                                 </TableCell>
                                 <TableCell className="py-4">
                                     <div className="flex flex-col gap-2 ">
-                                        {!item?.certificate_url && <button onClick={() => generateCertificate(item)} className="bg-white py-1 rounded-md w-[78%] border-primary border text-primary">
-                                            Certificate
-                                        </button>}
-
-                                        {item?.certificate_url && (
+                                         
                                             <>
-                                                <button onClick={() => generateCertificate(item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary mb-2">
-                                                    Re-create
-                                                </button>
-                                                <button onClick={() => printCertificate(item.certificate_url, item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary">
-                                                    Print
-                                                </button>
-                                            </>
-                                        )}
+                                                {!item?.certificate_url && (
+                                                    <button onClick={() => generateCertificate(item)} className="bg-white py-1 rounded-md w-[78%] border-primary border text-primary">
+                                                        Certificate
+                                                    </button>
+                                                )}
 
+                                                {item?.certificate_url && (
+                                                    <>
+                                                        <button onClick={() => generateCertificate(item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary mb-2">
+                                                            Re-create
+                                                        </button>
+                                                        <button onClick={() => printCertificate(item.certificate_url, item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary">
+                                                            Print
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </>
+                                    
                                     </div>
                                 </TableCell>
                             </TableRow>
