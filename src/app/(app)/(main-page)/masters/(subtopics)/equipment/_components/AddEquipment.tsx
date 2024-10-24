@@ -144,8 +144,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
-    setLoading(true);
-    console.log(values);
+    setLoading(true); 
     await addRecord({
       ...values,
       status: values.status === true ? "ACTIVE" : "INACTIVE"
@@ -727,7 +726,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   >
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </motion.div>

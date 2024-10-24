@@ -129,14 +129,12 @@ export default function Component() {
             },
             afterError: (error: any) => {
               toastWithTimeout(ToastVariant.Destructive, "Error: Invalid password");
-              console.log("in heere 2222",error); 
-
+             
               reject(error);  // Reject the promise with the error
             }
           }
         );
       });
-      console.log(verificationResult,"verificationresuklt");
       
       // Step 2: If verification is successful, change the password
       if (verificationResult) {
@@ -159,8 +157,7 @@ export default function Component() {
           );
         });
       }else{
-        console.log("podeii");
-        
+      
       }
     } catch (error) {
       console.error("Password update failed:", error);
@@ -198,8 +195,7 @@ export default function Component() {
 
   const onSubmit = async (data: any) => {
     const fullMobileNumber = `${countryCode}${data.mobile}`;  // Combine country code with mobile number
-    data.mobile = fullMobileNumber;
-console.log(fullMobileNumber,"fullmobileno");
+    data.mobile = fullMobileNumber; 
 
     makeApiCall(
       async () => new UserService().updateUser({

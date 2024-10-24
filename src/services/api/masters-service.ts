@@ -29,18 +29,14 @@ export class MasterService extends Supabase {
         if (error) {
             throw new Error(error.message);
         }
-        console.log(data, "major_data");
-
+      
         return data;
     }
 
     async getMergedDataOfSingleDoc(subtopic: string, references: { from: string, to: string }[]) {
 
         await this.ensureAuthenticated();
-        console.log(references);
-
-        console.log("sdsd");
-
+     
         // Build the select string dynamically by looping through the references
         const referencesSelect = references.map(ref => `${ref.to}:${ref.from} (*)`).join(', ');
 
@@ -48,8 +44,7 @@ export class MasterService extends Supabase {
         const { data, error } = await this.supabase
             .from(subtopic)
             .select(`*, ${referencesSelect}`);
-        console.log(data, error);
-
+     
         if (error) {
             throw new Error(error.message);
         }
@@ -62,8 +57,7 @@ export class MasterService extends Supabase {
         const { data, error } = await this.supabase
             .rpc('get_location_details');  // Calling the SQL function
 
-        console.log(data, "ss");
-
+       
 
         if (error) {
             throw new Error(error.message);
@@ -74,8 +68,7 @@ export class MasterService extends Supabase {
         const { data, error } = await this.supabase
             .rpc('get_major_category_data');  // Calling the SQL function
 
-        console.log(data, "ss");
-
+      
 
         if (error) {
             throw new Error(error.message);
@@ -86,8 +79,7 @@ export class MasterService extends Supabase {
         const { data, error } = await this.supabase
             .rpc('get_minor_category_data');  // Calling the SQL function
 
-        console.log(data, "ss");
-
+      
 
         if (error) {
             throw new Error(error.message);
@@ -121,7 +113,7 @@ export class MasterService extends Supabase {
 
             if (error) throw error;
 
-            console.log(data);
+       
             return data;
         } catch (error) {
             console.error('Error in addRecordToSubtopic:', error);
@@ -156,8 +148,7 @@ export class MasterService extends Supabase {
                 .select();
 
             if (error) throw error;
-console.log(updates,surveyorCompetency,"lolokodksoskdoskdoskdoskodksodksodksodkoskodk");
-
+ 
             if (surveyorCompetency) {
                  
 
@@ -176,7 +167,7 @@ console.log(updates,surveyorCompetency,"lolokodksoskdoskdoskdoskodksodksodksodko
                 }
             }
 
-            console.log(data);
+        
             return data;
         } catch (error) {
             console.error('Error in updateSubtopicDetails:', error);

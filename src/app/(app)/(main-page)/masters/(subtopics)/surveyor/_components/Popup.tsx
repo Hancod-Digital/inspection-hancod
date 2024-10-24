@@ -48,8 +48,7 @@ export default function SurveyorCompetencyPopup({
             res = data;
           },
         }
-      );
-      console.log('Upload response:', res);
+      ); 
 
       if (res?.fullPath) {
         return `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`;
@@ -81,15 +80,13 @@ export default function SurveyorCompetencyPopup({
 
     if (attachmentFile) {
       const attachmentUrl = await uploadImage(attachmentFile);
-      console.log('Attachment URL:', attachmentUrl);
-
+   
       if (attachmentUrl) {
         const newCompetency: SurveyorCompetency = {
           competency: competency.trim(),
           validity: validity.trim(),
           attachment: attachmentUrl,
-        };
-        console.log('Adding Competency:', newCompetency);
+        };  
         onAddCompetency((prevCompetencies:any) => [...prevCompetencies, newCompetency]);
         if(setCompetencies){
           setCompetencies((prevCompetencies:any) => [...prevCompetencies, newCompetency]);

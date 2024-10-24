@@ -27,11 +27,11 @@ export default function Component({ onOpen }:{onOpen: () => void}) {
                 <Button variant="link" className="flex-[1]  text-primary bg-white">
                     Advanced Search
                 </Button>
-                <Button variant="outline" onClick={onOpen} className="flex-[1]  hover:bg-secondary hover:text-primary hover:border-primary bg-primary text-primary-foreground">
+                <Button variant="outline" onClick={onOpen} className="flex-[1]  hover:bg-secondary hover:text-primary hover:border-primary border bg-primary text-primary-foreground">
                 <PlusIcon className="h-4 w-4 mr-1" />
   New
                 </Button>
-                <Button onClick={exportToExcel} className="flex-[1] hover:bg-secondary hover:text-primary hover:border-primary  bg-primary text-primary-foreground">
+                <Button onClick={exportToExcel} className="flex-[1] hover:bg-secondary hover:text-primary hover:border-primary border  bg-primary text-primary-foreground">
                     Export
                 </Button>
             </div>

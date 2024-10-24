@@ -316,14 +316,12 @@ Level:<br />Course Duration:</span
 </html>
 
   `
-  console.log(htmlString, "htmlString");
   
   return htmlString;
 };
 
 export function getSubTopicOne(str: string) {
-  // Split the string by "/"
-  console.log(str);
+   
   
   const parts = str.split('/');
   
@@ -343,8 +341,7 @@ export function getLastTwoDigitsOfCurrentYear(): string {
 }
 
 export function getSubTopic(str: string) {
-  // Split the string by "/"
-  console.log(str);
+ 
   
   const parts = str.split('/');
   

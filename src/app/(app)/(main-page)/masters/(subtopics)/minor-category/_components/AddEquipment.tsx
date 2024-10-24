@@ -46,12 +46,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       try {
         // Fetch major categories
         const majorCats = await getAllSingleSubtopic('major_category');
-        console.log('Major Categories:', majorCats);
+ 
         setMajorCategories(majorCats || []);
 
         // Fetch standards
         const stds = await getAllSingleSubtopic('standard');
-        console.log('Standards:', stds);
+     
         setStandards(stds || []);
       } catch (error) {
         console.error('Error fetching subtopics:', error);
@@ -71,7 +71,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   // Handle form submission
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-    console.log('Form Values:', values);
+ 
     await addRecord(values);
     setLoading(false);
     onClose();
@@ -196,7 +196,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

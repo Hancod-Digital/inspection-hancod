@@ -34,28 +34,24 @@ export class UserService extends Supabase {
 
   async uploadFile(file:  FormData, filename: string, bucket: string) {
     await this.ensureAuthenticated()
-    console.log(file);
     
     const { data, error } = await this.supabase
       .storage
       .from(bucket)
       .upload(`/${"filename"+filename}`, file);
-      console.log(error);
-      
+       
     if (error) {
-      console.log(error,"loplplplp");
       
       throw new Error(error.message);
     }
-    console.log(data);
+   
     
     return error || data;
   }
 
   async updateUser({name, email, phone, avatar, id} : {name:string,email:string,phone:number,avatar:string,id:number}) {
     await this.ensureAuthenticated()
-    console.log(name,email,phone,avatar,id);
-    
+     
     const { data, error } = await this.supabase
       .from('user')
       .update({ name, email, phone, avatar })

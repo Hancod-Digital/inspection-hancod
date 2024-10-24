@@ -7,8 +7,7 @@ import { getSubTopic } from '@/lib/utils';
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const subtopic = getSubTopic(pathname);
-console.log(pathname,subtopic);
-
+ 
   return (
     <SubtopicProvider subtopic={subtopic!}>
       {children}

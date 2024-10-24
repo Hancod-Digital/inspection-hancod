@@ -27,8 +27,7 @@ export default function MinorCategory({searchValue}:{searchValue:string}) {
         async function fetchMinorCategories() {
             try {
                 const data = await getMergedData(minorCategoryDataRange, 'minor_category');
-                console.log(data);
-                
+              
                 setMinorCategories(data);
             } catch (error) {
                 console.error("Error fetching minor categories:", error);

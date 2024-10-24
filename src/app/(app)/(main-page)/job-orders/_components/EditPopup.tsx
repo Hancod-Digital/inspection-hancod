@@ -44,9 +44,7 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<FormInput> = (values) => {
-    setLoading(true);
-    console.log(values);
-    // Handle form submission logic here
+    setLoading(true); 
     setLoading(false);
   };
 
@@ -183,7 +181,7 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
                 <Button type="reset" onClick={onClose} variant="outline">
                   Cancel
                 </Button>
-                <Button type="submit" disabled={loading}>
+                <Button className='hover:bg-secondary hover:text-primary hover:border-primary border ' type="submit" disabled={loading}>
                   {loading ? 'Saving...' : 'Save'}
                 </Button>
               </div>

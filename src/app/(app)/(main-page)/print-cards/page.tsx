@@ -56,7 +56,7 @@ const LiftingGearMulti = () => {
               className={`px-4 w-1/4 py-2 rounded-lg ${
                 activeTab === "User Details"
                   ? "bg-primary text-white  hover:text-white hover:bg-primary"
-                  : "bg-gray-100 text-gray-500 hover:text-primary hover:border-primary border"
+                  : "bg-gray-100 text-gray-500 hover:text-primary hover:border-primary border border"
               }`}
               onClick={() => setActiveTab("User Details")}
             >
@@ -66,7 +66,7 @@ const LiftingGearMulti = () => {
               className={`px-4 w-1/4  py-2 rounded-lg ${
                 activeTab === "Print Cards"
                   ? "bg-primary text-white  hover:text-white hover:bg-primary"
-                  : "bg-gray-100 text-gray-500 hover:text-primary hover:border-primary border"
+                  : "bg-gray-100 text-gray-500 hover:text-primary hover:border-primary border border"
               }`}
               onClick={() => setActiveTab("Print Cards")}
             >
@@ -76,7 +76,7 @@ const LiftingGearMulti = () => {
               className={`px-4 w-1/4  py-2 rounded-lg ${
                 activeTab === "Certificate"
                   ? "bg-primary text-white hover:text-white hover:bg-primary"
-                  : "bg-gray-100 text-gray-500 hover:text-primary hover:border-primary border"
+                  : "bg-gray-100 text-gray-500 hover:text-primary hover:border-primary border border"
               }`}
               onClick={() => setActiveTab("Certificate")}
             >

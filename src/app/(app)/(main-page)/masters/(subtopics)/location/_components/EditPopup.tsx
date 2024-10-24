@@ -61,8 +61,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     const fetchData = async () => {
       try {
         const {data,error} =  FetchLocationDetails()
-        let recordData:any;
-        console.log('Fetched Data:', data);
+        let recordData:any; 
         flushSync(() => {
           setData(recordData);
           reset({
@@ -103,8 +102,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
 
   // Handle form submission
   const onSubmitHandler: SubmitHandler<EquipmentDetailsSchemaType> = async (values) => {
-    setLoading(true);
-    console.log('Form Values:', values);
+    setLoading(true); 
 
     // Prepare the updated data
     const updatedData = {
@@ -216,7 +214,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

@@ -6,7 +6,6 @@ import { getSubTopic } from '@/lib/utils';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
- console.log("hi");
  
 
   return (

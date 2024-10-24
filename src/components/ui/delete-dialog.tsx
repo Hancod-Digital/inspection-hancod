@@ -30,7 +30,7 @@ const DeleteDialogue: React.FC<DeleteAlertDialogProps> = ({ onConfirm, triggerBu
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction className='hover:bg-white hover:border hover:border-primary hover:text-primary' onClick={onConfirm}>Delete</AlertDialogAction>
+                    <AlertDialogAction className='hover:bg-white hover:border hover:border-primary border hover:text-primary' onClick={onConfirm}>Delete</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

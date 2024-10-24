@@ -61,8 +61,7 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
                     res = data
                 },
             }
-        );
-        console.log(res, "data is sreerag");
+        ); 
 
         return res?.fullPath
             ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
@@ -80,13 +79,12 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
       // Create an HTML template for the card
       const htmlElement = document.createElement('div');
       htmlElement.innerHTML = await fetchHtml(item);
-
+      htmlElement.style.position = 'absolute'; // Ensure it's off-screen if it needs to be temporarily appended
+      htmlElement.style.left = '-9999px';
       // Append the element to the body temporarily
       document.body.appendChild(htmlElement);
       await loadImages(htmlElement);
-
-      console.log(htmlElement.outerHTML);
-
+ 
       // Convert the HTML element to a PNG image
       const dataUrl = await toPng(htmlElement, {
         quality: 0.95,
@@ -109,7 +107,7 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
           () => new StudentService().updateStudentCardUrl(item?.id, cardImageUrl),
           {
             afterSuccess: (data: any) => {
-              console.log('Card image URL updated:', data);
+           
             },
           }
         );
@@ -131,8 +129,7 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
           await makeApiCall(
             () => new StudentService().updateStudentQRUrl(item?.id, qrImageUrl),
             {
-              afterSuccess: (data: any) => {
-                console.log('QR code image URL updated:', data);
+              afterSuccess: (data: any) => { 
               },
             }
           );
@@ -154,7 +151,7 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
   };
 
   const handleEditClick = (item: any) => {
-    console.log(item);
+ 
 
     // Open a new window
     const printWindow = window.open('', '_blank', 'width=600,height=600');
@@ -4317,8 +4314,8 @@ ${cssString()}
                 </TableCell>
                 <TableCell className="py-4">{item?.added_by}</TableCell>
                 <TableCell className="py-4">
-                  <div>ID No: {item?.id_number}</div>
-                  <div>Card No: {item?.card_number}</div>
+                  <div>ID No: {item?.id_no}</div>
+                  <div>Card No: {item?.card_no}</div>
                   <div>Model/Level: {item?.model_level}</div>
                   <div>Company: {item?.company}</div>
                   <div>Issued on: {item?.issued_on}</div>

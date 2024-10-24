@@ -65,8 +65,7 @@ export class StudentService extends Supabase {
    
     async updateStudentQRUrl(id: number, qr_url: string) {
         await this.ensureAuthenticated();
-        console.log(`Updating QR URL for student with ID: ${id}`,qr_url);
-    
+        
         const { data, error } = await this.supabase
             .from("students_credentials")
             .update({ qr_url:qr_url }) // Update only the qr_url field
@@ -74,18 +73,15 @@ export class StudentService extends Supabase {
             .select(); // Optional: Returns the updated record(s)
     
         if (error) {
-            console.log(error);
-            
+         
             throw new Error(error.message);
         }
-        console.log(data);
-        
+         
         return data;
     }
     async updateStudentCardUrl(id: number, card: string) {
         await this.ensureAuthenticated();
-        console.log(`Updating QR URL for student with ID: ${id}`,card);
-    
+     
         const { data, error } = await this.supabase
             .from("students_credentials")
             .update({ card_url:card }) // Update only the qr_url field
@@ -93,17 +89,14 @@ export class StudentService extends Supabase {
             .select(); // Optional: Returns the updated record(s)
     
         if (error) {
-            console.log(error);
-            
+             
             throw new Error(error.message);
         }
-        console.log(data);
         
         return data;
     }
     async updateStudentCertificateQRUrl(id: number, qr_url: string) {
         await this.ensureAuthenticated();
-        console.log(`Updating QR URL for student with ID: ${id}`,qr_url);
     
         const { data, error } = await this.supabase
             .from("students_credentials")
@@ -112,18 +105,15 @@ export class StudentService extends Supabase {
             .select(); // Optional: Returns the updated record(s)
     
         if (error) {
-            console.log(error);
             
             throw new Error(error.message);
         }
-        console.log(data);
         
         return data;
     }
     async updateStudentCertificateUrl(id: number, card: string) {
         await this.ensureAuthenticated();
-        console.log(`Updating QR URL for student with ID: ${id}`,card);
-    
+      
         const { data, error } = await this.supabase
             .from("students_credentials")
             .update({ certificate_url:card }) // Update only the qr_url field
@@ -131,19 +121,16 @@ export class StudentService extends Supabase {
             .select(); // Optional: Returns the updated record(s)
     
         if (error) {
-            console.log(error);
-            
+   
             throw new Error(error.message);
         }
-        console.log(data);
         
         return data;
     }
     
     async addStudent(record: any) {
         await this.ensureAuthenticated()
-        console.log(record, "redcc");
-
+       
         const { data, error } = await this.supabase
             .from("students_credentials")
             .insert(record)
@@ -156,8 +143,7 @@ export class StudentService extends Supabase {
     }
     async editStudent(id: number, updatedRecord: any) {
         await this.ensureAuthenticated(); // Ensures the user is authenticated
-        console.log(updatedRecord, "updatedRecord");
-    
+       
         const { data, error } = await this.supabase
             .from("students_credentials")
             .update(updatedRecord) // Update the record with new data

@@ -46,7 +46,7 @@ export default function LoginForm() {
   }, [isSubmitSuccessful]);
   
   const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
-    console.log(values);
+  
     const service = new AuthService();
     makeApiCall(
         () =>
@@ -135,7 +135,7 @@ export default function LoginForm() {
 
 
         <Button
-          className="w-full bg-primary hover:border hover:border-primary hover:bg-secondary hover:text-primary"
+          className="w-full bg-primary hover:border hover:border-primary border hover:bg-secondary hover:text-primary"
           type="submit"
          
         >

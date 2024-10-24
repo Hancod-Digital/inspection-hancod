@@ -47,15 +47,14 @@ export default function LoginForm() {
   }, [isSubmitSuccessful]);
   
   const onSubmitHandler: SubmitHandler<LoginInput> = async(values) => {
-    console.log(values);
+   
     // Handle login logic here
     await new Promise((resolve, reject) => {
       makeApiCall(
         () => new AuthService().change_authenticated_password(values.newPassword), 
         {
           afterSuccess: (data: any) => {
-            console.log(data,"data is heree");
-            
+         
             toastWithTimeout(ToastVariant.Success, "Password Updated Successfully");
             // resetPasswordForm();
             // handleLogout()
@@ -104,7 +103,7 @@ export default function LoginForm() {
         </div>
 
         <Button
-          className="w-full bg-primary hover:border hover:border-primary hover:bg-secondary hover:text-primary"
+          className="w-full bg-primary hover:border hover:border-primary border hover:bg-secondary hover:text-primary"
           type="submit"
          >
           Submit

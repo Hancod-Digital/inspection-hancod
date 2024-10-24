@@ -23,7 +23,6 @@ export class AuthService extends Supabase {
             redirectTo: 'http://localhost:3000/new-password', // URL to handle password reset
           });
           if (error) {
-            console.log(error);
             
             throw new Error("An Error Occured")
         }
@@ -33,7 +32,6 @@ export class AuthService extends Supabase {
         const { data, error } = await this.supabase.auth.updateUser({
             password
           })
-          console.log(password,"ppaaaaaaaaaaaaaaaaaaaa");
           
           if (error) {
             throw new Error("An Error Occured")
@@ -120,6 +118,7 @@ export const fetchUserActiveStatus = async () => {
 
 export const fetchUserDetails = async () => {
     const service = new AuthService();
+console.log((await service.getActiveUser()).session?.user.id);
 
     const response = await service.getUserDetails((await service.getActiveUser()).session?.user.id!)
 

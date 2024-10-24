@@ -122,7 +122,7 @@ export default function EditUserForm({
           onClose();
         },
         afterError: (err: any) => {
-          console.log(err);
+        
           toastWithTimeout(ToastVariant.Error, 'An Error Occurred');
         },
       }
@@ -391,15 +391,16 @@ export default function EditUserForm({
                 </div>
 
                 {/* Buttons */}
-                <div className="flex justify-end pt-20 gap-4">
+                
+              </div>
+              <div className="flex justify-end pt-20 gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" variant={'default'} disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" variant={'default'} disabled={loading}>
                     {loading ? 'Updating...' : 'Update'}
                   </Button>
                 </div>
-              </div>
             </form>
           </FormProvider>
         </CardContent>

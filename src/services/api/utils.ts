@@ -53,8 +53,7 @@ export class Supabase {
         // if (!SUPABASE_URL || !SUPABASE_KEY) {
         //     throw new Error("Missing Supabase URL or Key");
         // }
-const isServer = typeof window === 'undefined';
-console.log(isServer ? 'Running on the server' : 'Running on the client');
+const isServer = typeof window === 'undefined'; 
         // Create Supabase client
         this.supabase = createClient(this.supabaseUrl, this.supabaseKey);
 

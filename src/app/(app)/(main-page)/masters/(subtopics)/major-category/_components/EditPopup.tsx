@@ -58,7 +58,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     // Fetch existing data when the component mounts
     const fetchData = async () => {
       const recordData = await findRecordByIdWithReference(id, majorCategoryDataRange);
-      console.log("-----",recordData?.id?.equipment_type);
+    
       flushSync(()=>{
         setData(recordData);
         reset({
@@ -92,8 +92,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-    console.log(id,"---------------------------------------------this is idd");
-    
+     
     await updateRecord(id, {...data,equipment_type:Number(values?.equipment_type)});
     setLoading(false);
     onClose(); // Close the form after saving
@@ -186,7 +185,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

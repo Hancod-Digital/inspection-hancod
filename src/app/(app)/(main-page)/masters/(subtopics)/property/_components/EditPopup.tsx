@@ -30,8 +30,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
   const [loading, setLoading] = useState(false);
   const { updateRecord, findRecordById } = useSubtopic();
   const data = findRecordById(id);
-  console.log('Editing Record Data:', data); // Debugging line
-
+ 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -50,8 +49,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
-    setLoading(true);
-    console.log('Submitting Updated Record:', values); // Debugging line
+    setLoading(true); 
     await updateRecord(id, values);
     setLoading(false);
     onClose();
@@ -142,7 +140,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

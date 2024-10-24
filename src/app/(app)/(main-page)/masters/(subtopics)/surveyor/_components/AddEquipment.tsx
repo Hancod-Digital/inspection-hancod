@@ -66,8 +66,7 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
           res = data;
         },
       }
-    );
-    console.log(res);
+    ); 
 
     return res?.fullPath
       ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
@@ -76,19 +75,14 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
 
   const onSubmitHandler: SubmitHandler<SurveyorDetailsInput> = async (values) => {
     setLoading(true);
-    // Handle file upload here
-
-    console.log(competencies,"--------------------------------------------------------");
-    
+     
 
     const file = values.digital_signature[0];
     const digitalSignatureUrl = await uploadImage(file);
-    console.log(digitalSignatureUrl);
+    
     
     if (digitalSignatureUrl) {
-      console.log('Uploaded Digital Signature URL:', digitalSignatureUrl);
-      console.log('Form Values:', { surveyor: values.surveyor, qualification: values.qualification, code: values.code, digital_signature: digitalSignatureUrl });
-      console.log('Competencies:', competencies);
+      
     } else {
       console.error('Failed to upload digital signature');
     }
@@ -197,7 +191,7 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

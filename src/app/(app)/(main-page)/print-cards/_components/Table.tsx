@@ -50,7 +50,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
             document.body.appendChild(htmlElement);
             await loadImages(htmlElement);
 
-            console.log(htmlElement.outerHTML);
+          
 
             // Convert the HTML element to a PNG image
             const dataUrl = await toPng(htmlElement, {
@@ -74,7 +74,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     () => new StudentService().updateStudentCardUrl(item?.id, cardImageUrl),
                     {
                         afterSuccess: (data: any) => {
-                            console.log('Card image URL updated:', data);
+                        
                         },
                     }
                 );
@@ -97,7 +97,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                         () => new StudentService().updateStudentQRUrl(item?.id, qrImageUrl),
                         {
                             afterSuccess: (data: any) => {
-                                console.log('QR code image URL updated:', data);
+                         
                             },
                         }
                     );
@@ -145,8 +145,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                         res = data
                     },
                 }
-            );
-            console.log(res, "data is sreerag");
+            ); 
 
             return res?.fullPath
                 ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`

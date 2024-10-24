@@ -25,6 +25,7 @@ export default function Component() {
      
 
     const userName = userDetails?.name != "" ? userDetails?.name : userDetails?.email?.split('@')[0] ;
+   console.log(userDetails);
    
      
     const userEmail = userDetails?.email;

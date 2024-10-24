@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import AnimateButton from "../animated/AnimateButton";
 import { LoadingProvider } from '@/context/LoadingContext';
 import { flushSync } from 'react-dom';
+import PrintCardIcon from '../icons/PrintCardIcon';
 
 type Option = {
     type?: string;
@@ -77,7 +78,7 @@ export default function Sidebar() {
                     title: "Equipment",
                     identifier: "equipment",
                     icon: <Square
-                        style={{ fill: currentPath == '/masters/equipment' ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath == '/masters/equipment' ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em' }}
                         className={`me-2 ${currentPath == '/masters/equipment' ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -87,7 +88,7 @@ export default function Sidebar() {
                     title: "Equipment Type",
                     identifier: "equipment-type",
                     icon: <Square
-                        style={{ fill: currentPath.includes('equipment-type') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('equipment-type') ? "#962c3d" : "#75829C" ,width:'0.6em',height:'0.6em'}}
                         className={`me-2 ${currentPath.includes('equipment-type') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -97,7 +98,7 @@ export default function Sidebar() {
                     title: "Area",
                     identifier: "area",
                     icon: <Square
-                        style={{ fill: currentPath.includes('area') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('area') ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em'}}
                         className={`me-2 ${currentPath.includes('area') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -107,7 +108,7 @@ export default function Sidebar() {
                     title: "Site",
                     identifier: "site",
                     icon: <Square
-                        style={{ fill: currentPath.includes('site') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('site') ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em' }}
                         className={`me-2 ${currentPath.includes('site') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -117,8 +118,8 @@ export default function Sidebar() {
                     title: "Location",
                     identifier: "location",
                     icon: <Square
-                        style={{ fill: currentPath.includes('location') ? "#962c3d" : "#75829C" }}
-                        className={`me-2 ${currentPath.includes('location') ? "text-primary" : "text-[#75829C]"}`}
+                        style={{ fill: currentPath.includes('location') ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em' }}
+                        className={`me-2 ${currentPath.includes('location') ? "text-primary" : "text-[#75829C] "}`}
                         size="0.5em"
                     />,
                     url: "/masters/location",
@@ -127,7 +128,7 @@ export default function Sidebar() {
                     title: "Major Category",
                     identifier: "major-category",
                     icon: <Square
-                        style={{ fill: currentPath.includes('major-category') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('major-category') ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em'}}
                         className={`me-2 ${currentPath.includes('major-category') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -137,7 +138,7 @@ export default function Sidebar() {
                     title: "Minor Category",
                     identifier: "minor-category",
                     icon: <Square
-                        style={{ fill: currentPath.includes('minor-category') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('minor-category') ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em' }}
                         className={`me-2 ${currentPath.includes('minor-category') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -147,7 +148,7 @@ export default function Sidebar() {
                     title: "Property",
                     identifier: "property",
                     icon: <Square
-                        style={{ fill: currentPath.includes('property') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('property') ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em' }}
                         className={`me-2 ${currentPath.includes('property') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -157,7 +158,7 @@ export default function Sidebar() {
                     title: "Annexure",
                     identifier: "annexure",
                     icon: <Square
-                        style={{ fill: currentPath.includes('annexure') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('annexure') ? "#962c3d" : "#75829C" ,width:'0.6em',height:'0.6em'}}
                         className={`me-2 ${currentPath.includes('annexure') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -167,7 +168,7 @@ export default function Sidebar() {
                     title: "Standard",
                     identifier: "standard",
                     icon: <Square
-                        style={{ fill: currentPath.includes('standard') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('standard') ? "#962c3d" : "#75829C" ,width:'0.6em',height:'0.6em'}}
                         className={`me-2 ${currentPath.includes('standard') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -177,7 +178,7 @@ export default function Sidebar() {
                     title: "Manufacturer",
                     identifier: "",
                     icon: <Square
-                        style={{ fill: currentPath.includes('manufacturer') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('manufacturer') ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em' }}
                         className={`me-2 ${currentPath.includes('manufacturer') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -187,7 +188,7 @@ export default function Sidebar() {
                     title: "Owner",
                     identifier: "owner",
                     icon: <Square
-                        style={{ fill: currentPath.includes('owner') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('owner') ? "#962c3d" : "#75829C" ,width:'0.6em',height:'0.6em'}}
                         className={`me-2 ${currentPath.includes('owner') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -197,7 +198,7 @@ export default function Sidebar() {
                     title: "Surveyor",
                     identifier: "surveyor",
                     icon: <Square
-                        style={{ fill: currentPath.includes('surveyor') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('surveyor') ? "#962c3d" : "#75829C",width:'0.6em',height:'0.6em' }}
                         className={`me-2 ${currentPath.includes('surveyor') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -207,7 +208,7 @@ export default function Sidebar() {
                     title: "Authority",
                     identifier: "authority",
                     icon: <Square
-                        style={{ fill: currentPath.includes('authority') ? "#962c3d" : "#75829C" }}
+                        style={{ fill: currentPath.includes('authority') ? "#962c3d" : "#75829C" ,width:'0.6em',height:'0.6em'}}
                         className={`me-2 ${currentPath.includes('authority') ? "text-primary" : "text-[#75829C]"}`}
                         size="0.5em"
                     />,
@@ -282,7 +283,7 @@ export default function Sidebar() {
             title: "Print Cards",
             url: "/print-cards",
             identifier: "print-cards",
-            icon: <JobOrdersIcon isLive={currentPath === "/job-orders"} />,
+            icon: <PrintCardIcon isLive={currentPath === "/print-cards"} />,
         },
     ];
 
@@ -407,7 +408,7 @@ function SidebarItems({ options, className, currentActiveDiv, setCurrentActiveDi
       setLoading(true);
       setTimeout(() => setLoading(false), 500);
     }
-    console.log(opt);
+    
     
   }, [setCurrentActiveDiv, setLoading, toggleExpanded]);
 

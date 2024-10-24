@@ -58,15 +58,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const { reset, handleSubmit, control, watch, setValue, formState: { isSubmitSuccessful, errors } } = methods;
 
   const selectedSite = watch('site'); // Watch the 'site' field for changes
-  console.log("Selected Site ID:", selectedSite);
-
+   
   // Fetch site options on component mount
   useEffect(() => {
     const fetchSites = async () => {
       try {
         const data = await getAllSingleSubtopic("site"); // Fetch sites
         if (data) {
-          console.log("Fetched Sites:", data);
+        
           setSiteOptions(data);
         }
       } catch (error) {
@@ -122,10 +121,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
-    console.log("------------------------------------------------------");
     
-    setLoading(true);
-    console.log("Form Values:", values);
+    setLoading(true); 
     try {
       await addRecord(values); // Add new record
     } catch (error) {
@@ -281,7 +278,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

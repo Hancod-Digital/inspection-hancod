@@ -126,7 +126,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                     Cancel
                   </Button>
                   <Button
-                    className="px-10"
+                    className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border "
                     type="submit"
                     disabled={loading}
                   >

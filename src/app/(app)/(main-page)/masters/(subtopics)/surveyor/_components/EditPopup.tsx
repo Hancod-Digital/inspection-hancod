@@ -66,8 +66,7 @@ export default function SurveyorDetailsForm({ onClose, id }: SurveyorDetailsForm
             () => new MasterService().fetchCompetencies(id),
             {
                 afterSuccess: (data: any) => {
-                    console.log(data,"sdsd",id);
-                    
+                   
                     setCompetencies(data || []);
                 },
             }
@@ -97,7 +96,7 @@ export default function SurveyorDetailsForm({ onClose, id }: SurveyorDetailsForm
         },
       }
     );
-    console.log(res);
+ 
 
     return res?.fullPath
       ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
@@ -116,9 +115,8 @@ export default function SurveyorDetailsForm({ onClose, id }: SurveyorDetailsForm
         setLoading(false);
         return;
       }
-      console.log('Uploaded Digital Signature URL:', digitalSignatureUrl);
-    }
-console.log(record,digitalSignatureUrl);
+    
+    } 
 
     // Combine form values and competencies
     const updatedData = {
@@ -129,9 +127,7 @@ console.log(record,digitalSignatureUrl);
       
       digital_signature: digitalSignatureUrl? digitalSignatureUrl : record?.digital_signature, // This will be null if not updated
     };
-
-    console.log('Form Values:', updatedData);
-    console.log('Competencies:', competencies);
+ 
 
     await updateRecord(id, updatedData, dummy);
     setLoading(false);
@@ -252,7 +248,7 @@ console.log(record,digitalSignatureUrl);
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

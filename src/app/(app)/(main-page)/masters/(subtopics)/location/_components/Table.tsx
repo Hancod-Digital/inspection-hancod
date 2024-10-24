@@ -20,7 +20,7 @@ export default function EquipmentTable() {
     const { FetchLocationDetails , deleteRecord} = useSubtopic(); // Assuming this is a hook from your context
  const {data,error} =  FetchLocationDetails()
     // Call the hook directly at the top level of the component
-     console.log(data,"loko",error);
+    
       
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo); 

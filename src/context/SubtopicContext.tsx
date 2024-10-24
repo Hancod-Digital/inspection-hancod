@@ -35,7 +35,7 @@ interface SubtopicProviderProps {
 export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, children }) => {
   const masterService = new MasterService();
   const queryClient = useQueryClient();
-console.log(subtopic);
+ 
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['subtopics', subtopic],
@@ -62,8 +62,7 @@ console.log(subtopic);
     subtopic: string
   ) => {
     const queryKey = ['mergedData', JSON.stringify(dateRange), subtopic];
-    console.log("recieved",dateRange);
-    
+   
     // Check if the data is already in the cache
     let data = queryClient.getQueryData<any>(queryKey);
   
@@ -74,8 +73,7 @@ console.log(subtopic);
         queryFn: () => masterService.getMergedDataOfSingleDoc(subtopic,dateRange),
         staleTime: 5 * 60 * 1000, // 5 minutes
       });
-    }
-  console.log(data);
+    } 
     
     return data;
   };
@@ -136,8 +134,7 @@ console.log(subtopic);
     mutationFn: async ({ id, updates,surveyor_competency }: { id: number; updates: object,surveyor_competency?:any }) =>
       await masterService.updateSubtopicDetails(subtopic, id, updates,surveyor_competency),
     onSuccess: () => {
-      console.log("---invalidating");
-      
+    
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(majorCategoryDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(siteDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(locationDataRange), subtopic] });
@@ -156,8 +153,7 @@ console.log(subtopic);
     mutationFn: async ({ id }: { id: number }) =>
       await masterService.deleteSubtopicDetails(subtopic, id),
     onSuccess: () => {
-      console.log("---invalidating after delete");
-  
+    
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(majorCategoryDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(siteDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(locationDataRange), subtopic] });
@@ -175,8 +171,7 @@ console.log(subtopic);
   
 
   const addRecord = async (record: object,surveyor_competency?:any) => {
-    console.log("-----------Reached hereee-----------",record,surveyor_competency);
-    
+   
     await addRecordMutation.mutateAsync({ newRecord: record, surveyor_competency });
   };
 
@@ -189,10 +184,8 @@ console.log(subtopic);
   };
 
   const findRecordById = (id: number) => {
-    console.log(data,id);
-
+    
     if (!data) return undefined;
-    console.log(data);
     
     return data.find((record: any) => record.id === id);
   };

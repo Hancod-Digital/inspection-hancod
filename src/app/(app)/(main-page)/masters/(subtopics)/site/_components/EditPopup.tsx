@@ -58,7 +58,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
   useEffect(() => {
     const fetchData = async () => {
       const recordData = await findRecordByIdWithReference(id, siteDataRange);
-      console.log('Fetched Data:', recordData);
+     
       flushSync(() => {
         setData(recordData);
         reset({
@@ -89,9 +89,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
   }, [isSubmitSuccessful, reset, onClose]);
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
-    setLoading(true);
-    console.log('Form Values:', values);
-
+    setLoading(true);  
     // Prepare the updated data
     const updatedData = {
       ...data,
@@ -195,7 +193,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

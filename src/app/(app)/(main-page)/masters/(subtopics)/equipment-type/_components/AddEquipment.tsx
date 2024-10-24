@@ -39,8 +39,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
-    setLoading(true)
-    console.log(values);
+    setLoading(true) 
     await addRecord(values)
     setLoading(false) 
     onClose()
@@ -117,7 +116,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10  hover:bg-secondary hover:border hover:border-primary hover:text-primary" type="submit" disabled={loading}>
+                  <Button className="px-10  hover:bg-secondary hover:border hover:border-primary border hover:text-primary" type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>

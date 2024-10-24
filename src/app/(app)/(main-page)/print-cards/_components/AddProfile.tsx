@@ -99,8 +99,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
-    setLoading(true);
-    console.log(values);
+    setLoading(true); 
     makeApiCall(
       async () =>
         new StudentService().addStudent({
@@ -118,7 +117,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
           reset();
         },
         afterError: (err: any) => {
-          console.log(err);
+       
           toastWithTimeout(ToastVariant.Error, 'An Error Occurred');
         },
       }
@@ -302,7 +301,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
 
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="id_no">
-                    ID No
+                  Qatar ID/ Employer ID No:
                   </Label>
                   <div>
                     <Input id="id_no" {...register('id_no')} />
@@ -327,7 +326,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
 
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="designation">
-                    Designation
+                  Designation / Course
                   </Label>
                   <div>
                     <Input id="designation" {...register('designation')} />
@@ -365,7 +364,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                 {/* Valid Until */}
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="valid_untill">
-                    Valid Until
+                    Expiry Date
                   </Label>
                   <div>
                     <Input id="valid_untill" type="date" {...register('valid_untill')} />
@@ -377,27 +376,37 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
 
                 {/* Course Duration */}
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label className="pt-3" htmlFor="course_duration">
-                    Course Duration
-                  </Label>
-                  <div>
-                    <Input id="course_duration" {...register('course_duration')} />
-                    {errors.course_duration && (
-                      <p className="text-red-500 text-[13px] mt-1">{errors.course_duration.message}</p>
-                    )}
-                  </div>
-                </div>
+  <Label className="pt-3" htmlFor="course_duration">
+    Course Duration
+  </Label>
+  <div className="relative">
+    <Input 
+      id="course_duration" 
+      {...register('course_duration')} 
+      className="pr-12" // Adds space to the right for the "Days" label
+    />
+    <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+      Days
+    </span>
+    {errors.course_duration && (
+      <p className="text-red-500 text-[13px] mt-1">{errors.course_duration.message}</p>
+    )}
+  </div>
+</div>
+
+
 
                 {/* Buttons */}
-                <div className="flex justify-end pt-20 gap-4">
+                
+              </div>
+              <div className="flex w-full  justify-end pt-20 gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button className="px-10" type="submit" variant={'default'} disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border border" type="submit"  disabled={loading}>
                     {loading ? 'Saving...' : 'Submit'}
                   </Button>
                 </div>
-              </div>
             </form>
           </FormProvider>
         </CardContent>
