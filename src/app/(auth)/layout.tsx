@@ -49,10 +49,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </div>
                     {children}
                 </div>
-                <div className="relative w-1/2">
+                <div className="relative w-1/2 h-screen">
                     <img
                         alt="Construction workers reviewing plans"
-                        className="object-cover h-full w-full"
+                        className="  w-full"
                         src="/images/login/hero.svg"
                     />
                 </div>
