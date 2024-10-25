@@ -56,8 +56,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             
             setIsGenerating(item?.id); // Set the current row's id as generating
             const htmlElement = document.createElement('div');
-            htmlElement.style.position = 'absolute'; // Ensure it's off-screen if it needs to be temporarily appended
-        htmlElement.style.left = '-9999px';
+           
             htmlElement.innerHTML = await fetchHtml(item?.avatar, item?.qr_url, item?.name, item?.id_no, item?.company, item?.designation, item?.issued_on, item?.valid_untill, item?.course_duration);
 
             document.body.appendChild(htmlElement);
@@ -79,27 +78,29 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                     { afterSuccess: (data: any) => {} }
                 );
 
-                const qrDataUrl = await QRCode.toDataURL(certificateUrl, {
-                    width: 300,
-                    errorCorrectionLevel: 'H',
-                });
+                // const qrDataUrl = await QRCode.toDataURL(certificateUrl, {
+                //     width: 300,
+                //     errorCorrectionLevel: 'H',
+                // });
 
-                const qrImageBlob = dataURLtoBlob(qrDataUrl);
-                const qrImageUrl = await uploadImage(qrImageBlob);
+                // const qrImageBlob = dataURLtoBlob(qrDataUrl);
+                // const qrImageUrl = await uploadImage(qrImageBlob);
 
-                if (qrImageUrl) {
-                    await makeApiCall(
-                        () => new StudentService().updateStudentCertificateQRUrl(item?.id, qrImageUrl),
-                        { afterSuccess: (data: any) => {} }
-                    );
-                    toastWithTimeout(ToastVariant.Success, "Certificate and QR code created successfully.");
-                } else {
-                    toastWithTimeout(ToastVariant.Error, "Failed to upload QR image.");
-                }
+                // if (qrImageUrl) {
+                //     await makeApiCall(
+                //         () => new StudentService().updateStudentCertificateQRUrl(item?.id, qrImageUrl),
+                //         { afterSuccess: (data: any) => {} }
+                //     );
+                //     toastWithTimeout(ToastVariant.Success, "Certificate and QR code created successfully.");
+                // } else {
+                //     toastWithTimeout(ToastVariant.Error, "Failed to upload QR image.");
+                // }
+                toastWithTimeout(ToastVariant.Success, "Certificate Recreated successfully.");
             } else {
                 toastWithTimeout(ToastVariant.Error, "Failed to upload certificate image.");
             }
             setChanged(!changed);
+            
         } catch (error) {
             console.error("Error generating certificate:", error);
             toastWithTimeout(ToastVariant.Error, "An error occurred while generating the certificate.");

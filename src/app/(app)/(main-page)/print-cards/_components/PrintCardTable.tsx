@@ -79,8 +79,7 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
       // Create an HTML template for the card
       const htmlElement = document.createElement('div');
       htmlElement.innerHTML = await fetchHtml(item);
-      htmlElement.style.position = 'absolute'; // Ensure it's off-screen if it needs to be temporarily appended
-      htmlElement.style.left = '-9999px';
+     
       // Append the element to the body temporarily
       document.body.appendChild(htmlElement);
       await loadImages(htmlElement);

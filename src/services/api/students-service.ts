@@ -100,7 +100,7 @@ export class StudentService extends Supabase {
     
         const { data, error } = await this.supabase
             .from("students_credentials")
-            .update({ certificate_qr_url:qr_url }) // Update only the qr_url field
+            .update({ certificate_url:qr_url }) // Update only the qr_url field
             .eq("id", Number(id))
             .select(); // Optional: Returns the updated record(s)
     
@@ -113,6 +113,7 @@ export class StudentService extends Supabase {
     }
     async updateStudentCertificateUrl(id: number, card: string) {
         await this.ensureAuthenticated();
+      console.log(card,"card");
       
         const { data, error } = await this.supabase
             .from("students_credentials")
