@@ -516,6 +516,14 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                   </div>
                 </div>
               </div>
+              <div className="bottom-0 left-0 p-4 text-black text-sm font-semibold">
+  <ul className="list-disc list-inside">
+    <li>Post the details, click on the submit button</li>
+    <li>After posting the details, click on the 'User details' tab to display user details.</li>
+    <li>And click on the 'Generate QR-Code' button to create a QR code</li>
+  </ul>
+</div>
+
               <div className="flex w-full justify-end pt-20 gap-4">
                 <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                   Cancel

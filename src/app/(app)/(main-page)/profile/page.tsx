@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AuthService, fetchUserDetails } from '@/services/api/auth-service';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { generateFallbackAvatar } from '../../_components/navbar/Navbar';
 import { makeApiCall } from '@/lib/apicaller';
 import { UserService } from '@/services/api/user-service';
@@ -89,7 +89,7 @@ export default function Component() {
     defaultValues: {
       name: userDetails?.name || "",
       email: userDetails?.email || "",
-      mobile: userDetails?.mobile || "",
+      mobile: userDetails?.phone || "",
     },
   });
 
@@ -164,6 +164,7 @@ export default function Component() {
     }
   };
 
+  const queryClient = useQueryClient();
 
 
   useEffect(() => {
@@ -205,7 +206,9 @@ export default function Component() {
       }), {
       afterSuccess: () => {
         toastWithTimeout(ToastVariant.Success, "Profile Updated");
-        reset();
+        queryClient.invalidateQueries({ queryKey: ['userDetails'] });
+        queryClient.refetchQueries({ queryKey: ['userDetails'] });
+       
       },
       afterError: (err: any) => {
         console.log(err);

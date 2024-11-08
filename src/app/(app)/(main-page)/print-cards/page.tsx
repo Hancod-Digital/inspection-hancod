@@ -33,15 +33,13 @@ const LiftingGearMulti = () => {
     });
   }, [changed, activeTab]);
 
-  const rearrangedData = data
-    ? [...data].sort((a:any, b:any) => {
-        const aMatch = a.name.toLowerCase().includes(searchValue.toLowerCase());
-        const bMatch = b.name.toLowerCase().includes(searchValue.toLowerCase());
-        if (aMatch && !bMatch) return -1;
-        if (!aMatch && bMatch) return 1;
-        return 0;
-      })
+  const rearrangedData  = data
+    ? data.filter((item: any) =>
+        item.name.toLowerCase().includes(searchValue.toLowerCase())
+      )
     : [];
+
+
 
   return (
     <motion.div
