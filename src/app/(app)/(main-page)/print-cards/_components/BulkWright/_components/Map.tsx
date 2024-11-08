@@ -55,7 +55,10 @@ export default function Component2() {
                 <div className="text-sm">{field.label}</div>
                 <Select
                   value={mappings[field.id] || "none"} // Set default value based on mappings
-                  onValueChange={(value) => handleMappingChange(field.id, value)}
+                  onValueChange={(value) => {
+                    console.log(value+"value--------------------");
+                    handleMappingChange(field.id, value)
+                  }}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder={mappings[field.id] || "Select column"} />
