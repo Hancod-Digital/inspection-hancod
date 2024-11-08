@@ -408,3 +408,24 @@ export function formatDateWithHyphen(dateString: string | number | Date) {
   const year = date.getFullYear();
   return `${day}-${month}-${year}`;
 } 
+
+export function mapDataFields(data:any, mappings:any) {
+  const fieldOccurrences:any = []; // Array to store transformed records
+
+  // Process each record in the data array
+  data.forEach((record:any) => {
+    const mappedRecord:any = {}; // Temporary object for each mapped record
+
+    // Map fields according to the mappings object
+    for (const key in mappings) {
+      const mappedField = mappings[key]; // Get the mapped field name from mappings
+      const fieldValue = record[mappedField]; // Retrieve the value from data record
+      mappedRecord[key] = fieldValue; // Assign it to the mappedRecord with the new key
+    }
+
+    // Add the mapped record to the array
+    fieldOccurrences.push(mappedRecord);
+  });
+
+  return fieldOccurrences; // Return the array of mapped records
+}

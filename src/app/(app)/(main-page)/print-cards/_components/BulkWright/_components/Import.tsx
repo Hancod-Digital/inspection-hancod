@@ -8,7 +8,7 @@ import { Upload } from "lucide-react"
 import { useStepper } from "../_context/Context"
 
 const Import: React.FC = () => {
-  const { file, handleFileChange, duplicateHandling, setDuplicateHandling } = useStepper()
+  const { file, handleFileChange, duplicateHandling, setDuplicateHandling ,handleValueChange} = useStepper()
 
   const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0]
@@ -28,11 +28,7 @@ const Import: React.FC = () => {
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
   }
-  const handleValueChange = (value: string) => {
-    console.log("Selected value:", value) // Debugging log
-    setDuplicateHandling(value)
-    console.log("Updated duplicateHandling:", duplicateHandling) // Check if context updates
-  }
+  
 
   return (
     <div>
@@ -64,9 +60,9 @@ const Import: React.FC = () => {
       <div className="space-y-6">
         <h2 className="text-base font-semibold mb-4">Duplicate Handling:</h2>
         <RadioGroup
-          defaultValue="skip"
+          defaultValue={duplicateHandling}
           value={duplicateHandling}
-          onValueChange={handleValueChange}
+          onValueChange={(selectedValue) => handleValueChange(selectedValue)} 
           className="space-y-4"
         >
           <div className="flex items-start space-x-3">

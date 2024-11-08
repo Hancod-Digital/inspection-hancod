@@ -1,6 +1,13 @@
 // StepperContext.tsx
+import { toastWithTimeout } from "@/components/ui/use-toast"
+import { StudentService } from "@/services/api/students-service"
+import { makeApiCall } from "@/lib/apicaller"
 import React, { createContext, useContext, useState, ReactNode } from "react"
 import * as XLSX from "xlsx"
+import { getLastTwoDigitsOfCurrentYear, mapDataFields } from "@/lib/utils"
+import { useQuery } from "@tanstack/react-query"
+import { fetchUserDetails } from "@/services/api/auth-service"
+import { ToastVariant } from "@/components/ui/use-toast"
 
 interface StepperContextProps {
   currentStep: number
@@ -17,6 +24,7 @@ interface StepperContextProps {
   goToPreviousStep: () => void
   handleFileChange: (file: File) => void
   processFile: (file: File) => void
+  handleValueChange: (value: string) => void
 }
 
 const StepperContext = createContext<StepperContextProps | undefined>(undefined)
@@ -25,12 +33,59 @@ export const StepperProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [currentStep, setCurrentStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
   const [data, setData] = useState<any>([])
-  const [duplicateHandling, setDuplicateHandling] = useState<any>("skip")
+  const [duplicateHandling, setDuplicateHandling] = useState<any>("overwrite")
   const [mappings, setMappings] = useState<{ [key: string]: string }>({}) // Add mappings state
+ // Using React Query to fetch user active status with object syntax (v5+)
+ const { data: userDetails, isLoading, isError } = useQuery({
+    queryKey: ['userDetails'],
+    queryFn: fetchUserDetails,
+  });
+
+  const userName = userDetails?.name !== '' ? userDetails?.name : userDetails?.email?.split('@')[0];
+
+  const uploadBatch = async () => {
+    try {
+      let mappedData = mapDataFields(data, mappings);
+      console.log(mappedData, "mappedData");
+  
+      // Use Promise.all to handle multiple async calls in parallel
+      await Promise.all(
+        mappedData.map((item: any) =>
+          makeApiCall(
+            async () =>
+              new StudentService().addStudent({
+                ...item,
+                added_by: userName,
+                certificate_no: "QSIS-TRA-" + getLastTwoDigitsOfCurrentYear(),
+                card_no: "QSIS-TRA-" + getLastTwoDigitsOfCurrentYear(),
+              }),
+            {
+              afterSuccess: () => {
+                toastWithTimeout(ToastVariant.Success, "Operation successful");
+                // setChanged(!changed);
+                // reset();
+              },
+              afterError: (err: any) => {
+                toastWithTimeout(ToastVariant.Error, "An Error Occurred");
+              },
+            }
+          )
+        )
+      );
+    } catch (error) {
+      console.error("Error uploading batch:", error);
+      toastWithTimeout(ToastVariant.Error, "Batch upload failed.");
+    }
+  };
+  
 
   const goToNextStep = () => {
     if (currentStep < 3) {
       setCurrentStep((prev) => prev + 1)
+    }
+    if(currentStep===3){
+        console.log(data,"data");
+        uploadBatch()
     }
   }
 
@@ -49,6 +104,12 @@ export const StepperProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   }
 
+  const handleValueChange = (value: string) => {
+    console.log("Selected value:", value) // Debugging log
+    setDuplicateHandling(value)
+    file&& processFile(file) 
+    console.log("Updated duplicateHandling:", duplicateHandling) // Check if context updates
+  }
   const processFile = (file: File) => {
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -74,7 +135,7 @@ export const StepperProvider: React.FC<{ children: ReactNode }> = ({ children })
       console.log(processedData?.length);
       
     }else{
-        console.log(duplicateHandling);
+        console.log(duplicateHandling,"wjyyyy");
         
         processedData = jsonData
     }
@@ -100,6 +161,7 @@ export const StepperProvider: React.FC<{ children: ReactNode }> = ({ children })
         goToPreviousStep,
         handleFileChange,
         processFile,
+        handleValueChange
       }}
     >
       {children}

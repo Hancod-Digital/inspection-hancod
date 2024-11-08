@@ -49,7 +49,15 @@ const LiftingGearMulti = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-    >
+    >< motion.h2 
+    className='px-5 pt-5 text-xl font-[700]'
+    initial={{ y: -20, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    transition={{ delay: 0.2, duration: 0.5 }}
+>
+   Print Cards
+</motion.h2>
+
       {!isAdd && !isBulk && (
         <>
           <div className="flex w-full space-x-4 p-5">

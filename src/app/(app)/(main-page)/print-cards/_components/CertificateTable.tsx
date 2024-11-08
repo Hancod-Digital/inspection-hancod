@@ -200,9 +200,10 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                 <TableHeader>
                     <TableRow>
                         <TableHead className="py-4">ID</TableHead>
-                        <TableHead className="py-4">Image</TableHead>
+                      
                         <TableHead className="py-4">Name</TableHead>
                         <TableHead className="py-4">Added_By</TableHead>
+                        <TableHead className="py-4">Image</TableHead>
                         <TableHead className="py-4">Card/Model/Level</TableHead>
                         <TableHead className="py-4">QR Image</TableHead>
                         <TableHead className="py-4">Action</TableHead>
@@ -213,6 +214,13 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                         <React.Fragment key={idx + 1}>
                             <TableRow>
                                 <TableCell className="py-4">{idx}</TableCell>
+                               
+                                <TableCell className="py-4">
+                                    {item?.name}
+                                    <div>Address: {item?.address}</div>
+                                    <div>Designation: {item?.designation}</div>
+                                </TableCell>
+                                <TableCell className="py-4">{item?.added_by}</TableCell>
                                 <TableCell className="py-4">
                                     <Avatar className="mb-2 w-16 h-16">
                                         <AvatarImage
@@ -223,12 +231,6 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                         <AvatarFallback>{item?.name}</AvatarFallback>
                                     </Avatar>
                                 </TableCell>
-                                <TableCell className="py-4">
-                                    {item?.name}
-                                    <div>Address: {item?.address}</div>
-                                    <div>Designation: {item?.designation}</div>
-                                </TableCell>
-                                <TableCell className="py-4">{item?.added_by}</TableCell>
                                 <TableCell className="py-4">
                                     <div>ID No: {item?.id_no}</div>
                                     <div>Card No: {item?.card_no}</div>

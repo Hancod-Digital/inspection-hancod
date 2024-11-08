@@ -7,16 +7,16 @@ import { useStepper } from "../_context/Context"
 // Define the fields to map to
 const fields = [
   { id: "name", label: "Name" },
-  { id: "contact", label: "Contact Number" },
+  { id: "contact_number", label: "Contact Number" },
   { id: "email", label: "Email" },
   { id: "address", label: "Address" },
   { id: "gender", label: "Gender" },
   { id: "company", label: "Company" },
-  { id: "qatar-id", label: "Qatar ID/ Employer ID No." },
+  { id: "id_no", label: "Qatar ID/ Employer ID No." },
   { id: "designation", label: "Designation / Course" },
-  { id: "issued-on", label: "Issued On" },
-  { id: "model", label: "Model/Level" },
-  { id: "expiry", label: "Expiry Date" },
+  { id: "issued_on", label: "Issued On" },
+  { id: "model_level", label: "Model/Level" },
+  { id: "valid_untill", label: "Expiry Date" },
 ]
 
 export default function Component2() {

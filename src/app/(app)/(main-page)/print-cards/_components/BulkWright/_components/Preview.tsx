@@ -18,6 +18,7 @@ export default function Component() {
 
   // Calculate the number of skipped records (total records - ready to import)
   const skippedRecordsCount = data.length - readyToImportCount
+console.log(mappings,"mappings",data);
 
   // Calculate the number of unmapped fields
   const unmappedFieldsCount = Object.keys(mappings).filter(
@@ -27,7 +28,7 @@ export default function Component() {
   return (
     <div className="w-full space-y-4 p-3">
       <p className="text-sm text-muted-foreground">
-        {readyToImportCount} of {data.length} user data in your file are ready to be imported.
+        {readyToImportCount} of {data.length} user data {mappings?.length}in your file are ready to be imported.
       </p>
 
       <div className="space-y-2">

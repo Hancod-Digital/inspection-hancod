@@ -24,8 +24,8 @@ const schema = z.object({
   name: z.string().min(1, "Full Name is required"),
   email: z.string().email("Invalid email address"),
   mobile: z
-  .string()
-  .regex(/^\d{10}$/, "Mobile number must be exactly 10 digits"),
+    .string()
+    .regex(/^\d{10}$/, "Mobile number must be exactly 10 digits"),
 });
 // Zod Schema for password validation
 const passwordSchema = z.object({
@@ -105,17 +105,17 @@ export default function Component() {
   const handleLogout = () => {
     const service = new AuthService();
     makeApiCall(
-        () => service.userLogout(),
-        {
-            toastContent: "Logout Successful",
-             
-            afterSuccess: () => {
-                router.push('/login');
-                router.refresh();
-            },
-        }
+      () => service.userLogout(),
+      {
+        toastContent: "Logout Successful",
+
+        afterSuccess: () => {
+          router.push('/login');
+          router.refresh();
+        },
+      }
     );
-};
+  };
   const onSubmitPassword = async (data: any) => {
     try {
       // Step 1: Verify the new password (using a promise-based approach)
@@ -124,26 +124,26 @@ export default function Component() {
           () => new AuthService().verify_user_password(data.currentPassword),
           {
             afterSuccess: (result: any) => {
-              result ===false  &&  toastWithTimeout(ToastVariant.Error, "Error: Invalid password");              
+              result === false && toastWithTimeout(ToastVariant.Error, "Error: Invalid password");
               resolve(result);  // Resolve the promise with the verification result
             },
             afterError: (error: any) => {
               toastWithTimeout(ToastVariant.Destructive, "Error: Invalid password");
-             
+
               reject(error);  // Reject the promise with the error
             }
           }
         );
       });
-      
+
       // Step 2: If verification is successful, change the password
       if (verificationResult) {
         await new Promise((resolve, reject) => {
           makeApiCall(
-            () => new AuthService().change_authenticated_password(data.newPassword), 
+            () => new AuthService().change_authenticated_password(data.newPassword),
             {
               afterSuccess: (data: any) => {
-                 
+
                 toastWithTimeout(ToastVariant.Success, "Password Updated Successfully");
                 resetPasswordForm();
                 handleLogout()
@@ -156,15 +156,15 @@ export default function Component() {
             }
           );
         });
-      }else{
-      
+      } else {
+
       }
     } catch (error) {
       console.error("Password update failed:", error);
     }
   };
-  
-    
+
+
 
   useEffect(() => {
     if (isSuccess && userDetails) {
@@ -195,7 +195,7 @@ export default function Component() {
 
   const onSubmit = async (data: any) => {
     const fullMobileNumber = `${countryCode}${data.mobile}`;  // Combine country code with mobile number
-    data.mobile = fullMobileNumber; 
+    data.mobile = fullMobileNumber;
 
     makeApiCall(
       async () => new UserService().updateUser({
@@ -289,17 +289,17 @@ export default function Component() {
                         </SelectContent>
                       </Select>
                       <Input  {...register("mobile")}
-    id="mobile"
-    type="tel"
-    inputMode="numeric"
-    pattern="[0-9]*" // Allows only numbers 0–9
-    onInput={(e) => {
-      const input = e.target as HTMLInputElement;
-      input.value = input.value.replace(/[^0-9]/g, ""); // Remove non-digit characters
-    }}
-    placeholder="Enter your mobile number"
-    className="flex-1"
-     />
+                        id="mobile"
+                        type="tel"
+                        inputMode="numeric"
+                        pattern="[0-9]*" // Allows only numbers 0–9
+                        onInput={(e) => {
+                          const input = e.target as HTMLInputElement;
+                          input.value = input.value.replace(/[^0-9]/g, ""); // Remove non-digit characters
+                        }}
+                        placeholder="Enter your mobile number"
+                        className="flex-1"
+                      />
                     </div>
                   </div>
                   {errors.mobile && <p className="text-red-500 text-[13px]">{errors?.mobile?.message as string}</p>}
@@ -314,33 +314,33 @@ export default function Component() {
           </TabsContent>
 
           {/* Password Change Form */}
-        {/* Password Change Form */}
-<TabsContent value="password" className="bg-white p-5">
-  <div className="space-y-4 max-w-md">
-    <h2 className="font-bold text-xl">Change Password</h2>
-    <form onSubmit={handlePasswordSubmit(onSubmitPassword)}>
-      <div className="space-y-2">
-        <Label htmlFor="currentPassword">Current Password</Label>
-        <Input {...passwordRegister("currentPassword")} id="currentPassword" type="password" />
-        {passwordErrors.currentPassword && <p className="text-red-500 text-[13px]">{passwordErrors.currentPassword.message}</p>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="newPassword">New Password</Label>
-        <Input {...passwordRegister("newPassword")} id="newPassword" type="password" />
-        {passwordErrors.newPassword && <p className="text-red-500 text-[13px]">{passwordErrors.newPassword.message}</p>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirm New Password</Label>
-        <Input {...passwordRegister("confirmPassword")} id="confirmPassword" type="password" />
-        {passwordErrors.confirmPassword && <p className="text-red-500 text-[13px]">{passwordErrors.confirmPassword.message}</p>}
-      </div>
+          {/* Password Change Form */}
+          <TabsContent value="password" className="bg-white p-5">
+            <div className="space-y-4 max-w-md">
+              <h2 className="font-bold text-xl">Change Password</h2>
+              <form onSubmit={handlePasswordSubmit(onSubmitPassword)}>
+                <div className="space-y-2">
+                  <Label htmlFor="currentPassword">Current Password</Label>
+                  <Input {...passwordRegister("currentPassword")} id="currentPassword" type="password" />
+                  {passwordErrors.currentPassword && <p className="text-red-500 text-[13px]">{passwordErrors.currentPassword.message}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="newPassword">New Password</Label>
+                  <Input {...passwordRegister("newPassword")} id="newPassword" type="password" />
+                  {passwordErrors.newPassword && <p className="text-red-500 text-[13px]">{passwordErrors.newPassword.message}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                  <Input {...passwordRegister("confirmPassword")} id="confirmPassword" type="password" />
+                  {passwordErrors.confirmPassword && <p className="text-red-500 text-[13px]">{passwordErrors.confirmPassword.message}</p>}
+                </div>
 
-      <div className="flex justify-end mt-4">
-        <Button type="submit" className="bg-[#8B1F41] text-white hover:bg-[#6B1732]">Update Password</Button>
-      </div>
-    </form>
-  </div>
-</TabsContent>
+                <div className="flex justify-end mt-4">
+                  <Button type="submit" className="bg-[#8B1F41] text-white hover:bg-[#6B1732]">Update Password</Button>
+                </div>
+              </form>
+            </div>
+          </TabsContent>
 
         </Tabs>
       </CardContent>

@@ -49,7 +49,7 @@ const StepperLayoutContent: React.FC = () => {
         <Button
           className="bg-primary text-primary-foreground"
           onClick={goToNextStep}
-          disabled={currentStep === steps.length}
+          disabled={currentStep === steps.length+1}
         >
           {currentStep === steps.length ? "Finish" : "Next"}
         </Button>
