@@ -9,14 +9,15 @@ import PrintCardTable from "./_components/PrintCardTable";
 import CertificateTable from "./_components/CertificateTable";
 import { makeApiCall } from "@/lib/apicaller";
 import { StudentService } from "@/services/api/students-service";
-
+import Layout from "./_components/BulkWright/_components/Layout";
+import Map from "./_components/BulkWright/_components/Map";
 const LiftingGearMulti = () => {
   const [activeTab, setActiveTab] = useState("User Details");
   const [changed, setChanged] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-
+  const [isBulk, setIsBulk] = useState(false);
   const handleCloseAdd = () => {
     setIsAdd(false);
   };
@@ -49,7 +50,7 @@ const LiftingGearMulti = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {!isAdd && (
+      {!isAdd && !isBulk && (
         <>
           <div className="flex w-full space-x-4 p-5">
             <Button
@@ -94,7 +95,7 @@ const LiftingGearMulti = () => {
         </>
       )}
       <AnimatePresence mode="wait">
-        {!isAdd && (
+        {!isAdd && !isBulk && (
           <motion.div
             key="header"
             initial={{ opacity: 0, y: 20 }}
@@ -102,17 +103,19 @@ const LiftingGearMulti = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <Header onOpen={handleOpenAdd} onSearchChange={setSearchValue} />
+            <Header onOpen={handleOpenAdd} setIsBulk={setIsBulk} onSearchChange={setSearchValue} />
           </motion.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
-        {!isAdd ? (
+        {isBulk? (
+<Layout /> 
+        ):!isAdd ? (
           <motion.div
             key="table"
             initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 1, x: 0 }} 
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.5 }}
           >
@@ -124,15 +127,16 @@ const LiftingGearMulti = () => {
               <CertificateTable data={rearrangedData} setChanged={setChanged} changed={changed} />
             )}
           </motion.div>
-        ) : (
+        )  : (
           <motion.div
             key="addForm"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.5 }}
-          >
-            <AddForm changed={changed} setChanged={setChanged} onClose={handleCloseAdd} />
+          > 
+          <AddForm changed={changed} setChanged={setChanged} onClose={handleCloseAdd} />
+          
           </motion.div>
         )}
       </AnimatePresence>
@@ -141,3 +145,4 @@ const LiftingGearMulti = () => {
 };
 
 export default LiftingGearMulti;
+ 

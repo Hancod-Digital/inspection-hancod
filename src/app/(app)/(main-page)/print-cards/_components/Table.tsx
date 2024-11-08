@@ -23,6 +23,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
 import { dataURLtoBlob, fetchHtml, loadImages } from '@/lib/utils';
+import { AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 export default function EquipmentTable({ data, setChanged, changed }: { data: any, setChanged: any, changed: boolean }) {
     const [editingRow, setEditingRow] = useState<any>(null);
@@ -182,8 +184,14 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                 </TableCell>
                                 <TableCell className="py-4">{item.added_by}</TableCell>
                                 <TableCell className="py-4">
-                                    <img src={item.avatar} alt="profile" className="w-16 h-16 rounded-full" />
-                                </TableCell>
+                                <Avatar className="mb-2 w-16 h-16">
+                  <AvatarImage
+                    className="object-cover w-full h-full"
+                    alt="User's avatar"
+                    src={item?.avatar}
+                  />
+                  <AvatarFallback>{item?.name}</AvatarFallback>
+                </Avatar></TableCell>
                                 <TableCell className="py-4">
                                     <div>ID No: {item.id_number}</div>
                                     <div>Card No: {item.card_number}</div>

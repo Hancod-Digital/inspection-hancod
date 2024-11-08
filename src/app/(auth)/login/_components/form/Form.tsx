@@ -1,5 +1,5 @@
 'use client'
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
+import { useForm, SubmitHandler, FormProvider,  Controller } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
@@ -67,33 +67,41 @@ export default function LoginForm() {
 
   return (
     <FormProvider {...methods}>
-      <form
-        className="space-y-4"
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit(onSubmitHandler)}
-      >
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            placeholder="your@example.com"
-            type="email"
-            fullWidth
-            required
-            {...register('email')}
-            sx={{
-              '& .MuiInputBase-input': {
-                padding: '0.5rem',
-                backgroundColor: 'white',
-              },
-            }}
-            error={!!errors.email}
-          />
-          {errors.email && (
-            <p className="text-sm text-red-600">{errors.email.message}</p>
+    <form
+      className="space-y-4"
+      noValidate
+      autoComplete="off"
+      onSubmit={handleSubmit(onSubmitHandler)}
+    >
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Controller
+          name="email"
+          control={methods.control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              id="email"
+              placeholder="your@example.com"
+              type="email"
+              fullWidth
+              required
+              onChange={(e) => field.onChange(e.target.value.toLowerCase())}
+              sx={{
+                '& .MuiInputBase-input': {
+                  padding: '0.5rem',
+                  backgroundColor: 'white',
+                },
+              }}
+              error={!!errors.email}
+            />
           )}
-        </div>
+        />
+        {errors.email && (
+          <p className="text-sm text-red-600">{errors.email.message}</p>
+        )}
+      </div>
+ 
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">

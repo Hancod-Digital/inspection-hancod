@@ -19,10 +19,11 @@ import { StudentService } from '@/services/api/students-service';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
-import { dataURLtoBlob, fetchHtml, loadImages } from '@/lib/utils';
+import { dataURLtoBlob, fetchHtml, formatDateWithHyphen, loadImages } from '@/lib/utils';
 import { toPng } from 'html-to-image';
 import { UserService } from '@/services/api/user-service';
 import TableSpinner from '@/components/animated/TableSpinner';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function PrintCardTable({ data, changed , setChanged}: { data: any, changed: boolean, setChanged: any }) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -4255,13 +4256,13 @@ ${cssString()}
                   <div class="line"></div>
                   <div class="bio">
                     <span class="qatar-id">Qatar ID/ ID No.: <br />Company name:<br />Course Details:<br />Model/ Level:</span>
-                    <span class="qube-inspection">${item?.id_no}<br />${item.company}<br />${item.designation}<br />${item.model_level}</span>
+                    <span class="qube-inspection">${item?.id_no}<br />${item?.company}<br />${item?.designation}<br />${item?.model_level}</span>
                   </div>
                 </div>
                 <div class="line-1"></div>
                 <div class="flex-row-b">
                   <div class="vector" ></div>
-                  <span class="issued-date-expiry-date">${item.issued_on}<br />${item.valid_untill}</span>
+                  <span class="issued-date-expiry-date">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span>
                   <span class="scan-qr-code">Issued Date: <br />Expiry Date:</span>
                   <span class="rectangle-155">Scan QR code to verify this card</span>
                 </div>
@@ -4294,6 +4295,7 @@ ${cssString()}
         <TableHeader>
           <TableRow>
             <TableHead className="py-4">ID</TableHead>
+            <TableHead className="py-4">Image</TableHead>
             <TableHead className="py-4">Name</TableHead>
             <TableHead className="py-4">Added_By</TableHead>
             <TableHead className="py-4">Card/Model/Level</TableHead>
@@ -4307,6 +4309,17 @@ ${cssString()}
               <TableRow>
                 <TableCell className="py-4">{idx}</TableCell>
                 <TableCell className="py-4">
+                <Avatar className="mb-2 w-16 h-16">
+                  <AvatarImage
+                    className="object-cover w-full h-full"
+                    alt="User's avatar"
+                    src={item?.avatar}
+                  />
+                  <AvatarFallback>{item?.name}</AvatarFallback>
+                </Avatar>
+                  {/* <img src={item?.avatar} alt="profile" className="w-16 h-16 rounded-full" /> */}
+                </TableCell>
+                <TableCell className="py-4">
                   {item?.name}
                   <div>Address: {item?.address}</div>
                   <div>Designation: {item?.designation}</div>
@@ -4317,8 +4330,8 @@ ${cssString()}
                   <div>Card No: {item?.card_no}</div>
                   <div>Model/Level: {item?.model_level}</div>
                   <div>Company: {item?.company}</div>
-                  <div>Issued on: {item?.issued_on}</div>
-                  <div>Valid Until: {item?.valid_untill}</div>
+                  <div>Issued on: {formatDateWithHyphen(item?.issued_on)}</div>
+                  <div>Valid Until: {formatDateWithHyphen(item?.valid_untill)}</div>
                 </TableCell>
                 <TableCell className="py-4">
                   {isGenerating === item.id ? <TableSpinner /> : <img src={item?.qr_url} alt="QR code" className="w-16 h-16" />}

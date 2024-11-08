@@ -42,7 +42,7 @@ export default function Component() {
   const [activeTab, setActiveTab] = useState("personal");
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [fileBuffer, setFileBuffer] = useState<File | null>(null);
-  const [countryCode, setCountryCode] = useState('+91');  // Default country code
+  const [countryCode, setCountryCode] = useState('+974');  // Default country code
 
   const { data: userDetails, isSuccess } = useQuery({
     queryKey: ['userDetails'],
@@ -284,9 +284,22 @@ export default function Component() {
                           <SelectItem value="+91">+91</SelectItem>
                           <SelectItem value="+1">+1</SelectItem>
                           <SelectItem value="+44">+44</SelectItem>
+                          <SelectItem value="+974">+974</SelectItem>
+
                         </SelectContent>
                       </Select>
-                      <Input {...register("mobile")} id="mobile" type="tel" placeholder="Enter your mobile number" className="flex-1" />
+                      <Input  {...register("mobile")}
+    id="mobile"
+    type="tel"
+    inputMode="numeric"
+    pattern="[0-9]*" // Allows only numbers 0–9
+    onInput={(e) => {
+      const input = e.target as HTMLInputElement;
+      input.value = input.value.replace(/[^0-9]/g, ""); // Remove non-digit characters
+    }}
+    placeholder="Enter your mobile number"
+    className="flex-1"
+     />
                     </div>
                   </div>
                   {errors.mobile && <p className="text-red-500 text-[13px]">{errors?.mobile?.message as string}</p>}

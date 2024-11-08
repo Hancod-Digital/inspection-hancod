@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Search, PlusIcon } from "lucide-react";
 import { useState } from "react";
 
-export default function Component({ onOpen, onSearchChange }:any) {
+export default function Component({ onOpen, setIsBulk, onSearchChange }:any) {
   const [searchValue, setSearchValue] = useState("");
 
   const handleSearchChange = (e: { target: { value: any; }; }) => {
@@ -25,6 +25,17 @@ export default function Component({ onOpen, onSearchChange }:any) {
             className="pl-10 pr-4 focus:border-primary w-full"
           />
         </div>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setIsBulk(true);
+            console.log("Bulk mode activated"); // Check if this logs when you click Import
+          }}
+          className="flex-[1] hover:bg-secondary hover:text-primary hover:border-primary border bg-primary text-primary-foreground"
+        >
+          <PlusIcon className="h-4 w-4 mr-1" />
+          Import
+        </Button>
         <Button
           variant="outline"
           onClick={onOpen}

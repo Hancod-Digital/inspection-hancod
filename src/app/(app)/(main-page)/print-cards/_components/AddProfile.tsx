@@ -1,9 +1,20 @@
 'use client';
+
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useState } from 'react';
+import ReactCrop, { type Crop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,7 +38,6 @@ const userFormSchema = object({
   gender: string().nonempty('Gender is required'),
   company: string().nonempty('Company is required'),
   id_no: string().nonempty('ID Number is required'),
-  card_no: string().nonempty('Card Number is required'),
   designation: string().nonempty('Designation is required'),
   model_level: string().nonempty('Model/Level is required'),
   issued_on: string().nonempty('Issued On date is required'),
@@ -49,8 +59,18 @@ const generateFallbackAvatar = (nameOrEmail: string) => {
 
 export default function UserForm({ onClose, setChanged, changed }: UserFormProps) {
   const [loading, setLoading] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
-  const [fileBuffer, setFileBuffer] = useState<File | null>(null);
+  const [croppedFile, setCroppedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  
+  // Cropping state
+  const [crop, setCrop] = useState<any>({
+    unit: '%',
+    width: 50,
+    aspect: 1,
+  });
+  const [src, setSrc] = useState<string | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const imageRef = useRef<HTMLImageElement | null>(null);
 
   // Using React Query to fetch user active status with object syntax (v5+)
   const { data: userDetails, isLoading, isError } = useQuery({
@@ -64,15 +84,50 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
     resolver: zodResolver(userFormSchema),
   });
 
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitSuccessful, errors },
+    register,
+    setValue, // Added setValue
+    watch,     // Added watch
+  } = methods;
+
+  // Watch issued_on and update valid_untill accordingly
+  useEffect(() => {
+    const issuedOn = watch('issued_on');
+    if (issuedOn) {
+      const issuedDate = new Date(issuedOn);
+      const validUntilDate = new Date(issuedDate);
+      validUntilDate.setFullYear(validUntilDate.getFullYear() + 1);
+      
+      // Format the date to YYYY-MM-DD
+      const formattedValidUntil = validUntilDate.toISOString().split('T')[0];
+      
+      setValue('valid_untill', formattedValidUntil, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [watch('issued_on'), setValue]);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+      setCroppedFile(null);
+      setPreviewUrl(null);
+    }
+  }, [isSubmitSuccessful, reset]);
+
   const uploadImage = useCallback(async () => {
-    if (!fileBuffer) return;
+    if (!croppedFile) return;
     const formData = new FormData();
-    formData.append('file', fileBuffer);
-    formData.append('filename', `${Date.now()}`);
+    formData.append('file', croppedFile);
+    formData.append('filename', `${Date.now()}_${croppedFile.name}`);
 
     return new Promise((resolve, reject) => {
       makeApiCall(
-        () => new UserService().uploadFile(formData, `${Date.now()}`, 'students'),
+        () => new UserService().uploadFile(formData, `${Date.now()}_${croppedFile.name}`, 'students'),
         {
           afterSuccess: (data: any) => {
             resolve(data?.fullPath); // Resolve the promise with the full image path
@@ -83,83 +138,125 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
         }
       );
     });
-  }, [fileBuffer]);
-
-  const {
-    reset,
-    handleSubmit,
-    formState: { isSubmitSuccessful, errors },
-    register,
-  } = methods;
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-    }
-  }, [isSubmitSuccessful, reset]);
+  }, [croppedFile]);
 
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
     setLoading(true); 
-    makeApiCall(
-      async () =>
-        new StudentService().addStudent({
-          ...values,
-          avatar: fileBuffer
-            ? 'https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/' +
-              (await uploadImage())
-            : '',
-          added_by: userName,certificate_no:"QSIS-TRA-" + getLastTwoDigitsOfCurrentYear()
-        }),
-      {
-        afterSuccess: () => {
-          toastWithTimeout(ToastVariant.Success, 'Operation successful');
-          setChanged(!changed);
-          reset();
-        },
-        afterError: (err: any) => {
-       
-          toastWithTimeout(ToastVariant.Error, 'An Error Occurred');
-        },
-      }
-    );
+    try {
+      const avatarUrl = croppedFile ? await uploadImage() : '';
 
-    setLoading(false);
-    onClose();
+      await makeApiCall(
+        async () =>
+          new StudentService().addStudent({
+            ...values,
+            avatar: avatarUrl,
+            added_by: userName,
+            certificate_no: "QSIS-TRA-" + getLastTwoDigitsOfCurrentYear()
+          }),
+        {
+          afterSuccess: () => {
+            toastWithTimeout(ToastVariant.Success, 'Operation successful');
+            setChanged(!changed);
+            reset();
+          },
+          afterError: (err: any) => {
+            toastWithTimeout(ToastVariant.Error, 'An Error Occurred');
+          },
+        }
+      );
+    } catch (error) {
+      toastWithTimeout(ToastVariant.Error, 'Failed to upload image');
+    } finally {
+      setLoading(false);
+      onClose();
+    }
   };
 
-  // Handle image upload
-  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle image selection for cropping
+  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-      setFileBuffer(file);
-      const imageUrl = URL.createObjectURL(file);
-      setUploadedFile(imageUrl);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSrc(reader.result as string);
+        setIsCropModalOpen(true);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  useEffect(() => {
-    const uploadLink = document.getElementById('upload_link');
-    const fileInput = document.getElementById('upload') as HTMLInputElement;
+  const onImageLoadedCrop = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    imageRef.current = e.currentTarget;
+  };
+  
 
-    const handleClick = (e: MouseEvent) => {
-      e.preventDefault();
-      fileInput?.click();
-    };
+  const makeClientCrop = async (crop: Crop) => {
+    if (imageRef.current && crop.width && crop.height) {
+      const cropped = await getCroppedImg(imageRef.current, crop);
+      if (cropped) {
+        setCroppedFile(cropped);
+      }
+    }
+  };
 
-    // Add event listener to the link
-    if (uploadLink && fileInput) {
-      uploadLink.addEventListener('click', handleClick);
+  const getCroppedImg = (image: HTMLImageElement, crop: Crop): Promise<File | null> => {
+    const canvas = document.createElement('canvas');
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    const pixelRatio = window.devicePixelRatio;
+    canvas.width = crop.width! * scaleX * pixelRatio;
+    canvas.height = crop.height! * scaleY * pixelRatio;
+    const ctx = canvas.getContext('2d');
+
+    if (ctx) {
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      ctx.imageSmoothingQuality = 'high';
+
+      ctx.drawImage(
+        image,
+        crop.x! * scaleX,
+        crop.y! * scaleY,
+        crop.width! * scaleX,
+        crop.height! * scaleY,
+        0,
+        0,
+        crop.width! * scaleX,
+        crop.height! * scaleY
+      );
     }
 
-    // Clean up the event listener on component unmount or re-render
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error('Canvas is empty');
+          resolve(null);
+          return;
+        }
+        const croppedFile = new File([blob], 'cropped_image.jpeg', { type: 'image/jpeg' });
+        resolve(croppedFile);
+      }, 'image/jpeg');
+    });
+  };
+
+  const handleCropSave = () => {
+    if (croppedFile) {
+      const objectUrl = URL.createObjectURL(croppedFile);
+      setPreviewUrl(objectUrl);
+      setIsCropModalOpen(false);
+    }
+  };
+
+  // Cleanup the object URL when component unmounts or when previewUrl changes
+  useEffect(() => {
     return () => {
-      if (uploadLink) {
-        uploadLink.removeEventListener('click', handleClick);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
       }
     };
-  }, []);
+  }, [previewUrl]);
 
   const fallbackAvatar = generateFallbackAvatar('User');
+  const [countryCode, setCountryCode] = useState('+974');  // Default country code
 
   return (
     <motion.div
@@ -181,25 +278,25 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
               onSubmit={handleSubmit(onSubmitHandler)}
             >
               {/* Profile Image Section */}
-              <div className="flex   items-center gap-5">
+              <div className="flex items-center gap-5">
                 <input
                   id="upload"
                   type="file"
                   accept="image/*"
-                  onChange={handleUpload}
+                  onChange={handleImageSelect}
                   className="hidden"
                 />
                 <Avatar className="mb-2 w-[200px] h-[200px]">
                   <AvatarImage
                     className="object-cover w-full h-full"
                     alt="User's avatar"
-                    src={uploadedFile || '/placeholder.svg'}
+                    src={previewUrl || '/placeholder.svg'}
                   />
                   <AvatarFallback>{fallbackAvatar}</AvatarFallback>
                 </Avatar>
-                <a href="#" id="upload_link" className="text-[#8B1F41] hover:underline">
+                <label htmlFor="upload" className="text-[#8B1F41] hover:underline cursor-pointer">
                   Upload Image
-                </a>
+                </label>
               </div>
 
               {/* Form Fields */}
@@ -234,8 +331,29 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                   <Label className="pt-3" htmlFor="contact_number">
                     Contact Number
                   </Label>
-                  <div>
-                    <Input id="contact_number" {...register('contact_number')} />
+                  <div className='flex'>
+                    <Select value={countryCode} onValueChange={setCountryCode}>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue placeholder="Code" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="+91">+91</SelectItem>
+                        <SelectItem value="+1">+1</SelectItem>
+                        <SelectItem value="+44">+44</SelectItem>
+                        <SelectItem value="+974">+974</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="contact_number"
+                      type="tel"
+                      inputMode="numeric"
+                      pattern="[0-9]*" // Allows only numbers 0–9
+                      onInput={(e) => {
+                        const input = e.target as HTMLInputElement;
+                        input.value = input.value.replace(/[^0-9]/g, ""); // Remove non-digit characters
+                      }}
+                      {...register('contact_number')}
+                    />
                     {errors.contact_number && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.contact_number.message}</p>
                     )}
@@ -301,7 +419,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
 
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="id_no">
-                  Qatar ID/ Employer ID No:
+                    Qatar ID/ Employer ID No:
                   </Label>
                   <div>
                     <Input id="id_no" {...register('id_no')} />
@@ -311,22 +429,9 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                   </div>
                 </div>
 
-                {/* Card No and Designation */}
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                  <Label className="pt-3" htmlFor="card_no">
-                    Card No
-                  </Label>
-                  <div>
-                    <Input id="card_no" {...register('card_no')} />
-                    {errors.card_no && (
-                      <p className="text-red-500 text-[13px] mt-1">{errors.card_no.message}</p>
-                    )}
-                  </div>
-                </div>
-
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="designation">
-                  Designation / Course
+                    Designation / Course
                   </Label>
                   <div>
                     <Input id="designation" {...register('designation')} />
@@ -354,7 +459,12 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                     Issued On
                   </Label>
                   <div>
-                    <Input id="issued_on" type="date" {...register('issued_on')} />
+                    <Input
+                      id="issued_on"
+                      type="date"
+                      defaultValue={new Date().toISOString().split("T")[0]}
+                      {...register('issued_on')}
+                    />
                     {errors.issued_on && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.issued_on.message}</p>
                     )}
@@ -367,7 +477,12 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                     Expiry Date
                   </Label>
                   <div>
-                    <Input id="valid_untill" type="date" {...register('valid_untill')} />
+                    <Input
+                      id="valid_untill"
+                      type="date"
+                      {...register('valid_untill')}
+                      // Removed defaultValue as it's now dynamically set
+                    />
                     {errors.valid_untill && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.valid_untill.message}</p>
                     )}
@@ -376,41 +491,82 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
 
                 {/* Course Duration */}
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-  <Label className="pt-3" htmlFor="course_duration">
-    Course Duration
-  </Label>
-  <div className="relative">
-    <Input 
-      id="course_duration" 
-      {...register('course_duration')} 
-      className="pr-12" // Adds space to the right for the "Days" label
-    />
-    <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
-      Days
-    </span>
-    {errors.course_duration && (
-      <p className="text-red-500 text-[13px] mt-1">{errors.course_duration.message}</p>
-    )}
-  </div>
-</div>
-
-
-
-                {/* Buttons */}
-                
-              </div>
-              <div className="flex w-full  justify-end pt-20 gap-4">
-                  <Button type="reset" className="px-10" onClick={onClose} variant="outline">
-                    Cancel
-                  </Button>
-                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border border" type="submit"  disabled={loading}>
-                    {loading ? 'Saving...' : 'Submit'}
-                  </Button>
+                  <Label className="pt-3" htmlFor="course_duration">
+                    Course Duration
+                  </Label>
+                  <div className="relative">
+                    <Input 
+                      id="course_duration" 
+                      {...register('course_duration')} 
+                      type="tel"
+                      inputMode="numeric"
+                      pattern="[0-9]*" // Allows only numbers 0–9
+                      onInput={(e) => {
+                        const input = e.target as HTMLInputElement;
+                        input.value = input.value.replace(/[^0-9]/g, ""); // Remove non-digit characters
+                      }}
+                      className="pr-12" // Adds space to the right for the "Days" label
+                    />
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+                      Days
+                    </span>
+                    {errors.course_duration && (
+                      <p className="text-red-500 text-[13px] mt-1">{errors.course_duration.message}</p>
+                    )}
+                  </div>
                 </div>
+              </div>
+              <div className="flex w-full justify-end pt-20 gap-4">
+                <Button type="reset" className="px-10" onClick={onClose} variant="outline">
+                  Cancel
+                </Button>
+                <Button 
+                  className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border border" 
+                  type="submit" 
+                  disabled={loading || !croppedFile}
+                >
+                  {loading ? 'Saving...' : 'Submit'}
+                </Button>
+              </div>
             </form>
           </FormProvider>
         </CardContent>
       </Card>
+
+      {/* Crop Modal */}
+      <Dialog open={isCropModalOpen} onOpenChange={setIsCropModalOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Crop Image</DialogTitle>
+            <DialogDescription>
+              Adjust the cropping area as needed and apply the crop.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {src && (
+              <ReactCrop
+                crop={crop}
+                onChange={(c) => setCrop(c)}
+                onComplete={(c) => makeClientCrop(c)}
+                aspect={1}
+              >
+                <img src={src} onLoad={onImageLoadedCrop} alt="Crop" />
+              </ReactCrop>
+            )}
+          </div>
+          <div className="mt-4 flex justify-end gap-4">
+            <Button variant="outline" onClick={() => setIsCropModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleCropSave} 
+              disabled={!croppedFile}
+            >
+              Apply Crop
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }

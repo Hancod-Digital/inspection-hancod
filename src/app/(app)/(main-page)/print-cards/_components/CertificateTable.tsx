@@ -16,6 +16,9 @@ import QRCode from 'qrcode';
 import { toJpeg, toPng, toSvg } from 'html-to-image';
 import { UserService } from '@/services/api/user-service';
 import TableSpinner from '@/components/animated/TableSpinner';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { AvatarFallback } from '@/components/ui/avatar';
+import { formatDateWithHyphen } from '@/lib/utils';
 
 export default function CertificateTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -53,11 +56,11 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
     const generateCertificate = async (item: any) => {
         try {
             console.log(item?.id);
-            
+
             setIsGenerating(item?.id); // Set the current row's id as generating
             const htmlElement = document.createElement('div');
-           
-            htmlElement.innerHTML = await fetchHtml(item?.avatar, item?.qr_url, item?.name, item?.id_no, item?.company, item?.designation, item?.issued_on, item?.valid_untill, item?.course_duration);
+
+            htmlElement.innerHTML = await fetchHtml(item?.avatar, item?.qr_url, item?.name, item?.id_no, item?.company, item?.designation, formatDateWithHyphen(item?.issued_on), formatDateWithHyphen(item?.valid_untill), item?.course_duration);
 
             document.body.appendChild(htmlElement);
             htmlElement.style.width = '794px';
@@ -75,7 +78,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             if (certificateUrl) {
                 await makeApiCall(
                     () => new StudentService().updateStudentCertificateUrl(item?.id, certificateUrl),
-                    { afterSuccess: (data: any) => {} }
+                    { afterSuccess: (data: any) => { } }
                 );
 
                 // const qrDataUrl = await QRCode.toDataURL(certificateUrl, {
@@ -100,7 +103,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                 toastWithTimeout(ToastVariant.Error, "Failed to upload certificate image.");
             }
             setChanged(!changed);
-            
+
         } catch (error) {
             console.error("Error generating certificate:", error);
             toastWithTimeout(ToastVariant.Error, "An error occurred while generating the certificate.");
@@ -138,35 +141,58 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
             : null;
     };
-
     const printCertificate = (certificateUrl: string, item: any) => {
-        const url = `${certificateUrl}?name=${encodeURIComponent(item.name)}&id_number=${encodeURIComponent(item.id_number)}&company=${encodeURIComponent(item.company)}&designation=${encodeURIComponent(item.designation)}&model_level=${encodeURIComponent(item.model_level)}&issued_on=${encodeURIComponent(item.issued_on)}&valid_until=${encodeURIComponent(item.valid_until)}`;
-        const printWindow = window.open('', '_blank', 'width=793,height=1123');
-
-        if (printWindow) {
-            printWindow.document.open();
-            printWindow.document.write(`
+        const url = `${certificateUrl}?name=${encodeURIComponent(item.name)}&id_number=${encodeURIComponent(item.id_number)}&company=${encodeURIComponent(item.company)}&designation=${encodeURIComponent(item.designation)}&model_level=${encodeURIComponent(item.model_level)}&issued_on=${encodeURIComponent(formatDateWithHyphen(item?.issued_on))}&valid_until=${encodeURIComponent(formatDateWithHyphen(item.valid_untill))}&_=${new Date().getTime()}`;
+    
+        const iframe:any = document.createElement('iframe');
+        iframe.style.visibility = 'hidden';
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.srcdoc = `
             <!DOCTYPE html>
             <html>
             <head>
-              <title>Print HTML Content</title>
+              <title>Print Content</title>
+              <style>
+                @page {
+                  size: A4; /* Change to 'Letter' if needed */
+                  margin: 0; /* Remove default margins */
+                }
+                body {
+                  margin: 0;
+                }
+                img {
+                  width: 100%;
+                  height: auto;
+                  display: block;
+                }
+              </style>
             </head>
             <body>
-              <img src="${certificateUrl}" alt="Certificate" id="certificateImage" />
+              <img src="${url}" alt="Certificate" id="certificateImage" />
               <script>
-                const image = document.getElementById('certificateImage');
-                image.onload = function() {
+                window.onload = function() {
                   window.print();
-                  window.close();
                 };
               </script>
             </body>
             </html>
-          `);
-            printWindow.document.close();
-            printWindow.focus();
-        }
+        `;
+        document.body.appendChild(iframe);
+    
+        iframe.onload = function() {
+            iframe.contentWindow?.focus();
+            iframe.contentWindow?.print();
+    
+            // Remove the iframe after printing
+            iframe.contentWindow.onafterprint = function() {
+                document.body.removeChild(iframe);
+            };
+        };
     };
+    
+
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
@@ -174,6 +200,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                 <TableHeader>
                     <TableRow>
                         <TableHead className="py-4">ID</TableHead>
+                        <TableHead className="py-4">Image</TableHead>
                         <TableHead className="py-4">Name</TableHead>
                         <TableHead className="py-4">Added_By</TableHead>
                         <TableHead className="py-4">Card/Model/Level</TableHead>
@@ -187,6 +214,16 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                             <TableRow>
                                 <TableCell className="py-4">{idx}</TableCell>
                                 <TableCell className="py-4">
+                                    <Avatar className="mb-2 w-16 h-16">
+                                        <AvatarImage
+                                            className="object-cover w-full h-full"
+                                            alt="User's avatar"
+                                            src={item?.avatar}
+                                        />
+                                        <AvatarFallback>{item?.name}</AvatarFallback>
+                                    </Avatar>
+                                </TableCell>
+                                <TableCell className="py-4">
                                     {item?.name}
                                     <div>Address: {item?.address}</div>
                                     <div>Designation: {item?.designation}</div>
@@ -197,8 +234,8 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                     <div>Card No: {item?.card_no}</div>
                                     <div>Model/Level: {item?.model_level}</div>
                                     <div>Company: {item?.company}</div>
-                                    <div>Issued on: {item?.issued_on}</div>
-                                    <div>Valid Until: {item?.valid_untill}</div>
+                                    <div>Issued on: {formatDateWithHyphen(item?.issued_on)}</div>
+                                    <div>Valid Until: {formatDateWithHyphen(item?.valid_untill)}</div>
                                 </TableCell>
                                 <TableCell className="py-4">
                                     {isGenerating === item?.id ? (
@@ -211,14 +248,14 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                     <div className="flex flex-col gap-2 ">
                                         <>
                                             {!item?.certificate_url && (
-                                                <button onClick={async() => await generateCertificate(item)} className="bg-white py-1 rounded-md w-[78%] border-primary border text-primary">
+                                                <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md w-[78%] border-primary border text-primary">
                                                     Certificate
                                                 </button>
                                             )}
 
                                             {item?.certificate_url && (
                                                 <>
-                                                    <button onClick={async() => await generateCertificate(item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary mb-2">
+                                                    <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary mb-2">
                                                         Re-create
                                                     </button>
                                                     <button onClick={() => printCertificate(item.certificate_url, item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary">

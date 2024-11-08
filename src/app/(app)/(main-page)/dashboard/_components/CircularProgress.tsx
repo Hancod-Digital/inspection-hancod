@@ -21,7 +21,7 @@ const CircularComponent: React.FC<{ number: number; label: string }> = ({ number
 //   </div>
 <div className="gradient-wrapper">
 <div id="maincircle">
-    <div className="inner-gradient-wrapper">
+    <div className="inner-gradient-wrapper ">
       <div id="innercircle" className='flex flex-col justify-center items-center'>
          <div className='text-primary font-bold text-4xl'>
             {number}

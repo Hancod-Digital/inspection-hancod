@@ -28,7 +28,7 @@ const LiftingEquipment = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-               Lifting Equipment
+               Lifting Gear Single
             </motion.h2>
             
             <AnimatePresence mode="wait">
