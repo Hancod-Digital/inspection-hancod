@@ -59,7 +59,7 @@ export function NavMain({
                   className="h-11 flex items-center justify-between w-full px-4"
                 >
                   <div className="flex items-center">
-                    {item.icon}
+                    {/* {item.icon} */}
                     <span className="font-medium text-[#75829C] ml-2">{item.title}</span>
                   </div>
                   {item.items?.length && (
@@ -75,7 +75,7 @@ export function NavMain({
                   className="h-11 flex items-center justify-between w-full px-4"
                 >
                   <div className="flex items-center">
-                    {item.icon}
+                    {/* {item.icon} */}
                     <span className="font-medium text-[#75829C] ml-2">{item.title}</span>
                   </div>
                   {item.items?.length && (
@@ -94,7 +94,7 @@ export function NavMain({
                   <SidebarMenuSubItem key={subItem.title}>
                     <SidebarMenuSubButton asChild className="h-9 px-4">
                       <Link href={subItem.url} className="flex items-center w-full">
-                        {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
+                        {/* {subItem.icon && <span className="mr-2">{subItem.icon}</span>} */}
                         <span className="font-medium text-[13px] text-[#75829C]">
                           {subItem.title}
                         </span>
