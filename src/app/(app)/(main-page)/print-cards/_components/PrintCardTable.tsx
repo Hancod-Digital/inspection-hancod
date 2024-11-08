@@ -4239,63 +4239,60 @@ button {
     iframe.style.bottom = '0';
 
     iframe.srcdoc = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Print HTML Content</title>
-          <style>
-            ${cssString()}
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>Print HTML Content</title>
+              <style>
+${cssString()}
           </style>
-        </head>
-        <body>
-          <div class="main-container">
-            <div class="rectangle"></div>
-            <div class="whatsapp-image"></div>
-            <div class="apply-style">
-              <div class="profile-photo"></div>
-            </div>
-            <span class="sheik-hameed-khan">${item?.name}</span>
-            <div class="flex-row-cf">
-              <div class="name">
-                <span class="apparicio-junior">${item?.certificate_no}<br /><br /></span>
+            </head>
+            <body>
+              <div class="main-container">
+                <div class="rectangle"></div>
+                <div class="whatsapp-image"></div>
+                <div class="apply-style"><div class="profile-photo"></div></div>
+                <span class="sheik-hameed-khan">${item?.name}</span>
+                <div class="flex-row-cf">
+                  <div class="name">
+                    <span class="apparicio-junior">${item?.certificate_no}<br /><br /></span>
+                  </div>
+                  <div class="line"></div>
+                  <div class="bio">
+                    <span class="qatar-id">Qatar ID/ ID No.: <br />Company name:<br />Course Details:<br />Model/ Level:</span>
+                    <span class="qube-inspection">${item?.id_no}<br />${item?.company}<br />${item?.designation}<br />${item?.model_level}</span>
+                  </div>
+                </div>
+                <div class="line-1"></div>
+                <div class="flex-row-b">
+                  <div class="vector" ></div>
+                  <span class="issued-date-expiry-date">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span>
+                  <span class="scan-qr-code">Issued Date: <br />Expiry Date:</span>
+                  <span class="rectangle-155">Scan QR code to verify this card</span>
+                </div>
+                <div class="shape"></div>
+                <div class="img-a3"></div>
               </div>
-              <div class="line"></div>
-              <div class="bio">
-                <span class="qatar-id">Qatar ID/ ID No.: <br />Company name:<br />Course Details:<br />Model/ Level:</span>
-                <span class="qube-inspection">${item?.id_no}<br />${item?.company}<br />${item?.designation}<br />${item?.model_level}</span>
-              </div>
-            </div>
-            <div class="line-1"></div>
-            <div class="flex-row-b">
-              <div class="vector"></div>
-              <span class="issued-date-expiry-date">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span>
-              <span class="scan-qr-code">Issued Date: <br />Expiry Date:</span>
-              <span class="rectangle-155">Scan QR code to verify this card</span>
-            </div>
-            <div class="shape"></div>
-            <div class="img-a3"></div>
-          </div>
-          <script>
-            window.onload = function() {
-              window.print();
-            };
-          </script>
-        </body>
-        </html>
-    `;
+              <script>
+                window.onload = function() {
+                  window.print();
+                  window.close();
+                };
+              </script>
+            </body>
+            </html>
+          `
+          document.body.appendChild(iframe);
 
-    document.body.appendChild(iframe);
-
-    iframe.onload = function() {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-
-        // Remove the iframe after printing
-        iframe.contentWindow.onafterprint = function() {
-            document.body.removeChild(iframe);
-        };
-    };
-     
+          iframe.onload = function() {
+              iframe.contentWindow.focus();
+              iframe.contentWindow.print();
+      
+              // Remove the iframe after printing
+              iframe.contentWindow.onafterprint = function() {
+                  document.body.removeChild(iframe);
+              };
+          };
   };
 
 
