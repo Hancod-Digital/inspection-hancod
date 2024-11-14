@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, enum as zEnum } from 'zod';
+import { object, string, TypeOf, enum as zEnum, array, number } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,10 +10,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
+import FormTable from './FormTable';
+
+const propertySchema = object({
+  id: string().or(number()),
+  property: string().nonempty('Property is required'),
+  property_group: string().nonempty('Property Group is required'),
+  condition: string().nonempty('Condition is required'),
+});
 
 const equipmentDetailsSchema = object({
   annexure: string().nonempty('Annexure is required'),
-  status: string().nonempty('Status is required')
+  status: string().nonempty('Status is required'),
+  properties: array(propertySchema).min(1, 'At least one property is required')
 }); 
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
@@ -24,11 +33,11 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const { addRecord } = useSubtopic();
+  const { addRecord, addProperty } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
-
+  
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
 
   useEffect(() => {
@@ -39,10 +48,36 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true);
+    const dataToSubmit = {
+      annexure: values.annexure,
+      status: values.status
+    };
     
-    await addRecord(values)
+   const response = await addRecord(dataToSubmit)
+   console.log(response[0])
+    await addProperty(values.properties.map(property => ({
+      ...property,
+      annexure_id: response[0].id
+    })))
     setLoading(false);
     onClose()
+  };
+  const [properties, setProperties] = useState([
+    { id: 1, property: "Main Structure", property_group: "Nil", condition: "In Order" },
+    { id: 2, property: "Steering System", property_group: "Nil", condition: "In Order" },
+    { id: 3, property: "Counter Weight", property_group: "Nil", condition: "In Order" },
+  ]);
+
+  useEffect(() => {
+    methods.register('properties');
+    methods.setValue('properties', properties);
+  }, [methods, properties]);
+
+  const handlePropertiesChange = (newProperties: Property[]) => {
+    setProperties(newProperties);
+    methods.setValue('properties', newProperties, {
+      shouldValidate: true
+    });
   };
 
   return (
@@ -66,11 +101,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="annexure"  className='mt-3'>Annexure</Label>
-                   
+                    <div>
                       <Input id="annexure" {...methods.register('annexure')} />
                       {errors.annexure && (
-                        <p className="text-red-500 mt-1">{errors.annexure.message}</p>
+                        <p className="text-red-500 mt-1 text-[13px]">{errors.annexure.message}</p>
                       )}
+                      </div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr]  w-1/2 gap-4">
@@ -93,12 +129,13 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         )}
                       />
                       {errors.status && (
-                        <p className="text-red-500 mt-1">{errors.status.message}</p>
+                        <p className="text-red-500 mt-1 text-[13px]">{errors.status.message}</p>
                       )}
                     </div>
                   </div>
+                  <FormTable onFunction={()=>{}} properties={properties} setProperties={handlePropertiesChange} />
                 </div>
-
+           
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

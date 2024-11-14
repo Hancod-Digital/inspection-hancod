@@ -7,7 +7,7 @@ export class MasterService extends Supabase {
     constructor() {
         super();
     }
-
+ 
     private async checkAuth(): Promise<boolean> {
         const { session } = (await this.supabase.auth.getSession()).data;
         return !!session?.access_token;
@@ -108,7 +108,7 @@ export class MasterService extends Supabase {
                     throw new Error(competencyError.message);
                 }
             }
-
+console.log(data)
 
 
             if (error) throw error;
@@ -188,6 +188,31 @@ export class MasterService extends Supabase {
         }
         return data;
     }
+    async getAllProperties() {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('property_list').select('*');
+        if (error) throw error;
+        return data;
+    }
+    async addPropertyToAnnexure(record: object) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('property_list').insert(record);
+        if (error) throw error;
+        return data;
+    }
 
+    async updatePropertyToAnnexure(id: number, updates: object) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('property_list').update(updates).eq('id', id);
+        if (error) throw error;
+        return data;
+    }
+
+    async deletePropertyFromAnnexure(id: number) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('property_list').delete().eq('id', id);
+        if (error) throw error;
+        return data;
+    }
 
 }

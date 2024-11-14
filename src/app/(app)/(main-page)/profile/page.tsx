@@ -18,15 +18,9 @@ import { UserService } from '@/services/api/user-service';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import { EdgeFunctionService } from '@/services/api/edge-function-service';
 import { useRouter } from 'next/navigation';
+import { countryCodes } from '@/lib/constants';
 
-// Zod Schema for validation
-const schema = z.object({
-  name: z.string().min(1, "Full Name is required"),
-  email: z.string().email("Invalid email address"),
-  mobile: z
-    .string()
-    .regex(/^\d{10}$/, "Mobile number must be exactly 10 digits"),
-});
+
 // Zod Schema for password validation
 const passwordSchema = z.object({
   currentPassword: z.string().min(6, "Current password must be at least 6 characters"),
@@ -43,7 +37,30 @@ export default function Component() {
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [fileBuffer, setFileBuffer] = useState<File | null>(null);
   const [countryCode, setCountryCode] = useState('+974');  // Default country code
+// Zod Schema for validation
+const getPhoneValidationSchema = (code: string) => {
+     
+  const countryInfo = countryCodes.find((country:any) => country.e164_cc === code.replace('+', ''));
 
+  if (!countryInfo) {
+    return z.string().nonempty("Phone number is required");
+  }
+
+  const maxLength = countryInfo.example.length;
+
+  return z.string()
+    .nonempty("Phone number is required")
+    .refine
+    (
+      (value) => value.length == maxLength,
+      `Phone number should be ${maxLength} digits for ${countryInfo.name}`
+    );
+};
+const schema = z.object({
+  name: z.string().min(1, "Full Name is required"),
+  email: z.string().email("Invalid email address"),
+  mobile: getPhoneValidationSchema(countryCode),
+});
   const { data: userDetails, isSuccess } = useQuery({
     queryKey: ['userDetails'],
     queryFn: fetchUserDetails,
@@ -310,7 +327,7 @@ export default function Component() {
               </div>
 
               <div className="flex justify-end space-x-4 mt-6">
-                <Button variant="outline" className="border-[#8B1F41] text-[#8B1F41]">Cancel</Button>
+                <Button type='button' variant="outline" className="border-[#8B1F41] text-[#8B1F41]" onClick={()=>router.back()}>Cancel</Button>
                 <Button type="submit" className="bg-[#8B1F41] text-white hover:bg-[#6B1732]">Save</Button>
               </div>
             </form>

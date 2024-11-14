@@ -1,9 +1,18 @@
 'use client';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useState } from 'react';
+import ReactCrop, { type Crop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,6 +29,9 @@ import { makeApiCall } from '@/lib/apicaller';
 import { UserService } from '@/services/api/user-service';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import { StudentService } from '@/services/api/students-service';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUserDetails } from '@/services/api/auth-service';
+import { getLastTwoDigitsOfCurrentYear } from '@/lib/utils';
 
 // Define schema for validation
 const userFormSchema = object({
@@ -60,26 +72,83 @@ export default function EditUserForm({
   id,
 }: UserFormProps) {
   const [loading, setLoading] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState<string | null>(userData.avatar || null);
-  const [fileBuffer, setFileBuffer] = useState<File | null>(null);
+  const [croppedFile, setCroppedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(userData.avatar || null);
 
+  // Cropping state
+  const [crop, setCrop] = useState<Crop>({
+    unit: '%',
+    width: 50,
+    aspect: 1.12,
+  });
+  const [src, setSrc] = useState<string | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+
+  // Country code state
+  const [countryCode, setCountryCode] = useState<string>('+974'); // Default country code
+
+  // Using React Hook Form
   const methods = useForm<UserFormInput>({
     resolver: zodResolver(userFormSchema),
     defaultValues: userData,
   });
 
-  const uploadImage = useCallback(async () => {
-    if (!fileBuffer) return;
-    const formData = new FormData();
-    formData.append('file', fileBuffer);
-    formData.append('filename', `${Date.now()}`);
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitSuccessful, errors },
+    register,
+    setValue,
+    watch,
+    control,
+  } = methods;
 
-    return new Promise((resolve, reject) => {
+  // Watch issued_on and update valid_untill accordingly
+  useEffect(() => {
+    const issuedOn = watch('issued_on');
+    if (issuedOn) {
+      const issuedDate = new Date(issuedOn);
+      const validUntilDate = new Date(issuedDate);
+      validUntilDate.setFullYear(validUntilDate.getFullYear() + 1);
+
+      // Format the date to YYYY-MM-DD
+      const formattedValidUntil = validUntilDate.toISOString().split('T')[0];
+
+      setValue('valid_untill', formattedValidUntil, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [watch('issued_on'), setValue]);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+      setCroppedFile(null);
+      setPreviewUrl(userData.avatar || null);
+    }
+  }, [isSubmitSuccessful, reset, userData.avatar]);
+
+  const uploadImage = useCallback(async () => {
+    if (!croppedFile) return;
+    const formData = new FormData();
+    formData.append('file', croppedFile);
+    formData.append('filename', `${Date.now()}_${croppedFile.name}`);
+
+    return new Promise<string>((resolve, reject) => {
       makeApiCall(
-        () => new UserService().uploadFile(formData, `${Date.now()}`, 'students'),
+        () =>
+          new UserService().uploadFile(
+            formData,
+            `${Date.now()}_${croppedFile.name}`,
+            'students'
+          ),
         {
           afterSuccess: (data: any) => {
-            resolve(data?.fullPath); // Resolve the promise with the full image path
+            // Ensure that the full URL is constructed
+            const baseURL = 'https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/'; // Replace with your actual base URL
+            resolve(`${baseURL}${data?.fullPath}`);
           },
           afterError: (error: any) => {
             reject(error); // Reject the promise with the error
@@ -87,81 +156,133 @@ export default function EditUserForm({
         }
       );
     });
-  }, [fileBuffer]);
-
-  const {
-    reset,
-    handleSubmit,
-    formState: { isSubmitSuccessful, errors },
-    register,
-    control,
-  } = methods;
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-    }
-  }, [isSubmitSuccessful, reset]);
+  }, [croppedFile]);
 
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
     setLoading(true);
-    makeApiCall(
-      async () =>
-        new StudentService().editStudent(id, {
-          ...values,
-          avatar: fileBuffer
-            ? 'https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/' +
-              (await uploadImage())
-            : userData.avatar || '',
-        }),
-      {
-        afterSuccess: () => {
-          toastWithTimeout(ToastVariant.Success, 'Update successful');
-          setChanged(!changed);
-          reset();
-          onClose();
-        },
-        afterError: (err: any) => {
-        
-          toastWithTimeout(ToastVariant.Error, 'An Error Occurred');
-        },
-      }
-    );
+    try {
+      const avatarUrl = croppedFile ? await uploadImage() : userData.avatar || '';
 
-    setLoading(false);
+      await makeApiCall(
+        async () =>
+          new StudentService().editStudent(id, {
+            ...values,
+            avatar: avatarUrl,
+            added_by: userData.name || userData.email?.split('@')[0],
+            certificate_no: 'QSIS-TRA-' + getLastTwoDigitsOfCurrentYear(),
+          }),
+        {
+          afterSuccess: () => {
+            toastWithTimeout(ToastVariant.Success, 'Update successful');
+            setChanged(!changed);
+            reset();
+            setCroppedFile(null);
+            setPreviewUrl(avatarUrl); // Update previewUrl with the new avatar URL
+          },
+          afterError: (err: any) => {
+            toastWithTimeout(ToastVariant.Error, 'An Error Occurred');
+          },
+        }
+      );
+    } catch (error) {
+      toastWithTimeout(ToastVariant.Error, 'Failed to upload image');
+    } finally {
+      setLoading(false);
+      onClose();
+    }
   };
 
-  // Handle image upload
-  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle image selection for cropping
+  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-      setFileBuffer(file);
-      const imageUrl = URL.createObjectURL(file);
-      setUploadedFile(imageUrl);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSrc(reader.result as string);
+        setIsCropModalOpen(true);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  useEffect(() => {
-    const uploadLink = document.getElementById('upload_link');
-    const fileInput = document.getElementById('upload') as HTMLInputElement;
+  const onImageLoadedCrop = (img: HTMLImageElement) => {
+    imageRef.current = img;
+  };
 
-    const handleClick = (e: MouseEvent) => {
-      e.preventDefault();
-      fileInput?.click();
-    };
-
-    // Add event listener to the link
-    if (uploadLink && fileInput) {
-      uploadLink.addEventListener('click', handleClick);
+  const makeClientCrop = async (crop: Crop) => {
+    if (imageRef.current && crop.width && crop.height) {
+      const cropped = await getCroppedImg(imageRef.current, crop);
+      if (cropped) {
+        setCroppedFile(cropped);
+      }
     }
+  };
 
-    // Clean up the event listener on component unmount or re-render
+  const getCroppedImg = (image: HTMLImageElement, crop: Crop): Promise<File | null> => {
+    const canvas = document.createElement('canvas');
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    const pixelRatio = window.devicePixelRatio;
+  
+    // Use the actual crop dimensions
+    const croppedWidth = crop.width! * scaleX * pixelRatio;
+    const croppedHeight = crop.height! * scaleY * pixelRatio;
+  
+    canvas.width = croppedWidth;
+    canvas.height = croppedHeight;
+  
+    const ctx = canvas.getContext('2d');
+  
+    if (ctx) {
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      ctx.imageSmoothingQuality = 'high';
+  
+      ctx.drawImage(
+        image,
+        crop.x! * scaleX,
+        crop.y! * scaleY,
+        crop.width! * scaleX,
+        crop.height! * scaleY,
+        0,
+        0,
+        croppedWidth,
+        croppedHeight
+      );
+    }
+  
+    return new Promise((resolve) => {
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            console.error('Canvas is empty');
+            resolve(null);
+            return;
+          }
+          const croppedFile = new File([blob], 'cropped_image.jpeg', { type: 'image/jpeg' });
+          resolve(croppedFile);
+        },
+        'image/jpeg',
+        1
+      );
+    });
+  };
+  
+  const handleCropSave = () => {
+    if (croppedFile) {
+      const objectUrl = URL.createObjectURL(croppedFile);
+      setPreviewUrl(objectUrl);
+      setIsCropModalOpen(false);
+    }
+  };
+
+  // Cleanup the object URL when component unmounts or when previewUrl changes
+  useEffect(() => {
     return () => {
-      if (uploadLink) {
-        uploadLink.removeEventListener('click', handleClick);
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
       }
     };
-  }, []);
+  }, [previewUrl]);
 
   const fallbackAvatar = generateFallbackAvatar(userData.name || 'User');
 
@@ -190,20 +311,20 @@ export default function EditUserForm({
                   id="upload"
                   type="file"
                   accept="image/*"
-                  onChange={handleUpload}
+                  onChange={handleImageSelect}
                   className="hidden"
                 />
                 <Avatar className="mb-2 w-[200px] h-[200px]">
                   <AvatarImage
                     className="object-cover w-full h-full"
                     alt="User's avatar"
-                    src={uploadedFile || '/placeholder.svg'}
+                    src={previewUrl || '/placeholder.svg'}
                   />
                   <AvatarFallback>{fallbackAvatar}</AvatarFallback>
                 </Avatar>
-                <a href="#" id="upload_link" className="text-[#8B1F41] hover:underline">
+                <label htmlFor="upload" className="text-[#8B1F41] hover:underline cursor-pointer">
                   Upload Image
-                </a>
+                </label>
               </div>
 
               {/* Form Fields */}
@@ -238,8 +359,29 @@ export default function EditUserForm({
                   <Label className="pt-3" htmlFor="contact_number">
                     Contact Number
                   </Label>
-                  <div>
-                    <Input id="contact_number" {...register('contact_number')} />
+                  <div className="flex">
+                    <Select value={countryCode} onValueChange={setCountryCode}>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue placeholder="Code" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="+91">+91</SelectItem>
+                        <SelectItem value="+1">+1</SelectItem>
+                        <SelectItem value="+44">+44</SelectItem>
+                        <SelectItem value="+974">+974</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="contact_number"
+                      type="tel"
+                      inputMode="numeric"
+                      pattern="[0-9]*" // Allows only numbers 0–9
+                      onInput={(e) => {
+                        const input = e.target as HTMLInputElement;
+                        input.value = input.value.replace(/[^0-9]/g, ''); // Remove non-digit characters
+                      }}
+                      {...register('contact_number')}
+                    />
                     {errors.contact_number && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.contact_number.message}</p>
                     )}
@@ -285,6 +427,7 @@ export default function EditUserForm({
                   </div>
                 </div>
               </div>
+
               <CardHeader>
                 <CardTitle className="text-md w-full">Company/Other Details</CardTitle>
               </CardHeader>
@@ -304,7 +447,7 @@ export default function EditUserForm({
 
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="id_no">
-                    ID No
+                    Qatar ID/ Employer ID No:
                   </Label>
                   <div>
                     <Input id="id_no" {...register('id_no')} />
@@ -314,7 +457,6 @@ export default function EditUserForm({
                   </div>
                 </div>
 
-                {/* Card No and Designation */}
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="card_no">
                     Card No
@@ -357,7 +499,12 @@ export default function EditUserForm({
                     Issued On
                   </Label>
                   <div>
-                    <Input id="issued_on" type="date" {...register('issued_on')} />
+                    <Input
+                      id="issued_on"
+                      type="date"
+                      defaultValue={new Date().toISOString().split('T')[0]}
+                      {...register('issued_on')}
+                    />
                     {errors.issued_on && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.issued_on.message}</p>
                     )}
@@ -367,10 +514,14 @@ export default function EditUserForm({
                 {/* Valid Until */}
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="valid_untill">
-                    Valid Until
+                    Expiry Date
                   </Label>
                   <div>
-                    <Input id="valid_untill" type="date" {...register('valid_untill')} />
+                    <Input
+                      id="valid_untill"
+                      type="date"
+                      {...register('valid_untill')}
+                    />
                     {errors.valid_untill && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.valid_untill.message}</p>
                     )}
@@ -382,29 +533,99 @@ export default function EditUserForm({
                   <Label className="pt-3" htmlFor="course_duration">
                     Course Duration
                   </Label>
-                  <div>
-                    <Input id="course_duration" {...register('course_duration')} />
+                  <div className="relative">
+                    <Input
+                      id="course_duration"
+                      {...register('course_duration')}
+                      type="tel"
+                      inputMode="numeric"
+                      pattern="[0-9]*" // Allows only numbers 0–9
+                      onInput={(e) => {
+                        const input = e.target as HTMLInputElement;
+                        input.value = input.value.replace(/[^0-9]/g, ''); // Remove non-digit characters
+                      }}
+                      className="pr-12" // Adds space to the right for the "Days" label
+                    />
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+                      Days
+                    </span>
                     {errors.course_duration && (
-                      <p className="text-red-500 text-[13px] mt-1">{errors.course_duration.message}</p>
+                      <p className="text-red-500 text-[13px] mt-1">
+                        {errors.course_duration.message}
+                      </p>
                     )}
                   </div>
                 </div>
-
-                {/* Buttons */}
-                
               </div>
-              <div className="flex justify-end pt-20 gap-4">
-                  <Button type="reset" className="px-10" onClick={onClose} variant="outline">
-                    Cancel
-                  </Button>
-                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" variant={'default'} disabled={loading}>
-                    {loading ? 'Updating...' : 'Update'}
-                  </Button>
-                </div>
+
+              {/* Instructions */}
+              <div className="bottom-0 left-0 p-4 text-black text-sm font-semibold">
+                <ul className="list-disc list-inside">
+                  <li>After updating details, click on the submit button.</li>
+                  <li>To view user details, navigate to the &apos;User Details&apos; tab.</li>
+                  <li>Click on the &apos;Generate QR-Code&apos; button to create a QR code.</li>
+                </ul>
+              </div>
+
+              {/* Form Buttons */}
+              <div className="flex w-full justify-end pt-20 gap-4">
+                <Button
+                  type="reset"
+                  className="px-10"
+                  onClick={onClose}
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? 'Updating...' : 'Update'}
+                </Button>
+              </div>
             </form>
           </FormProvider>
         </CardContent>
       </Card>
+
+      {/* Crop Modal */}
+      <Dialog open={isCropModalOpen} onOpenChange={setIsCropModalOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Crop Image</DialogTitle>
+            <DialogDescription>
+              Adjust the cropping area as needed and apply the crop.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {src && (
+              <ReactCrop
+              crop={crop}
+              onChange={(c) => setCrop(c)}
+              onComplete={(c) => makeClientCrop(c)}
+              aspect={0.89} // Use 0.89 to make the height larger relative to the width
+            >
+                <img
+                  src={src}
+                  onLoad={(e) => onImageLoadedCrop(e.currentTarget)}
+                  alt="Crop"
+                  style={{ maxWidth: '100%', maxHeight: '400px' }}
+                />
+              </ReactCrop>
+            )}
+          </div>
+          <div className="mt-4 flex justify-end gap-4">
+            <Button variant="outline" onClick={() => setIsCropModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCropSave} disabled={!croppedFile}>
+              Apply Crop
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }

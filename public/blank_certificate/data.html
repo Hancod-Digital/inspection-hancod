@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Text with Underline</title>
+    <style>
+        .centered-text {
+            text-align: center;
+            font-size: 24px;
+            font-family: serif;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .centered-text::after {
+            content: "";
+            display: block;
+            width: 50%; /* Adjust the width of the line */
+            height: 2px; /* Adjust the thickness of the line */
+            background-color: black;
+            margin: 10px auto 0; /* Adjust spacing between text and line */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="centered-text">Sheik</div>
+
+</body>
+</html>

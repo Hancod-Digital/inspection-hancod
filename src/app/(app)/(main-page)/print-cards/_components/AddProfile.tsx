@@ -61,12 +61,12 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   const [loading, setLoading] = useState(false);
   const [croppedFile, setCroppedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  
+
   // Cropping state
   const [crop, setCrop] = useState<any>({
     unit: '%',
     width: 50,
-    aspect: 1,
+    aspect: 1.12,
   });
   const [src, setSrc] = useState<string | null>(null);
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
@@ -100,10 +100,10 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
       const issuedDate = new Date(issuedOn);
       const validUntilDate = new Date(issuedDate);
       validUntilDate.setFullYear(validUntilDate.getFullYear() + 1);
-      
+
       // Format the date to YYYY-MM-DD
       const formattedValidUntil = validUntilDate.toISOString().split('T')[0];
-      
+
       setValue('valid_untill', formattedValidUntil, {
         shouldValidate: true,
         shouldDirty: true,
@@ -141,7 +141,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   }, [croppedFile]);
 
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
-    setLoading(true); 
+    setLoading(true);
     try {
       const avatarUrl = croppedFile ? await uploadImage() : '';
 
@@ -188,7 +188,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   const onImageLoadedCrop = (e: React.SyntheticEvent<HTMLImageElement>) => {
     imageRef.current = e.currentTarget;
   };
-  
+
 
   const makeClientCrop = async (crop: Crop) => {
     if (imageRef.current && crop.width && crop.height) {
@@ -269,7 +269,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
         <CardContent>
           <FormProvider {...methods}>
             <CardHeader>
-              <CardTitle className="text-md w-full">User Details</CardTitle>
+              <CardTitle className="text-md w-full">Add Profile</CardTitle>
             </CardHeader>
             <form
               className="space-y-4"
@@ -481,7 +481,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                       id="valid_untill"
                       type="date"
                       {...register('valid_untill')}
-                      // Removed defaultValue as it's now dynamically set
+                    // Removed defaultValue as it's now dynamically set
                     />
                     {errors.valid_untill && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.valid_untill.message}</p>
@@ -495,9 +495,9 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                     Course Duration
                   </Label>
                   <div className="relative">
-                    <Input 
-                      id="course_duration" 
-                      {...register('course_duration')} 
+                    <Input
+                      id="course_duration"
+                      {...register('course_duration')}
                       type="tel"
                       inputMode="numeric"
                       pattern="[0-9]*" // Allows only numbers 0–9
@@ -517,21 +517,21 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                 </div>
               </div>
               <div className="bottom-0 left-0 p-4 text-black text-sm font-semibold">
-  <ul className="list-disc list-inside">
-    <li>Post the details, click on the submit button</li>
-    <li>After posting the details, click on the &apos;User details&apos; tab to display user details.</li>
-    <li>And click on the &apos;Generate QR-Code&apos; button to create a QR code</li>
-  </ul>
-</div>
+                <ul className="list-disc list-inside">
+                  <li>Post the details, click on the submit button</li>
+                  <li>After posting the details, click on the &apos;User details&apos; tab to display user details.</li>
+                  <li>And click on the &apos;Generate QR-Code&apos; button to create a QR code</li>
+                </ul>
+              </div>
 
 
               <div className="flex w-full justify-end pt-20 gap-4">
-                <Button type="reset" className="px-10" onClick={onClose} variant="outline">
+                <Button type="reset" className="px-10 " onClick={onClose} variant="outline">
                   Cancel
                 </Button>
-                <Button 
-                  className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border border" 
-                  type="submit" 
+                <Button
+                  className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border "
+                  type="submit"
                   disabled={loading || !croppedFile}
                 >
                   {loading ? 'Saving...' : 'Submit'}
@@ -567,8 +567,8 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
             <Button variant="outline" onClick={() => setIsCropModalOpen(false)}>
               Cancel
             </Button>
-            <Button 
-              onClick={handleCropSave} 
+            <Button
+              onClick={handleCropSave}
               disabled={!croppedFile}
             >
               Apply Crop

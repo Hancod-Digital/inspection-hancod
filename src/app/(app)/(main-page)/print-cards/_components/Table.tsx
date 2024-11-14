@@ -190,11 +190,11 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     alt="User's avatar"
                     src={item?.avatar}
                   />
-                  <AvatarFallback>{item?.name}</AvatarFallback>
+                  <AvatarFallback>{item?.name?.charAt(0)}</AvatarFallback>
                 </Avatar></TableCell>
                                 <TableCell className="py-4">
-                                    <div>ID No: {item.id_number}</div>
-                                    <div>Card No: {item.card_number}</div>
+                                    <div>ID No: {item.id_no}</div>
+                                    <div>Card No: {item.card_no}</div>
                                     <div>Model/Level: {item.model_level}</div>
                                     <div>Company: {item.company}</div>
                                 </TableCell>
@@ -204,7 +204,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                     ) : (
                                         <button
                                             onClick={() => generateQr(item)}
-                                            className="bg-white p-1 px-2 flex rounded-md w-[78%] border-primary border text-primary"
+                                            className="bg-white p-1 px-2 flex rounded-md  border-primary border text-primary"
                                         >
                                             Generate QR
                                         </button>

@@ -23,6 +23,12 @@ interface SubtopicContextType {
   getMergedData: (dateRange: DateRange[], subtopic: string) => Promise<any>;
   findRecordByIdWithReference: (id: number, dataRange: DateRange[]) => Promise<any>
   deleteRecord: (id: number) => Promise<void>
+  addProperty: (record: object) => Promise<void>;
+  updateProperty: ({ id, updates }: { id: number; updates: object }) => Promise<void>;
+  deleteProperty: ({ id }: { id: number }) => Promise<void>;
+  properties: any[] | undefined;
+  propertiesLoading: boolean;
+  propertiesError: any;
 }
 
 const SubtopicContext = createContext<SubtopicContextType | undefined>(undefined);
@@ -40,6 +46,12 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
   const { data, isLoading, error } = useQuery({
     queryKey: ['subtopics', subtopic],
     queryFn: () => masterService.getAllSubtopicDetails(subtopic),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const { data:properties, isLoading:propertiesLoading, error:propertiesError } = useQuery({
+    queryKey: ['properties'],
+    queryFn: () => masterService.getAllProperties(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
@@ -172,7 +184,44 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
 
   const addRecord = async (record: object,surveyor_competency?:any) => {
    
-    await addRecordMutation.mutateAsync({ newRecord: record, surveyor_competency });
+    return await addRecordMutation.mutateAsync({ newRecord: record, surveyor_competency });
+    
+  };
+  
+  const addPropertyMutation = useMutation({
+    mutationFn: async (record: object) =>
+      await masterService.addPropertyToAnnexure(record),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['properties'] });
+      queryClient.refetchQueries({ queryKey: ['properties'] });
+    },
+  });
+
+  const updatePropertyMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: number; updates: object }) =>
+      await masterService.updatePropertyToAnnexure(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['properties'] });
+      queryClient.refetchQueries({ queryKey: ['properties'] });
+    },
+  });
+ const deletePropertyMutation = useMutation({
+    mutationFn: async ({ id }: { id: number }) =>
+      await masterService.deletePropertyFromAnnexure(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['properties'] });
+      queryClient.refetchQueries({ queryKey: ['properties'] });
+    },
+  }); 
+
+  const addProperty = async (record: object) => {
+    await addPropertyMutation.mutateAsync(record);
+  }
+  const updateProperty = async ({ id, updates }: { id: number; updates: object }) => {
+    await updatePropertyMutation.mutateAsync({ id, updates });
+  };
+  const deleteProperty = async ({ id }: { id: number }) => {
+    await deletePropertyMutation.mutateAsync({ id });
   };
 
   
@@ -213,7 +262,13 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
         FetchMinorCategory,
         getMergedData,
         findRecordByIdWithReference,
-        deleteRecord
+        deleteRecord,
+        addProperty,
+        updateProperty,
+        deleteProperty,
+        properties,
+        propertiesLoading,
+        propertiesError
       }}
     >
       {children}

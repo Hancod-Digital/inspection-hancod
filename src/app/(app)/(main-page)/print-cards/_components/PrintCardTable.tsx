@@ -25,7 +25,7 @@ import { UserService } from '@/services/api/user-service';
 import TableSpinner from '@/components/animated/TableSpinner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export default function PrintCardTable({ data, changed , setChanged}: { data: any, changed: boolean, setChanged: any }) {
+export default function PrintCardTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const [isGenerating, setIsGenerating] = useState<number | null>(null);
 
@@ -54,24 +54,24 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
     formData.append('file', imageBlob);
 
     try {
-        let res: any;
-        const result = await makeApiCall(
-            () => new UserService().uploadFile(formData, `${Date.now()}`, 'students'),
-            {
-                afterSuccess: (data: any) => {
-                    res = data
-                },
-            }
-        ); 
+      let res: any;
+      const result = await makeApiCall(
+        () => new UserService().uploadFile(formData, `${Date.now()}`, 'students'),
+        {
+          afterSuccess: (data: any) => {
+            res = data
+          },
+        }
+      );
 
-        return res?.fullPath
-            ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
-            : null;
+      return res?.fullPath
+        ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
+        : null;
     } catch (error) {
-        console.error("Error uploading image:", error);
-        return null;
+      console.error("Error uploading image:", error);
+      return null;
     }
-};
+  };
 
   const generateQr = async (item: any) => {
     setIsGenerating(item.id);
@@ -80,11 +80,11 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
       // Create an HTML template for the card
       const htmlElement = document.createElement('div');
       htmlElement.innerHTML = await fetchHtml(item);
-     
+
       // Append the element to the body temporarily
       document.body.appendChild(htmlElement);
       await loadImages(htmlElement);
- 
+
       // Convert the HTML element to a PNG image
       const dataUrl = await toPng(htmlElement, {
         quality: 0.95,
@@ -107,7 +107,7 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
           () => new StudentService().updateStudentCardUrl(item?.id, cardImageUrl),
           {
             afterSuccess: (data: any) => {
-           
+
             },
           }
         );
@@ -129,7 +129,7 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
           await makeApiCall(
             () => new StudentService().updateStudentQRUrl(item?.id, qrImageUrl),
             {
-              afterSuccess: (data: any) => { 
+              afterSuccess: (data: any) => {
               },
             }
           );
@@ -151,7 +151,7 @@ export default function PrintCardTable({ data, changed , setChanged}: { data: an
   };
 
   const handleEditClick = (item: any) => {
- 
+
 
     // // Open a new window
     // const printWindow = window.open('', '_blank', 'width=600,height=600');
@@ -218,23 +218,28 @@ button {
   border: 1px solid #8d1b3d;
   z-index: 995;
   overflow: hidden;
-  border-radius: 30.971px;
+   border-radius: 30.971px;
+  overflow: hidden;
 }
 .profile-photo {
-
-  width: 597.74px;
-  height: 597.74px;
+  position: absolute; /* Positions the element relative to its nearest positioned ancestor */
+ width: 175px;
+  height: 198px;
   top: 50%;
   left: 50%;
-  background: url("${item?.avatar}") no-repeat center center;
+  background: url("${item?.avatar}")  no-repeat center center;
   background-size: contain;
   transform: translate(-50%, -50%);
+") no-repeat center center; 
+  background-size: contain; /* Ensures the entire image fits within the container */
+  transform: translate(-50%, -50%); /* Centers the container */
   z-index: 996;
   padding: 0;
   border: none;
   box-sizing: border-box;
-  background-clip: content-box;
+  /* background-clip: content-box; */ /* Removed for clarity */
 }
+
 
 .sheik-hameed-khan {
   display: block;
@@ -254,7 +259,7 @@ button {
   position: relative;
   width: 393px;
   height: 157px;
-  margin: 13.59px 0 0 59.751px;
+  margin: 15.59px 0 0 59.751px;
   z-index: 5;
 }
 .name {
@@ -299,52 +304,46 @@ button {
   background-size: cover;
   z-index: 4;
 }
-.bio {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-  gap: -14px;
+  .bio {
+  display: grid;
+  grid-template-columns: 163px 1fr; /* Fixed width for labels, flexible for values */
+  row-gap: 10px; /* Space between rows */
+  column-gap: 10px; /* Space between columns */
   position: absolute;
   width: 393px;
-  height: 104px;
+  height: auto; /* Let height adjust based on content */
   top: 51.023px;
   left: 0;
   z-index: 5;
 }
+
+.field {
+  display: contents; /* Allows grid items to flow correctly */
+}
+
 .qatar-id {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-  width: 163.029px;
-  height: 104px;
   color: rgba(255, 255, 255, 0.5);
   font-family: Inter, var(--default-font-family);
-  font-size: 18.582597732543945px;
+  font-size: 18.58px;
   font-weight: 400;
   line-height: 30px;
   text-align: left;
   letter-spacing: -0.74px;
-  z-index: 6;
+  /* Removed fixed width and other flex properties */
 }
+
 .qube-inspection {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-  width: 201.257px;
-  height: 104px;
   color: #ffffff;
   font-family: Inter, var(--default-font-family);
-  font-size: 18.582597732543945px;
+  font-size: 18.58px;
   font-weight: 400;
   line-height: 30px;
   text-align: left;
   letter-spacing: -0.74px;
-  z-index: 7;
+  word-wrap: break-word; /* Ensures long words wrap */
+  /* Removed fixed width and other flex properties */
 }
+
 .line-1 {
   position: relative;
   width: 373.135px;
@@ -4163,7 +4162,7 @@ button {
   justify-content: flex-start;
   position: absolute;
   height: 46px;
-  top: 19.367px;
+  top: 13.367px;
   left: 149.029px;
   color: #ffffff;
   font-family: Inter, var(--default-font-family);
@@ -4185,9 +4184,9 @@ button {
   left: 0;
   color: rgba(255, 255, 255, 0.5);
   font-family: Inter, var(--default-font-family);
-  font-size: 18.582597732543945px;
+  font-size: 13.582597732543945px;
   font-weight: 400;
-  line-height: 32px;
+  line-height: 20px;
   text-align: left;
   white-space: nowrap;
   letter-spacing: -0.74px;
@@ -4222,7 +4221,7 @@ button {
 .img-a3 {
   position: absolute;
   width: 100%;
-  height: 101.54%;
+  height: 94.54%;
   top: 0;
   left: 0;
   background: url(/blank_certificate/card/images/aceabc52-acd8-4500-9ee1-a30e10edd491.png)
@@ -4232,7 +4231,7 @@ button {
               
          `
     }
-    const iframe:any = document.createElement('iframe');
+    const iframe: any = document.createElement('iframe');
     iframe.style.visibility = 'hidden';
     iframe.style.position = 'fixed';
     iframe.style.right = '0';
@@ -4242,7 +4241,7 @@ button {
             <!DOCTYPE html>
             <html>
             <head>
-              <title>Print HTML Content</title>
+               
               <style>
 ${cssString()}
           </style>
@@ -4259,9 +4258,24 @@ ${cssString()}
                   </div>
                   <div class="line"></div>
                   <div class="bio">
-                    <span class="qatar-id">Qatar ID/ ID No.: <br />Company name:<br />Course Details:<br />Model/ Level:</span>
-                    <span class="qube-inspection">${item?.id_no}<br />${item?.company}<br />${item?.designation}<br />${item?.model_level}</span>
-                  </div>
+  <div class="field">
+    <span class="qatar-id">Qatar ID/ ID No.:</span>
+    <span class="qube-inspection">${item?.id_no}</span>
+  </div>
+  <div class="field">
+    <span class="qatar-id">Company Name:</span>
+    <span class="qube-inspection">${item?.company}</span>
+  </div>
+  <div class="field">
+    <span class="qatar-id">Course Details:</span>
+    <span class="qube-inspection">${item?.designation}</span>
+  </div>
+  <div class="field">
+    <span class="qatar-id">Model/ Level:</span>
+    <span class="qube-inspection">${item?.model_level}</span>
+  </div>
+</div>
+
                 </div>
                 <div class="line-1"></div>
                 <div class="flex-row-b">
@@ -4282,17 +4296,17 @@ ${cssString()}
             </body>
             </html>
           `
-          document.body.appendChild(iframe);
+    document.body.appendChild(iframe);
 
-          iframe.onload = function() {
-              iframe.contentWindow.focus();
-              iframe.contentWindow.print();
-      
-              // Remove the iframe after printing
-              iframe.contentWindow.onafterprint = function() {
-                  document.body.removeChild(iframe);
-              };
-          };
+    iframe.onload = function () {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+
+      // Remove the iframe after printing
+      iframe.contentWindow.onafterprint = function () {
+        document.body.removeChild(iframe);
+      };
+    };
   };
 
 
@@ -4306,11 +4320,13 @@ ${cssString()}
         <TableHeader>
           <TableRow>
             <TableHead className="py-4">ID</TableHead>
-            <TableHead className="py-4">Image</TableHead>
+
             <TableHead className="py-4">Name</TableHead>
             <TableHead className="py-4">Added_By</TableHead>
+            <TableHead className="py-4">Image</TableHead>
             <TableHead className="py-4">Card/Model/Level</TableHead>
             <TableHead className="py-4">QR Image</TableHead>
+
             <TableHead className="py-4">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -4319,23 +4335,21 @@ ${cssString()}
             <React.Fragment key={idx + 1}>
               <TableRow>
                 <TableCell className="py-4">{idx}</TableCell>
-                <TableCell className="py-4">
-                <Avatar className="mb-2 w-16 h-16">
-                  <AvatarImage
-                    className="object-cover w-full h-full"
-                    alt="User's avatar"
-                    src={item?.avatar}
-                  />
-                  <AvatarFallback>{item?.name}</AvatarFallback>
-                </Avatar>
-                  {/* <img src={item?.avatar} alt="profile" className="w-16 h-16 rounded-full" /> */}
-                </TableCell>
+
                 <TableCell className="py-4">
                   {item?.name}
                   <div>Address: {item?.address}</div>
                   <div>Designation: {item?.designation}</div>
                 </TableCell>
                 <TableCell className="py-4">{item?.added_by}</TableCell>
+                <TableCell className="py-4"><Avatar className="mb-2 w-16 h-16">
+                  <AvatarImage
+                    className="object-cover w-full h-full"
+                    alt="User's avatar"
+                    src={item?.avatar}
+                  />
+                  <AvatarFallback>{item?.name?.charAt(0)}</AvatarFallback>
+                </Avatar></TableCell>
                 <TableCell className="py-4">
                   <div>ID No: {item?.id_no}</div>
                   <div>Card No: {item?.card_no}</div>
@@ -4348,7 +4362,7 @@ ${cssString()}
                   {isGenerating === item.id ? <TableSpinner /> : <img src={item?.qr_url} alt="QR code" className="w-16 h-16" />}
                 </TableCell>
                 <TableCell className="py-4">
-                   
+
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

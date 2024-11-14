@@ -52,7 +52,7 @@ export function NavbarHeader() {
     if (isLoading) return <Spinner />;
     if (isError) return <div>Error loading user data</div>;
     return (
-        <header className="flex h-16 shrink-0 bg-white items-center w-full p gap-2 fixed z-[]">
+        <header className="flex  h-16 shrink-0 bg-white items-center w-full p gap-2 fixed z-[]">
             {/* <SidebarTrigger className="ml-4" /> */}
             <div className="flex items-center gap-2   px-4 ml-auto  ">
                 

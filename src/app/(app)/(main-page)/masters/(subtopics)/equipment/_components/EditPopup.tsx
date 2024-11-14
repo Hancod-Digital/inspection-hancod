@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PlusIcon } from 'lucide-react';
+import { CalendarIcon, PlusIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useSubtopic } from '@/context/SubtopicContext';
 
@@ -26,8 +26,7 @@ import 'react-quill/dist/quill.snow.css';
 // Validation schema using Zod
 const equipmentDetailsSchema = object({
   minor_category: string().nonempty('Minor Category is required'),
-  equipment_no: string().nonempty('Equipment No is required'),
-  equipment_type: string().nonempty('Equipment Type is required'),
+  equipment_no: string().nonempty('Equipment No is required'), 
   owner_id: string().nonempty('Owner ID is required'),
   registration_no: string().nonempty('Registration No is required'),
   model_no: string().nonempty('Model No is required'),
@@ -48,21 +47,24 @@ const equipmentDetailsSchema = object({
   last_thorough_date: string().nonempty('Last thorough date is required'),
   next_thorough_date: string().nonempty('Next thorough date is required'),
   description: string().nonempty('Description is required'),
+  item_type: string().nonempty('Item type is required'),
+  property_table_type: string().optional(), // Conditionally required
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
-  id: number;
+  id?: number; // Optional, only required for edit
 }
 
 export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const { updateRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
+  const { addRecord, updateRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
 
-  // Get existing data synchronously
-  const data = findRecordById(id);
+  // State variables for checkboxes
+  const [testExamChecked, setTestExamChecked] = useState(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
 
   // State variables for select options
   const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
@@ -72,28 +74,42 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
   const [locationOptions, setLocationOptions] = useState<any[]>([]);
   const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
   const [equipmentTypeOptions, setEquipmentTypeOptions] = useState<any[]>([]);
+  const [itemTypeOptions, setItemTypeOptions] = useState<any[]>([]); // If needed
+
+  // Get existing data if editing
+  const data = id ? findRecordById(id) : null;
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
-    defaultValues: {
-      ...data,
-      manufacturer: String(data?.manufacturer),
-      minor_category: String(data?.minor_category),
-      equipment_type: String(data?.equipment_type),
-      location: String(data?.location),
-      standard: String(data?.standard),
-      annexure: String(data?.annexure),
-      owner_id: String(data?.owner_id),
-      status: data?.status === 'ACTIVE',
-    },
+    defaultValues: data
+      ? {
+          ...data,
+          manufacturer: String(data.manufacturer),
+          minor_category: String(data.minor_category),
+        
+          location: String(data.location),
+          standard: String(data.standard),
+          annexure: String(data.annexure),
+          owner_id: String(data.owner_id),
+          status: data.status === 'ACTIVE',
+          item_type: String(data.item_type),
+          property_table_type: String(data.property_table_type) || '',
+        }
+      : {},
+    mode: 'onSubmit',
   });
 
   const {
     reset,
     handleSubmit,
     control,
+    watch,
+    setValue,
     formState: { isSubmitSuccessful, errors },
   } = methods;
+
+  // Watchers for conditional fields
+  const selectedItemType = watch('item_type');
 
   // Fetch options for select fields
   useEffect(() => {
@@ -136,12 +152,16 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
         }
 
         // Fetch equipment type options
-        const equipmentTypes = await getAllSingleSubtopic('equipment_type');
-        if (equipmentTypes) {
-          setEquipmentTypeOptions(equipmentTypes);
-        }
+         
+
+        // Fetch item type options if needed
+        // const itemTypes = await getAllSingleSubtopic('item_type');
+        // if (itemTypes) {
+        //   setItemTypeOptions(itemTypes);
+        // }
       } catch (error) {
         console.error('Error fetching options:', error);
+        // Optionally, handle the error (e.g., show a notification)
       }
     };
     fetchOptions();
@@ -157,24 +177,45 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
-      await updateRecord(id, {
+      const payload = {
         ...values,
         status: values.status ? 'ACTIVE' : 'INACTIVE',
-      });
+        next_test_date: testExamChecked ? null : values.next_test_date,
+        next_thorough_date: thoroughExamChecked ? null : values.next_thorough_date,
+        property_table_type:
+          selectedItemType === 'Elevator Certificate' ? values.property_table_type : null,
+      };
+
+      if (id) {
+        await updateRecord(id, payload);
+      } else {
+        await addRecord(payload);
+      }
     } catch (error) {
-      console.error('Error updating equipment:', error);
+      console.error('Error submitting form:', error);
+      // Optionally, handle the error (e.g., show a notification)
     } finally {
       setLoading(false);
       onClose();
     }
   };
 
+  // Handle conditional requirement for property_table_type
+  useEffect(() => {
+    if (selectedItemType === 'Elevator Certificate') {
+      methods.register('property_table_type', { required: 'Property table type is required' });
+    } else {
+      methods.unregister('property_table_type');
+      setValue('property_table_type', '');
+    }
+  }, [selectedItemType, methods, setValue]);
+
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 20, y: 0 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 20, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
         <Card className="w-full border-0 p-0 hover:bg-white">
@@ -187,7 +228,9 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                 onSubmit={handleSubmit(onSubmitHandler)}
               >
                 <CardHeader>
-                  <CardTitle className="text-md">Equipment Details</CardTitle>
+                  <CardTitle className="text-md">
+                    {id ? 'Edit Equipment Details' : 'Add Equipment Details'}
+                  </CardTitle>
                 </CardHeader>
 
                 <div className="space-y-4">
@@ -200,20 +243,16 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                           name="minor_category"
                           control={control}
                           render={({ field }) => (
-                            <Select onValueChange={field.onChange} value={String(field.value)} >
+                            <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger id="minor_category">
                                 <SelectValue placeholder="Select Minor Category" />
                               </SelectTrigger>
                               <SelectContent>
                                 {minorCategoryOptions.map((option: any) => (
-                                  <SelectItem
-                                    key={option.id}
-                                    value={String(option.id)}
-                                  >
+                                  <SelectItem key={option.id} value={String(option.id)}>
                                     {option.minor_category}
                                   </SelectItem>
                                 ))}
-
                               </SelectContent>
                             </Select>
                           )}
@@ -273,35 +312,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                       </div>
                     </div>
 
-                    {/* Equipment Type */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="equipment_type">Equipment Type</Label>
-                      <div>
-                        <Controller
-                          name="equipment_type"
-                          control={control}
-                          render={({ field }) => (
-                            <Select onValueChange={field.onChange} value={String(field.value)}>
-                              <SelectTrigger id="equipment_type">
-                                <SelectValue placeholder="Select Equipment Type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {equipmentTypeOptions?.map((option: any) => (
-                                  <SelectItem key={option.id} value={String(option.id)}>
-                                    {option.equipment_type}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          )}
-                        />
-                        {errors.equipment_type && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.equipment_type.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                     
 
                     {/* Registration No./Plate No. */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
@@ -566,6 +577,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                   </div>
                 </div>
 
+                {/* Certificate Details */}
                 <CardHeader>
                   <CardTitle className="text-md w-full">Certificate Details</CardTitle>
                 </CardHeader>
@@ -583,6 +595,42 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                         {errors.safe_working_load && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.safe_working_load.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Test Insp. Frequency (Months) */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="test_insp_frequency_months">
+                        Test Insp. Frequency (Months)
+                      </Label>
+                      <div>
+                        <Controller
+                          name="test_insp_frequency_months"
+                          control={control}
+                          render={({ field }) => <Input id="test_insp_frequency_months" {...field} />}
+                        />
+                        {errors.test_insp_frequency_months && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.test_insp_frequency_months.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Proof Load */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="proof_load">Proof Load</Label>
+                      <div>
+                        <Controller
+                          name="proof_load"
+                          control={control}
+                          render={({ field }) => <Input id="proof_load" {...field} />}
+                        />
+                        {errors.proof_load && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.proof_load.message}
                           </p>
                         )}
                       </div>
@@ -607,63 +655,6 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                       </div>
                     </div>
 
-                    {/* Proof Load */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="proof_load">Proof Load</Label>
-                      <div>
-                        <Controller
-                          name="proof_load"
-                          control={control}
-                          render={({ field }) => <Input id="proof_load" {...field} />}
-                        />
-                        {errors.proof_load && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.proof_load.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Next Test Date */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="next_test_date">Next Test Date</Label>
-                      <div>
-                        <Controller
-                          name="next_test_date"
-                          control={control}
-                          render={({ field }) => (
-                            <Input id="next_test_date" type="date" {...field} />
-                          )}
-                        />
-                        {errors.next_test_date && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.next_test_date.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Test Insp. Frequency (Months) */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="test_insp_frequency_months">
-                        Test Insp. Frequency (Months)
-                      </Label>
-                      <div>
-                        <Controller
-                          name="test_insp_frequency_months"
-                          control={control}
-                          render={({ field }) => (
-                            <Input id="test_insp_frequency_months" {...field} />
-                          )}
-                        />
-                        {errors.test_insp_frequency_months && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.test_insp_frequency_months.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
                     {/* Last Thorough Examination Date */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                       <Label htmlFor="last_thorough_date">Last Thorough Examination Date</Label>
@@ -682,18 +673,63 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                         )}
                       </div>
                     </div>
+                  </div>
 
-                    {/* Next Thorough Examination Date */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                  {/* Next Test Date */}
+                  <div className="grid gap-4 grid-cols-1">
+                    <div className="grid grid-cols-[200px_1fr] w-[64.2%] items-start gap-4">
+                      <Label htmlFor="next_test_date">Next Test Date</Label>
+                      <div className="flex items-center gap-4">
+                        <Controller
+                          name="next_test_date"
+                          control={control}
+                          render={({ field }) => (
+                            <Input
+                              id="next_test_date"
+                              disabled={testExamChecked}
+                              type="date"
+                              {...field}
+                            />
+                          )}
+                        />
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={testExamChecked}
+                          onCheckedChange={(checked) => setTestExamChecked(checked)}
+                        />
+                        <span className="text-[13px] w-[33%]">Not Applicable</span>
+                        {errors.next_test_date && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.next_test_date.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Next Thorough Examination Date */}
+                  <div className="grid gap-4 grid-cols-1">
+                    <div className="grid grid-cols-[200px_1fr] w-[64.2%] items-start gap-4">
                       <Label htmlFor="next_thorough_date">Next Thorough Examination Date</Label>
-                      <div>
+                      <div className="flex items-center gap-4 w-full">
                         <Controller
                           name="next_thorough_date"
                           control={control}
                           render={({ field }) => (
-                            <Input id="next_thorough_date" type="date" {...field} />
+                            <Input
+                              id="next_thorough_date"
+                              disabled={thoroughExamChecked}
+                              type="date"
+                              {...field}
+                            />
                           )}
                         />
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={thoroughExamChecked}
+                          onCheckedChange={(checked) => setThoroughExamChecked(checked)}
+                        />
+                        <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.next_thorough_date && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.next_thorough_date.message}
@@ -702,10 +738,75 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                       </div>
                     </div>
                   </div>
+
+                  {/* Item Type and Property Table Type */}
+                  <div className="grid gap-4 grid-cols-2">
+                    {/* Item Type */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="item_type">Item Type</Label>
+                      <div>
+                        <Controller
+                          name="item_type"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="item_type">
+                                <SelectValue placeholder="Select Item Type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value={'Lifting Equipment'}>Lifting Equipment</SelectItem>
+                                <SelectItem value={'Lifting Accessories'}>Lifting Accessories</SelectItem>
+                                {/* Add more options as needed */}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.item_type && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.item_type.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Property Table Type */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label htmlFor="property_table_type">Property Table Type{selectedItemType === 'Elevator Certificate' && '*'}</Label>
+                      <div>
+                        <Controller
+                          name="property_table_type"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              disabled={selectedItemType !== 'Elevator Certificate'}
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger id="property_table_type">
+                                <SelectValue placeholder="Select Property Table Type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value={'Elevator Certificate'}>
+                                  Elevator Certificate
+                                </SelectItem>
+                                {/* Add more options if needed */}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.property_table_type && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.property_table_type.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
+                {/* Description */}
                 <motion.div
-                  initial={{ opacity: 20, y: 0 }}
+                  initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
@@ -731,21 +832,27 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                     </div>
                   </div>
                 </motion.div>
+
+                {/* Action Buttons */}
                 <motion.div
                   className="flex justify-end gap-4"
-                  initial={{ opacity: 20, y: 0 }}
+                  initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
                   <Button
-                    type="reset"
+                    type="button"
                     className="px-10"
                     onClick={onClose}
                     variant={'outline'}
                   >
                     Cancel
                   </Button>
-                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
+                  <Button
+                    className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border"
+                    type="submit"
+                    disabled={loading}
+                  >
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </motion.div>

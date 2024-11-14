@@ -26,15 +26,31 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
     const [isGenerating, setIsGenerating] = useState<number | null>(null);
 
     const fetchHtml = async (profile_url: string, qr_url: string, name: string, id_no: string, company: string, designation: string, issued_on: string, valid_untill: string, course_duration: string) => {
-        const response = await fetch('/blank_certificate/certificate.html'); // Replace with the correct path
+        const response = await fetch('/blank_certificate/redesigned_certificate.html'); // Replace with the correct path
         let htmlString = await response.text();
-
+ 
         // Replace placeholders for dynamic URLs
         htmlString = htmlString.replace(/\{\{profilePhotoUrl\}\}/g, profile_url);
         htmlString = htmlString.replace(/\{\{qrCodeUrl\}\}/g, qr_url);
         htmlString = htmlString.replace(/\{\{IDNumber\}\}/g, id_no);
         htmlString = htmlString.replace(/\{\{Company\}\}/g, company);
-        htmlString = htmlString.replace(/\{\{Training\}\}/g, designation);
+        const words = designation.split(' ');
+        let training = '';
+        let training1 = '';
+        let currentLength = 0;
+        
+        for (const word of words) {
+            const newLength = currentLength + word.length + (training ? 1 : 0);
+            if (newLength <= 25) {
+                training += (training ? ' ' : '') + word;
+                currentLength = newLength;
+            } else {
+                training1 += (training1 ? ' ' : '') + word;
+            }
+        }
+        
+        htmlString = htmlString.replace(/\{\{Training\}\}/g, training);
+        htmlString = htmlString.replace(/\{\{Training1\}\}/g, training1);
 
         // Replace the placeholder name in the span
         htmlString = htmlString.replace(/<span class="name-text">.*?<\/span>/, `<span class="name-text">${name}</span>`);

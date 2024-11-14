@@ -30,20 +30,9 @@ export default function Component({searchValue}:{searchValue:string}) {
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
-    useEffect(() => {
-        async function fetchSubtopics() {
-            try {
-                const equipment_type = await getMergedData(equipmentDataRange, 'equipment');
-                setSubtopics(equipment_type);
-            } catch (error) {
-                console.error("Error fetching subtopics:", error);
-            }
-        }
-
-        fetchSubtopics();
-    }, [getMergedData]);
-    const rearrangedData = subtopics
-    ? [...subtopics].sort((a:any, b:any) => {
+     
+    const rearrangedData = data
+    ? [...data].sort((a:any, b:any) => {
         const aMatch = a.title.toLowerCase().includes(searchValue.toLowerCase());
         const bMatch = b.title.toLowerCase().includes(searchValue.toLowerCase());
         if (aMatch && !bMatch) return -1;
@@ -58,8 +47,7 @@ export default function Component({searchValue}:{searchValue:string}) {
                     <TableRow>
                         <TableHead>Sl. No.</TableHead>
                         <TableHead className="py-4">Equipment ID</TableHead>
-                        <TableHead className="py-4">Title</TableHead>
-                        <TableHead className="py-4">Equipment Type</TableHead>
+                        <TableHead className="py-4">Title</TableHead> 
                         <TableHead className="py-4">Last Through Date</TableHead>
                         <TableHead className="py-4">Next Through Date</TableHead>
                         <TableHead className="py-4">Last Test Date</TableHead>
@@ -74,9 +62,9 @@ export default function Component({searchValue}:{searchValue:string}) {
                                 <TableCell className="py-4">{idx + 1}</TableCell>
                                 <TableCell className="py-4">{item?.equipment_no}</TableCell>
                                 <TableCell className="py-4">{item?.title}</TableCell>
-                                <TableCell className="py-4">{item?.equipment_type?.equipment_type}</TableCell>{/** */}
+                               
                                 <TableCell className="py-4">{item?.last_thorough_date}</TableCell>
-                                <TableCell className="py-4">{item?.next_thorough_date}</TableCell>
+                                <TableCell className="py-4">{item.next_thorough_date === null ||item.next_thorough_date === '' ? "NOT APPLICABLE": item.next_thorough_date}</TableCell>
                                 <TableCell className="py-4">{item?.last_test_date}</TableCell>
                                 <TableCell className="py-4">{item?.status}</TableCell>
                                 <TableCell className="py-4">

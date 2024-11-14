@@ -31,7 +31,7 @@ const LiftingGearMulti = () => {
         setData(data);
       },
     });
-  }, [changed, activeTab]);
+  }, [changed, activeTab,isBulk]);
 
   const rearrangedData  = data
     ? data.filter((item: any) =>
@@ -116,7 +116,7 @@ const LiftingGearMulti = () => {
 
       <AnimatePresence mode="wait">
         {isBulk? (
-<Layout /> 
+<Layout  setIsBulk={setIsBulk} /> 
         ):!isAdd ? (
           <motion.div
             key="table"

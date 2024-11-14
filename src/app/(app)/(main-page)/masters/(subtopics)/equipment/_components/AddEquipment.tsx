@@ -25,37 +25,8 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 import { useSubtopic } from '@/context/SubtopicContext';
 
-// Validation schema using Zod
-const equipmentDetailsSchema = object({
-  minor_category: string().nonempty('Minor Category is required'),
-  equipment_no: string().nonempty('Equipment No is required'),
-  equipment_type: string().nonempty('Equipment Type is required'),
-
-  owner_id: string().nonempty('Owner ID  is required'),
-  registration_no: string().nonempty('Registration No is required'),
-  model_no: string().nonempty('Model No is required'),
-  manufacturer: string().nonempty('Supplier is required'),
-  test_certificate_no: string().nonempty('Test Certificate No is required'),
-  location: string().nonempty('Location is required'),
-  title: string().nonempty('Title is required'),
-  standard: string().nonempty('Standard is required'),
-  serial_no: string().nonempty('Serial No is required'),
-  annexure: string().nonempty('Annexure is required'),
-  year_of_manufacture: string().nonempty('Year of manufacture is required'),
-  status: boolean(),
-  safe_working_load: string().nonempty('Safe working load is required'),
-  last_test_date: string().nonempty('Last test date is required'),
-  proof_load: string().nonempty('Proof load is required'),
-  next_test_date: string().nonempty('Next test date is required'),
-  
-  test_insp_frequency_months: string().nonempty('Test inspection frequency in months is required'),
-  last_thorough_date: string().nonempty('Last thorough date is required'),
-  next_thorough_date: string().nonempty('Next thorough date is required'),
-  description: string().nonempty('Description is required'),
-});
 
 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
@@ -65,6 +36,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [loading, setLoading] = useState(false);
   const { addRecord, getAllSingleSubtopic } = useSubtopic();
 
+  const [testExamChecked, setTestExamChecked] = useState(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
   // State variables for select options
   const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
   const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
@@ -73,18 +46,48 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [locationOptions, setLocationOptions] = useState<any[]>([]);
   const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
 
+  const [selectedItemType, setSelectedItemType] = useState<string>('');
+
+// Validation schema using Zod
+const equipmentDetailsSchema = object({
+  minor_category: string().nonempty('Minor Category is required'),
+  equipment_no: string().nonempty('Equipment No is required'),
+  
+  owner_id: string().nonempty('Owner ID  is required'),
+  registration_no: string().nonempty('Registration No is required'),
+  model_no: string().nonempty('Model No is required'),
+  manufacturer: string().nonempty('Supplier is required'),
+  test_certificate_no: string().nonempty('Test Certificate No is required'),
+  location: string().nonempty('Location is required'),
+  title: string().nonempty('Title is required'),
+  standard: string().nonempty('Standard is required'),
+  thorough_insp_frequency_months: string().nonempty('Thorough inspection frequency in months is required'),
+  serial_no: string().nonempty('Serial No is required'),
+  annexure: string().nonempty('Annexure is required'),
+  year_of_manufacture: string().nonempty('Year of manufacture is required'),
+  status: boolean(),
+  safe_working_load: string().nonempty('Safe working load is required'),
+  last_test_date: string().nonempty('Last test date is required'),
+  proof_load: string().nonempty('Proof load is required'),
+  next_test_date: testExamChecked ? string().optional() : string().nonempty('Next test date is required'),
+  test_insp_frequency: string().nonempty('Test inspection frequency in months is required'),
+  last_thorough_date: string().nonempty('Last thorough date is required'),
+  next_thorough_date: thoroughExamChecked ? string().optional() : string().nonempty('Next thorough date is required'),
+  description: string().nonempty('Description is required'),
+  property_table_type: selectedItemType === 'Elevator Certificate' ? string().nonempty('Property table type is required') : string().optional(),
+  item_type: string().nonempty('Item type is required'),
+});
+
+type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
+    mode: 'onSubmit',
   });
 
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        // Fetch Equipment Type category options
-        const equipmentType = await getAllSingleSubtopic('equipment_type');
-        if (equipmentType) {
-          setMinorCategoryOptions(equipmentType);
-        }
         
         // Fetch minor category options
         const minorCategories = await getAllSingleSubtopic('minor_category');
@@ -147,15 +150,27 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     setLoading(true); 
     await addRecord({
       ...values,
-      status: values.status === true ? "ACTIVE" : "INACTIVE"
+      status: values.status === true ? "ACTIVE" : "INACTIVE",
+      next_test_date: testExamChecked ? values.next_test_date : null,
+      next_thorough_date: thoroughExamChecked ? values.next_thorough_date : null,
+      property_table_type: selectedItemType === 'Elevator Certificate' ? values.property_table_type : null,
+
     });
         setLoading(false);
     onClose();
   };
 
+  useEffect(() => {
+    const subscription = methods.watch((value, { name }) => {
+      if (name === 'item_type') {
+        setSelectedItemType(value.item_type!);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [methods]);
   return (
     <AnimatePresence>
-      <motion.div
+      <motion.div 
         initial={{ opacity: 20, y: 0 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 20, y: 0 }}
@@ -178,7 +193,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid gap-4 grid-cols-2">
                     {/* Minor Category and Equipment No */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="minor_category">Minor Category:*</Label>
+                      <Label  className='mt-3' htmlFor="minor_category">Minor Category:*</Label>
                       <div>
                         <Controller
                           name="minor_category"
@@ -208,7 +223,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Equipment No */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="equipment_no">Equipment No</Label>
+                      <Label  className='mt-3' htmlFor="equipment_no">Equipment No</Label>
                       <div>
                         <Controller
                           name="equipment_no"
@@ -225,7 +240,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Owner ID/Tag No */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="owner_id">Owner ID/Tag No</Label>
+                      <Label  className='mt-3'  htmlFor="owner_id">Owner ID/Tag No</Label>
                       <div>
                       <Controller
                           name="owner_id"
@@ -253,55 +268,28 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       </div>
                     </div>
 
+                     {/* Title */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="equipment_type">Equipment Type</Label>
+                      <Label  className='mt-3' htmlFor="title">Title</Label>
                       <div>
-                      <Controller
-                          name="equipment_type"
+                        <Controller
+                          name="title"
                           control={control}
-                          render={({ field }) => (
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="equipment_type">
-                                <SelectValue placeholder="Select equipment_type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {ownerOptions?.map((option: any) => (
-                                  <SelectItem key={option.id} value={String(option.id)}>
-                                    {option.owner}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          )}
+                          render={({ field }) => <Input id="title" {...field} />}
                         />
-                        {errors.owner_id && (
+                        {errors.title && (
                           <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.owner_id.message}
+                            {errors.title.message}
                           </p>
                         )}
                       </div>
                     </div>
 
-                    {/* Registration No./Plate No. */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="registration_no">Registration No./Plate No.</Label>
-                      <div>
-                        <Controller
-                          name="registration_no"
-                          control={control}
-                          render={({ field }) => <Input id="registration_no" {...field} />}
-                        />
-                        {errors.registration_no && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.registration_no.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                   
 
                     {/* Model No */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="model_no">Model No</Label>
+                      <Label  className='mt-3' htmlFor="model_no">Model No</Label>
                       <div>
                         <Controller
                           name="model_no"
@@ -318,7 +306,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Supplier/Manufacturer */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="manufacturer">Supplier/Manufacturer</Label>
+                      <Label  className='mt-3' htmlFor="manufacturer">Supplier/Manufacturer</Label>
                       <div className="relative">
                         <Controller
                           name="manufacturer"
@@ -355,7 +343,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Test Certificate No./COC No. */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="test_certificate_no">Test Certificate No./COC No.</Label>
+                      <Label  className='mt-3' htmlFor="test_certificate_no">Test Certificate No./COC No.</Label>
                       <div>
                         <Controller
                           name="test_certificate_no"
@@ -372,7 +360,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Location */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="location">Location:*</Label>
+                      <Label  className='mt-3' htmlFor="location">Location:*</Label>
                       <div className="relative">
                         <Controller
                           name="location"
@@ -407,18 +395,18 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       </div>
                     </div>
 
-                    {/* Title */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="title">Title</Label>
+                     {/* Registration No./Plate No. */}
+                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label  className='mt-3' htmlFor="registration_no">Registration No./Plate No.</Label>
                       <div>
                         <Controller
-                          name="title"
+                          name="registration_no"
                           control={control}
-                          render={({ field }) => <Input id="title" {...field} />}
+                          render={({ field }) => <Input id="registration_no" {...field} />}
                         />
-                        {errors.title && (
+                        {errors.registration_no && (
                           <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.title.message}
+                            {errors.registration_no.message}
                           </p>
                         )}
                       </div>
@@ -426,7 +414,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Standard */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="standard">Standard</Label>
+                      <Label  className='mt-3' htmlFor="standard">Standard</Label>
                       <div>
                         <Controller
                           name="standard"
@@ -456,7 +444,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Serial No. */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="serial_no">Serial No.</Label>
+                      <Label  className='mt-3' htmlFor="serial_no">Serial No.</Label>
                       <div>
                         <Controller
                           name="serial_no"
@@ -473,7 +461,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Annexure */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="annexure">Annexure</Label>
+                      <Label  className='mt-3' htmlFor="annexure">Annexure</Label>
                       <div>
                         <Controller
                           name="annexure"
@@ -503,7 +491,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Year of Manufacture */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="year_of_manufacture">Year of Manufacture</Label>
+                      <Label  className='mt-3' htmlFor="year_of_manufacture">Year of Manufacture</Label>
                       <div>
                         <Controller
                           name="year_of_manufacture"
@@ -522,7 +510,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
                     {/* Active */}
                     <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                      <Label htmlFor="status">Active</Label>
+                      <Label  className='mt-3' htmlFor="status">Active</Label>
                       <div>
                         <Controller
                           name="status"
@@ -552,7 +540,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid gap-4 grid-cols-2">
                     {/* Safe Working Load */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="safe_working_load">Safe Working Load</Label>
+                      <Label  className='mt-3' htmlFor="safe_working_load">Safe Working Load</Label>
                       <div>
                         <Controller
                           name="safe_working_load"
@@ -566,67 +554,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         )}
                       </div>
                     </div>
-
-                    {/* Last Test Date */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="last_test_date">Last Test Date</Label>
-                      <div>
-                        <Controller
-                          name="last_test_date"
-                          control={control}
-                          render={({ field }) => (
-                            <Input id="last_test_date" type="date" {...field} />
-                          )}
-                        />
-                        {errors.last_test_date && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.last_test_date.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Proof Load */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="proof_load">Proof Load</Label>
-                      <div>
-                        <Controller
-                          name="proof_load"
-                          control={control}
-                          render={({ field }) => <Input id="proof_load" {...field} />}
-                        />
-                        {errors.proof_load && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.proof_load.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Next Test Date */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="next_test_date">Next Test Date</Label>
-                      <div>
-                        <Controller
-                          name="next_test_date"
-                          control={control}
-                          render={({ field }) => (
-                            <Input id="next_test_date" type="date" {...field} />
-                          )}
-                        />
-                        {errors.next_test_date && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.next_test_date.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                     
-
-                    {/* Test Insp. Frequency (Months) */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="test_insp_frequency_months">
+                     {/* Test Insp. Frequency (Months) */}
+                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label  className='mt-3' htmlFor="test_insp_frequency_months">
                         Test Insp. Frequency (Months)
                       </Label>
                       <div>
@@ -645,9 +575,63 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       </div>
                     </div>
 
-                    {/* Last Thorough Examination Date */}
+                    {/* Last Test Date */}
+                    
+
+                    {/* Proof Load */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="last_thorough_date">Last Thorough Examination Date</Label>
+                      <Label  className='mt-3' htmlFor="proof_load">Proof Load</Label>
+                      <div>
+                        <Controller
+                          name="proof_load"
+                          control={control}
+                          render={({ field }) => <Input id="proof_load" {...field} />}
+                        />
+                        {errors.proof_load && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.proof_load.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                     {/* Thorough Insp. Frequency:(Months) */}
+                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label  className='mt-3' htmlFor="thorough_insp_frequency_months">Thorough Insp. Frequency:(Months)</Label>
+                      <div>
+                        <Controller
+                          name="thorough_insp_frequency_months"
+                          control={control}
+                          render={({ field }) => <Input id="thorough_insp_frequency_months" {...field} />}
+                        />
+                        {errors.thorough_insp_frequency_months && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.thorough_insp_frequency_months.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label  className='mt-3' htmlFor="last_test_date">Last Test Date</Label>
+                      <div>
+                        <Controller
+                          name="last_test_date"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="last_test_date" type="date" {...field} />
+                          )}
+                        />
+                        {errors.last_test_date && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.last_test_date.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+{/* Last Thorough Exam */}
+<div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label  className='mt-3' htmlFor="last_thorough_date">Last Thorough Exam</Label>
                       <div>
                         <Controller
                           name="last_thorough_date"
@@ -663,18 +647,46 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         )}
                       </div>
                     </div>
+                    </div>
+                    {/* Next Test Date */}
+                    <div className="grid gap-4 grid-cols-1">
+                    <div className="grid grid-cols-[200px_1fr] w-[64.2%]  items-start gap-4">
+                      <Label  className='mt-3' htmlFor="next_test_date">Next Test Date</Label>
+                      <div className="flex items-center gap-4">
+                        <Controller
+                          name="next_test_date"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="next_test_date" disabled={testExamChecked} type="date" {...field} />
+                          )}
+                        />
+                        <Checkbox className='w-6 h-6' checked={testExamChecked} onCheckedChange={(checked) => setTestExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                        {errors.next_test_date && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.next_test_date.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
-                    {/* Next Thorough Examination Date */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="next_thorough_date">Next Thorough Examination Date</Label>
-                      <div>
+                     
+</div>
+                   
+
+                    
+                                     
+                    <div className="grid gap-4 grid-cols-1">
+                    {/* Next Thorough Exam */}
+                    <div className="grid grid-cols-[200px_1fr] w-[64.2%]  items-start gap-4">                      <Label  className='mt-3' htmlFor="next_thorough_date">Next Thorough Exam</Label>
+                      <div className="flex items-center gap-4 w-full ">
                         <Controller
                           name="next_thorough_date"
                           control={control}
                           render={({ field }) => (
-                            <Input id="next_thorough_date" type="date" {...field} />
+                            <Input id="next_thorough_date" disabled={thoroughExamChecked} type="date" {...field} />
                           )}
                         />
+                        <Checkbox className='w-6 h-6' checked={thoroughExamChecked} onCheckedChange={(checked) => setThoroughExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
                         {errors.next_thorough_date && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.next_thorough_date.message}
@@ -682,6 +694,68 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         )}
                       </div>
                     </div>
+                  </div>
+                  <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label  className='mt-3' htmlFor="item_type">Item Type</Label>
+                      <div>
+                        <Controller
+                          name="item_type"
+                          control={control}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="item_type">
+                                <SelectValue placeholder="Select Minor Category" />
+                              </SelectTrigger>
+                              <SelectContent>
+                              <SelectItem   value={'Lifting Equipment'}>
+                                   Lifting Equipment
+                                  </SelectItem>
+                                  <SelectItem   value={'Lifting Accessories'}>
+                                   Lifting Accessories
+                                  </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.item_type && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.item_type.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label  className='mt-3' htmlFor="property_table_type">Property Table Type*</Label>
+                      <div>
+                        <Controller
+                          name="property_table_type"
+                          control={control}
+                          
+                          render={({ field }) => (
+                            <Select disabled={selectedItemType !== 'Lifting Equipment'} onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger id="property_table_type">
+                                <SelectValue placeholder="Select Property Table Type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                
+                                  <SelectItem   value={'Elevator Certificate'}>
+                                   Elevator Certificate
+                                  </SelectItem>
+
+                                
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.property_table_type && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.property_table_type.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                   
                   </div>
                 </div>
 
@@ -693,7 +767,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="space-y-4 ">
                     <div className="grid gap-4 grid-cols-1">
                       <div className="w-full ">
-                        <Label htmlFor="description">Description</Label>
+                        <Label  className='mt-3' htmlFor="description">Description</Label>
                         <div>
                           <Controller
                             name="description"

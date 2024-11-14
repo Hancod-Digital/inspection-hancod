@@ -13,7 +13,6 @@ export default function Component({onFunction,competencies}:{onFunction: ()=>voi
     <div className="w-full  mx-auto py-5">
       <div className="flex justify-between items-center mb-4">
       <span className="font-bold">Surveyor Competency</span>
-
         <span onClick={onFunction} className="text-red-600 cursor-pointer">New</span>
       </div>
       <Table className="border border-gray-200">

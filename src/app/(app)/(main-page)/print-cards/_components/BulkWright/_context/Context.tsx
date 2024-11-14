@@ -29,7 +29,7 @@ interface StepperContextProps {
 
 const StepperContext = createContext<StepperContextProps | undefined>(undefined)
 
-export const StepperProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = ({ children ,setIsBulk}) => {
   const [currentStep, setCurrentStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
   const [data, setData] = useState<any>([])
@@ -64,6 +64,7 @@ export const StepperProvider: React.FC<{ children: ReactNode }> = ({ children })
                 toastWithTimeout(ToastVariant.Success, "Operation successful");
                 // setChanged(!changed);
                 // reset();
+                setIsBulk(false)
               },
               afterError: (err: any) => {
                 toastWithTimeout(ToastVariant.Error, "An Error Occurred");
