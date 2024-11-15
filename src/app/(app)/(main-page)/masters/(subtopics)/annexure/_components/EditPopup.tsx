@@ -95,7 +95,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
         });
       } else {
         // Add mode
-        const response = await addRecord({
+        const response:any = await addRecord({
           annexure: values.annexure,
           status: values.status,
         });
