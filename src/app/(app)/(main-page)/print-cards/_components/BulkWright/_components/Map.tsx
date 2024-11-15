@@ -135,7 +135,7 @@ export default function Map({ errors, setErrors }:any) {
                     <button
                       type="button"
                       onClick={() => handleClearMapping(field.id)}
-                      className="absolute right-14 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                      className="absolute right-14 top-1/2 transform -translate-y-1/2 text-red-600 hover:text-gray-700 focus:outline-none"
                       aria-label={`Clear selection for ${field.label}`}
                     >
                       <FiX size={18} />
