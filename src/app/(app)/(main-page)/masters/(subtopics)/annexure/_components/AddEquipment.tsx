@@ -53,7 +53,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       status: values.status
     };
     
-   const response = await addRecord(dataToSubmit)
+   const response:any = await addRecord(dataToSubmit)
    console.log(response[0])
     await addProperty(values.properties.map(property => ({
       ...property,
@@ -73,7 +73,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     methods.setValue('properties', properties);
   }, [methods, properties]);
 
-  const handlePropertiesChange = (newProperties: Property[]) => {
+  const handlePropertiesChange = (newProperties: any) => {
     setProperties(newProperties);
     methods.setValue('properties', newProperties, {
       shouldValidate: true
