@@ -33,11 +33,11 @@ interface EquipmentDetailsFormProps {
 }
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<any>(false);
   const { addRecord, getAllSingleSubtopic } = useSubtopic();
 
-  const [testExamChecked, setTestExamChecked] = useState(false);
-  const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
+  const [testExamChecked, setTestExamChecked] = useState<any>(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
   // State variables for select options
   const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
   const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
@@ -556,20 +556,20 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     </div>
                      {/* Test Insp. Frequency (Months) */}
                      <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="test_insp_frequency_months">
-                        Test Insp. Frequency (Months)
+                      <Label  className='mt-3' htmlFor="test_insp_frequency">
+                        Test Insp. Frequency
                       </Label>
                       <div>
                         <Controller
-                          name="test_insp_frequency_months"
+                          name="test_insp_frequency"
                           control={control}
                           render={({ field }) => (
-                            <Input id="test_insp_frequency_months" {...field} />
+                            <Input id="test_insp_frequency" {...field} />
                           )}
                         />
-                        {errors.test_insp_frequency_months && (
+                        {errors.test_insp_frequency && (
                           <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.test_insp_frequency_months.message}
+                            {errors.test_insp_frequency.message}
                           </p>
                         )}
                       </div>
