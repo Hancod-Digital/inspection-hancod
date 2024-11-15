@@ -12,7 +12,7 @@ interface SubtopicContextType {
   data: any[] | undefined;
   isLoading: boolean;
   error: any;
-  addRecord: (record: object,surveyor_competency?:any) => Promise<void>;
+  addRecord: (record: object,surveyor_competency?:any) => Promise<any[]>;
   updateRecord: (id: number, updates: object,surveyor_competency?:any) => Promise<void>;
   findRecordById: (id: number) => any;
   getAllSingleSubtopic: (subtopic: string) => Promise<any[] | undefined>;
