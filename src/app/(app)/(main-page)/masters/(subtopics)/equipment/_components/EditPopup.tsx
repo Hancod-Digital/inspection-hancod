@@ -59,12 +59,12 @@ interface EquipmentDetailsFormProps {
 }
 
 export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<any>(false);
   const { addRecord, updateRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
 
   // State variables for checkboxes
-  const [testExamChecked, setTestExamChecked] = useState(false);
-  const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
+  const [testExamChecked, setTestExamChecked] = useState<any>(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
 
   // State variables for select options
   const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
