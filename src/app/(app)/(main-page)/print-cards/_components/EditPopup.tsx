@@ -76,7 +76,7 @@ export default function EditUserForm({
   const [previewUrl, setPreviewUrl] = useState<string | null>(userData.avatar || null);
 
   // Cropping state
-  const [crop, setCrop] = useState<Crop>({
+  const [crop, setCrop] = useState<any>({
     unit: '%',
     width: 50,
     aspect: 1.12,
@@ -177,7 +177,7 @@ export default function EditUserForm({
             setChanged(!changed);
             reset();
             setCroppedFile(null);
-            setPreviewUrl(avatarUrl); // Update previewUrl with the new avatar URL
+            setPreviewUrl(avatarUrl!); // Update previewUrl with the new avatar URL
           },
           afterError: (err: any) => {
             toastWithTimeout(ToastVariant.Error, 'An Error Occurred');
