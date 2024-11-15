@@ -18,7 +18,8 @@ interface ComponentProps {
 
 export default function Component({ onFunction, properties, setProperties }: ComponentProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const { formState: { errors } } = useFormContext();
+  const { formState } = useFormContext();
+  const { errors }:any = formState;
 
   const handleAddRow = () => {
     const newRow: Property = { property: "", property_group: "", condition: "" };
