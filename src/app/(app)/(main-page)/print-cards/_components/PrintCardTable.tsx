@@ -177,7 +177,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="rectangle"></div>
       <div class="whatsapp-image"></div>
     <div class="apply-style">
-        <img style="object-fit: cover;" width="100%" height="100%" src="https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/students/filename1731402831919_cropped_image.jpeg" alt="">
+        <img style="object-fit: cover;" width="100%" height="100%" src="${item.avatar || "https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg="}" alt="">
       </div>
       <span class="sheik-hameed-khan">${item?.name}</span>
       <div class="flex-row-b">

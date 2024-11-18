@@ -25,6 +25,7 @@ import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
 import { dataURLtoBlob, fetchHtml, loadImages } from '@/lib/utils';
 import { AvatarFallback } from '@/components/ui/avatar';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import TableSpinner from '@/components/animated/TableSpinner';
 
 export default function EquipmentTable({ data, setChanged, changed }: { data: any, setChanged: any, changed: boolean }) {
     const [editingRow, setEditingRow] = useState<any>(null);
@@ -39,9 +40,10 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
-    
+ const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
     const generateQr = async (item:any) => {
+        setIsGenerating(item?.id);
         try {
            
             // Create an HTML template for the card
@@ -116,6 +118,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
             console.error("Error generating QR code:", error);
             toastWithTimeout(ToastVariant.Error, "An error occurred while generating the QR code.");
         }
+        setIsGenerating(false);
     };
 
     
@@ -201,10 +204,14 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                     <div>Company: {item.company}</div>
                                 </TableCell>
                                 <TableCell className="py-4">
-                                    {item.qr_url ? (
+                                
+                                    {isGenerating === item?.id ? (
+                                        <TableSpinner />
+                                    ) : item.qr_url ? (
                                         <AvatarWithTooltip item={item} tooltipPosition="top" />
                                       
                                     ) : (
+                                        
                                         <button
                                             onClick={() => generateQr(item)}
                                             className="bg-white p-1 px-2 flex rounded-md  border-primary border text-primary"

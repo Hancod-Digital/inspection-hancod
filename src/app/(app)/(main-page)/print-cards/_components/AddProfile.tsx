@@ -269,7 +269,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
         <CardContent>
           <FormProvider {...methods}>
             <CardHeader>
-              <CardTitle className="text-md w-full">Add Profile</CardTitle>
+              <CardTitle className="text-md w-full">User Details</CardTitle>
             </CardHeader>
             <form
               className="space-y-4"
