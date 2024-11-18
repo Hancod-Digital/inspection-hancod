@@ -24,6 +24,7 @@ import { toPng } from 'html-to-image';
 import { UserService } from '@/services/api/user-service';
 import TableSpinner from '@/components/animated/TableSpinner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarWithTooltip } from './Table';
 
 export default function PrintCardTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -282,7 +283,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
                   <div>Valid Until: {formatDateWithHyphen(item?.valid_untill)}</div>
                 </TableCell>
                 <TableCell className="py-4">
-                  {isGenerating === item.id ? <TableSpinner /> : <img src={item?.qr_url} alt="QR code" className="w-16 h-16" />}
+                  {isGenerating === item.id ? <TableSpinner /> :   <AvatarWithTooltip item={item} tooltipPosition="top" />}
                 </TableCell>
                 <TableCell className="py-4">
 

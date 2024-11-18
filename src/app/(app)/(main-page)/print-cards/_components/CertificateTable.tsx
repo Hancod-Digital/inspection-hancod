@@ -19,6 +19,7 @@ import TableSpinner from '@/components/animated/TableSpinner';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { AvatarFallback } from '@/components/ui/avatar';
 import { formatDateWithHyphen } from '@/lib/utils';
+import { AvatarWithTooltip } from './Table';
 
 export default function CertificateTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -259,7 +260,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                     {isGenerating === item?.id ? (
                                         <TableSpinner />
                                     ) : (
-                                        !item?.qr_url ? "QR not found" : <img src={item?.qr_url} alt="QR code" className="w-16 h-16" />
+                                        !item?.qr_url ? "QR not found" :   <AvatarWithTooltip item={item} tooltipPosition="top" />
                                     )}
                                 </TableCell>
                                 <TableCell className="py-4">

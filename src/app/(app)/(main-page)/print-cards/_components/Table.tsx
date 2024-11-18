@@ -191,7 +191,9 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     src={item?.avatar}
                   />
                   <AvatarFallback>{item?.name?.charAt(0)}</AvatarFallback>
-                </Avatar></TableCell>
+                </Avatar>
+                                {/* <AvatarWithTooltip item={userItem} tooltipPosition="top" /> */}
+                </TableCell>
                                 <TableCell className="py-4">
                                     <div>ID No: {item.id_no}</div>
                                     <div>Card No: {item.card_no}</div>
@@ -200,7 +202,8 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                 </TableCell>
                                 <TableCell className="py-4">
                                     {item.qr_url ? (
-                                        <img src={item.qr_url} alt="QR code" className="w-16 h-16" />
+                                        <AvatarWithTooltip item={item} tooltipPosition="top" />
+                                      
                                     ) : (
                                         <button
                                             onClick={() => generateQr(item)}
@@ -260,3 +263,19 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
         </div>
     );
 }
+
+
+export const AvatarWithTooltip = ({ item, tooltipPosition = 'top' }:any) => {
+    return (
+      <div className={`tooltip ${tooltipPosition}`}>
+         <img src={item.qr_url} alt="QR code" className="w-16 h-16" />
+        <span className="tooltiptext">
+          <img
+            src={item.qr_url}
+            alt="Tooltip Image"
+            style={{ width: '150px', height: 'auto' }} // Adjust size as needed
+          />
+        </span>
+      </div>
+    );
+  };
