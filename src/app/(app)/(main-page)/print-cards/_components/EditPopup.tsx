@@ -204,7 +204,7 @@ const value = {
       };
       await makeApiCall(
         async () =>
-          new StudentService().addStudent({
+          new StudentService().editStudent(id, {
             ...value,
             avatar: avatarUrl,
             added_by: userName,
