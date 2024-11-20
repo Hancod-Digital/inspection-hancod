@@ -71,20 +71,20 @@ export default function EquipmentTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {equipmentData.map((item) => (
+                    {equipmentData.map((item:any) => (
                         <React.Fragment key={item.slNo}>
                             <TableRow className='flex'>
-                                <TableCell className="py-4 flex-[1]">{item.slNo}</TableCell>
-                                <TableCell className="py-4 flex-[1]">{item.equipmentID}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item.title}</TableCell>
-                                <TableCell className="py-4 flex-[1]">{item.equipmentType}</TableCell>
-                                <TableCell className="py-4 flex-[1]">{item.lastThroughDate}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item?.slNo}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item?.equipmentID}</TableCell>
+                                <TableCell className="py-4 flex-[2]">{item?.title}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item?.equipmentType}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item?.lastThroughDate}</TableCell>
                                 
-                                <TableCell className="py-4 flex-[1]">{item.nextTestExam}</TableCell>
-                                <TableCell className="py-4 flex-[1] bg-blue-500">{item.result}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item?.nextTestExam}</TableCell>
+                                <TableCell className="py-4 flex-[1] bg-blue-500">{item?.result}</TableCell>
                                 
-                                <TableCell className={`py-4 flex-[1] ${item.status === 'Pending' ? 'text-orange-500' : 'text-green-500'}`}>
-                                    {item.status}
+                                <TableCell className={`py-4 flex-[1] ${item?.status === 'Pending' ? 'text-orange-500' : 'text-green-500'}`}>
+                                    {item?.status}
                                 </TableCell>
                                 <TableCell className="py-4 flex-[1]">
                                 <DropdownMenu>
@@ -94,7 +94,7 @@ export default function EquipmentTable() {
                                             </button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => handleEditClick(item.slNo)}>Edit</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleEditClick(item?.slNo)}>Edit</DropdownMenuItem>
                                             <DropdownMenuItem>Delete</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
