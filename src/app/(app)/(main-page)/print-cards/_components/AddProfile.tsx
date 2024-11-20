@@ -355,7 +355,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                     Email
                   </Label>
                   <div>
-                    <Input id="email" {...register('email')} />
+                    <Input id="email" {...register('email',{ setValueAs: (value) => value?.trim() })} />
                     {errors.email && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.email.message}</p>
                     )}
@@ -537,6 +537,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                       id="course_duration"
                       {...register('course_duration')}
                       type="tel"
+                      placeholder='Days'
                       inputMode="numeric"
                       pattern="[0-9]*" // Allows only numbers 0–9
                       onInput={(e) => {
@@ -545,9 +546,9 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                       }}
                       className="pr-12" // Adds space to the right for the "Days" label
                     />
-                    <span className="   flex items-center pr-3 text-gray-500">
+                    {/* <span className="   flex items-center pr-3 text-gray-500">
                       Days
-                    </span>
+                    </span> */}
                     {errors.course_duration && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.course_duration.message}</p>
                     )}

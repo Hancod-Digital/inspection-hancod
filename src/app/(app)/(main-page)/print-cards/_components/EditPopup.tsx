@@ -391,7 +391,7 @@ const value = {
                     Email
                   </Label>
                   <div>
-                    <Input id="email" {...register('email')} />
+                    <Input id="email" {...register('email',{ setValueAs: (value) => value?.trim() })} />
                     {errors.email && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.email.message}</p>
                     )}
@@ -583,6 +583,7 @@ const value = {
                       {...register('course_duration')}
                       type="tel"
                       inputMode="numeric"
+                       placeholder='Days'
                       pattern="[0-9]*" // Allows only numbers 0–9
                       onInput={(e) => {
                         const input = e.target as HTMLInputElement;
@@ -590,9 +591,9 @@ const value = {
                       }}
                       className="pr-12" // Adds space to the right for the "Days" label
                     />
-                    <span className="absolute  inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+                    {/* <span className="absolute  inset-y-0 right-0 flex items-center pr-3 text-gray-500">
                       Days
-                    </span>
+                    </span> */}
                     {errors.course_duration && (
                       <p className="text-red-500 text-[13px] mt-1">
                         {errors.course_duration.message}
