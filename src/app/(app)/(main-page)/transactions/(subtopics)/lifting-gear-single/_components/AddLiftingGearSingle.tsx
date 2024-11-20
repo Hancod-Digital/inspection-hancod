@@ -53,7 +53,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
-
+ const [testExamChecked, setTestExamChecked] = useState<any>(false);
   const { reset, handleSubmit, control, register, formState: { isSubmitSuccessful, errors } } = methods;
 
   useEffect(() => {
@@ -257,7 +257,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     <Label htmlFor="last_test_exam" className="mt-3">Last Test Exam</Label>
                     <Input id="last_test_exam" type="date" {...register('last_test_exam')} />
                     {errors.last_test_exam && (
-                      <p className="text-red-500 mt-1">{errors.lastTestExam.message}</p>
+                      <p className="text-red-500 mt-1">{errors.last_test_exam.message}</p>
                     )}
                   </div>
                  
@@ -409,24 +409,24 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="workOrderNo" className="mt-3">Work Order No.</Label>
-                    <Input id="workOrderNo" {...register('workOrderNo')} />
-                    {errors.workOrderNo && (
-                      <p className="text-red-500 mt-1">{errors.workOrderNo.message}</p>
+                    <Label htmlFor="work_order_no" className="mt-3">Work Order No.</Label>
+                    <Input id="work_order_no" {...register('work_order_no')} />
+                    {errors.work_order_no && (
+                      <p className="text-red-500 mt-1">{errors.work_order_no.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="ownerName" className="mt-3">Owner Name</Label>
-                    <Input id="ownerName" {...register('ownerName')} />
-                    {errors.ownerName && (
-                      <p className="text-red-500 mt-1">{errors.ownerName.message}</p>
+                    <Label htmlFor="owner_name" className="mt-3">Owner Name</Label>
+                    <Input id="owner_name" {...register('owner_name')} />
+                    {errors.owner_name && (
+                      <p className="text-red-500 mt-1">{errors.owner_name.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="ownerAddress" className="mt-3">Owner Address</Label>
-                    <Input id="ownerAddress" {...register('ownerAddress')} />
-                    {errors.ownerAddress && (
-                      <p className="text-red-500 mt-1">{errors.ownerAddress.message}</p>
+                    <Label htmlFor="owner_address" className="mt-3">Owner Address</Label>
+                    <Input id="owner_address" {...register('owner_address')} />
+                    {errors.owner_address && (
+                      <p className="text-red-500 mt-1">{errors.owner_address.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -451,14 +451,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="testedStandard" className="mt-3">Tested Standard</Label>
+                    <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
                     <Controller
-                      name="testedStandard"
+                      name="tested_standard"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="testedStandard">
-                            <SelectValue placeholder="Select testedStandard" />
+                          <SelectTrigger id="tested_standard">
+                            <SelectValue placeholder="Select tested standard" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="Standard1">Standard 1</SelectItem>
@@ -467,8 +467,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         </Select>
                       )}
                     />
-                    {errors.testedStandard && (
-                      <p className="text-red-500 mt-1">{errors.testedStandard.message}</p>
+                    {errors.tested_standard && (
+                      <p className="text-red-500 mt-1">{errors.tested_standard.message}</p>
                     )}
                   </div>
 
