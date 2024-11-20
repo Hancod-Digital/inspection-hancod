@@ -43,6 +43,7 @@ const userFormSchema = object({
   issued_on: string().nonempty('Issued On date is required'),
   valid_untill: string().nonempty('Valid Until date is required'),
   course_duration: string().nonempty('Course duration is required'), // Added field
+  image: string().nonempty('Profile image is required'), // Add this field
 });
 
 type UserFormInput = TypeOf<typeof userFormSchema>;
@@ -82,6 +83,9 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
 
   const methods = useForm<UserFormInput>({
     resolver: zodResolver(userFormSchema),
+    defaultValues: {
+      image: '', // Add default value
+    }
   });
 
   const {
@@ -258,6 +262,17 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   const fallbackAvatar = generateFallbackAvatar('User');
   const [countryCode, setCountryCode] = useState('+974');  // Default country code
 
+  // Update image handling
+  useEffect(() => {
+    if (croppedFile) {
+      // When image is cropped, update the form value
+      setValue('image', 'image-selected', { 
+        shouldValidate: true,
+        shouldDirty: true 
+      });
+    }
+  }, [croppedFile, setValue]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -294,9 +309,14 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                   />
                   <AvatarFallback>{fallbackAvatar}</AvatarFallback>
                 </Avatar>
-                <label htmlFor="upload" className="text-[#8B1F41] hover:underline cursor-pointer">
-                  Upload Image
-                </label>
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="upload" className="text-[#8B1F41] hover:underline cursor-pointer">
+                    Upload Image
+                  </label>
+                  {errors.image && (
+                    <p className="text-red-500 text-[13px]">{errors.image.message}</p>
+                  )}
+                </div>
               </div>
 
               {/* Form Fields */}
@@ -507,7 +527,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                       }}
                       className="pr-12" // Adds space to the right for the "Days" label
                     />
-                    <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+                    <span className="absolute inset-y-0 right-0 flex items-center justify-center pr-3 text-gray-500">
                       Days
                     </span>
                     {errors.course_duration && (

@@ -67,7 +67,7 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
                 setIsBulk(false)
               },
               afterError: (err: any) => {
-                toastWithTimeout(ToastVariant.Error, "An Error Occurred");
+                toastWithTimeout(ToastVariant.Error, "Please check the Mapped Data and try again");
               },
             }
           )

@@ -48,6 +48,7 @@ const userFormSchema = object({
   issued_on: string().nonempty('Issued On date is required'),
   valid_untill: string().nonempty('Valid Until date is required'),
   course_duration: string().nonempty('Course duration is required'),
+  image: string().nonempty('Profile image is required'),
 });
 
 type UserFormInput = TypeOf<typeof userFormSchema>;
@@ -91,7 +92,10 @@ export default function EditUserForm({
   // Using React Hook Form
   const methods = useForm<UserFormInput>({
     resolver: zodResolver(userFormSchema),
-    defaultValues: userData,
+    defaultValues: {
+      ...userData,
+      image: userData.avatar ? 'image-exists' : '', // Set initial value based on existing avatar
+    }
   });
 
   const {
@@ -130,6 +134,15 @@ export default function EditUserForm({
     }
   }, [isSubmitSuccessful, reset, userData.avatar]);
 
+  useEffect(() => {
+    if (croppedFile || previewUrl) {
+      setValue('image', 'image-selected', { 
+        shouldValidate: true,
+        shouldDirty: true 
+      });
+    }
+  }, [croppedFile, previewUrl, setValue]);
+
   const uploadImage = useCallback(async () => {
     if (!croppedFile) return;
     const formData = new FormData();
@@ -159,6 +172,10 @@ export default function EditUserForm({
   }, [croppedFile]);
 
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
+    if (!croppedFile && !userData.avatar) {
+      methods.setError('image', { message: 'Profile image is required' });
+      return;
+    }
     setLoading(true);
     try {
       const avatarUrl = croppedFile ? await uploadImage() : userData.avatar || '';
@@ -318,13 +335,18 @@ export default function EditUserForm({
                   <AvatarImage
                     className="object-cover w-full h-full"
                     alt="User's avatar"
-                    src={previewUrl || '/placeholder.svg'}
+                    src={previewUrl || userData.avatar || '/placeholder.svg'}
                   />
                   <AvatarFallback>{fallbackAvatar}</AvatarFallback>
                 </Avatar>
-                <label htmlFor="upload" className="text-[#8B1F41] hover:underline cursor-pointer">
-                  Upload Image
-                </label>
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="upload" className="text-[#8B1F41] hover:underline cursor-pointer">
+                    Upload Image
+                  </label>
+                  {errors.image && (
+                    <p className="text-red-500 text-[13px]">{errors.image.message}</p>
+                  )}
+                </div>
               </div>
 
               {/* Form Fields */}
