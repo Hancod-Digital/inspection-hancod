@@ -343,7 +343,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                     Name
                   </Label>
                   <div>
-                    <Input id="name" {...register('name')} />
+                    <Input id="name" {...register('name', { setValueAs: (value) => value?.trim() })} />
                     {errors.name && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.name.message}</p>
                     )}
