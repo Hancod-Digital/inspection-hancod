@@ -85,9 +85,15 @@ export default function EditUserForm({
   const [src, setSrc] = useState<string | null>(null);
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
+// Using React Query to fetch user active status with object syntax (v5+)
+const { data: userDetails, isLoading, isError } = useQuery({
+  queryKey: ['userDetails'],
+  queryFn: fetchUserDetails,
+});
 
   // Country code state
   const [countryCode, setCountryCode] = useState<string>('+974'); // Default country code
+  const userName = userDetails?.name !== '' ? userDetails?.name : userDetails?.email?.split('@')[0];
 
   // Using React Hook Form
   const methods = useForm<UserFormInput>({
@@ -176,17 +182,33 @@ export default function EditUserForm({
       methods.setError('image', { message: 'Profile image is required' });
       return;
     }
+
     setLoading(true);
     try {
       const avatarUrl = croppedFile ? await uploadImage() : userData.avatar || '';
-
+const value = {
+        name: values.name,
+        email: values.email,
+        contact_number: values.contact_number,
+        address: values.address,
+        gender: values.gender,
+        company: values.company,
+        id_no: values.id_no,
+        designation: values.designation,
+        model_level: values.model_level,
+        issued_on: values.issued_on,
+        valid_untill: values.valid_untill,
+        course_duration: values.course_duration,
+        added_by: userData.name || userData.email?.split('@')[0],
+        avatar: avatarUrl
+      };
       await makeApiCall(
         async () =>
-          new StudentService().editStudent(id, {
-            ...values,
+          new StudentService().addStudent({
+            ...value,
             avatar: avatarUrl,
-            added_by: userData.name || userData.email?.split('@')[0],
-            certificate_no: 'QSIS-TRA-' + getLastTwoDigitsOfCurrentYear(),
+            added_by: userName,
+            certificate_no: "QSIS-TRA-" + getLastTwoDigitsOfCurrentYear()
           }),
         {
           afterSuccess: () => {

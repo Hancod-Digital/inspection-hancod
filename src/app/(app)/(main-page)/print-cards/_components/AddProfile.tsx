@@ -149,10 +149,26 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
     try {
       const avatarUrl = croppedFile ? "https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/"+await uploadImage() : '';
       console.log(avatarUrl,"sdsd");
+      const value = {
+        name: values.name,
+        email: values.email,
+        contact_number: values.contact_number,
+        address: values.address,
+        gender: values.gender,
+        company: values.company,
+        id_no: values.id_no,
+        designation: values.designation,
+        model_level: values.model_level,
+        issued_on: values.issued_on,
+        valid_untill: values.valid_untill,
+        course_duration: values.course_duration,
+        added_by: userName,
+        avatar: avatarUrl
+      };
       await makeApiCall(
         async () =>
           new StudentService().addStudent({
-            ...values,
+            ...value,
             avatar: avatarUrl,
             added_by: userName,
             certificate_no: "QSIS-TRA-" + getLastTwoDigitsOfCurrentYear()
@@ -529,7 +545,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                       }}
                       className="pr-12" // Adds space to the right for the "Days" label
                     />
-                    <span className="absolute  inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+                    <span className="   flex items-center pr-3 text-gray-500">
                       Days
                     </span>
                     {errors.course_duration && (
