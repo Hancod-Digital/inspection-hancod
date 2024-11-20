@@ -529,7 +529,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                       }}
                       className="pr-12" // Adds space to the right for the "Days" label
                     />
-                    <span className="absolute inset-y-0 right-0 flex items-center justify-center pr-3 text-gray-500">
+                    <span className="absolute  inset-y-0 right-0 flex items-center pr-3 text-gray-500">
                       Days
                     </span>
                     {errors.course_duration && (
