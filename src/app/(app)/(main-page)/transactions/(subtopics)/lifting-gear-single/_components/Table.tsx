@@ -60,12 +60,13 @@ export default function EquipmentTable() {
                 <TableHeader>
                     <TableRow className='flex justify-start'>
                         <TableHead className="py-4 flex-[1]">Sl. No.</TableHead>
-                        <TableHead className="py-4 flex-[2]">Equipment ID</TableHead>
-                        <TableHead className="py-4 flex-[3]">Title</TableHead>
-                        <TableHead className="py-4 flex-[2]">Equipment Type</TableHead>
-                        <TableHead className="py-4 flex-[2]">Last Through Date</TableHead>
-                        <TableHead className="py-4 flex-[2]">Next Test Exam</TableHead>
-                        <TableHead className="py-4 flex-[1]">Status</TableHead>
+                        <TableHead className="py-4 flex-[1]">Equipment ID</TableHead>
+                        <TableHead className="py-4 flex-[2]">Title</TableHead>
+                        <TableHead className="py-4 flex-[1]">Equipment Type</TableHead>
+                        <TableHead className="py-4 flex-[1]">Inspection Date</TableHead>
+                        <TableHead className="py-4 flex-[1]">Next Test Exam</TableHead>
+                        <TableHead className="py-4 flex-[1]">Result</TableHead>
+                        <TableHead className="py-4 flex-[1]"></TableHead>
                         <TableHead className="py-4 flex-[1]"></TableHead>
                     </TableRow>
                 </TableHeader>
@@ -74,11 +75,14 @@ export default function EquipmentTable() {
                         <React.Fragment key={item.slNo}>
                             <TableRow className='flex'>
                                 <TableCell className="py-4 flex-[1]">{item.slNo}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item.equipmentID}</TableCell>
-                                <TableCell className="py-4 flex-[3]">{item.title}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item.equipmentType}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item.lastThroughDate}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item.nextTestExam}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item.equipmentID}</TableCell>
+                                <TableCell className="py-4 flex-[2]">{item.title}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item.equipmentType}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item.lastThroughDate}</TableCell>
+                                
+                                <TableCell className="py-4 flex-[1]">{item.nextTestExam}</TableCell>
+                                <TableCell className="py-4 flex-[1] bg-blue-500">{item.result}</TableCell>
+                                
                                 <TableCell className={`py-4 flex-[1] ${item.status === 'Pending' ? 'text-orange-500' : 'text-green-500'}`}>
                                     {item.status}
                                 </TableCell>

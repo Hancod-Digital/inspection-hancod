@@ -143,8 +143,8 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
     setLoading(true);
     try {
-      const avatarUrl = croppedFile ? await uploadImage() : '';
-
+      const avatarUrl = croppedFile ? "https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/"+await uploadImage() : '';
+      console.log(avatarUrl,"sdsd");
       await makeApiCall(
         async () =>
           new StudentService().addStudent({
@@ -532,7 +532,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                 <Button
                   className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border "
                   type="submit"
-                  disabled={loading || !croppedFile}
+                  disabled={loading}
                 >
                   {loading ? 'Saving...' : 'Submit'}
                 </Button>

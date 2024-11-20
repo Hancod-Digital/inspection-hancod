@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import Table from './_components/Table'
 import Header from './_components/Header'
-import AddForm from './_components/AddEquipment'
+import AddForm from './_components/AddLiftingGearSingle'
 import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
 const LiftingEquipment = () => {

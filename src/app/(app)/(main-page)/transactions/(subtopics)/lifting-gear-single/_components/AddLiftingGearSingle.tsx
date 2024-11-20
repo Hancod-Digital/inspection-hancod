@@ -13,28 +13,32 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import dynamic from 'next/dynamic';
 import Table from './AnnexureTable'
 import 'react-quill/dist/quill.snow.css';
+import { Checkbox } from '@/components/ui/checkbox';
 const equipmentDetailsSchema = object({
   inspectionDate: string().nonempty('Inspection Date is required'),
   site: string().nonempty('Site is required'),
   authority: string().nonempty('Authority is required'),
-  jobOrderNo: string().nonempty('Job Order No. is required'),
-  equipmentNo: string().nonempty('Equipment No. is required'),
+  standard: string().nonempty('Standard is required'),
+  job_order_no: string().nonempty('Job Order No. is required'),
+  equipment_no: string().nonempty('Equipment No. is required'),
   title: string().nonempty('Title is required'),
-  testCertCOCNo: string().nonempty('Test Cert/COC No. is required'),
-  safeWorkingLoad: string().nonempty('Safe Working Load is required'),
-  lastTestExam: string().nonempty('Last Test Exam is required'),
-  nextTestExam: string().nonempty('Next Test Exam is required'),
-  lastThoroughExam: string().nonempty('Last Thorough Exam is required'),
-  nextThoroughExam: string().nonempty('Next Thorough Exam is required'),
+  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
+  safe_working_load: string().nonempty('Safe Working Load is required'),
+  last_test_exam: string().nonempty('Last Test Exam is required'),
+  next_test_exam: string().nonempty('Next Test Exam is required'),
+  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+  next_thorough_exam: string().nonempty('Next Thorough Exam is required'),
   result: string().nonempty('Result is required'),
   area: string().nonempty('Area is required'),
   surveyor: string().nonempty('Surveyor is required'),
-  workOrderNo: string().nonempty('Work Order No. is required'),
-  ownerName: string().nonempty('Owner Name is required'),
+  equipment_description: string().nonempty('Equipment Description is required'),
+  work_order_no: string().nonempty('Work Order No. is required'),
+  owner_name: string().nonempty('Owner Name is required'),
+  proof_load: string().nonempty('Proof Load is required'),
   description: string().nonempty('Description Date is required'),
-  ownerAddress: string().nonempty('Owner Address is required'),
+  owner_address: string().nonempty('Owner Address is required'),
   manufacturer: string().nonempty('Manufacturer is required'),
-  testedStandard: string().nonempty('Tested Standard is required'),
+  tested_standard: string().nonempty('Tested Standard is required'),
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
@@ -60,7 +64,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = (values) => {
     setLoading(true);
-  
+
     // Handle form submission logic here
     setLoading(false);
   };
@@ -138,12 +142,28 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="jobOrderNo" className="mt-3">Job Order No.</Label>
-                    <Input id="jobOrderNo" {...register('jobOrderNo')} />
-                    {errors.jobOrderNo && (
-                      <p className="text-red-500 mt-1">{errors.jobOrderNo.message}</p>
+                    <Label htmlFor="job_order_no" className="mt-3">Job Order No.</Label>
+                    <Controller
+                      name="job_order_no"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="job_order_no">
+                            <SelectValue placeholder="Select job order no." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="JobOrder1">Job Order 1</SelectItem>
+                            <SelectItem value="JobOrder2">Job Order 2</SelectItem>
+                            <SelectItem value="JobOrder3">Job Order 3</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.job_order_no && (
+                      <p className="text-red-500 mt-1">{errors.job_order_no.message}</p>
                     )}
                   </div>
+
                 </div>
 
                 {/* Equipment Information Title */}
@@ -152,10 +172,25 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                 <div className="grid gap-4 grid-cols-2">
                   {/* Equipment Information Section */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="equipmentNo" className="mt-3">Equipment No.</Label>
-                    <Input id="equipmentNo" {...register('equipmentNo')} />
-                    {errors.equipmentNo && (
-                      <p className="text-red-500 mt-1">{errors.equipmentNo.message}</p>
+                    <Label htmlFor="equipment_no" className="mt-3">Equipment No.</Label>
+                    <Controller
+                      name="equipment_no"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="equipment_no">
+                            <SelectValue placeholder="Select job order no." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="JobOrder1">Job Order 1</SelectItem>
+                            <SelectItem value="JobOrder2">Job Order 2</SelectItem>
+                            <SelectItem value="JobOrder3">Job Order 3</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.equipment_no && (
+                      <p className="text-red-500 mt-1">{errors.equipment_no.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -165,48 +200,124 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 mt-1">{errors.title.message}</p>
                     )}
                   </div>
+                  </div>
+                  <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="testCertCOCNo" className="mt-3">Test Cert/COC No.</Label>
-                    <Input id="testCertCOCNo" {...register('testCertCOCNo')} />
-                    {errors.testCertCOCNo && (
-                      <p className="text-red-500 mt-1">{errors.testCertCOCNo.message}</p>
+                    <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
+                    <Input id="equipment_description" {...register('equipment_description')} />
+                    {errors.equipment_description && (
+                      <p className="text-red-500 mt-1">{errors.equipment_description.message}</p>
+                    )}
+                  </div>  
+                  </section>
+                  <div className="grid gap-4 grid-cols-2">
+                    <div className="grid grid-cols-[200px_1fr] gap-4">
+                      <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
+                    <Input id="test_cert_coc_no" {...register('test_cert_coc_no')} />
+                    {errors.test_cert_coc_no && (
+                      <p className="text-red-500 mt-1">{errors.test_cert_coc_no.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="safeWorkingLoad" className="mt-3">Safe Working Load</Label>
-                    <Input id="safeWorkingLoad" {...register('safeWorkingLoad')} />
-                    {errors.safeWorkingLoad && (
-                      <p className="text-red-500 mt-1">{errors.safeWorkingLoad.message}</p>
+                    <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
+                    <Input id="safe_working_load" {...register('safe_working_load')} />
+                    {errors.safe_working_load && (
+                      <p className="text-red-500 mt-1">{errors.safe_working_load.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="lastTestExam" className="mt-3">Last Test Exam</Label>
-                    <Input id="lastTestExam" type="date" {...register('lastTestExam')} />
-                    {errors.lastTestExam && (
+                    <Label htmlFor="proof_load" className="mt-3">Proof Load:</Label>
+                    <Input id="proof_load" {...register('proof_load')} />
+                    {errors.proof_load && (
+                      <p className="text-red-500 mt-1">{errors.proof_load.message}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="standard" className="mt-3">Standard</Label>
+                    <Controller
+                      name="standard"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="standard">
+                            <SelectValue placeholder="Select standard" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Standard1">Standard 1</SelectItem>
+                            <SelectItem value="Standard2">Standard 2</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.standard && (
+                      <p className="text-red-500 mt-1">{errors.standard.message}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="last_test_exam" className="mt-3">Last Test Exam</Label>
+                    <Input id="last_test_exam" type="date" {...register('last_test_exam')} />
+                    {errors.last_test_exam && (
                       <p className="text-red-500 mt-1">{errors.lastTestExam.message}</p>
                     )}
                   </div>
+                 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="last_thorough_exam" className="mt-3">Last Thorough Exam</Label>
+                    <Input id="last_thorough_exam" type="date" {...register('last_thorough_exam')} />
+                    {errors.last_thorough_exam && (
+                      <p className="text-red-500 mt-1">{errors.last_thorough_exam.message}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] w-[64.2%]  items-start gap-4">
+                      <Label  className='mt-3' htmlFor="next_test_date">Next Test Exam</Label>
+                      <div className="flex items-center gap-4">
+                        <Controller
+                          name="next_test_exam"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="next_test_date" disabled={testExamChecked} type="date" {...field} />
+                          )}
+                        />
+                        <Checkbox className='w-6 h-6' checked={testExamChecked} onCheckedChange={(checked) => setTestExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                        {errors.next_test_exam && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.next_test_exam.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="nextTestExam" className="mt-3">Next Test Exam</Label>
                     <Input id="nextTestExam" type="date" {...register('nextTestExam')} />
                     {errors.nextTestExam && (
                       <p className="text-red-500 mt-1">{errors.nextTestExam.message}</p>
                     )}
-                  </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="lastThoroughExam" className="mt-3">Last Thorough Exam</Label>
-                    <Input id="lastThoroughExam" type="date" {...register('lastThoroughExam')} />
-                    {errors.lastThoroughExam && (
-                      <p className="text-red-500 mt-1">{errors.lastThoroughExam.message}</p>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  </div> */}
+                  <div className="grid grid-cols-[200px_1fr] w-[64.2%]  items-start gap-4">
+                      <Label className='mt-3' htmlFor="next_thorough_exam">Next Thorough Exam</Label>
+                      <div className="flex items-center gap-4">
+                        <Controller
+                          name="next_thorough_exam"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="next_thorough_exam" disabled={testExamChecked} type="date" {...field} />
+                          )}
+                        />
+                        <Checkbox className='w-6 h-6' checked={testExamChecked} onCheckedChange={(checked) => setTestExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                        {errors.next_thorough_exam && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.next_thorough_exam.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="nextThoroughExam" className="mt-3">Next Thorough Exam</Label>
                     <Input id="nextThoroughExam" type="date" {...register('nextThoroughExam')} />
                     {errors.nextThoroughExam && (
                       <p className="text-red-500 mt-1">{errors.nextThoroughExam.message}</p>
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Additional Information Section */}
@@ -214,7 +325,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid gap-4 grid-cols-1">
                     <div className="w-full">
                       <Label htmlFor="description">Description</Label>
-                      <div> 
+                      <div>
                         <Controller
                           name="description"
                           control={control}
@@ -360,13 +471,13 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 mt-1">{errors.testedStandard.message}</p>
                     )}
                   </div>
-                
+
 
                 </div>
                 <div className="grid gap-4 grid-cols-1">
-                 <Table onFunction={function (): void {
+                  <Table onFunction={function (): void {
                     throw new Error('Function not implemented.');
-                  } } />
+                  }} />
                 </div>
 
                 <div className="flex justify-end gap-4">

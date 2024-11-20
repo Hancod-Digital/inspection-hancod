@@ -267,17 +267,17 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                     <div className="flex flex-col gap-2 ">
                                         <>
                                             {!item?.certificate_url && (
-                                                <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md w-[78%] border-primary border text-primary">
+                                                <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md  border-primary border text-primary">
                                                     Certificate
                                                 </button>
                                             )}
 
                                             {item?.certificate_url && (
                                                 <>
-                                                    <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary mb-2">
+                                                    <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md  border-primary border text-primary mb-2">
                                                         Re-create
                                                     </button>
-                                                    <button onClick={() => printCertificate(item.certificate_url, item)} className="bg-white py-1 rounded-md w-4/5 border-primary border text-primary">
+                                                    <button onClick={() => printCertificate(item.certificate_url, item)} className="bg-white py-1 rounded-md     border-primary border text-primary">
                                                         Print
                                                     </button>
                                                 </>
