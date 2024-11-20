@@ -38,7 +38,7 @@ const userFormSchema = object({
   gender: string().nonempty('Gender is required'),
   company: string().nonempty('Company is required'),
   id_no: string().nonempty('ID Number is required'),
-  designation: string().nonempty('Designation is required'),
+  designation: string().max(49).nonempty('Designation is required'),
   model_level: string().nonempty('Model/Level is required'),
   issued_on: string().nonempty('Issued On date is required'),
   valid_untill: string().nonempty('Valid Until date is required'),
@@ -434,7 +434,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                     Designation / Course
                   </Label>
                   <div>
-                    <Input id="designation" {...register('designation')} />
+                    <Input id="designation"  {...register('designation')} />
                     {errors.designation && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.designation.message}</p>
                     )}
@@ -551,7 +551,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
               Adjust the cropping area as needed and apply the crop.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
+          <div className="mt-4 max-h-[400px] overflow-auto">
             {src && (
               <ReactCrop
                 crop={crop}

@@ -23,16 +23,16 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-    "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-lg border p-4 px-4 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full ",
+    "group pointer-events-auto relative flex w-full  items-center justify-between space-x-4 overflow-hidden rounded-lg border p-4 px-4 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full ",
     {
         variants: {
             variant: {
                 error:
                     "bg-red-700 text-white border  border-muted-foreground/10 backdrop-blur border ",
                 success:
-                    "bg-white text-red-400 border  border-muted-foreground/10 backdrop-blur border text-foreground",
+                    "bg-white z-[5000] text-red-400 border  border-muted-foreground/10 backdrop-blur border text-foreground",
                 default:
-                    "bg-white text-white border  border-muted-foreground/10 backdrop-blur border text-foreground",
+                    "bg-white  text-white border  border-muted-foreground/10 backdrop-blur border text-foreground",
                 destructive:
                     "bg-white text-red-400 border  border-muted-foreground/10 backdrop-blur border text-foreground",
             },

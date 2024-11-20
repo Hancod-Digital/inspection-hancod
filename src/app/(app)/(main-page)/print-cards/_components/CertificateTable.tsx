@@ -26,8 +26,8 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
     const [htmlContent, setHtmlContent] = useState('');
     const [isGenerating, setIsGenerating] = useState<number | null>(null);
 
-    const fetchHtml = async (profile_url: string, qr_url: string, name: string, id_no: string, company: string, designation: string, issued_on: string, valid_untill: string, course_duration: string) => {
-        const response = await fetch('/blank_certificate/redesigned_certificate.html'); // Replace with the correct path
+    const fetchHtml = async (profile_url: string, qr_url: string, name: string, id_no: string, company: string, designation: string, issued_on: string, valid_untill: string, course_duration: string, certificate_no:string) => {
+        const response = await fetch('/blank_certificate/redesigned_certificate.html'); 
         let htmlString = await response.text();
  
         // Replace placeholders for dynamic URLs
@@ -52,10 +52,12 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
         
         htmlString = htmlString.replace(/\{\{Training\}\}/g, training);
         htmlString = htmlString.replace(/\{\{Training1\}\}/g, training1);
-
+        htmlString = htmlString.replace(/\{\{Designation\}\}/g, certificate_no);
+        console.log(issued_on,valid_untill,designation);
+        
         // Replace the placeholder name in the span
         htmlString = htmlString.replace(/<span class="name-text">.*?<\/span>/, `<span class="name-text">${name}</span>`);
-        htmlString = htmlString.replace(/<span class="date">.*?<br\s*\/>.*?<\/span>/, `<span class="date">${issued_on}<br />${valid_untill}</span>`);
+         htmlString = htmlString.replace(/<span class="date">.*?<br\s*\/>.*?<\/span>/, `<span class="date">${issued_on}<br />${valid_untill}</span>`);
         htmlString = htmlString.replace(/<span\s*class="day">.*?<\/span>/, `<span class="day">${course_duration} ${parseInt(course_duration) > 1 ? " days" : "day"}</span>`);
 
         setHtmlContent(htmlString);
@@ -76,8 +78,9 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
 
             setIsGenerating(item?.id); // Set the current row's id as generating
             const htmlElement = document.createElement('div');
-
-            htmlElement.innerHTML = await fetchHtml(item?.avatar, item?.qr_url, item?.name, item?.id_no, item?.company, item?.designation, formatDateWithHyphen(item?.issued_on), formatDateWithHyphen(item?.valid_untill), item?.course_duration);
+            console.log( formatDateWithHyphen(item?.issued_on));
+            
+            htmlElement.innerHTML = await fetchHtml(item?.avatar, item?.qr_url, item?.name, item?.id_no, item?.company, item?.designation, formatDateWithHyphen(item?.issued_on), formatDateWithHyphen(item?.valid_untill), item?.course_duration, item?.certificate_no);
 
             document.body.appendChild(htmlElement);
             htmlElement.style.width = '794px';

@@ -599,7 +599,7 @@ export default function EditUserForm({
               Adjust the cropping area as needed and apply the crop.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
+          <div className="mt-4 max-h-[400px] overflow-auto">
             {src && (
               <ReactCrop
               crop={crop}

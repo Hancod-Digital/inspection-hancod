@@ -52,8 +52,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <>
             <Navbar />
             <div className="flex relative leading-loose">
-                <Sidebar />
-                {contextLoading ? <Spinner /> : children} {/* Display spinner based on context loading */}
+                <Sidebar /> 
+                {contextLoading ? <Spinner /> : <div className="pt-16 w-full">{children}</div>} {/* Display spinner based on context loading */}
             </div>
         </>
     );

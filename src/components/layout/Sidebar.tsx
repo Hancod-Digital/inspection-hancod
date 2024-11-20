@@ -292,7 +292,7 @@ export default function Sidebar() {
         <>
 
             <Sheet>
-                <SheetTrigger className="absolute left-5 top-[2.75rem] z-[9999] text-muted-foreground sm:hidden">
+                <SheetTrigger className="absolute left-5 top-[2.75rem] z-[12] text-muted-foreground sm:hidden">
                     <MenuBarIcon />
                 </SheetTrigger>
                 <SheetContent side="left" className="z-[9999] max-w-72 p-0">

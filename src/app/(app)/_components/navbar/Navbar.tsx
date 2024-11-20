@@ -16,7 +16,7 @@ export default function Component() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
 
-    // Using React Query to fetch user active status with object syntax (v5+)
+    // Using React Query to fetch user active status with obje vct syntax (v5+)
     const { data: userDetails, isLoading, isError } = useQuery({
         queryKey: ['userDetails'],
         queryFn: fetchUserDetails,
@@ -50,7 +50,7 @@ export default function Component() {
     if (isError) return <div>Error loading user data</div>;
 
     return (
-        <header className="flex h-16 px-10 items-center justify-between border-b bg-white">
+        <header className="flex h-16 px-10 items-center fixed top-0 left-0 right-0 justify-between border-b bg-white z-[14]">
             <div className="flex items-center gap-4">
                 <img src="/images/logo.svg" alt="" />
             </div>

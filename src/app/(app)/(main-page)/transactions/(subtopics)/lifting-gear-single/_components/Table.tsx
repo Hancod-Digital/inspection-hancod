@@ -71,8 +71,8 @@ export default function EquipmentTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {equipmentData.map((item:any) => (
-                        <React.Fragment key={item.slNo}>
+                    {equipmentData?.map((item:any) => (
+                        <React.Fragment key={item?.slNo}>
                             <TableRow className='flex'>
                                 <TableCell className="py-4 flex-[1]">{item?.slNo}</TableCell>
                                 <TableCell className="py-4 flex-[1]">{item?.equipmentID}</TableCell>
