@@ -248,7 +248,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                             alt="User's avatar"
                                             src={item?.avatar}
                                         />
-                                        <AvatarFallback>{item?.name}</AvatarFallback>
+                                        <AvatarFallback>{item?.name.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 </TableCell>
                                 <TableCell className="py-4">
