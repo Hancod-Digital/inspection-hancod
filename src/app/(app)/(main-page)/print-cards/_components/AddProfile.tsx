@@ -351,9 +351,10 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                   <Label className="pt-3" htmlFor="contact_number">
                     Contact Number
                   </Label>
-                  <div className='flex'>
-                    <Select value={countryCode} onValueChange={setCountryCode}>
-                      <SelectTrigger className="w-[80px]">
+                  <div>
+                    <section className='flex'>
+                      <Select value={countryCode} onValueChange={setCountryCode}>
+                        <SelectTrigger className="w-[80px]">
                         <SelectValue placeholder="Code" />
                       </SelectTrigger>
                       <SelectContent>
@@ -374,6 +375,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                       }}
                       {...register('contact_number')}
                     />
+                    </section>
                     {errors.contact_number && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.contact_number.message}</p>
                     )}
