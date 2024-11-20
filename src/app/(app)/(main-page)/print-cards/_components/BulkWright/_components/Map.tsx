@@ -90,9 +90,11 @@ export default function Map({ errors, setErrors }:any) {
   return (
     <Card className="w-full p-5 mx-auto">
       <CardContent className="p-6">
-        <p className="text-sm text-muted-foreground mb-6">
+        <p className="text-sm text-muted-foreground">
           Your Selected File: sample_userdetails.csv
         </p>
+        
+        <p className="text-primary  mb-6">The best match to each field on the selected file have been auto-selected.</p>
 
         <div className="grid gap-8 md:grid-cols-2">
           <h3 className="text-lg font-medium mb-4">Details</h3>

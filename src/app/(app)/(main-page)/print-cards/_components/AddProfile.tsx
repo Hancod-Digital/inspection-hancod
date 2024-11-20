@@ -569,6 +569,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
             </Button>
             <Button
               onClick={handleCropSave}
+              className='hover:bg-secondary hover:text-primary hover:border-primary border'
               disabled={!croppedFile}
             >
               Apply Crop

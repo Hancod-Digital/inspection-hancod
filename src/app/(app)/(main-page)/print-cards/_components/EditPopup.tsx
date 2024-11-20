@@ -620,7 +620,9 @@ export default function EditUserForm({
             <Button variant="outline" onClick={() => setIsCropModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCropSave} disabled={!croppedFile}>
+            <Button onClick={handleCropSave}
+            className='hover:bg-secondary hover:text-primary hover:border-primary border'
+            disabled={!croppedFile}>
               Apply Crop
             </Button>
           </div>
