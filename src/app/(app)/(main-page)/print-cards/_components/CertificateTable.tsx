@@ -313,12 +313,10 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
 
     const generateCertificate = async (item: any) => {
         try {
-            console.log(item?.id);
-
+           
             setIsGenerating(item?.id); // Set the current row's id as generating
             const htmlElement = document.createElement('div');
-            console.log( formatDateWithHyphen(item?.issued_on));
-            
+             
             htmlElement.innerHTML = await fetchHtml(item?.avatar, item?.qr_url, item?.name, item?.id_no, item?.company, item?.designation, formatDateWithHyphen(item?.issued_on), formatDateWithHyphen(item?.valid_untill), item?.course_duration, item?.certificate_no,item);
 
             document.body.appendChild(htmlElement);

@@ -54,7 +54,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     };
     
    const response:any = await addRecord(dataToSubmit)
-   console.log(response[0])
+  
     await addProperty(values.properties.map(property => ({
       ...property,
       annexure_id: response[0].id

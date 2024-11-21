@@ -18,8 +18,7 @@ export default function Component() {
 
   // Calculate the number of skipped records (total records - ready to import)
   const skippedRecordsCount = data.length - readyToImportCount
-console.log(mappings,"mappings",data);
-
+ 
   // Calculate the number of unmapped fields
   const unmappedFieldsCount = Object.keys(mappings).filter(
     field => !mappings[field] || mappings[field] === "none"

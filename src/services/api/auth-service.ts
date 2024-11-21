@@ -118,8 +118,7 @@ export const fetchUserActiveStatus = async () => {
 
 export const fetchUserDetails = async () => {
     const service = new AuthService();
-console.log((await service.getActiveUser()).session?.user.id);
-
+ 
     const response = await service.getUserDetails((await service.getActiveUser()).session?.user.id!)
 
     return response

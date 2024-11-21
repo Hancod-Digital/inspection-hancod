@@ -29,7 +29,7 @@ export default function Component({ onOpen, setIsBulk, onSearchChange }:any) {
           variant="outline"
           onClick={() => {
             setIsBulk(true);
-            console.log("Bulk mode activated"); // Check if this logs when you click Import
+           // Check if this logs when you click Import
           }}
           className="flex-[1] hover:bg-secondary hover:text-primary hover:border-primary border bg-primary text-primary-foreground"
         >

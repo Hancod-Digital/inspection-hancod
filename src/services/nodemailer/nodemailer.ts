@@ -88,8 +88,7 @@ export const sendOtpEmail = ({ name, email }: { name: string, email: string }) =
         transporter.sendMail(mailOptions, (error: any, info: any) => {
             if (error) {
                 console.log(error);
-
-                // Handle the error and reject the promise with the error details
+ 
                 reject({ error, message: 'Invalid sender-email or password' });
             } else {
                 // Resolve the promise with the OTP and success message

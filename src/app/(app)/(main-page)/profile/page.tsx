@@ -228,8 +228,7 @@ const schema = z.object({
        
       },
       afterError: (err: any) => {
-        console.log(err);
-        toastWithTimeout(ToastVariant.Error, "An Error Occured");
+         toastWithTimeout(ToastVariant.Error, "An Error Occured");
       }
     });
   };

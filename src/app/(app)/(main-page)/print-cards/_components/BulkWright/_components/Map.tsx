@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { useStepper } from "../_context/Context";
 import { z } from "zod";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Define the fields to map to
 const fields = [
@@ -119,16 +120,17 @@ export default function Map({ errors, setErrors }:any) {
                       setErrors((prev:any) => ({ ...prev, [field.id]: undefined }));
                     }}
                   >
-                    <SelectTrigger className="w-full pr-8"> {/* Add padding-right to accommodate the clear icon */}
+                    <SelectTrigger className="w-full pr-8">
                       <SelectValue placeholder="Select column" />
                     </SelectTrigger>
                     <SelectContent>
-                      {headers.map((header) => (
-                        <SelectItem key={header} value={header}>
-                          {header}
-                        </SelectItem>
-                      ))}
-                      <SelectItem value="none">None</SelectItem>
+                      <ScrollArea className="h-[200px]">
+                        {headers.map((header) => (
+                          <SelectItem key={header} value={header}>
+                            {header}
+                          </SelectItem>
+                        ))}
+                      </ScrollArea>
                     </SelectContent>
                   </Select>
 

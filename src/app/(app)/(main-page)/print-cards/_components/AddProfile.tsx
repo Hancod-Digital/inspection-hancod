@@ -148,7 +148,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
     setLoading(true);
     try {
       const avatarUrl = croppedFile ? "https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/"+await uploadImage() : '';
-      console.log(avatarUrl,"sdsd");
+     
       const value = {
         name: values.name,
         email: values.email,

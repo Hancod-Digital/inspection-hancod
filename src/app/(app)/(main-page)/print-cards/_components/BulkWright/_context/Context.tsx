@@ -46,8 +46,7 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
   const uploadBatch = async () => {
     try {
       let mappedData = mapDataFields(data, mappings);
-      console.log(mappedData, "mappedData");
-  
+   
       // Use Promise.all to handle multiple async calls in parallel
       await Promise.all(
         mappedData.map((item: any) =>
@@ -61,13 +60,15 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
               }),
             {
               afterSuccess: () => {
+                 
                 toastWithTimeout(ToastVariant.Success, "Operation successful");
                 // setChanged(!changed);
                 // reset();
                 setIsBulk(false)
               },
               afterError: (err: any) => {
-                toastWithTimeout(ToastVariant.Error, "Please check the Mapped Data and try again");
+                 
+                toastWithTimeout(ToastVariant.Success, "Please check the Mapped Data and try again");
               },
             }
           )
@@ -85,8 +86,7 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
       setCurrentStep((prev) => prev + 1)
     }
     if(currentStep===3){
-        console.log(data,"data");
-        uploadBatch()
+         uploadBatch()
     }
   }
 
@@ -106,10 +106,9 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
   }
 
   const handleValueChange = (value: string) => {
-    console.log("Selected value:", value) // Debugging log
-    setDuplicateHandling(value)
+     setDuplicateHandling(value)
     file&& processFile(file) 
-    console.log("Updated duplicateHandling:", duplicateHandling) // Check if context updates
+   
   }
   const processFile = (file: File) => {
     const reader = new FileReader()
@@ -125,23 +124,19 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
 
   const handleDuplicates = (jsonData: any[]) => {
     let processedData
-    console.log(jsonData?.length);
+    
     
    if (duplicateHandling === "skip") {
       const uniqueDataMap = new Map()
       jsonData.forEach(item => uniqueDataMap.set(item.id, item))
       processedData = Array.from(uniqueDataMap.values())
-      console.log(duplicateHandling,"here");
-        
-      console.log(processedData?.length);
+    
       
     }else{
-        console.log(duplicateHandling,"wjyyyy");
-        
+         
         processedData = jsonData
     }
-    console.log(processedData?.length,"lokok");
-    
+  
     setData(processedData)
   }
 
