@@ -32,7 +32,7 @@ import { getLastTwoDigitsOfCurrentYear } from '@/lib/utils';
 // Define schema for validation
 const userFormSchema = object({
   name: string().nonempty('Name is required'),
-  email: string().nonempty('Email is required').email('Invalid email address'),
+  email: string().nonempty('Email is required').email('Invalid email address').transform(val => val.toLowerCase()),
   contact_number: string().nonempty('Contact number is required'),
   address: string().nonempty('Address is required'),
   gender: string().nonempty('Gender is required'),
@@ -355,7 +355,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                     Email
                   </Label>
                   <div>
-                    <Input id="email" {...register('email',{ setValueAs: (value:string) => value?.trim().toLowerCase() })} />
+                    <Input id="email" {...register('email')} />
                     {errors.email && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.email.message}</p>
                     )}

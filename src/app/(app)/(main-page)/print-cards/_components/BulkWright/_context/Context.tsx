@@ -49,8 +49,13 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
    
       // Use Promise.all to handle multiple async calls in parallel
       await Promise.all(
-        mappedData.map((item: any) =>
-          makeApiCall(
+        mappedData.map((item: any) => {
+          if (!item.contact_number?.startsWith('+')) {
+            toastWithTimeout(ToastVariant.Error, "Please check the contact number field");
+            return Promise.reject();
+          }
+          
+          return makeApiCall(
             async () =>
               new StudentService().addStudent({
                 ...item,
@@ -60,19 +65,15 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
               }),
             {
               afterSuccess: () => {
-                 
                 toastWithTimeout(ToastVariant.Success, "Operation successful");
-                // setChanged(!changed);
-                // reset();
                 setIsBulk(false)
               },
               afterError: (err: any) => {
-                 
                 toastWithTimeout(ToastVariant.Success, "Please check the Mapped Data and try again");
               },
             }
           )
-        )
+        })
       );
     } catch (error) {
       console.error("Error uploading batch:", error);

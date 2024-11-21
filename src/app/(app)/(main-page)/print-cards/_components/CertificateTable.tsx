@@ -507,17 +507,17 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                     <div className="flex flex-col gap-2 ">
                                         <>
                                             {!item?.certificate_url && (
-                                                <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md  border-primary border text-primary">
+                                                <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 px-2 rounded-md  border-primary border text-primary">
                                                     Certificate
                                                 </button>
                                             )}
 
                                             {item?.certificate_url && (
                                                 <>
-                                                    <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md  border-primary border text-primary mb-2">
+                                                    <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 px-2  rounded-md  border-primary border text-primary mb-2">
                                                         Re-create
                                                     </button>
-                                                    <button onClick={() => Printq( item)} className="bg-white py-1 rounded-md     border-primary border text-primary">
+                                                    <button onClick={() => Printq( item)} className="bg-white py-1 rounded-md   px-1  border-primary border text-primary">
                                                         Print
                                                     </button>
                                                 </>

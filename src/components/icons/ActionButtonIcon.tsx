@@ -6,10 +6,12 @@ interface IconProps {
 }
 
 const ActionButtonIcon: React.FC<IconProps> = ({ className, onClick }) => (
+  <div className='p-4'>
   <svg
 
     width="15"
     height="4"
+    className=""
     viewBox="0 0 15 4"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +28,7 @@ const ActionButtonIcon: React.FC<IconProps> = ({ className, onClick }) => (
       d="M3.14609 0.872186C2.43781 0.188771 1.28944 0.188771 0.581157 0.872186C-0.127129 1.5556 -0.127129 2.66364 0.581157 3.34706C1.28944 4.03047 2.43781 4.03047 3.14609 3.34706C3.85438 2.66367 3.85438 1.55563 3.14609 0.872186Z"
       fill="#75829C"
     />
-  </svg>
+  </svg></div>
 );
 
 export default ActionButtonIcon;
