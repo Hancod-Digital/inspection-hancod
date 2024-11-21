@@ -355,7 +355,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
                     Email
                   </Label>
                   <div>
-                    <Input id="email" {...register('email',{ setValueAs: (value) => value?.trim() })} />
+                    <Input id="email" {...register('email',{ setValueAs: (value:string) => value?.trim().toLowerCase() })} />
                     {errors.email && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.email.message}</p>
                     )}
