@@ -51,7 +51,7 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
       await Promise.all(
         mappedData.map((item: any) => {
           if (!item.contact_number?.startsWith('+')) {
-            toastWithTimeout(ToastVariant.Error, "Please check the contact number field");
+            toastWithTimeout(ToastVariant.Success, "Please check the contact number field");
             return Promise.reject();
           }
           
@@ -77,7 +77,7 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
       );
     } catch (error) {
       console.error("Error uploading batch:", error);
-      toastWithTimeout(ToastVariant.Error, "Batch upload failed.");
+      toastWithTimeout(ToastVariant.Success, "Batch upload failed.");
     }
   };
   

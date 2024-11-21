@@ -353,17 +353,17 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                 //     );
                 //     toastWithTimeout(ToastVariant.Success, "Certificate and QR code created successfully.");
                 // } else {
-                //     toastWithTimeout(ToastVariant.Error, "Failed to upload QR image.");
+                //     toastWithTimeout(ToastVariant.Success, "Failed to upload QR image.");
                 // }
                 toastWithTimeout(ToastVariant.Success, "Certificate Recreated successfully.");
             } else {
-                toastWithTimeout(ToastVariant.Error, "Failed to upload certificate image.");
+                toastWithTimeout(ToastVariant.Success, "Failed to upload certificate image.");
             }
             setChanged(!changed);
 
         } catch (error) {
             console.error("Error generating certificate:", error);
-            toastWithTimeout(ToastVariant.Error, "An error occurred while generating the certificate.");
+            toastWithTimeout(ToastVariant.Success, "An error occurred while generating the certificate.");
         } finally {
             setIsGenerating(null); // Reset after completion
         }

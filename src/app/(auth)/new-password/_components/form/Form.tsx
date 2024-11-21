@@ -61,7 +61,7 @@ export default function LoginForm() {
             resolve(true);  // Resolve the promise after successful password change
           },
           afterError: (err: any) => {
-            toastWithTimeout(ToastVariant.Error, "An Error Occurred");
+            toastWithTimeout(ToastVariant.Success, "An Error Occurred");
             reject(err);  // Reject the promise with the error
           }
         }

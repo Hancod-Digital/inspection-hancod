@@ -141,7 +141,7 @@ const schema = z.object({
           () => new AuthService().verify_user_password(data.currentPassword),
           {
             afterSuccess: (result: any) => {
-              result === false && toastWithTimeout(ToastVariant.Error, "Error: Invalid password");
+              result === false && toastWithTimeout(ToastVariant.Success, "Error: Invalid password");
               resolve(result);  // Resolve the promise with the verification result
             },
             afterError: (error: any) => {
@@ -167,7 +167,7 @@ const schema = z.object({
                 resolve(true);  // Resolve the promise after successful password change
               },
               afterError: (err: any) => {
-                toastWithTimeout(ToastVariant.Error, "An Error Occurred");
+                toastWithTimeout(ToastVariant.Success, "An Error Occurred");
                 reject(err);  // Reject the promise with the error
               }
             }
@@ -228,7 +228,7 @@ const schema = z.object({
        
       },
       afterError: (err: any) => {
-         toastWithTimeout(ToastVariant.Error, "An Error Occured");
+         toastWithTimeout(ToastVariant.Success, "An Error Occured");
       }
     });
   };

@@ -109,14 +109,14 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     setChanged(!changed);
                     toastWithTimeout(ToastVariant.Success, "Card and QR code created successfully.");
                 } else {
-                    toastWithTimeout(ToastVariant.Error, "Failed to upload QR image.");
+                    toastWithTimeout(ToastVariant.Success, "Failed to upload QR image.");
                 }
             } else {
-                toastWithTimeout(ToastVariant.Error, "Failed to upload card image.");
+                toastWithTimeout(ToastVariant.Success, "Failed to upload card image.");
             }
         } catch (error) {
             console.error("Error generating QR code:", error);
-            toastWithTimeout(ToastVariant.Error, "An error occurred while generating the QR code.");
+            toastWithTimeout(ToastVariant.Success, "An error occurred while generating the QR code.");
         }
         setIsGenerating(false);
     };

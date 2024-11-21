@@ -180,12 +180,12 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
             reset();
           },
           afterError: (err: any) => {
-            toastWithTimeout(ToastVariant.Error, 'An Error Occurred');
+            toastWithTimeout(ToastVariant.Success, 'An Error Occurred');
           },
         }
       );
     } catch (error) {
-      toastWithTimeout(ToastVariant.Error, 'Failed to upload image');
+      toastWithTimeout(ToastVariant.Success, 'Failed to upload image');
     } finally {
       setLoading(false);
       onClose();
