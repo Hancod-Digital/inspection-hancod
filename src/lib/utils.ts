@@ -12,7 +12,7 @@ export const equipmentDataRange = [{from:'equipment_type',to:'equipment_type'}]
 export const locationDataRange = [{from:'site',to:'site'}]
 export const minorCategoryDataRange = [{from:'major_category',to:'major_category'},{from:'standard',to:'standard'}]
 
-export const fetchCertificateHtml = async (item) => {
+export const fetchCertificateHtml = async (item:any) => {
   const htmlString = `
   <!DOCTYPE html>
   <html lang="en">
