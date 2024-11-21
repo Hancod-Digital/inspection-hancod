@@ -27,6 +27,7 @@ const fields = [
   { id: "id_no", label: "Qatar ID/ Employer ID No." },
   { id: "designation", label: "Designation / Course" },
   { id: "issued_on", label: "Issued On" },
+  { id: "course_duration", label: "Course Duration (In Days)" },
   { id: "model_level", label: "Model/Level" },
   { id: "valid_untill", label: "Expiry Date" },
 ];
