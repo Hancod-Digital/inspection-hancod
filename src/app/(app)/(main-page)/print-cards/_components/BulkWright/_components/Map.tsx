@@ -125,7 +125,7 @@ export default function Map({ errors, setErrors }:any) {
                       <SelectValue placeholder="Select column" />
                     </SelectTrigger>
                     <SelectContent>
-                      <ScrollArea className="h-[200px]">
+                      <ScrollArea className="max-h-[200px]">
                         {headers.map((header) => (
                           <SelectItem key={header} value={header}>
                             {header}
