@@ -216,7 +216,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                         </div>
                                         <div class="meta-values">
                                             <p>${item?.certificate_no}</p>
-                                            <p>${item?.course_duration+" " || 2+" "}day</p>
+                                            <p>${(item?.course_duration || 2) > 1 ? `${item?.course_duration || 2} days` : `${item?.course_duration || 2} day`}</p>
                                             <p>${formatDateWithHyphen(item?.issued_on)}</p>
                                             <p>${formatDateWithHyphen(item?.valid_untill)}</p>
                                         </div>

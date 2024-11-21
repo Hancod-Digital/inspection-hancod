@@ -459,7 +459,7 @@ function SidebarItems({ options, className, currentActiveDiv, setCurrentActiveDi
   }, [currentActiveDiv, expandedItems, currentPathname, handleItemClick, setLoading]);
 
   return (
-<aside className={cn("border border-t-0 bg-secondary p-2 py-8 backdrop-blur-lg h-full overflow-y-auto", className)}>
+<aside className={cn("border-t-0 bg-secondary p-2 pt-20 backdrop-blur-lg h-full overflow-y-auto", className)}>
           <div className="grid gap-2">
         {options.map((opt: { identifier: React.Key | null | undefined; type: string; }) => (
           <div key={opt.identifier}>

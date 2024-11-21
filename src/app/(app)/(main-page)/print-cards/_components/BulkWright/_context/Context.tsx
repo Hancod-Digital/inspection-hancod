@@ -126,20 +126,55 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
     let processedData
     
     
-   if (duplicateHandling === "skip") {
-      const uniqueDataMap = new Map()
-      jsonData.forEach(item => uniqueDataMap.set(item.id, item))
-      processedData = Array.from(uniqueDataMap.values())
+    if (duplicateHandling === "skip") {
+      // Find and remove duplicates after trimming string values
+      const uniqueDataMap = new Map();
+      const duplicates:any = [];
     
+      const trimData = (item:any) => {
+        // Create a new object with trimmed string values
+        const trimmedItem:any = {};
+        Object.keys(item).forEach(key => {
+          // Only trim if the value is a string
+          trimmedItem[key] = (typeof item[key] === 'string') 
+            ? item[key].trim() 
+            : item[key];
+        });
+        return trimmedItem;
+      };
+    
+      jsonData.forEach(item => {
+        const trimmedItem = trimData(item);
+        const rowKey = JSON.stringify(trimmedItem);
+        
+        if (uniqueDataMap.has(rowKey)) {
+          duplicates.push(item);
+        } else {
+          uniqueDataMap.set(rowKey, trimmedItem);
+        }
+      });
+    
+      processedData = Array.from(uniqueDataMap.values());
       
-    }else{
-         
-        processedData = jsonData
+      // Optional: Log duplicates
+      if (duplicates.length > 0) {
+        console.log('Duplicate items skipped:', duplicates);
+      }
+    } else {
+      // Trim data even if not skipping duplicates
+      processedData = jsonData.map(item => {
+        const trimmedItem:any = {};
+        Object.keys(item).forEach(key => {
+          trimmedItem[key] = (typeof item[key] === 'string') 
+            ? item[key].trim() 
+            : item[key];
+        });
+        return trimmedItem;
+      });
     }
-  
-    setData(processedData)
+    
+    setData(processedData);
   }
-
   return (
     <StepperContext.Provider
       value={{
