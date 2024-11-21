@@ -53,7 +53,7 @@ const LiftingGearMulti = () => {
     animate={{ y: 0, opacity: 1 }}
     transition={{ delay: 0.2, duration: 0.5 }}
 >
-   Print Cards
+  {isAdd ? "Add Profile" : "Print Cards"}
 </motion.h2>
 
       {!isAdd && !isBulk && (

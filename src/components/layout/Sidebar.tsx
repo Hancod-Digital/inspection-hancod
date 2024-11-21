@@ -295,7 +295,7 @@ export default function Sidebar() {
                 <SheetTrigger className="absolute left-5 top-[2.75rem] z-[12] text-muted-foreground sm:hidden">
                     <MenuBarIcon />
                 </SheetTrigger>
-                <SheetContent side="left" className="z-[9999] max-w-72 p-0">
+                <SheetContent side="left" className="z-[9999]  max-w-72 p-0">
                     <SidebarItems
                         className="border-none"
                         options={options}
@@ -459,7 +459,7 @@ function SidebarItems({ options, className, currentActiveDiv, setCurrentActiveDi
   }, [currentActiveDiv, expandedItems, currentPathname, handleItemClick, setLoading]);
 
   return (
-<aside className={cn("border-t-0 bg-secondary p-2 pt-20 backdrop-blur-lg h-full overflow-y-auto", className)}>
+<aside className={cn("border-t-0 bg-secondary  p-2 pt-20 backdrop-blur-lg  overflow-y-auto", className)}>
           <div className="grid gap-2">
         {options.map((opt: { identifier: React.Key | null | undefined; type: string; }) => (
           <div key={opt.identifier}>
