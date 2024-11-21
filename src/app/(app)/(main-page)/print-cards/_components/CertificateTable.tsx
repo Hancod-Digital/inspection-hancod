@@ -18,16 +18,247 @@ import { UserService } from '@/services/api/user-service';
 import TableSpinner from '@/components/animated/TableSpinner';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { AvatarFallback } from '@/components/ui/avatar';
-import { formatDateWithHyphen } from '@/lib/utils';
+import { formatDateWithHyphen, splitDesignation } from '@/lib/utils';
 import { AvatarWithTooltip } from './Table';
 
 export default function CertificateTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const [htmlContent, setHtmlContent] = useState('');
     const [isGenerating, setIsGenerating] = useState<number | null>(null);
-
-    const fetchHtml = async (profile_url: string, qr_url: string, name: string, id_no: string, company: string, designation: string, issued_on: string, valid_untill: string, course_duration: string, certificate_no:string) => {
-        const response = await fetch('/blank_certificate/redesigned_certificate.html'); 
+ 
+    const Printq = (item: any) => {
+        const {training, training1} = splitDesignation(item?.designation)
+        const {training:model_level, training1:model_level1} = splitDesignation(item?.model_level)
+        const iframe: any = document.createElement('iframe');
+        iframe.style.visibility = 'hidden';
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+    
+        iframe.srcdoc = `
+           <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Certificate of Completion</title>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" />
+                <style>
+                    :root {
+                        --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                            Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+                            "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
+                            "Source Han Sans CN", sans-serif;
+                    }
+                    .certificate-container {
+                        background-color: #fff;
+                        display: flex;
+                        max-width: 595px;
+                        max-height: 860px;
+                        flex-direction: column;
+                        overflow: hidden;
+                        align-items: center;
+                        padding: 218px 35px 89px;
+                        margin: 0 auto;
+                    }
+                    .logo {
+                        aspect-ratio: 0.94;
+                        object-fit: contain;
+                        object-position: center;
+                        width: 94px;
+                        border-radius: 15px;
+                    }
+                    .certificate-intro {
+                        color: #212121;
+                        margin: 16px 0 0;
+                        font: 400 16px/1.1 Javanese Text, var(--default-font-family);
+                    }
+                    .recipient-name {
+                        color: #000;
+                        margin: 9px 0 0;
+                        font: 400 36px/1.1 Javanese Text, var(--default-font-family);
+                    }
+                    .certificate-details {
+                        color: #1a1a1e;
+                        width: 100%;
+                        margin: 26px 0 0;
+                        font: 400 14px/32px Javanese Text, var(--default-font-family);
+                        position: relative;
+                    }
+                    .underline {
+                        color: #c9c9c9;
+                    }
+                    .signatures-section {
+                        width: 100%;
+                        margin-top: 92px;
+                    }
+                    .value {
+                        position: absolute;
+                        text-align: center;
+                        width: 100%;
+                        font-weight: bold;
+                        color: #000;
+                        transform: translateY(-20px);
+                        text-align: left;
+                        margin-left: 40px;
+                    }
+                    .signatures-container {
+                        gap: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    .signature-column {
+                        display: flex;
+                        flex-direction: column;
+                        width: 45%;
+                    }
+                    .trainer-section {
+                        display: flex;
+                        width: 100%;
+                        flex-direction: column;
+                        font: 400 14px Javanese Text, sans-serif;
+                    }
+                    .signature-line {
+                        aspect-ratio: 200;
+                        object-fit: cover;
+                        max-width: 100%;
+                    }
+                    .signature-title {
+                        color: #1f1f1f;
+                        font-size: 14px;
+                        text-align: center;
+                        margin: 9px 0 0;
+                    }
+                    .certificate-meta {
+                        display: flex;
+                        margin-top: 36px;
+                        gap: 37px;
+                        font-size: 12px;
+                        color: #1a1a1e;
+                        line-height: 0px;
+                    }
+                    .meta-labels {
+                        align-self: start;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: start;
+                        flex: 1;
+                    }
+                    .meta-values {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: start;
+                        flex: 1;
+                    }
+                    .authorized-section {
+                        display: flex;
+                        flex-grow: 1;
+                        flex-direction: column;
+                        color: #1f1f1f;
+                        font: 400 14px Javanese Text, sans-serif;
+                    }
+                    .auth-signature-wrapper {
+                        display: flex;
+                        margin-top: 9px;
+                        flex-direction: column;
+                        align-items: start;
+                        padding: 0 28px;
+                    }
+                    .stamp {
+                        aspect-ratio: 1.01;
+                        object-fit: contain;
+                        width: 80px;
+                        margin-top: 28px;
+                    }
+                    @media print {
+                        body { margin: 0; }
+                        .certificate-container { margin: 0 auto; }
+                    }
+                </style>
+            </head>
+            <body>
+                <section class="certificate-container">
+                    <img src="${item?.avatar}" alt="Certificate Logo" class="logo" />
+                    <h1 class="certificate-intro">This is to certify that</h1>
+                    <h2 class="recipient-name">${item?.name}</h2>
+                    <p class="certificate-details" style="font-size: 14px;">
+                        Qatar ID/ Employer ID No.
+                        <span class="value qatar-id" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.id_no}</span>
+                        <span class="underline">____________________________________________________________________</span>
+                        <br />
+                        Company / Employer
+                        <span class="value company" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.company}</span>
+                        <span class="underline">__________________________________________________________________________</span>
+                        <br />
+                        has successfully completed a Training/assessment as
+                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training}</span>
+                        <span class="underline">____________________________________________</span>
+                        <br />
+                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training1}</span>
+                        <span class="underline">_______________________________________________________</span>.
+                    </p>
+                    <article class="signatures-section">
+                        <div class="signatures-container">
+                            <div class="signature-column">
+                                <section class="trainer-section">
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ad78b217e334dfbd7976459e664d9d9995052b34db611f60c68bd8a693d3a39?placeholderIfAbsent=true&apiKey=ec30a833d743462ba89f4aaebb78651e" alt="Trainer Signature" class="signature-line" />
+                                    <p class="signature-title">Trainer/Assessor</p>
+                                    <div class="certificate-meta">
+                                        <div class="meta-labels">
+                                            <p>Certificate Number:</p>
+                                            <p>Course Duration:</p>
+                                            <p>Issued Date :</p>
+                                            <p>Expiry Date :</p>
+                                        </div>
+                                        <div class="meta-values">
+                                            <p>${item?.certificate_no}</p>
+                                            <p>${item?.course_duration+" " || 2+" "}day</p>
+                                            <p>${formatDateWithHyphen(item?.issued_on)}</p>
+                                            <p>${formatDateWithHyphen(item?.valid_untill)}</p>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="signature-column">
+                                <section class="authorized-section">
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/4d89aae86126e38e4b57de5efb2cdbc307737da9691d772b85c8f21184c2b195?placeholderIfAbsent=true&apiKey=ec30a833d743462ba89f4aaebb78651e" alt="Authorized Signature Line" class="signature-line" />
+                                    <div class="auth-signature-wrapper">
+                                        <p class="signature-title" style="margin-top: 4px; margin-left: 43px">Authorized Signature</p>
+                                        <img src="${item?.qr_url}" alt="Official Stamp" class="stamp" />
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+                <script>
+                    // Print and close the window after content is loaded
+                    window.onload = function() {
+                        window.print();
+                        window.onafterprint = function() {
+                            window.close();
+                        };
+                    };
+                </script>
+            </body>
+            </html>
+    
+              `
+        document.body.appendChild(iframe);
+    
+        iframe.onload = function () {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+    
+          // Remove the iframe after printing
+          iframe.contentWindow.onafterprint = function () {
+            document.body.removeChild(iframe);
+          };
+        };
+      };
+    
+    const fetchHtml = async (profile_url: string, qr_url: string, name: string, id_no: string, company: string, designation: string, issued_on: string, valid_untill: string, course_duration: string, certificate_no:string,item:any   ) => {
+        const response = await fetch('/blank_certificate/data.html'); 
         let htmlString = await response.text();
  
         // Replace placeholders for dynamic URLs
@@ -35,6 +266,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
         htmlString = htmlString.replace(/\{\{qrCodeUrl\}\}/g, qr_url);
         htmlString = htmlString.replace(/\{\{IDNumber\}\}/g, id_no);
         htmlString = htmlString.replace(/\{\{Company\}\}/g, company);
+        htmlString = htmlString.replace(/\{\{name\}\}/g, name);
         const words = designation.split(' ');
         let training = '';
         let training1 = '';
@@ -52,14 +284,17 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
         
         htmlString = htmlString.replace(/\{\{Training\}\}/g, training);
         htmlString = htmlString.replace(/\{\{Training1\}\}/g, training1);
-        htmlString = htmlString.replace(/\{\{Designation\}\}/g, certificate_no);
-        console.log(issued_on,valid_untill,designation);
+        htmlString = htmlString.replace(/\{\{CertificateNo\}\}/g, certificate_no);
+        htmlString = htmlString.replace(/\{\{IssuedDate\}\}/g, issued_on);
+        htmlString = htmlString.replace(/\{\{ExpiryDate\}\}/g, valid_untill);
+        htmlString = htmlString.replace(/\{\{CourseDuration\}\}/g, `${course_duration} ${parseInt(course_duration) > 1 ? " days" : "day"}`);
+
         
         // Replace the placeholder name in the span
-        htmlString = htmlString.replace(/<span class="name-text">.*?<\/span>/, `<span class="name-text">${name}</span>`);
-         htmlString = htmlString.replace(/<span class="date">.*?<br\s*\/>.*?<\/span>/, `<span class="date">${issued_on}<br />${valid_untill}</span>`);
-        htmlString = htmlString.replace(/<span\s*class="day">.*?<\/span>/, `<span class="day">${course_duration} ${parseInt(course_duration) > 1 ? " days" : "day"}</span>`);
-
+        // htmlString = htmlString.replace(/<span class="name-text">.*?<\/span>/, `<span class="name-text">${name}</span>`);
+        //  htmlString = htmlString.replace(/<span class="date">.*?<br\s*\/>.*?<\/span>/, `<span class="date">${issued_on}<br />${valid_untill}</span>`);
+        // htmlString = htmlString.replace(/<span\s*class="day">.*?<\/span>/, `<span class="day">${course_duration} ${parseInt(course_duration) > 1 ? " days" : "day"}</span>`);
+      
         setHtmlContent(htmlString);
         return htmlString;
     };
@@ -80,7 +315,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             const htmlElement = document.createElement('div');
             console.log( formatDateWithHyphen(item?.issued_on));
             
-            htmlElement.innerHTML = await fetchHtml(item?.avatar, item?.qr_url, item?.name, item?.id_no, item?.company, item?.designation, formatDateWithHyphen(item?.issued_on), formatDateWithHyphen(item?.valid_untill), item?.course_duration, item?.certificate_no);
+            htmlElement.innerHTML = await fetchHtml(item?.avatar, item?.qr_url, item?.name, item?.id_no, item?.company, item?.designation, formatDateWithHyphen(item?.issued_on), formatDateWithHyphen(item?.valid_untill), item?.course_duration, item?.certificate_no,item);
 
             document.body.appendChild(htmlElement);
             htmlElement.style.width = '794px';
@@ -280,7 +515,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                                     <button onClick={async () => await generateCertificate(item)} className="bg-white py-1 rounded-md  border-primary border text-primary mb-2">
                                                         Re-create
                                                     </button>
-                                                    <button onClick={() => printCertificate(item.certificate_url, item)} className="bg-white py-1 rounded-md     border-primary border text-primary">
+                                                    <button onClick={() => Printq( item)} className="bg-white py-1 rounded-md     border-primary border text-primary">
                                                         Print
                                                     </button>
                                                 </>
