@@ -10,7 +10,7 @@ import { StepperProvider, useStepper } from "../_context/Context"
 import { useState } from "react"
 
 const steps = [
-  { id: 1, name: "Configure", status: "complete" },
+  { id: 1, name: "Import - Select File", status: "complete" },
   { id: 2, name: "Map Fields", status: "current" },
   { id: 3, name: "Preview", status: "upcoming" },
 ]
