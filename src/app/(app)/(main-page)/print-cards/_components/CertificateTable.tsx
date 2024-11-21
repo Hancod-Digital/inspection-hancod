@@ -30,10 +30,14 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
         const {training, training1} = splitDesignation(item?.designation)
         const {training:model_level, training1:model_level1} = splitDesignation(item?.model_level)
         const iframe: any = document.createElement('iframe');
-        iframe.style.visibility = 'hidden';
-        iframe.style.position = 'fixed';
-        iframe.style.right = '0';
-        iframe.style.bottom = '0';
+        iframe.style.cssText = `
+            visibility: hidden;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+        `;
     
         iframe.srcdoc = `
            <!DOCTYPE html>
