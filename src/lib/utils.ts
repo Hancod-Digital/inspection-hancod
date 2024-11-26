@@ -82,6 +82,7 @@ export const fetchCertificateHtml = async (item:any) => {
               gap: 20px;
               display: flex;
               justify-content: space-between;
+              margi
           }
           .signature-column {
             display: flex;
@@ -211,6 +212,2409 @@ export const fetchCertificateHtml = async (item:any) => {
 };
 
 
+export function generateEquipmentCertificateHTML(item:any):string {
+  return `
+</style></head><body style="margin: 0px; background: rgb(244, 253, 255); overflow-x: hidden;" dark-scroll="">
+  <input type="hidden" id="anPageName" name="page" value="certificate-of-thorough-examination-of-lifting-gear">
+  <div class="container-center-horizontal">
+    <div class="certificate-of-thorough-examination-of-lifting-gear screen " data-id="277:132">
+      <img class="whats-app_-image_202-lyLXxs whats-app_-image_202" data-id="277:133" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-08-21-at-2-15-14-pm-1-removebg-preview-2.png" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-08-21-at-2-15-14-pm-1-removebg-preview-2.png" alt="WhatsApp_Image_2024-08-21_at_2.15.14_PM_1-removebg-preview 2">
+      <div class="group-1000006694-lyLXxs" data-id="277:134">
+        <img class="whats-app_-image_202-aIznp1 whats-app_-image_202" data-id="277:135" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-10-16-at-1-39-39-pm-removebg-preview-1.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-10-16-at-1-39-39-pm-removebg-preview-1.svg" alt="WhatsApp_Image_2024-10-16_at_1.39.39_PM-removebg-preview 1">
+      </div>
+      <img class="whats-app_-image_202-4RajHW whats-app_-image_202" data-id="277:136" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-08-21-at-2-15-14-pm-1-removebg-preview-1.png" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-08-21-at-2-15-14-pm-1-removebg-preview-1.png" alt="WhatsApp_Image_2024-08-21_at_2.15.14_PM_1-removebg-preview 1">
+      <img class="whats-app_-image_202-9WsDNS whats-app_-image_202" data-id="277:137" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-10-16-at-1-39-40-pm--2--removebg-preview-1.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-10-16-at-1-39-40-pm--2--removebg-preview-1.svg" alt="WhatsApp_Image_2024-10-16_at_1.39.40_PM__2_-removebg-preview 1">
+      <img class="whats-app_-image_202-uywPwW whats-app_-image_202" data-id="277:138" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-10-16-at-1-39-40-pm--1--removebg-preview-1.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-10-16-at-1-39-40-pm--1--removebg-preview-1.svg" alt="WhatsApp_Image_2024-10-16_at_1.39.40_PM__1_-removebg-preview 1">
+      <img class="whats-app_-image_202-yyauHm whats-app_-image_202" data-id="277:139" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-10-16-at-1-39-40-pm-removebg-preview-1.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/whatsapp-image-2024-10-16-at-1-39-40-pm-removebg-preview-1.svg" alt="WhatsApp_Image_2024-10-16_at_1.39.40_PM-removebg-preview 1">
+      <img class="line-647-lyLXxs" data-id="277:140" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-647.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-647.svg" alt="Line 647">
+      <img class="line-650-lyLXxs" data-id="277:141" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-650.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-650.svg" alt="Line 650">
+      <img class="line-651-lyLXxs" data-id="277:142" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-651.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-651.svg" alt="Line 651">
+      <img class="line-648-lyLXxs" data-id="277:143" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-648.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-648.svg" alt="Line 648">
+      <div class="an-isoiec-170202012-company-lyLXxs valign-text-bottom" data-id="277:144">AN ISO/IEC 17020:2012 COMPANY</div>
+      <div class="rectangle-23895-lyLXxs" data-id="277:145"></div>
+      <div class="rectangle-23896-lyLXxs" data-id="277:146"></div>
+      <div class="rectangle-23897-lyLXxs" data-id="277:147"></div>
+      <div class="rectangle-23898-lyLXxs" data-id="277:148"></div>
+      <img class="line-652-lyLXxs" data-id="277:149" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-652.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-652.svg" alt="Line 652">
+      <div class="certificate-no-crt-24-4142-lyLXxs valign-text-middle body-large-2" data-id="277:150">
+        <span>
+          <span class="span0-3sSeiN body-large-2">CERTIFICATE No.: </span>
+          <span class="span1-3sSeiN body-large-2">${item?.certificate_no}</span>
+        </span>
+      </div>
+      <p class="equipment-owner-art-line-grc-qatar-lyLXxs valign-text-middle body-large-2" data-id="277:151">
+        <span>
+          <span class="span0-vZkDGw body-large-2">EQUIPMENT OWNER:<br></span>
+          <span class="span1-vZkDGw body-large-4">${item?.owner_name}</span>
+        </span>
+      </p>
+      <div class="reference-standard-bs-en-1492a12008-lyLXxs valign-text-middle body-large-2" data-id="277:152">
+        <span>
+          <span class="span0-2vI5tY body-large-2">REFERENCE STANDARD:<br></span>
+          <span class="span1-2vI5tY body-large-4">${item?.standard}</span>
+        </span>
+      </div>
+      <p class="qube-safety-inspection-services-co-wll-lyLXxs valign-text-middle body-small-1" data-id="277:153">Qube Safety Inspection &amp; Services Co WLL</p>
+      <p class="cr-134005-office-04-lyLXxs valign-text-middle body-small-4" data-id="277:154">
+        <span>
+          <span class="span0-oKe1YJ body-small-4">CR# 134005, Office 04, 1st Floor, Bldg No. 154, St 204, Zone 56<br>Salwa Road, P.O. Box 201438, Doha-Qatar, Ph: +974 3149 9334<br></span>
+          <span class="span1-oKe1YJ body-small-1">info@qubeinspection.com I www.qubeinspection.com<br></span>
+        </span>
+      </p>
+      <div class="date-of-inspection-29-sep-2024-lyLXxs valign-text-middle body-large-2" data-id="277:155">
+        <span>
+          <span class="span0-eLUxbt body-large-2">DATE OF INSPECTION:<br></span>
+          <span class="span1-eLUxbt body-large-4">${item?.inspection_date}</span>
+        </span>
+      </div>
+      <div class="location-pearl-qatar-lyLXxs valign-text-middle body-large-2" data-id="277:156">
+        <span>
+          <span class="span0-50ie5f body-large-2">LOCATION:<br></span>
+          <span class="span1-50ie5f body-large-4">${item?.location_id}</span>
+        </span>
+      </div>
+      <p class="equipment-descriptio-lyLXxs valign-text-middle body-large-2" data-id="277:157">
+        <span>
+          <span class="span0-VP1xgE body-large-2">EQUIPMENT DESCRIPTION:<br></span>
+          <span class="span1-VP1xgE body-large-4">${item?.equipment_description}</span>
+        </span>
+      </p>
+      <div class="rectangle-23899-lyLXxs" data-id="277:158"></div>
+      <div class="rectangle-23900-lyLXxs" data-id="277:159"></div>
+      <div class="rectangle-23901-lyLXxs" data-id="277:160"></div>
+      <div class="rectangle-23902-lyLXxs" data-id="277:161"></div>
+      <img class="line-653-lyLXxs" data-id="277:162" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-653.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-653.svg" alt="Line 653">
+      <img class="line-654-lyLXxs" data-id="277:163" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-654.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-654.svg" alt="Line 654">
+      <img class="line-657-lyLXxs" data-id="277:164" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-657.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-657.svg" alt="Line 657">
+      <img class="line-658-lyLXxs" data-id="277:165" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" alt="Line 658">
+      <img class="line-659-lyLXxs" data-id="277:166" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" alt="Line 659">
+      <img class="line-660-lyLXxs" data-id="277:167" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" alt="Line 660">
+      <img class="line-661-lyLXxs" data-id="277:168" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" alt="Line 661">
+      <img class="line-662-lyLXxs" data-id="277:169" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-658.svg" alt="Line 662">
+      <img class="line-665-lyLXxs" data-id="277:170" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-665.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-665.svg" alt="Line 665">
+      <img class="line-666-lyLXxs" data-id="277:171" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-665.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-665.svg" alt="Line 666">
+      <img class="line-655-lyLXxs" data-id="277:172" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-655.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-655.svg" alt="Line 655">
+      <img class="line-656-lyLXxs" data-id="277:173" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-656.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-656.svg" alt="Line 656">
+      <div class="serial-noid-no-lyLXxs valign-text-middle body-large-2" data-id="277:174">SERIAL NO./ID NO.</div>
+      <p class="dq-22123368-dq-22123-lyLXxs valign-text-middle body-large-2" data-id="277:175">${item.serial_no}</p>
+      <div class="date-of-last-examination-lyLXxs valign-text-middle body-large-2" data-id="277:176">Date of Last Examination</div>
+      <p class="name-qualifications-lyLXxs valign-text-middle body-large-2" data-id="277:177">Name &amp; Qualifications of person making this report: MUNSHEER P.C.P</p>
+      <div class="date-of-next-examination-lyLXxs valign-text-middle body-large-2" data-id="277:178">Date of Next Examination</div>
+      <p class="is-this-first-examin-lyLXxs valign-text-middle body-large-4" data-id="277:179">Is this first examination after installation or assembly at a new<br>site or location</p>
+      <p class="if-the-answer-to-the-lyLXxs valign-text-middle body-large-4" data-id="277:180">If the answer to the above question is YES has the equipment been installed correctly</p>
+      <p class="was-the-examination-lyLXxs valign-text-middle was-the-examination body-large-4" data-id="277:181">Was the examination carried out: within an interval of 6 months</p>
+      <p class="was-the-examination-4RajHW valign-text-middle was-the-examination body-large-4" data-id="277:182">Was the examination carried out: within an interval of 12 months</p>
+      <p class="in-accordance-with-an-examination-scheme-lyLXxs valign-text-middle body-large-4" data-id="277:183">In accordance with an examination scheme?</p>
+      <p class="identification-of-an-lyLXxs valign-text-middle body-large-4" data-id="277:184">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</p>
+      <p class="particulars-of-any-t-lyLXxs valign-text-middle body-large-4" data-id="277:185">Particulars of any tests carried out as part of the examination</p>
+      <p class="is-this-equipment-safe-to-use-lyLXxs valign-text-middle body-large-2" data-id="277:186">Is this equipment safe to use ?</p>
+      <div class="signature-lyLXxs valign-text-middle signature body-large-4" data-id="277:187">Signature:</div>
+      <p class="name-of-person-authe-lyLXxs valign-text-middle body-large-2" data-id="277:188">Name of person authenticating this report:<br>SANOOF MOHAMMED (Technical Manager)</p>
+      <div class="signature-4RajHW valign-text-middle signature body-large-4" data-id="277:189">Signature:</div>
+      <p class="after-the-occurrence-lyLXxs valign-text-middle body-large-4" data-id="277:190">After the occurrence of exceptional circumstances</p>
+      <p class="date-of-next-proof-load-test-lyLXxs valign-text-middle body-large-2" data-id="277:191">Date of Next Proof Load Test</p>
+      <p class="date-of-last-proof-load-test-lyLXxs valign-text-middle body-large-2" data-id="277:192">Date of Last Proof Load Test</p>
+      <div class="not-available-lyLXxs valign-text-middle body-large-2" data-id="277:193">${item?.last_test_exam}</div>
+      <div class="x28-mar-2025-lyLXxs valign-text-middle body-large-2" data-id="277:194">${item?.last_thorough_exam}</div>
+      <div class="yes-lyLXxs valign-text-middle yes body-large-2" data-id="277:195">Yes</div>
+      <div class="no-lyLXxs valign-text-middle no body-large-2" data-id="277:196">No</div>
+      <div class="yes-4RajHW valign-text-middle yes body-large-2" data-id="277:197">Yes</div>
+      <div class="none-lyLXxs valign-text-middle body-large-2" data-id="277:198">${item?.defect_description}</div>
+      <p class="a-thorough-visual-ex-lyLXxs valign-text-middle body-large-2" data-id="277:199">${item?.test_particulars}</p>
+      <div class="no-4RajHW valign-text-middle no body-large-2" data-id="277:200">No</div>
+      <div class="not-applicable-lyLXxs valign-text-middle not-applicable body-large-2" data-id="277:201">${item?.next_test_exam}</div>
+      <div class="not-applicable-4RajHW valign-text-middle not-applicable body-large-2" data-id="277:202">${item?.next_thorough_exam}</div>
+      <div class="nil-lyLXxs valign-text-middle body-large-2" data-id="277:203">Nil</div>
+      <div class="x10-t-straight-lift-lyLXxs valign-text-middle body-large-2" data-id="277:204">${item?.safe_working_load}</div>
+      <div class="make-dutest-qatar-ma-lyLXxs valign-text-middle body-large-2" data-id="277:205">
+     ${item?.description} 
+      </div>
+      <div class="x04-lyLXxs valign-text-middle body-large-2" data-id="277:206">04</div>
+      <div class="qty-lyLXxs valign-text-middle body-large-2" data-id="277:207">QTY</div>
+      <div class="description-of-item-lyLXxs valign-text-middle body-large-2" data-id="277:208">DESCRIPTION OF ITEM</div>
+      <div class="test-load-tonne-lyLXxs valign-text-middle body-large-2" data-id="277:209">TEST LOAD (tonne)</div>
+      <div class="wll-or-swl-tonne-lyLXxs valign-text-middle body-large-2" data-id="277:210">WLL or SWL (tonne)</div>
+      <div class="job-no-wo-24-1644-lyLXxs valign-text-middle body-large-2" data-id="277:211">
+        <span>
+          <span class="span0-dEDzkL body-large-2">JOB No.: </span>
+          <span class="span1-dEDzkL body-large-2">${item?.job_order_no}</span>
+        </span>
+      </div>
+      <h1 class="title-lyLXxs valign-text-middle" data-id="277:212">CERTIFICATE OF THOROUGH EXAMINATION OF LIFTING GEAR</h1>
+      <div class="rectangle-23903-lyLXxs" data-id="277:213"></div>
+      <div class="rectangle-23908-lyLXxs" data-id="277:214"></div>
+      <div class="rectangle-23904-lyLXxs" data-id="277:215"></div>
+      <div class="rectangle-23905-lyLXxs" data-id="277:216"></div>
+      <div class="rectangle-23906-lyLXxs" data-id="277:217"></div>
+      <div class="rectangle-23907-lyLXxs" data-id="277:218"></div>
+      <img class="line-663-lyLXxs" data-id="277:219" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-663.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-663.svg" alt="Line 663">
+      <img class="line-664-lyLXxs" data-id="277:220" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-663.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/line-663.svg" alt="Line 664">
+      <img class="charmtick-lyLXxs" data-id="277:221" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/charm-tick@2x.png" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/charm-tick@2x.png" alt="charm:tick">
+      <img class="vector-lyLXxs vector" data-id="277:223" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" alt="Vector">
+      <div class="yes-9WsDNS valign-text-middle yes body-large-2" data-id="277:224">Yes</div>
+      <div class="no-9WsDNS valign-text-middle no body-large-2" data-id="277:225">No</div>
+      <img class="vector-4RajHW vector" data-id="277:226" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" alt="Vector">
+      <div class="yes-uywPwW valign-text-middle yes body-large-2" data-id="277:227">Yes</div>
+      <div class="no-uywPwW valign-text-middle no body-large-2" data-id="277:228">No</div>
+      <img class="vector-9WsDNS vector" data-id="277:229" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" alt="Vector">
+      <div class="yes-yyauHm valign-text-middle yes body-large-2" data-id="277:230">Yes</div>
+      <div class="no-yyauHm valign-text-middle no body-large-2" data-id="277:231">No</div>
+      <img class="vector-uywPwW vector" data-id="277:232" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector-1.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" alt="Vector">
+      <div class="yes-Y5tY8J valign-text-middle yes body-large-2" data-id="277:233">Yes</div>
+      <div class="no-Y5tY8J valign-text-middle no body-large-2" data-id="277:234">No</div>
+      <img class="vector-yyauHm vector" data-id="277:235" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" alt="Vector">
+      <div class="yes-ASSg9r valign-text-middle yes body-large-2" data-id="277:236">Yes</div>
+      <div class="no-ASSg9r valign-text-middle no body-large-2" data-id="277:237">No</div>
+      <img class="vector-Y5tY8J vector" data-id="277:238" src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" anima-src="https://cdn.animaapp.com/projects/67333f197f850eaed5a7981b/releases/673f1f22a0ff6727407567e8/img/vector.svg" alt="Vector">
+      <p class="the-concern-inspecto-lyLXxs valign-text-middle body-xsmall-4" data-id="277:239">
+        <br>The concern inspector or representative has thoroughly examined the equipment in accordance to the relevant standards. Examination indicates that the said equipment has no apparent defects or deformation which may prove dangerous during normal operation. The said equipment is found to be satisfactory for further use, provided there is regular maintenance and operated by a certified operator. This certificate is granted subject to the condition that is agreed &amp; understood that Qube safety Inspection co. Liability shall be limited to the act of its employees on premises of sub-contractors. Under no circumstances whatsoever shall qube safety inspection co.be libel for any injury or damage to any person or occurring as a result of negligent operation or any defect in materials, machinery, equipment or systems other than defects ascertainable during routine inspection. We hereby report that the all particulars in this report are correct at the time of test/ inspection &amp; operational maintenance is the sole responsibility of the equipment owner.
+      </p>
+      <p class="this-certificate-bec-lyLXxs valign-text-middle body-small-1" data-id="277:240">THIS CERTIFICATE BECOMES INVALID, IF ANY ALTERATION/REPAIR OR MODIFICATION IS MADE TO THE EQUIPMENT</p>
+      <p class="this-certificate-is-lyLXxs valign-text-middle body-xsmall-1" data-id="277:241">THIS CERTIFICATE IS GENERATED AND AUTHORIZED ELECTRONICALLY AND CAN BE CONSIDERED AS ORIGINAL. TO VERIFY THE AUTHENTICITY OF THIS CERTIFICATE, PLEASE CONTACT COMPANY.</p>
+      <div class="text_label-lyLXxs valign-text-bottom" data-id="277:242">
+        <span>
+          <span class="span0-8JxGHj">كيوب السلامة</span>
+          <span class="span1-8JxGHj"> والانسباكشن سيرفيس</span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <script src="launchpad-js/launchpad-banner.js" async=""></script>
+  <script defer="" src="https://animaapp.s3.amazonaws.com/static/restart-btn.min.js"></script>
+  <div id="anima-interface" data-turbo-permanent="true" class="idle"><!----></div>
+  `;
+}
+
+export function generateEquipmentCertificateHTMLBody(item:any):string {
+  return `
+  <html><head><style type="text/css">.turbo-progress-bar {
+    position: fixed;
+    display: block;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: #0076ff;
+    z-index: 9999;
+    transition:
+      width 300ms ease-out,
+      opacity 150ms 150ms ease-in;
+    transform: translate3d(0, 0, 0);
+  }
+  </style><style id="st_globalStyles">
+  /* MEDIA QUERIES */
+  .anima-desktop-only {
+    @media (max-width: 768px) {
+      display: none !important;
+    }
+  }
+  
+  /* SCROLLBAR */
+  
+  [dark-scroll]::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  [dark-scroll]::-webkit-scrollbar-track-piece {
+    background-color: #2b2b2b;
+    border: 1px solid #1d1d1d;
+  }
+  
+  [dark-scroll]::-webkit-scrollbar-thumb {
+    height: 10px;
+    background-color: #4d4d4d;
+  }
+  [dark-scroll]::-webkit-scrollbar-thumb:hover {
+    background-color: #5a5a5a;
+  }
+  
+  /* LOAD PROGRESS */
+  
+  .turbolinks-progress-bar {
+    height: 3px;
+    background-color: #ff6250;
+  }
+  
+  /* GROUPING */
+  
+  [data-id].ui-selecting {
+    box-shadow: inset 0 0 0 1px #4285f4 !important;
+  }
+  [data-id].ui-selected {
+    box-shadow: inset 0 0 0 1px #4285f4 !important;
+  }
+  
+  /* CURSOR */
+  
+  body[mode='comments'] * {
+    cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00LjkxNjQ4IDIzLjQxMDlDNS40OTE1MyAyMi45ODg3IDUuOTMxNzkgMjIuMzkzNSA2LjIzMjggMjEuNjQwN0M0Ljc5MDY5IDE5LjczODMgNCAxNy4zOTMzIDQgMTQuOTk3NUM0IDguOTM0MSA4LjkzMjgyIDQgMTUuMDAyMiA0QzIxLjA3MTcgNCAyNiA4LjkzOTE5IDI2IDE1LjAwMjVDMjYgMjEuMDY1OSAyMS4wNjcyIDI2IDE0Ljk5NzggMjZDMTIuOTg5NiAyNiAxMS4wMzUzIDI1LjQ1NTcgOS4zMjM2NyAyNC40MjMxQzguNDI5NjUgMjQuOTU3MiA3LjQxNDM0IDI1LjIyNjggNi4zMDAxOCAyNS4yMjY4QzUuOTU0MjYgMjUuMjI2OCA1LjU5OTM1IDI1LjIwMTQgNS4yNTM0MiAyNS4xNDU0QzQuOTAzIDI1LjA4OTUgNC42Mjg5NiAyNC44MDQ2IDQuNTUyNTggMjQuNDE4QzQuNDc2MjEgMjQuMDI2NCA0LjYxOTk3IDIzLjYyOTYgNC45MTY0OCAyMy40MTA5WiIgZmlsbD0iI0ZGNjI1MCIvPgo8L3N2Zz4K')
+        0 24,
+      auto !important;
+  }
+  
+  body[mode='code'] [data-id]:not(.hidden) {
+    cursor: default;
+  }
+  
+  /* default node state */
+  
+  body[mode='code'] [data-id]:not(.hidden), body[mode='comments'] [data-id]:not(.hidden) {
+    pointer-events: all;
+  }
+  
+  /* is_image */
+  
+  body[mode='code'] [data-id].is_image [data-id], body[mode='comments'] [data-id].is_image [data-id] {
+    pointer-events: none !important;
+  }
+  
+  /* without a data-id or ignored */
+  
+  [data-id].ignore,body[mode='code'] *:not([data-id]) {
+    pointer-events: none !important;
+  }
+  /* disable transforms for ignored elements */
+  
+  
+  body[mode='code'] [data-id]:hover{
+    transform: none !important;
+  }
+  
+  /* ANIMA BUTTONS */
+  .an-button {
+    position: relative;
+    height: 28px;
+    padding: 0 20px;
+    font-size: 14px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    transition-property: all;
+    transition-duration: 100ms;
+    appearance: none;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    border-width: 0;
+  }
+  
+  .an-button > div {
+    width: 100%;
+  }
+  
+  .an-button.primary {
+    background: #ff6250;
+    color: #ffffff;
+  }
+  
+  .an-button.primary:hover:not(:disabled) {
+    background: #e2412e;
+  }
+  
+  .an-button.secondary {
+    background: transparent;
+    border: 1px solid #ff6250;
+    color: #ff6250;
+  }
+  
+  .an-button.secondary:hover:not(:disabled) {
+    color: #ffffff;
+    background: #ff6250;
+  }
+  
+  .an-button.rounded {
+    border-radius: 100px;
+  }
+  
+  .an-button:disabled {
+    opacity: 0.5;
+  }
+  
+  .an-button:disabled {
+    cursor: default;
+  }
+  
+  .an-button:active,
+  .an-button:focus {
+    outline: none;
+  }
+  
+  </style><meta charset="utf-8"><meta name="viewport" content="width=1133, maximum-scale=1.0"><link rel="shortcut icon" type="image/png" href="https://animaproject.s3.amazonaws.com/home/favicon.png"><meta name="og:type" content="website"><meta name="twitter:card" content="photo"><script id="anima-load-script" src="load.js"></script><script id="anima-hotspots-script" src="hotspots.js"></script><style id="hotspots-styles">
+      .hotspot {
+        position: absolute;
+        border: 1px solid #2a9fd8;
+        background: rgba(0, 173, 255, 0.54);
+        opacity: 0;
+        z-index: -1;
+        pointer-events:none;
+      }
+    </style><script id="s_turbo" src="https://animaapp.s3.amazonaws.com/static/turbo.es2017-umd.js"></script><script id="anima-overrides-script" src="overrides.js"></script><script src="https://animaapp.s3.amazonaws.com/js/timeline.js"></script><style>
+  @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+  
+  @import url("https://fonts.googleapis.com/css?family=Inter:400,700,600");
+  
+  
+  @font-face {
+    font-family: "BentonSans Black-Regular";
+    font-style: normal;
+    font-weight: 400;
+    src: url('https://anima-uploads.s3.amazonaws.com/projects/60a30f014258b240d9538671/fonts/bentonsans-regular.otf') format("opentype");
+  }
+  /* The following line is used to measure usage of this code. You can remove it if you want. */
+  @import url("https://px.animaapp.com/67333f187f850eaed5a79816.67333f187f850eaed5a79819.Su0iJvK.hch.png");
+  
+  
+  .screen textarea:focus,
+  .screen input:focus {
+    outline: none;
+  }
+  
+  .screen * {
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+  }
+  
+  .screen div {
+    -webkit-text-size-adjust: none;
+  }
+  
+  .component-wrapper a {
+    display: contents;
+    pointer-events: auto;
+    text-decoration: none;
+  }
+  
+  .component-wrapper * {
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
+  
+  .component-wrapper a *,
+  .component-wrapper input,
+  .component-wrapper video,
+  .component-wrapper iframe {
+    pointer-events: auto;
+  }
+  
+  .component-wrapper.not-ready,
+  .component-wrapper.not-ready * {
+    visibility: hidden !important;
+  }
+  
+  .screen a {
+    display: contents;
+    text-decoration: none;
+  }
+  
+  .full-width-a {
+    width: 100%;
+  }
+  
+  .full-height-a {
+    height: 100%;
+  }
+  
+  .container-center-vertical {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+  .container-center-vertical > * {
+    flex-shrink: 0;
+    pointer-events: auto;
+  }
+  
+  .container-center-horizontal {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    pointer-events: none;
+    width: 100%;
+  }
+  
+  .container-center-horizontal > * {
+    flex-shrink: 0;
+    pointer-events: auto;
+  }
+  
+  .auto-animated div {
+    --z-index: -1;
+    opacity: 0;
+    position: absolute;
+  }
+  
+  .auto-animated input {
+    --z-index: -1;
+    opacity: 0;
+    position: absolute;
+  }
+  
+  .auto-animated .container-center-vertical,
+  .auto-animated .container-center-horizontal {
+    opacity: 1;
+  }
+  
+  .overlay-base {
+    display: none;
+    height: 100%;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  
+  .overlay-base.animate-appear {
+    align-items: center;
+    animation: reveal 0.3s ease-in-out 1 normal forwards;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+  }
+  
+  .overlay-base.animate-disappear {
+    animation: reveal 0.3s ease-in-out 1 reverse forwards;
+    display: block;
+    opacity: 1;
+    pointer-events: none;
+  }
+  
+  .overlay-base.animate-disappear * {
+    pointer-events: none;
+  }
+  
+  @keyframes reveal {
+    from { opacity: 0 }
+   to { opacity: 1 }
+  }
+  
+  .animate-nodelay {
+    animation-delay: 0s;
+  }
+  
+  .align-self-flex-start {
+    align-self: flex-start;
+  }
+  
+  .align-self-flex-end {
+    align-self: flex-end;
+  }
+  
+  .align-self-flex-center {
+    align-self: flex-center;
+  }
+  
+  .valign-text-middle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .valign-text-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  
+  input:focus {
+    outline: none;
+  }
+  
+  .listeners-active,
+  .listeners-active * {
+    pointer-events: auto;
+  }
+  
+  .hidden,
+  .hidden * {
+    pointer-events: none;
+    visibility: hidden;
+  }
+  
+  .smart-layers-pointers,
+  .smart-layers-pointers * {
+    pointer-events: auto;
+    visibility: visible;
+  }
+  
+  .listeners-active-click,
+  .listeners-active-click * {
+    cursor: pointer;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  :root { 
+    --black: #000000;
+    --dark-1: #0f1422;
+    --dark-2: #1f222a;
+    --red-orange: #ff3b30;
+   
+    --font-size-l: 24px;
+    --font-size-m: 16px;
+    --font-size-s: 12px;
+    --font-size-xs: 10px;
+   
+    --font-family-bentonsans_black-regular: "BentonSans Black-Regular", Helvetica;
+    --font-family-inter: "Inter", Helvetica;
+  }
+  .body-large-2 {
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-m);
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0px;
+  }
+  
+  .body-small-1 {
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-s);
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0px;
+  }
+  
+  .body-large-4 {
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-m);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
+  
+  .body-xsmall-4 {
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-xs);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
+  
+  .body-xsmall-1 {
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-xs);
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0px;
+  }
+  
+  .body-small-4 {
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-s);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
+  
+  :root {
+  }
+  
+  
+  /* screen - certificate-of-thorough-examination-of-lifting-gear */
+  
+  .certificate-of-thorough-examination-of-lifting-gear {
+    background-color: #f4fdff;
+    height: 1603.34px;
+    overflow: hidden;
+    overflow-x: hidden;
+    position: relative;
+    width: 1133px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .whats-app_-image_202-lyLXxs {
+    height: 1056px;
+    left: 26px;
+    top: 244px;
+    width: 1097px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .group-1000006694-lyLXxs {
+    background-color: transparent;
+    height: 98px;
+    left: 36px;
+    position: absolute;
+    top: 26px;
+    width: 79px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .whats-app_-image_202-aIznp1 {
+    height: 98px;
+    left: 0px;
+    top: 0px;
+    width: 79px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .whats-app_-image_202-4RajHW {
+    height: 88px;
+    left: 172px;
+    object-fit: cover;
+    top: 25px;
+    width: 310px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .whats-app_-image_202-9WsDNS {
+    height: 74px;
+    left: 21px;
+    top: 1518px;
+    width: 74px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .whats-app_-image_202-uywPwW {
+    height: 74px;
+    left: 100px;
+    top: 1518px;
+    width: 74px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .whats-app_-image_202-yyauHm {
+    height: 74px;
+    left: 179px;
+    top: 1518px;
+    width: 74px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-647-lyLXxs {
+    background-color: transparent;
+    height: 1px;
+    left: 0px;
+    object-fit: cover;
+    position: absolute;
+    top: 138px;
+    width: 1133px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-650-lyLXxs {
+    background-color: transparent;
+    height: 1px;
+    left: 0px;
+    object-fit: cover;
+    position: absolute;
+    top: 1508px;
+    width: 1133px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-651-lyLXxs {
+    background-color: transparent;
+    height: 1px;
+    left: 268px;
+    object-fit: cover;
+    position: absolute;
+    top: 1554px;
+    width: 523px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-648-lyLXxs {
+    background-color: transparent;
+    height: 78px;
+    left: 140px;
+    object-fit: cover;
+    position: absolute;
+    top: 30px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .an-isoiec-170202012-company-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-family: var(--font-family-bentonsans_black-regular);
+    font-size: var(--font-size-m);
+    font-style: normal;
+    font-weight: 400;
+    height: 22px;
+    left: 768px;
+    letter-spacing: 0.00px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: right;
+    top: 1545px;
+    width: 322px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23895-lyLXxs {
+    background-color: #cddced;
+    border: 1px solid;
+    border-color: var(--black);
+    height: 49px;
+    left: 43px;
+    position: absolute;
+    top: 191px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23896-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 59px;
+    left: 43px;
+    position: absolute;
+    top: 236px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23897-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 59px;
+    left: 43px;
+    position: absolute;
+    top: 295px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23898-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 59px;
+    left: 43px;
+    position: absolute;
+    top: 355px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-652-lyLXxs {
+    background-color: transparent;
+    height: 164px;
+    left: 566px;
+    object-fit: cover;
+    position: absolute;
+    top: 191px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .certificate-no-crt-24-4142-lyLXxs {
+    background-color: transparent;
+    color: transparent;
+    font-style: normal;
+    font-weight: 600;
+    height: 19px;
+    left: 61px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 205px;
+    white-space: nowrap;
+    width: 331px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-3sSeiN {
+    color: var(--dark-1);
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-3sSeiN {
+    color: var(--red-orange);
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .equipment-owner-art-line-grc-qatar-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 48px;
+    left: 61px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 241px;
+    width: 384px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-vZkDGw {
+    font-style: normal;
+    font-weight: 600;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-vZkDGw {
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .reference-standard-bs-en-1492a12008-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 48px;
+    left: 585px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 241px;
+    width: 384px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-2vI5tY {
+    font-style: normal;
+    font-weight: 600;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-2vI5tY {
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .qube-safety-inspection-services-co-wll-lyLXxs {
+    background-color: transparent;
+    color: #8d1b3d;
+    font-style: normal;
+    font-weight: 700;
+    height: 19px;
+    left: 685px;
+    line-height: normal;
+    position: absolute;
+    text-align: right;
+    top: 50px;
+    width: 406px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .cr-134005-office-04-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 55px;
+    left: 643px;
+    line-height: normal;
+    position: absolute;
+    text-align: right;
+    top: 73px;
+    width: 448px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-oKe1YJ {
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-oKe1YJ {
+    font-style: normal;
+    font-weight: 700;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .date-of-inspection-29-sep-2024-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 48px;
+    left: 585px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 301px;
+    width: 384px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-eLUxbt {
+    font-style: normal;
+    font-weight: 600;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-eLUxbt {
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .location-pearl-qatar-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 48px;
+    left: 61px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 301px;
+    width: 384px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-50ie5f {
+    font-style: normal;
+    font-weight: 600;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-50ie5f {
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .equipment-descriptio-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 48px;
+    left: 61px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 361px;
+    width: 797px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-VP1xgE {
+    font-style: normal;
+    font-weight: 600;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-VP1xgE {
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23899-lyLXxs {
+    background-color: #cddced;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 49px;
+    left: 43px;
+    position: absolute;
+    top: 414px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23900-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 263px;
+    left: 43px;
+    position: absolute;
+    top: 457px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23901-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 51px;
+    left: 43px;
+    position: absolute;
+    top: 718px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23902-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 51px;
+    left: 43px;
+    position: absolute;
+    top: 769px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-653-lyLXxs {
+    background-color: transparent;
+    height: 304px;
+    left: 216px;
+    object-fit: cover;
+    position: absolute;
+    top: 414px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-654-lyLXxs {
+    background-color: transparent;
+    height: 406px;
+    left: 283px;
+    object-fit: cover;
+    position: absolute;
+    top: 414px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-657-lyLXxs {
+    background-color: transparent;
+    height: 100px;
+    left: 549px;
+    object-fit: cover;
+    position: absolute;
+    top: 719px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-658-lyLXxs {
+    background-color: transparent;
+    height: 188px;
+    left: 549px;
+    object-fit: cover;
+    position: absolute;
+    top: 828px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-659-lyLXxs {
+    background-color: transparent;
+    height: 188px;
+    left: 469px;
+    object-fit: cover;
+    position: absolute;
+    top: 828px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-660-lyLXxs {
+    background-color: transparent;
+    height: 188px;
+    left: 390px;
+    object-fit: cover;
+    position: absolute;
+    top: 828px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-661-lyLXxs {
+    background-color: transparent;
+    height: 188px;
+    left: 1009px;
+    object-fit: cover;
+    position: absolute;
+    top: 828px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-662-lyLXxs {
+    background-color: transparent;
+    height: 188px;
+    left: 930px;
+    object-fit: cover;
+    position: absolute;
+    top: 828px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-665-lyLXxs {
+    background-color: transparent;
+    height: 40px;
+    left: 930px;
+    object-fit: cover;
+    position: absolute;
+    top: 1109px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-666-lyLXxs {
+    background-color: transparent;
+    height: 40px;
+    left: 1009px;
+    object-fit: cover;
+    position: absolute;
+    top: 1109px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-655-lyLXxs {
+    background-color: transparent;
+    height: 304px;
+    left: 962px;
+    object-fit: cover;
+    position: absolute;
+    top: 414px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-656-lyLXxs {
+    background-color: transparent;
+    height: 406px;
+    left: 834px;
+    object-fit: cover;
+    position: absolute;
+    top: 414px;
+    width: 1px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .serial-noid-no-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 28px;
+    left: 61px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 413px;
+    width: 146px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .dq-22123368-dq-22123-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 106px;
+    left: 61px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 539px;
+    width: 137px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .date-of-last-examination-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 70px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 731px;
+    white-space: nowrap;
+    width: 194px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .name-qualifications-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 46px;
+    left: 58px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 1160px;
+    width: 477px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .date-of-next-examination-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 313px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 731px;
+    white-space: nowrap;
+    width: 196px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .is-this-first-examin-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 50px;
+    left: 63px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 849px;
+    width: 305px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .if-the-answer-to-the-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 50px;
+    left: 63px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 941px;
+    width: 272px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .was-the-examination-lyLXxs {
+    top: 826px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .was-the-examination-4RajHW {
+    top: 873px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .in-accordance-with-an-examination-scheme-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 49px;
+    left: 571px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 920px;
+    width: 351px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .identification-of-an-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 49px;
+    left: 63px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 1017px;
+    width: 606px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .particulars-of-any-t-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 39px;
+    left: 63px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 1069px;
+    width: 606px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .is-this-equipment-safe-to-use-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 38px;
+    left: 63px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 1106px;
+    width: 606px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .signature-lyLXxs {
+    left: 58px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .name-of-person-authe-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 46px;
+    left: 595px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 1160px;
+    width: 477px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .signature-4RajHW {
+    left: 595px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .after-the-occurrence-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 49px;
+    left: 571px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 967px;
+    width: 334px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .date-of-next-proof-load-test-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 847px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 740px;
+    white-space: nowrap;
+    width: 228px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .date-of-last-proof-load-test-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 14px;
+    left: 562px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 745px;
+    white-space: nowrap;
+    width: 263px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .not-available-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 70px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 780px;
+    white-space: nowrap;
+    width: 194px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .x28-mar-2025-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 313px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 780px;
+    white-space: nowrap;
+    width: 196px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .yes-lyLXxs {
+    left: 398px;
+    top: 862px;
+    width: 33px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .no-lyLXxs {
+    left: 482px;
+    top: 862px;
+    width: 32px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .yes-4RajHW {
+    left: 398px;
+    top: 956px;
+    width: 33px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .none-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    right: 60px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 1030px;
+    white-space: nowrap;
+    
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .a-thorough-visual-ex-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 729px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: end;
+    top: 1075px;
+    white-space: nowrap;
+    width: 344px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .no-4RajHW {
+    left: 482px;
+    top: 956px;
+    width: 32px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .not-applicable-lyLXxs {
+    left: 847px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .not-applicable-4RajHW {
+    left: 580px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .nil-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 843px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 568px;
+    white-space: nowrap;
+    width: 137px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .x10-t-straight-lift-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 962px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 568px;
+    white-space: nowrap;
+    width: 137px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .make-dutest-qatar-ma-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 171px;
+    left: 308px;
+    line-height: 28.3px;
+    position: absolute;
+    text-align: left;
+    top: 493px;
+    width: 520px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .x04-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    left: 242px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 568px;
+    white-space: nowrap;
+    width: 26px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .qty-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 28px;
+    left: 234px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 424px;
+    width: 37px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .description-of-item-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 28px;
+    left: 477px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 424px;
+    width: 178px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .test-load-tonne-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 28px;
+    left: 847px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 424px;
+    width: 99px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .wll-or-swl-tonne-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 50px;
+    left: 982px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 424px;
+    width: 99px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .job-no-wo-24-1644-lyLXxs {
+    background-color: transparent;
+    color: transparent;
+    font-style: normal;
+    font-weight: 600;
+    height: 19px;
+    left: 585px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 205px;
+    white-space: nowrap;
+    width: 331px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-dEDzkL {
+    color: var(--dark-1);
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-dEDzkL {
+    color: var(--red-orange);
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .title-lyLXxs {
+    background-color: transparent;
+    color: var(--dark-2);
+    font-family: var(--font-family-inter);
+    font-size: var(--font-size-l);
+    font-style: normal;
+    font-weight: 700;
+    height: 47px;
+    left: 172px;
+    letter-spacing: 0.00px;
+    line-height: 28.8px;
+    position: absolute;
+    text-align: center;
+    top: 141px;
+    width: 789px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23903-lyLXxs {
+    background-color: transparent;
+    border: 1px solid;
+    border-color: var(--black);
+    height: 240px;
+    left: 43px;
+    position: absolute;
+    top: 828px;
+    width: 1047px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23908-lyLXxs {
+    background-color: transparent;
+    border: 1px solid;
+    border-color: var(--black);
+    height: 126px;
+    left: 43px;
+    position: absolute;
+    top: 1369px;
+    width: 1048px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23904-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 94px;
+    left: 43px;
+    position: absolute;
+    top: 828px;
+    width: 1047px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23905-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 94px;
+    left: 43px;
+    position: absolute;
+    top: 922px;
+    width: 1047px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23906-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 41px;
+    left: 43px;
+    position: absolute;
+    top: 1068px;
+    width: 1047px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .rectangle-23907-lyLXxs {
+    background-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--black);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: none;
+    height: 40px;
+    left: 43px;
+    position: absolute;
+    top: 1109px;
+    width: 1047px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-663-lyLXxs {
+    background-color: transparent;
+    height: 1px;
+    left: 549px;
+    object-fit: cover;
+    position: absolute;
+    top: 874px;
+    width: 541px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .line-664-lyLXxs {
+    background-color: transparent;
+    height: 1px;
+    left: 549px;
+    object-fit: cover;
+    position: absolute;
+    top: 968px;
+    width: 541px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .charmtick-lyLXxs {
+    background-color: transparent;
+    height: 19px;
+    left: 438px;
+    position: absolute;
+    top: 864px;
+    width: 21px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .vector-lyLXxs {
+    height: 12px;
+    ${!item?.first_examination ? "left: 513px" :"left: 433px"};
+    top: 961px;
+    width: 20px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .yes-9WsDNS {
+    left: 939px;
+    top: 839px;
+    width: 32px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .no-9WsDNS {
+    left: 1022px;
+    top: 839px;
+    width: 33px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .vector-4RajHW {
+    height: 14px;
+    ${!item?.first_examination ? "left: 1054px;" :"left: 974px;"}
+    top: 843px;
+    width: 18px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .yes-uywPwW {
+    left: 939px;
+    top: 886px;
+    width: 32px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .no-uywPwW {
+    left: 1022px;
+    top: 886px;
+    width: 33px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .vector-9WsDNS {
+    height: 14px;
+    ${item?.twelve_month_interval ? "left: 979px" :"left: 1059px"};
+    top: 890px;
+    width: 18px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .yes-yyauHm {
+    left: 939px;
+    top: 932px;
+    width: 32px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .no-yyauHm {
+    left: 1022px;
+    top: 932px;
+    width: 33px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .vector-uywPwW {
+    height: 12px;
+     ${item?.examination_scheme? "left: 979px":"left: 1059px"};
+    top: 937px;
+    width: 18px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .yes-Y5tY8J {
+    left: 939px;
+    top: 1116px;
+    width: 32px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .no-Y5tY8J {
+    left: 1022px;
+    top: 1116px;
+    width: 33px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .vector-yyauHm {
+    height: 14px;
+    ${item?.safe_to_use ? "left: 979px" :"left: 1059px"};
+    top: 1120px;
+    width: 18px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .yes-ASSg9r {
+    left: 939px;
+    top: 979px;
+    width: 32px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .no-ASSg9r {
+    left: 1022px;
+    top: 979px;
+    width: 33px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .vector-Y5tY8J {
+    height: 12px;
+    ${item?.exceptional_circumstances ? "left: 1054px" :"left: 1134px"};
+    top: 984px;
+    width: 18px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .the-concern-inspecto-lyLXxs {
+    background-color: transparent;
+    color: var(--black);
+    font-style: normal;
+    font-weight: 400;
+    height: 104px;
+    left: 59px;
+    line-height: normal;
+    position: absolute;
+    text-align: left;
+    top: 1384px;
+    width: 1032px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .this-certificate-bec-lyLXxs {
+    background-color: transparent;
+    color: var(--red-orange);
+    font-style: normal;
+    font-weight: 700;
+    height: 15px;
+    left: 226px;
+    line-height: normal;
+    position: absolute;
+    text-align: left;
+    top: 1377px;
+    width: 684px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .this-certificate-is-lyLXxs {
+    background-color: transparent;
+    color: #015293;
+    font-style: normal;
+    font-weight: 700;
+    height: 12px;
+    left: -37px;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 1475px;
+    width: 1201px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .text_label-lyLXxs {
+    background-color: transparent;
+    color: transparent;
+    direction: rtl;
+    font-family: var(--font-family-bentonsans_black-regular);
+    font-size: var(--font-size-m);
+    font-style: normal;
+    font-weight: 400;
+    height: 22px;
+    left: 854px;
+    letter-spacing: 0.00px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: right;
+    top: 28px;
+    white-space: nowrap;
+    width: auto;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span0-8JxGHj {
+    color: var(--black);
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .span1-8JxGHj {
+    color: #8d1b3d;
+    font-style: normal;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .no {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    white-space: nowrap;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .not-applicable {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    top: 781px;
+    white-space: nowrap;
+    width: 228px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .signature {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 45px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    top: 1209px;
+    width: 273px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .vector {
+    background-color: transparent;
+    position: absolute;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .was-the-examination {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 400;
+    height: 49px;
+    left: 571px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: left;
+    width: 334px;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .whats-app_-image_202 {
+    background-color: transparent;
+    position: absolute;
+  }
+  
+  .certificate-of-thorough-examination-of-lifting-gear .yes {
+    background-color: transparent;
+    color: var(--dark-1);
+    font-style: normal;
+    font-weight: 600;
+    height: 24px;
+    line-height: 22.4px;
+    position: absolute;
+    text-align: center;
+    white-space: nowrap;
+  }
+  </style><script id="anime-js-script" src="https://cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js" integrity="sha256-98Q574VkbV+PkxXCKSgL6jVq9mrVbS7uCdA+vt0sLS8=" crossorigin="anonymous"></script><script id="imgloaded-js-script" src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script><style id="action-links-styles">
+  @import url('https://fonts.googleapis.com/css2?family=Mulish&display=swap');
+  
+  #anima-interface{
+    transition: all 0.5s ease-in-out;
+  }
+  
+  #anima-watermark {
+    transition: all 0.5s ease-in-out;
+    display: none;
+  }
+  #anima-watermark-link{
+    position: fixed;
+    bottom:20px;
+    height:30px;
+    border-radius: 1000px;
+    background: #3B3B3B;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    user-select:none;
+    transition: width 0.25s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+    text-decoration:none;
+    color:#fff;
+    padding:8px 16px 8px 11px;
+    font-family:Mulish, sans-serif;
+    font-size:12px;
+  }
+  #anima-watermark-link .text {
+    margin-left: 6px;
+  }
+  
+  .omniview-anima-action-links .link{
+    height: 30px;
+    width: 30px;
+    border-radius: 1000px;
+    background: #3B3B3B;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    user-select:none;
+    transition: width 0.25s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+    text-decoration:none;
+    color:#fff;
+  }
+  .omniview-anima-action-links #comment-link .text,.omniview-anima-action-links #code-link .text{
+    display:none;
+    font-size:12px;
+    margin-right:5px;
+  }
+  .omniview-anima-action-links #comment-link:hover,.omniview-anima-action-links #code-link:hover{
+    width:105px;
+  }
+  .omniview-anima-action-links #comment-link.pop-active,.omniview-anima-action-links #code-link.pop-active{
+    width:105px;
+    background: #FF6250;
+  }
+  .omniview-anima-action-links #comment-link.pop-active .text,.omniview-anima-action-links #code-link.pop-active .text{
+    display:block
+  }
+  .omniview-anima-action-links #comment-link:hover .text,.omniview-anima-action-links #code-link:hover .text{
+    display:block;
+  }
+  
+  .link.navigation{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%);
+    width:auto;
+    height:32px;
+    color:#fff;
+    font-size:12px;
+    cursor:default;
+    padding:0 5px;
+  }
+  .link.navigation .icon{
+    margin:0 6px;
+    fill:none;
+    stroke:currentColor;
+    cursor:pointer;
+  }
+  .link.navigation .icon.disabled{
+    opacity:0.5;
+    cursor:default;
+  }
+  
+  
+  .link.navigation .home-icon{
+    margin-left:6px;
+    fill:currentColor;
+    stroke:currentColor;
+    cursor:pointer;
+  }
+  
+  .omniview-anima-action-links .restart{
+    height: 30px;
+    padding:0 12px;
+    background: #3B3B3B;
+    border-radius: 1000px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    color:#f1f1f1;
+    font-size: 12px;
+  }
+  
+  .omniview-anima-action-links{
+    display:flex;
+    align-items:center;
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    font-family:Mulish, sans-serif;
+    transition: all 0.5s ease-in-out;
+    opacity:1;
+  }
+  
+  .omniview-anima-action-links > * + *{
+     margin-right: 0;
+     margin-left: 10px;
+  }
+  
+  .idle{
+    opacity:0;
+    pointer-events:none;
+  }
+  
+  #popoverOpener {
+    position: absolute;
+    left: 50%;
+    margin-left: -10vw;
+    text-align: center;
+    top: 45vh;
+    width: 20vw;
+  }
+  
+  
+  .popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1060;
+    display: none;
+    font-family: "sans-serif";
+    font-size: 14px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  }
+  
+  .popover.top {
+    margin-top: -12px
+  }
+  
+  .popover.right {
+    margin-left: 10px
+  }
+  
+  .popover.bottom {
+    margin-top: 10px
+  }
+  
+  .popover.left {
+    margin-left: -10px
+  }
+  
+  .popover-title {
+    padding: 8px 14px;
+    margin: 0;
+    font-size: 14px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 5px 5px 0 0
+  }
+  
+  .popover-content {
+    height: 100%;
+    width: 100%;
+    display:flex;
+    overflow:hidden;
+    font-family:Mulish, sans-serif;
+  }
+  
+  
+  
+  .popover>.arrow,.popover>.arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid
+  }
+  
+  .popover>.arrow {
+    border-width: 11px
+  }
+  
+  .popover>.arrow:after {
+    content: "";
+    border-width: 10px
+  }
+  
+  .popover.top>.arrow {
+    bottom: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-top-color: #999;
+    border-top-color: rgba(0,0,0,.25);
+    border-bottom-width: 0
+  }
+  
+  .popover.top>.arrow:after {
+    bottom: 1px;
+    margin-left: -10px;
+    content: " ";
+    border-top-color: #fff;
+    border-bottom-width: 0
+  }
+  
+  .popover.right>.arrow {
+    top: 50%;
+    left: -11px;
+    margin-top: -11px;
+    border-right-color: #999;
+    border-right-color: rgba(0,0,0,.25);
+    border-left-width: 0
+  }
+  
+  .popover.right>.arrow:after {
+    bottom: -10px;
+    left: 1px;
+    content: " ";
+    border-right-color: #fff;
+    border-left-width: 0
+  }
+  
+  .popover.bottom>.arrow {
+    top: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-top-width: 0;
+    border-bottom-color: #999;
+    border-bottom-color: rgba(0,0,0,.25)
+  }
+  
+  .popover.bottom>.arrow:after {
+    top: 1px;
+    margin-left: -10px;
+    content: " ";
+    border-top-width: 0;
+    border-bottom-color: #fff
+  }
+  
+  .popover.left>.arrow {
+    top: 50%;
+    right: -11px;
+    margin-top: -11px;
+    border-right-width: 0;
+    border-left-color: #999;
+    border-left-color: rgba(0,0,0,.25)
+  }
+  
+  .popover.left>.arrow:after {
+    right: 1px;
+    bottom: -10px;
+    content: " ";
+    border-right-width: 0;
+    border-left-color: #fff
+  }
+  
+  
+  
+  #anima-comment-popover,#anima-code-popover{
+    background:#333333;
+    color:#fff;
+  }
+  
+  #anima-comment-popover.top>.arrow,#anima-comment-popover.top>.arrow:after,#anima-code-popover.top>.arrow:after,#anima-code-popover.top>.arrow {
+    border-top-color:#333;
+  }
+  
+  #anima-comment-popover .btn,#anima-code-popover .btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 20px;
+    background: #FF6250;
+    color:#fff;
+    border-radius: 100px;
+    width: max-content;
+    text-decoration:none;
+  }
+  
+  @media screen and (max-width: 550px) {
+    #anima-watermark-link {
+      padding: 6px !important;
+    }
+    #anima-watermark-link .text {
+      display: none !important;
+    }
+  }
+${generateEquipmentCertificateHTML(item)}
+   <div id="anima-comment-popover" class="popover top" role="tooltip" style="left: -205px; top: -220px;">
+            <div class="arrow" style="margin-left: 128px;"></div>
+            <div class="popover-content" style="align-items:center">
+              <div style="display:flex;flex-direction:column;height: 100%;padding: 20px;">
+                <h3 style="font-size:18px;margin-bottom:10px;font-weight:500;line-height: 26px;font-family: Roslindale;">
+                  Leave feedback and collaborate
+                </h3>
+                <p style="font-size:12px;margin-bottom:20px;font-weight:400;line-height: 20px;">
+                  Login to your account to leave comments. Don't have an account?
+                  Sign up for free!
+                </p>
+                <a target="_blank" rel="noopener noreferrer" class="btn" href="https://projects.animaapp.com/p/undefined/s/undefined?mode=comments&amp;utm_campaign=add-comment&amp;utm_medium=add-comment&amp;utm_source=animaapp.io">Add comment</a>
+              </div>
+  
+              <div style="display:flex;align-items:center;justify-content:center;padding-right:20px">
+                <img src="https://animaapp.s3.amazonaws.com/static/comment-illustration.svg">
+              </div>
+            </div>
+          </div>
+          <div id="anima-code-popover" class="popover top" role="tooltip" style="left: -205px; top: -220px;">
+            <div class="arrow" style="margin-left: 168px;"></div>
+            <div class="popover-content" style="align-items:center">
+              <div style="display:flex;flex-direction:column;height: 100%;padding: 20px;">
+                <h3 style="font-size:18px;margin-bottom:10px;font-weight:500;line-height: 26px;font-family: Roslindale;">
+                  Get clean code you’ll love with Anima
+                </h3>
+                <p style="font-size:12px;margin-bottom:20px;font-weight:400;line-height: 20px;">
+                  Login and easily export HTML, React or Vue of this prototype.
+                  Don’t have an account? Sign up for free!
+                </p>
+                <a target="_blank" rel="noopener noreferrer" class="btn" href="https://projects.animaapp.com/p/undefined/s/undefined?mode=code&amp;utm_campaign=get-code&amp;utm_medium=get-code&amp;utm_source=animaapp.io">
+                  Get code
+                </a>
+              </div>
+  
+              <img src="https://animaapp.s3.amazonaws.com/static/code-illustration.svg">
+            </div>
+          </div>
+          <div class="omniview-anima-action-links" id="actions-wrap">
+            <div class="omniview-anima-action-links">
+              <div id="page-nav" class="link navigation" style="display: none;">
+                <svg id="homepage-icon" class="home-icon" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.151 11a.25.25 0 01-.167-.436l4.349-3.913a.25.25 0 01.334 0l4.349 3.913a.25.25 0 01-.167.436H8.15zM16 12H9v4a1 1 0 001 1h5a1 1 0 001-1v-4z" fill="#fff"></path>
+                </svg>
+  
+                <svg class="icon" id="arrow-left" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+  
+                <span id="page-num"></span>
+  
+                <svg class="icon" id="arrow-right" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+  
+              <a class="link" id="comment-link" target="_blank" style="display: none;">
+                <span class="text">Comment</span>
+                <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.301 15.137a.551.551 0 01.199-.55c.314-.23.554-.554.718-.965A6.015 6.015 0 014 10 6.006 6.006 0   0110.001 4 6.006 6.006 0 0116 10.001 6.006 6.006 0 019.999 16a5.98 5.98 0 01-3.095-.86 3.165 3.165 0 01-1.65.438 3.6  3.6 0 01-.57-.044c-.191-.03-.34-.186-.383-.397z" fill="#fff"></path>
+                </svg>
+              </a>
+  
+              <a class="link" id="code-link" target="_blank" style="display: none;">
+                <span class="text">Get Code</span>
+                <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 15.667a1 1 0 01-.707-1.708l3.626-3.625-3.626-3.626a1 1 0 111.415-1.415l4.333 4.333a1 1 0 010 1.414l-4.333 4.333a.993.993 0 01-.707.294zM7.333 5a1 1 0 01.707 1.708l-3.626 3.625 3.627 3.626a1 1 0 11-1.415 1.415L2.293 11.04a1 1 0 010-1.415l4.333-4.333A.992.992 0 017.333 5z" fill="#fff"></path>
+                </svg>
+              </a>
+  
+              <div class="restart" id="restart-btn" style="display: none;">
+                <svg style="margin-right: 6px" width="12" height="12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 11.817A5.017 5.017 0 01.994 6.811c0-.207.169-.375.375-.375s.375.168.375.375A4.265 4.265 0 006 11.067a4.265 4.265 0 004.256-4.256A4.265 4.265 0 006 2.555a.376.376 0 01-.375-.376c0-.206.169-.374.375-.374a5.017 5.017 0 015.006 5.006A5.017 5.017 0 016 11.817z" fill="#fff"></path>
+                  <path d="M6.75 4.237a.37.37 0 01-.263-.112l-1.65-1.65a.363.363 0 010-.525L6.487.3c.15-.15.375-.15.525 0 .15.15.15.375 0 .525L5.625 2.212 7.012 3.6c.15.15.15.375 0 .525-.056.075-.15.112-.262.112z" fill="#fff"></path>
+                </svg>
+                Restart
+              </div>
+            </div>
+          </div>
+        <!----></div><div id="anima-watermark" class="idle" style="display: none;"><!----><a id="anima-watermark-link" target="_blank" href="https://www.animaapp.com?utm_campaign=public-link-banner&amp;utm_medium=public-link-banner&amp;utm_source=animaapp.io" style="right: 20px; left: auto; padding: 6px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" id="anima-logo-icon" fill="none" xmlns="http://www.w3.org/2000/svg" data-hotspot-id="hp-0">
+            <path d="M4.09293 3.00001H16.5327C16.5484 2.99976 16.5638 3.00351 16.5776 3.01092C16.5913 3.01832 16.603 3.02913 16.6114 3.04231C16.6198 3.0555 16.6247 3.07061 16.6256 3.08622C16.6265 3.10182 16.6233 3.1174 16.6165 3.13146C15.5441 5.29706 13.9276 7.14699 11.9253 8.50009C8.69117 10.6822 5.43436 10.9075 4.09389 10.9196C4.08165 10.9198 4.06949 10.9176 4.05811 10.9131C4.04672 10.9086 4.03636 10.9019 4.02761 10.8933C4.01887 10.8848 4.01192 10.8745 4.00718 10.8633C4.00244 10.852 4 10.8399 4 10.8276V3.09198C4 3.07982 4.00241 3.06778 4.00709 3.05656C4.01177 3.04534 4.01863 3.03516 4.02728 3.02661C4.03592 3.01805 4.04617 3.0113 4.05744 3.00673C4.06871 3.00217 4.08077 2.99988 4.09293 3.00001Z" fill="#FF6250"></path>
+            <path d="M6.77772 17.4446C8.31182 17.4446 9.55545 16.201 9.55545 14.6669C9.55545 13.1328 8.31182 11.8892 6.77772 11.8892C5.24363 11.8892 4 13.1328 4 14.6669C4 16.201 5.24363 17.4446 6.77772 17.4446Z" fill="#FFDF90"></path>
+            <path d="M12.4559 17.2799C11.6701 16.9799 11.2522 16.1151 11.5185 15.3496L13.6153 9.3656C13.884 8.60003 14.7387 8.22302 15.5245 8.52299C16.3103 8.82344 16.7282 9.68772 16.4619 10.4538L14.365 16.4377C14.0964 17.2033 13.2417 17.5808 12.4559 17.2799Z" fill="#3366FF"></path>
+          </svg>
+          <span class="text" style="display: none;">Made with Anima</span>
+        </a><!----></div><div id="hotspots_wrapper"><div class="hotspot" id="hp-0" style="top: 0px; left: 0px; z-index: -1; opacity: 0;"></div></div><div id="t_preload_links"><link href="/certificate-of-thorough-examination-of-lifting-gear" rel="prefetch"></div></body></html>
+  `
+}
+
 export function replaceHyphen(str: string) {
   if (str.includes('-')) {
       return str.replace(/-/g, '_');  // Replace all hyphens with underscores
@@ -257,6 +2661,7 @@ position: relative;
 width: 595px;
 height: 842px;
 margin: 0 auto;
+    margin-top: 30px;
 background: #ffffff;
 overflow: hidden;
 }
@@ -492,12 +2897,12 @@ z-index: 12;
 >
 </div>
 <div class="profile-photo"></div>
-<span class="sheik-hameed-khan">${item?.name}</span>
+<span class="sheik-hameed-khan">${item?.name?.toUpperCase()}</span>
 <div class="nome">
 <span class="apparicio-junior">${item?.certificate_no}<br /><br /></span>
 </div>
 <span class="qube-inspection-basic"
->${item?.id_no}<br />${item?.company}<br />${item?.designation}<br />${item?.model_level}<br />${item?.course_duration+" " || 2+" "}day</span
+>${item?.id_no}<br />${item?.company?.toUpperCase()}<br />${item?.designation?.toUpperCase()}<br />${item?.model_level?.toUpperCase()}<br />${item?.course_duration} ${Number(item?.course_duration) > 1 ? "DAYS" : "DAY"}</span
 ><span class="qatar-id-company"
 >Qatar ID/ ID No.: <br />Company name:<br />Designation:<br />Model/
 Level:<br />Course Duration:</span
@@ -652,7 +3057,20 @@ textarea,
 button {
   outline: 0;
 }
-
+  *{
+  margin: 0px;
+  padding: 0px;
+}
+@media print {  
+  @page {
+    size: 500px 800px;
+    margin: 0;
+    padding: 0;
+  }
+    html, body {
+        height: 95%;    
+    }
+}
 .main-container {
   position: relative;
   width: 493px;

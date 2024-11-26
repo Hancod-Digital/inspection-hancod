@@ -179,6 +179,67 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
     <div class="apply-style">
         <img style="object-fit: cover;" width="100%" height="100%" src="${item.avatar || "https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg="}" alt="">
       </div>
+      <span class="sheik-hameed-khan">${item?.name?.to?.toUpperCase()}</span>
+      <div class="flex-row-b">
+        <div class="nome">
+          <span class="apparicio-junior">${item?.certificate_no}<br /><br /></span>
+        </div>
+        <div class="line"></div>
+        <span class="qatar-id-company"
+          >Qatar ID/ ID No.: <br />Company name:<br />Course Details:<br /><br />Model/
+          Level:</span
+        ><span class="qube-inspection"
+          >${item?.id_no}<br />Qube Inspection<br /><br /><br /></span
+        ><span class="safe-building-operator"
+          >${training?.toUpperCase()} <br />${training1?.toUpperCase()}</span
+        ><span class="safety-model-operator"
+          >${model_level?.toUpperCase()} <br />${model_level1?.toUpperCase()}</span
+        >
+      </div>
+      <div class="line-1"></div>
+      <div class="flex-row-baa">
+        <div class="vector">
+         
+          
+         
+        </div>
+        <span class="date-range">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span
+        ><span class="date-info">Issued Date: <br />Expiry Date:</span
+        ><span class="qr-code">Scan QR code to verify this card</span>
+      </div>
+    
+      <div class="shape"></div>
+    </div>
+    <script>
+      window.onload = function() {
+        window.print();
+        window.close();
+      };
+    </script>
+  </body>
+</html>
+
+          `
+    document.body.appendChild(iframe);
+console.log(`
+  <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
+ <style>
+  ${cssString(item)}
+ </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="rectangle"></div>
+      <div class="whatsapp-image"></div>
+    <div class="apply-style">
+        <img style="object-fit: cover;" width="100%" height="100%" src="${item.avatar || "https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg="}" alt="">
+      </div>
       <span class="sheik-hameed-khan">${item?.name}</span>
       <div class="flex-row-b">
         <div class="nome">
@@ -207,7 +268,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
         ><span class="date-info">Issued Date: <br />Expiry Date:</span
         ><span class="qr-code">Scan QR code to verify this card</span>
       </div>
-      <div class="rectangle-15a"></div>
+      
       <div class="shape"></div>
     </div>
     <script>
@@ -218,9 +279,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
     </script>
   </body>
 </html>
-
-          `
-    document.body.appendChild(iframe);
+  `);
 
     iframe.onload = function () {
       iframe.contentWindow.focus();

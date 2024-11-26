@@ -34,9 +34,9 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             visibility: hidden;
             position: fixed;
             right: 0;
-            bottom: 0;
+            bottom: 0; 
             width: 100%;
-            height: 100%;
+            height:  100%;
         `;
     
         iframe.srcdoc = `
@@ -54,6 +54,11 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                             "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
                             "Source Han Sans CN", sans-serif;
                     }
+                            @page {   
+    size: 695px 930px;
+    margin: 0mm;
+}
+                  
                     .certificate-container {
                         background-color: #fff;
                         display: flex;
@@ -80,7 +85,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                     .recipient-name {
                         color: #000;
                         margin: 9px 0 0;
-                        font: 400 36px/1.1 Javanese Text, var(--default-font-family);
+                        font: 400 32.4px/1.1 Javanese Text, var(--default-font-family);
                     }
                     .certificate-details {
                         color: #1a1a1e;
@@ -168,15 +173,16 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                         align-items: start;
                         padding: 0 28px;
                     }
-                    .stamp {
-                        aspect-ratio: 1.01;
-                        object-fit: contain;
-                        width: 80px;
-                        margin-top: 28px;
-                    }
-                    @media print {
-                        body { margin: 0; }
-                        .certificate-container { margin: 0 auto; }
+                   .stamp {
+            aspect-ratio: 1.01;
+            object-fit: contain;
+            width: 117px;
+          margin-top: 28px;
+          }
+                    
+                        *{
+                    margin: 0px,
+                    padding: 0px
                     }
                 </style>
             </head>
@@ -184,21 +190,21 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                 <section class="certificate-container">
                     <img src="${item?.avatar}" alt="Certificate Logo" class="logo" />
                     <h1 class="certificate-intro">This is to certify that</h1>
-                    <h2 class="recipient-name">${item?.name}</h2>
+                    <h2 class="recipient-name">${item?.name?.toUpperCase()}</h2>
                     <p class="certificate-details" style="font-size: 14px;">
                         Qatar ID/ Employer ID No.
                         <span class="value qatar-id" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.id_no}</span>
                         <span class="underline">____________________________________________________________________</span>
                         <br />
                         Company / Employer
-                        <span class="value company" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.company}</span>
+                        <span class="value company" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.company?.toUpperCase()}</span>
                         <span class="underline">__________________________________________________________________________</span>
                         <br />
                         has successfully completed a Training/assessment as
-                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training}</span>
+                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training?.toUpperCase()}</span>
                         <span class="underline">____________________________________________</span>
                         <br />
-                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training1}</span>
+                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training1?.toUpperCase()}</span>
                         <span class="underline">_______________________________________________________</span>.
                     </p>
                     <article class="signatures-section">
@@ -216,7 +222,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                                         </div>
                                         <div class="meta-values">
                                             <p>${item?.certificate_no}</p>
-                                            <p>${(item?.course_duration || 2) > 1 ? `${item?.course_duration || 2} days` : `${item?.course_duration || 2} day`}</p>
+                                            <p>${(item?.course_duration || 2) > 1 ? `${item?.course_duration || 2} DAYS` : `${item?.course_duration || 2} DAY`}</p>
                                             <p>${formatDateWithHyphen(item?.issued_on)}</p>
                                             <p>${formatDateWithHyphen(item?.valid_untill)}</p>
                                         </div>
@@ -247,7 +253,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             </body>
             </html>
     
-              `
+           `
         document.body.appendChild(iframe);
     
         iframe.onload = function () {
@@ -269,8 +275,8 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
         htmlString = htmlString.replace(/\{\{profilePhotoUrl\}\}/g, profile_url);
         htmlString = htmlString.replace(/\{\{qrCodeUrl\}\}/g, qr_url);
         htmlString = htmlString.replace(/\{\{IDNumber\}\}/g, id_no);
-        htmlString = htmlString.replace(/\{\{Company\}\}/g, company);
-        htmlString = htmlString.replace(/\{\{name\}\}/g, name);
+        htmlString = htmlString.replace(/\{\{Company\}\}/g, company.toUpperCase());
+        htmlString = htmlString.replace(/\{\{name\}\}/g, name.toUpperCase());
         const words = designation.split(' ');
         let training = '';
         let training1 = '';
@@ -286,12 +292,12 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             }
         }
         
-        htmlString = htmlString.replace(/\{\{Training\}\}/g, training);
-        htmlString = htmlString.replace(/\{\{Training1\}\}/g, training1);
+        htmlString = htmlString.replace(/\{\{Training\}\}/g, training.toUpperCase());
+        htmlString = htmlString.replace(/\{\{Training1\}\}/g, training1.toUpperCase());
         htmlString = htmlString.replace(/\{\{CertificateNo\}\}/g, certificate_no);
         htmlString = htmlString.replace(/\{\{IssuedDate\}\}/g, issued_on);
         htmlString = htmlString.replace(/\{\{ExpiryDate\}\}/g, valid_untill);
-        htmlString = htmlString.replace(/\{\{CourseDuration\}\}/g, `${course_duration} ${parseInt(course_duration) > 1 ? " days" : "day"}`);
+        htmlString = htmlString.replace(/\{\{CourseDuration\}\}/g, `${course_duration} ${parseInt(course_duration) > 1 ? " DAYS" : "DAY"}`);
 
         
         // Replace the placeholder name in the span
