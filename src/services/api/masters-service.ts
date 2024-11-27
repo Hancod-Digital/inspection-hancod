@@ -64,6 +64,17 @@ export class MasterService extends Supabase {
         }
         return data;
     }
+    async addEquipment(result:any){
+        const {data,error} = await this.supabase
+                             .from('lifting_gear_multi_equipments').insert(result).select()
+
+              console.log(data);
+                             
+        if (error) {
+            throw new Error(error.message);
+        }
+        return data[0];
+    }
     async getMajorCategoryDetails() {
         const { data, error } = await this.supabase
             .rpc('get_major_category_data');  // Calling the SQL function

@@ -17,11 +17,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import SafetyChecklist from '@/components/safety-checklist';
 import { equipmentDataRange, generateEquipmentCertificateHTML } from '@/lib/utils';
 import { useSubtopic } from '@/context/SubtopicContext';
+import { makeApiCall } from '@/lib/apicaller';
+import { MasterService } from '@/services/api/masters-service';
+import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
   site: string().nonempty('Site is required'),
   authority: string().nonempty('Authority is required'),
   standard: string().nonempty('Standard is required'),
+  type_of_exam: string().nonempty('Type of Exam is required'),
   job_order_no: string().nonempty('Job Order No. is required'),
   equipment_no: string().nonempty('Equipment No. is required'),
   title: string().nonempty('Title is required'),
@@ -44,6 +48,7 @@ const equipmentDetailsSchema = object({
   manufacturer: string().nonempty('Manufacturer is required'),
   tested_standard: string().nonempty('Tested Standard is required'),
   approval_status: string().nonempty('Approval Status is required'),
+  location: string().nonempty('Location is required'),
 });
 console.log(generateEquipmentCertificateHTML({}));
 
@@ -70,22 +75,37 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [manufacturerOptions, setManufacturerOptions] = useState<any>([]);
   const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
   const [ownerOptions, setOwnerOptions] = useState<any>([])
-
+  const [locationOptions, setLocationOptions] = useState<any>([]);
 
   const { watch, setValue, formState } = methods
-  const { equipment_no, standard } = watch()
-  console.log(formState.errors, "formState.errors");
-
+  const { equipment_no, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
+  console.log(standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard);
+  //manufacturer
+  const addEquipmentToMulti = async() => {
+    const datas = {equipment_no,title,equipment_description,test_cert_coc_no,safe_working_load,proof_load,standard:standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard,last_test_exam,last_thorough_exam:last_thorough_exam == null ?"Not Applicable": last_thorough_exam,next_test_exam,next_thorough_exam:next_thorough_exam==null ? "Not Applicable":next_thorough_exam,owner_name:ownerOptions?.filter((item: any) => item?.id == owner_name)[0]?.owner,manufacturer:manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,result,surveyor,approval_status,location};
+    const otherfields = {result,equipment_no}
+    await makeApiCall(
+      ()=>new MasterService().addEquipment(datas),{
+          afterSuccess: (data:any) => {
+              const existingData = JSON.parse(localStorage.getItem('equipmentData') || '[]');
+              existingData.push(data);
+              localStorage.setItem('equipmentData', JSON.stringify(existingData));
+              toastWithTimeout(ToastVariant.Success,"Equipment addded")
+          }
+      }
+    )
+  }
   useEffect(() => {
     if (equipment_no) {
       // Find the associated data for the current equipment_no
       const selectedEquipment = equipmentNoOptions.find((item: any) => item.id == equipment_no);
+console.log(selectedEquipment);
 
       if (selectedEquipment) {
 
         setValue('standard', selectedEquipment.standard || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
-        setValue('owner_name', String(selectedEquipment.owner_name) || ''); // Update owner
+        
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || ''); // Update test cert/coc no
         setValue('safe_working_load', String(selectedEquipment.safe_working_load) || ''); // Update safe working load
         setValue('proof_load', String(selectedEquipment.proof_load) || ''); // Update proof load
@@ -94,7 +114,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         setValue('title', String(selectedEquipment.title) || ''); // Update title
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
-        setValue('owner_name', String(selectedEquipment.owner_name) || ''); // Update owner
+        setValue('owner_name', String(selectedEquipment.owner_id) || ''); // Update owner
         console.log(selectedEquipment, "selectedEquipment");
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
         setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
@@ -117,16 +137,22 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }
 
   }, [equipment_no])
+
   useEffect(() => {
     const fetchSites = async () => {
-      const data = await getAllSingleSubtopic("site"); // Fetch the areas
-      if (data) {
-        console.log(data);
-
-        setSiteOptions(data); // Set the area options to the fetched data
+      const res = locationOptions.filter((item: any) => item.location.id == location);
+      console.log(res,location);
+      
+      if (res.length > 0) {
+        console.log(res[0].site);
+        setSiteOptions([res[0].site]); // Set the area options to the fetched data
       }
     };
     fetchSites();
+  }, [location, locationOptions]);
+  useEffect(() => {
+    
+    
     const fetchSurveyors = async () => {
       const data = await getAllSingleSubtopic("surveyor"); // Fetch the areas
       if (data) {
@@ -184,6 +210,21 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     };
     fetchManufacturers();
 
+    const fetchLocations = async () => {
+      const data = await makeApiCall(()=>new MasterService().getLocationDetails(),{
+        afterSuccess: (data:any)=>{
+          console.log(data);
+          if (data) {
+            console.log(data);
+          
+            setLocationOptions(data); // Set the location options to the fetched data
+          }
+        }
+      })
+     
+    };
+    fetchLocations();
+
   }, [getAllSingleSubtopic]); // Runs once on component mount
 
   useEffect(() => {
@@ -228,7 +269,21 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       };
 
       console.log('Form submission:', formData);
-      await addRecord(formData);
+      const data = await addRecord(formData);
+      const existingData = JSON.parse(localStorage.getItem('equipmentData') || '[]');
+      Promise.all(existingData.map((item:any) => {
+        return makeApiCall(
+          () => new MasterService().updateSubtopicDetails('lifting_gear_multi_equipments', item.id, { lifting_gear_multi_id: data[0]?.id }),{}
+        );
+      }))
+      .then(() => {
+        console.log('All updates completed successfully');
+      })
+      .catch((error) => {
+        console.error('Error updating records:', error);
+      });
+      
+      localStorage.clear()
     } catch (error) {
       console.error('Form submission error:', error);
     } finally {
@@ -285,7 +340,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                           <SelectContent>
                             {siteOptions?.map((site: any) => (
                               <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.site}
+                                {site?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -321,6 +376,33 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="type_of_exam" className="mt-3">Type of Exam</Label>
+                    <Controller
+                      name="type_of_exam"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="type_of_exam">
+                            <SelectValue placeholder="Select job order no." />
+                          </SelectTrigger>
+                          <SelectContent>
+                             
+                              <SelectItem   value={"Test"}>
+                                Test
+                              </SelectItem>
+                              <SelectItem   value={"Thorough"}>
+                                Thorough
+                              </SelectItem>
+                            
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.job_order_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="job_order_no" className="mt-3">Job Order No.</Label>
                     <Controller
                       name="job_order_no"
@@ -342,6 +424,30 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     />
                     {errors.job_order_no && (
                       <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <Controller
+                      name="location"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="location">
+                            <SelectValue placeholder="Select location" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {locationOptions?.map((location: any) => (
+                              <SelectItem key={location.id} value={String(location?.location?.id)}>
+                                {location?.location?.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.location && (
+                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                     )}
                   </div>
 
@@ -732,9 +838,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                    <Table onFunction={function (): void {
-                      throw new Error('Function not implemented.');
-                    } } />
+                    <Table onFunction={addEquipmentToMulti}  />
                   </div>
                 </div>
                 <div className="space-y-4">

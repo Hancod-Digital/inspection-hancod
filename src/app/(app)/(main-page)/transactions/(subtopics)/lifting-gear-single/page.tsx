@@ -15,6 +15,7 @@ const LiftingEquipment = () => {
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
+    
     const handleOpenAdd = () => {
         setIsAdd(true)
     }

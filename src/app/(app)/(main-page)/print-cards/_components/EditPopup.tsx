@@ -208,7 +208,7 @@ const value = {
             ...value,
             avatar: avatarUrl,
             added_by: userName,
-            certificate_no: "QSIS-TRA-" + getLastTwoDigitsOfCurrentYear()
+            
           }),
         {
           afterSuccess: () => {

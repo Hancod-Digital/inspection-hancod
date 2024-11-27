@@ -17,6 +17,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import SafetyChecklist from '@/components/safety-checklist';
 import { equipmentDataRange, generateEquipmentCertificateHTML } from '@/lib/utils';
 import { useSubtopic } from '@/context/SubtopicContext';
+import { MasterService } from '@/services/api/masters-service';
+import { makeApiCall } from '@/lib/apicaller';
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
   site: string().nonempty('Site is required'),
@@ -32,11 +34,11 @@ const equipmentDetailsSchema = object({
   last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
   next_thorough_exam: string().optional(),
   result: string().nonempty('Result is required'),
-
+  type_of_exam: string().nonempty('Type of Exam is required'),
   surveyor: string().nonempty('Surveyor is required'),
   defect_description: string().nonempty('Defect Description is required'),
   test_particulars: string().nonempty('Test Particulars is required'),
-
+  location: string().nonempty('Location is required'),
   owner_name: string().nonempty('Owner Name is required'),
   proof_load: string().nonempty('Proof Load is required'),
   description: string().nonempty('Description Date is required'),
@@ -71,7 +73,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
   const [ownerOptions, setOwnerOptions] = useState<any>([])
 
-
+ const[locationOptions,setLocationOptions] = useState<any>([])
   const { watch, setValue, formState } = methods
   const { equipment_no, standard } = watch()
   console.log(formState.errors, "formState.errors");
@@ -104,6 +106,20 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       }
     }
   }, [equipment_no, equipmentNoOptions, setValue]);
+  const {location} = watch()
+  useEffect(() => {
+    const fetchSites = async () => {
+      const res = locationOptions.filter((item:any ) => item.location.id == location);
+      console.log(res,location);
+      
+      if (res.length > 0) {
+        console.log(res[0].site);
+        setSiteOptions([res[0].site]); // Set the area options to the fetched data
+      }
+    };
+    fetchSites();
+  }, [location, locationOptions]);
+
   useEffect(() => {
     if (equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date == null) {
       setTestExamChecked(true)
@@ -183,7 +199,20 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       }
     };
     fetchManufacturers();
-
+    const fetchLocations = async () => {
+      const data = await makeApiCall(()=>new MasterService().getLocationDetails(),{
+        afterSuccess: (data:any)=>{
+          console.log(data);
+          if (data) {
+            console.log(data);
+          
+            setLocationOptions(data); // Set the location options to the fetched data
+          }
+        }
+      })
+     
+    };
+    fetchLocations();
   }, [getAllSingleSubtopic]); // Runs once on component mount
 
   useEffect(() => {
@@ -321,6 +350,33 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="type_of_exam" className="mt-3">Type of Exam</Label>
+                    <Controller
+                      name="type_of_exam"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="type_of_exam">
+                            <SelectValue placeholder="Select job order no." />
+                          </SelectTrigger>
+                          <SelectContent>
+                             
+                              <SelectItem   value={"Test"}>
+                                Test
+                              </SelectItem>
+                              <SelectItem   value={"Thorough"}>
+                                Thorough
+                              </SelectItem>
+                            
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.job_order_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="job_order_no" className="mt-3">Job Order No.</Label>
                     <Controller
                       name="job_order_no"
@@ -344,7 +400,30 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
                     )}
                   </div>
-
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <Controller
+                      name="location"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="location">
+                            <SelectValue placeholder="Select location" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {locationOptions?.map((location: any) => (
+                              <SelectItem key={location.id} value={String(location?.location?.id)}>
+                                {location?.location?.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.location && (
+                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Equipment Information Title */}
