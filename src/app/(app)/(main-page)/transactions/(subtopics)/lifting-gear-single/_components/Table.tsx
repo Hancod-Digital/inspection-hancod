@@ -90,7 +90,7 @@ export default function EquipmentTable() {
         console.log({...item,job_order_no:jobOrderNoOptions.find((job:any)=>job.id == item.job_order_no)?.job_no,location_id:siteOptions.find((site:any)=>site.id == item.site)?.site,owner_name:ownerOptions.find((owner:any)=>owner.id == item.owner_name)?.owner,standard:standardOptions.find((standard:any)=>standard.id == item.standard)?.standard});
          
         // console.log(generateEquipmentCertificateHTMLBody({...item,job_order_no:jobOrderNoOptions.find((job:any)=>job.id === item.job_order_no)?.job_number,location_id:siteOptions.find((site:any)=>site.id === item.site)?.site}));
-        
+        if (typeof window !== 'undefined') {
           const iframe: any = document.createElement('iframe');
         iframe.style.visibility = 'hidden';
         iframe.style.position = 'fixed';
@@ -113,6 +113,7 @@ export default function EquipmentTable() {
           };
         };
       };
+    }
     
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
