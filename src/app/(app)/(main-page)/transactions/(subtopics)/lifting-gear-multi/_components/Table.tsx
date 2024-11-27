@@ -91,7 +91,7 @@ export default function EquipmentTable() {
          
         // console.log(generateEquipmentCertificateHTMLBody({...item,job_order_no:jobOrderNoOptions.find((job:any)=>job.id === item.job_order_no)?.job_number,location_id:siteOptions.find((site:any)=>site.id === item.site)?.site}));
           if (typeof window !== 'undefined') {
-            const iframe: any = document.createElement('iframe');
+            const iframe: any = window.document.createElement('iframe');
             iframe.style.visibility = 'hidden';
             iframe.style.position = 'fixed';
             iframe.style.right = '0';
