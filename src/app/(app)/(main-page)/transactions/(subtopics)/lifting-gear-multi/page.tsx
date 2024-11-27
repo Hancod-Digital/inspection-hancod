@@ -1,10 +1,14 @@
 'use client'
-import React, { useState } from 'react'
-import Table from './_components/Table'
+import React, { useState } from 'react' 
 import Header from './_components/Header'
 import AddForm from './_components/AddEquipment'
-import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
+import dynamic from 'next/dynamic'
+import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
+const Table = dynamic(
+    () => import('./_components/Table'),
+    { ssr: false }
+  )
 const LiftingGearMulti = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
 
