@@ -84,7 +84,7 @@ export default function EquipmentTable() {
           fetchStandards();
     },[data])
 
-    const printCertificate = (item: any) => {
+    const printCertificate = (item: any) => { 
         //job_number as job_order_no, certificate_no is undefined, location_id is undefined, date of inspection in dd-mm-yyyy format, test_load,
         console.log(equipmentOptions.find((equipment:any)=>equipment.id == item.equipment_no)?.equipment_name);
         console.log({...item,job_order_no:jobOrderNoOptions.find((job:any)=>job.id == item.job_order_no)?.job_no,location_id:siteOptions.find((site:any)=>site.id == item.site)?.site,owner_name:ownerOptions.find((owner:any)=>owner.id == item.owner_name)?.owner,standard:standardOptions.find((standard:any)=>standard.id == item.standard)?.standard});
