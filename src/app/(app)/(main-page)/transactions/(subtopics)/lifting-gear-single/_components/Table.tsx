@@ -170,7 +170,7 @@ export default function EquipmentTable() {
                                         transition={{ duration: 0.2 }}
                                     >
                                         <TableCell colSpan={5}>
-                                        <EditPopup onClose={handleCloseEdit} />
+                                        <EditPopup onClose={handleCloseEdit} id={item?.id} />
                                         </TableCell>
                                     </motion.tr>
                                 )}

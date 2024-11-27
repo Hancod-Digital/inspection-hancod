@@ -4,7 +4,7 @@ import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-for
 import { object, optional, string, TypeOf, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button'; 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,11 +32,11 @@ const equipmentDetailsSchema = object({
   last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
   next_thorough_exam: string().optional(),
   result: string().nonempty('Result is required'),
-  
+
   surveyor: string().nonempty('Surveyor is required'),
   defect_description: string().nonempty('Defect Description is required'),
   test_particulars: string().nonempty('Test Particulars is required'),
-  
+
   owner_name: string().nonempty('Owner Name is required'),
   proof_load: string().nonempty('Proof Load is required'),
   description: string().nonempty('Description Date is required'),
@@ -55,7 +55,7 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const {getAllSingleSubtopic,addRecord} = useSubtopic();
+  const { getAllSingleSubtopic, addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
@@ -69,20 +69,20 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [standardOptions, setStandardOptions] = useState<any>([]);
   const [manufacturerOptions, setManufacturerOptions] = useState<any>([]);
   const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
-  const [ownerOptions,setOwnerOptions] = useState<any>([])
-  
+  const [ownerOptions, setOwnerOptions] = useState<any>([])
 
-  const  {watch,setValue,formState} = methods
-  const {equipment_no,standard} =  watch()
-  console.log(formState.errors,"formState.errors");
-  
+
+  const { watch, setValue, formState } = methods
+  const { equipment_no, standard } = watch()
+  console.log(formState.errors, "formState.errors");
+
   useEffect(() => {
     if (equipment_no) {
       // Find the associated data for the current equipment_no
       const selectedEquipment = equipmentNoOptions.find((item: any) => item.id == equipment_no);
-  
+
       if (selectedEquipment) {
-        
+
         setValue('standard', selectedEquipment.standard || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
         setValue('owner_name', String(selectedEquipment.owner_name) || ''); // Update owner
@@ -95,7 +95,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
         setValue('owner_name', String(selectedEquipment.owner_name) || ''); // Update owner
-        console.log(selectedEquipment,"selectedEquipment");
+        console.log(selectedEquipment, "selectedEquipment");
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
         setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
         setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || ''); // Update last thorough exam
@@ -104,26 +104,26 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       }
     }
   }, [equipment_no, equipmentNoOptions, setValue]);
-  useEffect(()=>{
-    if(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date == null){
+  useEffect(() => {
+    if (equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date == null) {
       setTestExamChecked(true)
-    }else{
+    } else {
       setTestExamChecked(false)
     }
-    if(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date == null){
-    setThoroughExamChecked(true)
-  }else{
-    setThoroughExamChecked(false)
-  }
-    
-  },[equipment_no])
+    if (equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date == null) {
+      setThoroughExamChecked(true)
+    } else {
+      setThoroughExamChecked(false)
+    }
+
+  }, [equipment_no])
   useEffect(() => {
     const fetchSites = async () => {
       const data = await getAllSingleSubtopic("site"); // Fetch the areas
       if (data) {
- console.log(data);
- 
-          setSiteOptions(data); // Set the area options to the fetched data
+        console.log(data);
+
+        setSiteOptions(data); // Set the area options to the fetched data
       }
     };
     fetchSites();
@@ -134,7 +134,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       }
     };
     fetchSurveyors();
-    
+
     const fetchOwners = async () => {
       const data = await getAllSingleSubtopic('owner')
       if (data) {
@@ -160,8 +160,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
     const fetchEquipmentNos = async () => {
       const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
-      console.log(data,"data");
-      
+      console.log(data, "data");
+
       if (data) {
         setEquipmentNoOptions(data); // Set the area options to the fetched data
       }
@@ -209,9 +209,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     }));
   };
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-    
+
     try {
       const formData = {
         ...values,
@@ -224,9 +224,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
         approval_status: values.approval_status === "Approved" ? true : false,
         next_test_exam: testExamChecked ? "Not Applicable" : values.next_test_exam,
-        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam  
+        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam
       };
-      
+
       console.log('Form submission:', formData);
       await addRecord(formData);
     } catch (error) {
@@ -235,10 +235,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       setLoading(false);
     }
   };
-    
-    useEffect(()=>{
 
-  },[])
+  useEffect(() => {
+
+  }, [])
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -378,7 +378,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">Title</Label>
-                    <Input id="title"  value={equipmentNoOptions?.find((item:any)=>item?.id==equipment_no)?.title} {...register('title')} />
+                    <Input id="title" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.title} {...register('title')} />
                     {errors.title && (
                       <p className="text-red-500 text-[12px] ">{errors.title.message}</p>
                     )}
@@ -386,8 +386,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                 </div>
                 <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="equipment_description"  className="mt-3">Equipment Description</Label>
-                    <Input id="equipment_description"  value={equipmentNoOptions?.find((item:any)=>item?.id==equipment_no)?.description} {...register('equipment_description')} />
+                    <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
+                    <Input id="equipment_description" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.description} {...register('equipment_description')} />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
                     )}
@@ -396,100 +396,100 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
-                    <Input id="test_cert_coc_no"  value={equipmentNoOptions?.find((item:any)=>item?.id==equipment_no)?.test_certificate_no} {...register('test_cert_coc_no')} />
+                    <Input id="test_cert_coc_no" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.test_certificate_no} {...register('test_cert_coc_no')} />
                     {errors.test_cert_coc_no && (
                       <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
-                    <Input id="safe_working_load"  value={equipmentNoOptions?.find((item:any)=>item?.id==equipment_no)?.safe_working_load} {...register('safe_working_load')} />
+                    <Input id="safe_working_load" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.safe_working_load} {...register('safe_working_load')} />
                     {errors.safe_working_load && (
                       <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="proof_load"  className="mt-3">Proof Load:</Label>
-                    <Input id="proof_load"  value={equipmentNoOptions?.find((item:any)=>item?.id==equipment_no)?.proof_load} {...register('proof_load')} />
+                    <Label htmlFor="proof_load" className="mt-3">Proof Load:</Label>
+                    <Input id="proof_load" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.proof_load} {...register('proof_load')} />
                     {errors.proof_load && (
                       <p className="text-red-500 text-[12px] ">{errors.proof_load.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="standard" className="mt-3">
-    Standard
-  </Label>
-  <Controller
-    name="standard"
-    control={control}
-    render={({ field }) => {
-      // Extract the current standard value based on equipment_no
-      const currentStandard = String(
-        equipmentNoOptions?.find((item:any) => item?.id == equipment_no)?.standard
-      );
- 
-      return (
-        <Select
-          value={currentStandard||field.value } // Use field value or fallback to currentStandard
-          onValueChange={(value) => field.onChange(value)} // Update the form's value
-        >
-          <SelectTrigger id="standard">
-            <SelectValue defaultValue={currentStandard||field.value} placeholder="Select standard" />
-          </SelectTrigger>
-          <SelectContent>
-            {standardOptions?.map((standard: any) => (
-              <SelectItem key={standard.id} value={String(standard.id)}>
-                {standard.standard}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      );
-    }}
-  />
-  {errors.standard && (
-    <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
-  )}
-</div>
+                    <Label htmlFor="standard" className="mt-3">
+                      Standard
+                    </Label>
+                    <Controller
+                      name="standard"
+                      control={control}
+                      render={({ field }) => {
+                        // Extract the current standard value based on equipment_no
+                        const currentStandard = String(
+                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.standard
+                        );
 
-<div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="last_test_exam" className="mt-3">
-    Last Test Exam
-  </Label>
-  <Input
-    id="last_test_exam"
-    type="date"
-    defaultValue={
-      equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
-        ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date).toISOString().split('T')[0]
-        : ''
-    }
-    {...register('last_test_exam')}
-  />
-  {errors.last_test_exam && (
-    <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
-  )}
-</div>
+                        return (
+                          <Select
+                            value={currentStandard || field.value} // Use field value or fallback to currentStandard
+                            onValueChange={(value) => field.onChange(value)} // Update the form's value
+                          >
+                            <SelectTrigger id="standard">
+                              <SelectValue defaultValue={currentStandard || field.value} placeholder="Select standard" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {standardOptions?.map((standard: any) => (
+                                <SelectItem key={standard.id} value={String(standard.id)}>
+                                  {standard.standard}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        );
+                      }}
+                    />
+                    {errors.standard && (
+                      <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="last_test_exam" className="mt-3">
+                      Last Test Exam
+                    </Label>
+                    <Input
+                      id="last_test_exam"
+                      type="date"
+                      defaultValue={
+                        equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
+                          ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date).toISOString().split('T')[0]
+                          : ''
+                      }
+                      {...register('last_test_exam')}
+                    />
+                    {errors.last_test_exam && (
+                      <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
+                    )}
+                  </div>
 
 
-<div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="last_thorough_exam" className="mt-3">
-    Last Thorough Exam
-  </Label>
-  <Input
-    id="last_thorough_exam"
-    type="date"
-    defaultValue={
-      equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
-        ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date).toISOString().split('T')[0]
-        : ''
-    }
-    {...register('last_thorough_exam')}
-  />
-  {errors.last_thorough_exam && (
-    <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
-  )}
-</div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="last_thorough_exam" className="mt-3">
+                      Last Thorough Exam
+                    </Label>
+                    <Input
+                      id="last_thorough_exam"
+                      type="date"
+                      defaultValue={
+                        equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
+                          ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date).toISOString().split('T')[0]
+                          : ''
+                      }
+                      {...register('last_thorough_exam')}
+                    />
+                    {errors.last_thorough_exam && (
+                      <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
+                    )}
+                  </div>
 
                 </div>
                 <div className="grid gap-4 grid-cols-1 w-[64%]">
@@ -500,14 +500,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         name="next_test_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input id="next_test_date"  defaultValue={
+                          <Input id="next_test_date" defaultValue={
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
                               ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date).toISOString().split('T')[0]
                               : ''
                           } disabled={testExamChecked} type="date" {...field} />
                         )}
                       />
-                      <Checkbox className='w-6 h-6'  checked={testExamChecked} onCheckedChange={(checked) => setTestExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                      <Checkbox className='w-6 h-6' checked={testExamChecked} onCheckedChange={(checked) => setTestExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
                       {errors.next_test_exam && (
                         <p className="text-red-500 text-[12px]  text-[13px] ">
                           {errors.next_test_exam.message}
@@ -523,7 +523,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         name={"next_thorough_exam"}
                         control={control}
                         render={({ field }) => (
-                          <Input id={"next_thorough_exam"}  defaultValue={
+                          <Input id={"next_thorough_exam"} defaultValue={
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
                               ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date).toISOString().split('T')[0]
                               : ''
@@ -571,44 +571,44 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.result.message}</p>
                     )}
                   </div>
-                <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="owners" className="mt-3">
-    Owner Name
-  </Label>
-  <Controller
-    name="owner_name"
-    control={control}
-    render={({ field }) => {
-      // Extract the current owner value based on equipment_no
-      const currentOwner = String(
-        equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.owner_id
-      );
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="owners" className="mt-3">
+                      Owner Name
+                    </Label>
+                    <Controller
+                      name="owner_name"
+                      control={control}
+                      render={({ field }) => {
+                        // Extract the current owner value based on equipment_no
+                        const currentOwner = String(
+                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.owner_id
+                        );
 
-      return (
-        <Select
-          value={currentOwner || field.value} // Use field value or fallback to currentOwner
-          onValueChange={(value) => field.onChange(value)} // Update the form's value
-        >
-          <SelectTrigger id="owners">
-            <SelectValue defaultValue={currentOwner || field.value} placeholder="Select owner" />
-          </SelectTrigger>
-          <SelectContent>
-            {ownerOptions?.map((owner: any) => (
-              <SelectItem key={owner.id} value={String(owner.id)}>
-                {owner?.owner}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      );
-    }}
-  />
-  {errors.owner_name && (
-    <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
-  )}
-</div>
+                        return (
+                          <Select
+                            value={currentOwner || field.value} // Use field value or fallback to currentOwner
+                            onValueChange={(value) => field.onChange(value)} // Update the form's value
+                          >
+                            <SelectTrigger id="owners">
+                              <SelectValue defaultValue={currentOwner || field.value} placeholder="Select owner" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {ownerOptions?.map((owner: any) => (
+                                <SelectItem key={owner.id} value={String(owner.id)}>
+                                  {owner?.owner}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        );
+                      }}
+                    />
+                    {errors.owner_name && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
+                    )}
+                  </div>
 
-                   
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
                     <Controller
@@ -644,42 +644,42 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     )}
                   </div>
 
-                <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="manufacturer" className="mt-3">
-    Manufacturer
-  </Label>
-  <Controller
-    name="manufacturer"
-    control={control}
-    render={({ field }) => {
-      // Extract the current manufacturer value based on equipment_no
-      const currentManufacturer = String(
-        equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.manufacturer
-      );
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="manufacturer" className="mt-3">
+                      Manufacturer
+                    </Label>
+                    <Controller
+                      name="manufacturer"
+                      control={control}
+                      render={({ field }) => {
+                        // Extract the current manufacturer value based on equipment_no
+                        const currentManufacturer = String(
+                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.manufacturer
+                        );
 
-      return (
-        <Select
-          value={currentManufacturer || field.value} // Use field value or fallback to currentManufacturer
-          onValueChange={(value) => field.onChange(value)} // Update the form's value
-        >
-          <SelectTrigger id="manufacturer">
-            <SelectValue defaultValue={currentManufacturer || field.value} placeholder="Select manufacturer" />
-          </SelectTrigger>
-          <SelectContent>
-            {manufacturerOptions?.map((manufacturer: any) => (
-              <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
-                {manufacturer.manufacturer}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      );
-    }}
-  />
-  {errors.manufacturer && (
-    <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
-  )}
-</div>
+                        return (
+                          <Select
+                            value={currentManufacturer || field.value} // Use field value or fallback to currentManufacturer
+                            onValueChange={(value) => field.onChange(value)} // Update the form's value
+                          >
+                            <SelectTrigger id="manufacturer">
+                              <SelectValue defaultValue={currentManufacturer || field.value} placeholder="Select manufacturer" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {manufacturerOptions?.map((manufacturer: any) => (
+                                <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
+                                  {manufacturer.manufacturer}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        );
+                      }}
+                    />
+                    {errors.manufacturer && (
+                      <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
+                    )}
+                  </div>
 
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -730,31 +730,32 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     </div>
                   </div>
                 </div>
+                
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                   
+
                     <Label htmlFor="defect_description" className="mt-3">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
                     <Input id="defect_description" {...register('defect_description')} />
                     {errors.defect_description && (
                       <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                     )}
-                  
+
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                   
+
                     <Label htmlFor="test_particulars" className="mt-3">Particulars of any tests carried out as part of the examination</Label>
                     <Input id="test_particulars" {...register('test_particulars')} />
                     {errors.test_particulars && (
                       <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
                     )}
-                  
+
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                    <SafetyChecklist 
+                    <SafetyChecklist
                       values={safetyChecklistValues}
                       onChange={handleSafetyChecklistChange}
                     />
