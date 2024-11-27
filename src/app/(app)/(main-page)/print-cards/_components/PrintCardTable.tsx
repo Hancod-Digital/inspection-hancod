@@ -153,6 +153,8 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
  
   const handleEditClick = (item: any) => {
     const {training, training1} = splitDesignation(item?.designation)
+    console.log(item);
+    
     const {training:model_level, training1:model_level1} = splitDesignation(item?.model_level)
     const iframe: any = document.createElement('iframe');
     iframe.style.visibility = 'hidden';
@@ -179,7 +181,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
     <div class="apply-style">
         <img style="object-fit: cover;" width="100%" height="100%" src="${item.avatar || "https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg="}" alt="">
       </div>
-      <span class="sheik-hameed-khan">${item?.name?.to?.toUpperCase()}</span>
+      <span class="sheik-hameed-khan">${item?.name?.toUpperCase()}</span>
       <div class="flex-row-b">
         <div class="nome">
           <span class="apparicio-junior">${item?.certificate_no}<br /><br /></span>
