@@ -12,6 +12,9 @@ export const equipmentDataRange = [{from:'equipment_type',to:'equipment_type'}]
 export const locationDataRange = [{from:'site',to:'site'}]
 export const minorCategoryDataRange = [{from:'major_category',to:'major_category'},{from:'standard',to:'standard'}]
 
+
+
+
 export const fetchCertificateHtml = async (item:any) => {
   const htmlString = `
   <!DOCTYPE html>
@@ -273,10 +276,10 @@ export function generateEquipmentCertificateHTML(item:any):string {
           <span class="span1-50ie5f body-large-4">${item?.location_id}</span>
         </span>
       </div>
-      <p class="equipment-descriptio-lyLXxs valign-text-middle body-large-2" data-id="277:157">
+     <p class="equipment-descriptio-lyLXxs valign-text-middle body-large-2" data-id="277:157">
         <span>
           <span class="span0-VP1xgE body-large-2">EQUIPMENT DESCRIPTION:<br></span>
-          <span class="span1-VP1xgE body-large-4">${item?.equipment_description}</span>
+          <span class="span1-VP1xgE body-large-4">${item?.location_id}</span>
         </span>
       </p>
       <div class="rectangle-23899-lyLXxs" data-id="277:158"></div>
@@ -327,9 +330,9 @@ export function generateEquipmentCertificateHTML(item:any):string {
       <div class="nil-lyLXxs valign-text-middle body-large-2" data-id="277:203">Nil</div>
       <div class="x10-t-straight-lift-lyLXxs valign-text-middle body-large-2" data-id="277:204">${item?.safe_working_load}</div>
       <div class="make-dutest-qatar-ma-lyLXxs valign-text-middle body-large-2" data-id="277:205">
-     ${item?.description} 
+       ${item?.description} 
       </div>
-      <div class="x04-lyLXxs valign-text-middle body-large-2" data-id="277:206">04</div>
+      <div class="x04-lyLXxs valign-text-middle body-large-2" data-id="277:206">${item?.multiequipments ? (item?.multiequipments?.length < 10 ? "0" + item?.multiequipments?.length : item?.multiequipments?.length) : "01"}</div>
       <div class="qty-lyLXxs valign-text-middle body-large-2" data-id="277:207">QTY</div>
       <div class="description-of-item-lyLXxs valign-text-middle body-large-2" data-id="277:208">DESCRIPTION OF ITEM</div>
       <div class="test-load-tonne-lyLXxs valign-text-middle body-large-2" data-id="277:209">TEST LOAD (tonne)</div>
@@ -407,7 +410,15 @@ export function generateEquipmentCertificateHTMLBody(item:any):string {
       display: none !important;
     }
   }
-  
+  @media print {  
+  @page {
+    size: 
+1133px 1603px;
+    margin: 0;
+    padding: 0;
+  }
+   
+}
   /* SCROLLBAR */
   
   [dark-scroll]::-webkit-scrollbar {

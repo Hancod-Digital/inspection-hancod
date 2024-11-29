@@ -47,8 +47,7 @@ const equipmentDetailsSchema = object({
   tested_standard: string().nonempty('Tested Standard is required'),
   approval_status: string().nonempty('Approval Status is required'),
 });
-console.log(generateEquipmentCertificateHTML({}));
-
+ 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
@@ -76,8 +75,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
  const[locationOptions,setLocationOptions] = useState<any>([])
   const { watch, setValue, formState } = methods
   const { equipment_no, standard } = watch()
-  console.log(formState.errors, "formState.errors");
-
+  
   useEffect(() => {
     if (equipment_no) {
       // Find the associated data for the current equipment_no
@@ -97,7 +95,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
         setValue('owner_name', String(selectedEquipment.owner_name) || ''); // Update owner
-        console.log(selectedEquipment, "selectedEquipment");
+        
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
         setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
         setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || ''); // Update last thorough exam
@@ -110,10 +108,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   useEffect(() => {
     const fetchSites = async () => {
       const res = locationOptions.filter((item:any ) => item.location.id == location);
-      console.log(res,location);
+ 
       
       if (res.length > 0) {
-        console.log(res[0].site);
+       
         setSiteOptions([res[0].site]); // Set the area options to the fetched data
       }
     };
@@ -137,8 +135,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     const fetchSites = async () => {
       const data = await getAllSingleSubtopic("site"); // Fetch the areas
       if (data) {
-        console.log(data);
-
+      
         setSiteOptions(data); // Set the area options to the fetched data
       }
     };
@@ -176,9 +173,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
     const fetchEquipmentNos = async () => {
       const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
-      console.log(data, "data");
-
-      if (data) {
+    if (data) {
         setEquipmentNoOptions(data); // Set the area options to the fetched data
       }
     };
@@ -202,9 +197,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     const fetchLocations = async () => {
       const data = await makeApiCall(()=>new MasterService().getLocationDetails(),{
         afterSuccess: (data:any)=>{
-          console.log(data);
+       
           if (data) {
-            console.log(data);
+        
           
             setLocationOptions(data); // Set the location options to the fetched data
           }
@@ -217,7 +212,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      reset();
+      // reset();
     }
   }, [isSubmitSuccessful, reset]);
 
@@ -256,7 +251,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam
       };
 
-      console.log('Form submission:', formData);
+      
       await addRecord(formData);
     } catch (error) {
       console.error('Form submission error:', error);
@@ -283,7 +278,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               noValidate
               autoComplete="off"
               onSubmit={handleSubmit((values) => {
-                console.log('Form submitted');
+             
                 onSubmitHandler(values);
               })}
             >

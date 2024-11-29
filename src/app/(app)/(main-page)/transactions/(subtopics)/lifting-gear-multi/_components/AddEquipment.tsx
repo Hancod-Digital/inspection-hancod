@@ -50,8 +50,7 @@ const equipmentDetailsSchema = object({
   approval_status: string().nonempty('Approval Status is required'),
   location: string().nonempty('Location is required'),
 });
-console.log(generateEquipmentCertificateHTML({}));
-
+ 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
@@ -78,11 +77,12 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [locationOptions, setLocationOptions] = useState<any>([]);
 
   const { watch, setValue, formState } = methods
-  const { equipment_no, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
-  console.log(standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard);
+  const { equipment_no,inspection_date,type_of_exam, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
+  const [isSubmitted, setIsSubmitted] = useState(false)
+ 
   //manufacturer
   const addEquipmentToMulti = async() => {
-    const datas = {equipment_no,title,equipment_description,test_cert_coc_no,safe_working_load,proof_load,standard:standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard,last_test_exam,last_thorough_exam:last_thorough_exam == null ?"Not Applicable": last_thorough_exam,next_test_exam,next_thorough_exam:next_thorough_exam==null ? "Not Applicable":next_thorough_exam,owner_name:ownerOptions?.filter((item: any) => item?.id == owner_name)[0]?.owner,manufacturer:manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,result,surveyor,approval_status,location};
+    const datas = {equipment_no,inspection_date,type_of_exam,title,equipment_description,test_cert_coc_no,safe_working_load,proof_load,standard:standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard,last_test_exam,last_thorough_exam:last_thorough_exam == null ?"Not Applicable": last_thorough_exam,next_test_exam,next_thorough_exam:next_thorough_exam==null ? "Not Applicable":next_thorough_exam,owner_name:ownerOptions?.filter((item: any) => item?.id == owner_name)[0]?.owner,manufacturer:manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,result,surveyor,approval_status};
     const otherfields = {result,equipment_no}
     await makeApiCall(
       ()=>new MasterService().addEquipment(datas),{
@@ -91,6 +91,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               existingData.push(data);
               localStorage.setItem('equipmentData', JSON.stringify(existingData));
               toastWithTimeout(ToastVariant.Success,"Equipment addded")
+              setIsSubmitted(true)
           }
       }
     )
@@ -99,7 +100,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     if (equipment_no) {
       // Find the associated data for the current equipment_no
       const selectedEquipment = equipmentNoOptions.find((item: any) => item.id == equipment_no);
-console.log(selectedEquipment);
+ 
 
       if (selectedEquipment) {
 
@@ -115,7 +116,7 @@ console.log(selectedEquipment);
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
         setValue('owner_name', String(selectedEquipment.owner_id) || ''); // Update owner
-        console.log(selectedEquipment, "selectedEquipment");
+      
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
         setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
         setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || ''); // Update last thorough exam
@@ -141,10 +142,10 @@ console.log(selectedEquipment);
   useEffect(() => {
     const fetchSites = async () => {
       const res = locationOptions.filter((item: any) => item.location.id == location);
-      console.log(res,location);
+    
       
       if (res.length > 0) {
-        console.log(res[0].site);
+   
         setSiteOptions([res[0].site]); // Set the area options to the fetched data
       }
     };
@@ -186,8 +187,7 @@ console.log(selectedEquipment);
 
     const fetchEquipmentNos = async () => {
       const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
-      console.log(data, "data");
-
+  
       if (data) {
         setEquipmentNoOptions(data); // Set the area options to the fetched data
       }
@@ -213,9 +213,9 @@ console.log(selectedEquipment);
     const fetchLocations = async () => {
       const data = await makeApiCall(()=>new MasterService().getLocationDetails(),{
         afterSuccess: (data:any)=>{
-          console.log(data);
+     
           if (data) {
-            console.log(data);
+          
           
             setLocationOptions(data); // Set the location options to the fetched data
           }
@@ -229,7 +229,7 @@ console.log(selectedEquipment);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      reset();
+      // reset();
     }
   }, [isSubmitSuccessful, reset]);
 
@@ -283,7 +283,7 @@ console.log(selectedEquipment);
         console.error('Error updating records:', error);
       });
       
-      localStorage.clear()
+      localStorage.removeItem('equipmentData')
     } catch (error) {
       console.error('Form submission error:', error);
     } finally {
@@ -838,7 +838,7 @@ console.log(selectedEquipment);
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                    <Table onFunction={addEquipmentToMulti}  />
+                    <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} />
                   </div>
                 </div>
                 <div className="space-y-4">

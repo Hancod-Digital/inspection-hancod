@@ -15,8 +15,7 @@ export default function Component() {
   const readyToImportCount = data.filter(row =>
     Object.keys(mappings).every(field => mappings[field] && row[mappings[field]])
   ).length
-console.log(data,mappings);
-
+ 
   // Calculate the number of skipped records (total records - ready to import)
   const skippedRecordsCount = data.length - readyToImportCount
  

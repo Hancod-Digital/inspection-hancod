@@ -11,10 +11,19 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { PencilIcon, TrashIcon } from "@heroicons/react/solid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function Component({ onFunction }: { onFunction: () => void }) {
-  const existingData = JSON.parse(localStorage.getItem('equipmentData') || '[]');
+export default function Component({ onFunction ,isSubmitted}: { onFunction: () => void ,isSubmitted:boolean}) {
+  const [existingData, setExistingData] = useState<any[]>([]);
+
+  useEffect(()=>{
+    const data = JSON.parse(localStorage.getItem('equipmentData') || '[]');
+    console.log(data);
+    
+    setExistingData(data);
+  },[isSubmitted])
+
+   
   return (
     <div className="w-full mx-auto py-5">
       <div className="flex justify-between items-center mb-4">

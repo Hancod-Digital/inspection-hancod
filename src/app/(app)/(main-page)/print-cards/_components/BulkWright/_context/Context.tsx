@@ -159,7 +159,7 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
       
       // Optional: Log duplicates
       if (duplicates.length > 0) {
-        console.log('Duplicate items skipped:', duplicates);
+    
       }
     } else {
       // Trim data even if not skipping duplicates

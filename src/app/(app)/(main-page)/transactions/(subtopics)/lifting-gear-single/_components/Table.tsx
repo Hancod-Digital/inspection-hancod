@@ -37,7 +37,7 @@ export default function EquipmentTable() {
         setEditingRow(null);
     };
     const {data} = useSubtopic();
-    console.log(data);
+ 
     const [jobOrderNoOptions,setJobOrderNoOptions] = useState<any>([])
     const [siteOptions,setSiteOptions] = useState<any>([])
     const [ownerOptions,setOwnerOptions] = useState<any>([])
@@ -47,7 +47,7 @@ export default function EquipmentTable() {
         const fetchJobOrderNos = async () => {
             const data = await getAllSingleSubtopic("job_orders"); // Fetch the areas
             if (data) {
-                console.log(data,"data")
+          
               setJobOrderNoOptions(data); 
             }
           };
@@ -62,14 +62,14 @@ export default function EquipmentTable() {
           const fetchSites = async () => {
             const data = await getAllSingleSubtopic("site"); // Fetch the areas
             if (data) {
-                console.log(data,"datssa")
+            
               setSiteOptions(data); 
             }
           };
           fetchSites();
           const fetchOwners = async () => {
             const data = await getAllSingleSubtopic("owner"); // Fetch the areas
-            console.log(data,"dataa")
+        
             if (data) {
               setOwnerOptions(data); 
             }
@@ -86,9 +86,8 @@ export default function EquipmentTable() {
 
     const printCertificate = (item: any) => {
         //job_number as job_order_no, certificate_no is undefined, location_id is undefined, date of inspection in dd-mm-yyyy format, test_load,
-        console.log(equipmentOptions.find((equipment:any)=>equipment.id == item.equipment_no)?.equipment_name);
-        console.log({...item,job_order_no:jobOrderNoOptions.find((job:any)=>job.id == item.job_order_no)?.job_no,location_id:siteOptions.find((site:any)=>site.id == item.site)?.site,owner_name:ownerOptions.find((owner:any)=>owner.id == item.owner_name)?.owner,standard:standardOptions.find((standard:any)=>standard.id == item.standard)?.standard});
-         
+     
+          
         // console.log(generateEquipmentCertificateHTMLBody({...item,job_order_no:jobOrderNoOptions.find((job:any)=>job.id === item.job_order_no)?.job_number,location_id:siteOptions.find((site:any)=>site.id === item.site)?.site}));
         if (typeof window !== 'undefined') {
           const iframe: any = window.document.createElement('iframe');
