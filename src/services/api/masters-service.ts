@@ -149,6 +149,18 @@ console.log(data)
         }
       };
     
+    async fetchAllEquipments(id:string) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase
+            .from("lifting_gear_multi_equipments")
+            .select("*")
+            .eq('lifting_gear_multi_id', id);
+        
+        if (error) {
+            throw new Error(error.message);
+        }
+        return data;
+    }
     async updateSubtopicDetails(subtopic: string, id: number, updates: object, surveyorCompetency?: any) {
         await this.ensureAuthenticated();
         try {
@@ -186,6 +198,20 @@ console.log(data)
         }
     }
 
+    async fetchSerialNos(id: string) {
+        await this.ensureAuthenticated()
+console.log(id);
+
+        const {data,error} = await this.supabase.from('equipment')
+        .select('serial_no')
+        .eq('id',id)
+        console.log(data);
+        
+        if (error) {
+            throw new Error(error.message);
+        }
+        return data;
+    }
     async deleteSubtopicDetails(subtopic: string, id: number) {
         await this.ensureAuthenticated();
 

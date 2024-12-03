@@ -414,6 +414,9 @@ export function generateEquipmentCertificateHTMLBody(item:any):string {
   @page {
     size: 
 1133px 1603px;
+
+
+
     margin: 0;
     padding: 0;
   }
