@@ -121,8 +121,8 @@ export default function EquipmentTable() {
     useEffect(() => {
         const generateCertificates = async () => {
             const certificates = await Promise.all(data?.map(async (item) => {
-                const serialNo = await fetchEquipments(item?.id);
-                console.log(serialNo);
+                const serialNo:any = await fetchEquipments(item?.id);
+                 
                 const serialNoGroups = await Promise.all(serialNo.map(async (item: any) => {
                     return await fetchSerialNos(item.equipment_no);
                 }));
