@@ -21,8 +21,8 @@ export default function PropertyTable({data,setData}:{data:any,setData:any}) {
       const newColumns = [...prevColumns, columnName];
 
       // Update each row to add the new column with an empty value
-      setData((prevData) =>
-        prevData.map((row) => ({
+      setData((prevData:any) =>
+        prevData.map((row:any) => ({
           ...row,
           [columnName]: '', // Add empty value for the new column in all rows
         }))
@@ -39,7 +39,7 @@ export default function PropertyTable({data,setData}:{data:any,setData:any}) {
       return acc;
     }, { property: '' } as { [key: string]: string }); // Include 'property' key
 
-    setData((prevData) => [...prevData, newRow]);
+    setData((prevData:any) => [...prevData, newRow]);
   };
 
   return (
@@ -77,7 +77,7 @@ export default function PropertyTable({data,setData}:{data:any,setData:any}) {
               </TableCell>
             </TableRow>
           ) : (
-            data?.map((row, index) => (
+            data?.map((row:any, index:any) => (
               <TableRow key={index}>
                 <TableCell className="p-2">
                   <input
