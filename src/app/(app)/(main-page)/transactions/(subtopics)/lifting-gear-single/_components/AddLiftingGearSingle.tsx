@@ -675,7 +675,7 @@ console.log(values,"values_name");
                             <SelectContent>
                               {ownerOptions?.map((owner: any) => (
                                 <SelectItem key={owner?.id} value={String(owner?.id)}>
-                                  {owner?.id}
+                                  {owner?.owner}
                                 </SelectItem>
                               ))}
                             </SelectContent>
