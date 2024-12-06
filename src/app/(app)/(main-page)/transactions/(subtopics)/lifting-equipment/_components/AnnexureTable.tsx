@@ -52,7 +52,7 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
   }, [equipmentDetails])
 
   const handleReset = () => {
-    setPropertyList(propertyList.map(item => ({
+    setPropertyList(propertyList.map((item:any) => ({
       ...item,
       property_group: '',
       condition: ''
@@ -60,19 +60,19 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
   }
 
   const handlePropertyChange = (id: string, value: string) => {
-    setPropertyList(propertyList.map(item => 
+    setPropertyList(propertyList.map((item:any) => 
       item.id === id ? { ...item, property: value } : item
     ))
   }
 
   const handleValueChange = (id: string, value: string) => {
-    setPropertyList(propertyList.map(item =>
+    setPropertyList(propertyList.map((item:any) =>
       item.id === id ? { ...item, property_group: value } : item  
     ))
   }
 
   const handleRemarksChange = (id: string, value: string) => {
-    setPropertyList(propertyList.map(item =>
+    setPropertyList(propertyList.map((item:any) =>
       item.id === id ? { ...item, condition: value } : item
     ))
   }
@@ -100,7 +100,7 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
             </TableRow>
           </TableHeader>
           <TableBody>
-            {propertyList.map((item) => (
+            {propertyList.map((item:any) => (
               <TableRow key={item.id}>
                 <TableCell className="border border-gray-200">
                   <input
