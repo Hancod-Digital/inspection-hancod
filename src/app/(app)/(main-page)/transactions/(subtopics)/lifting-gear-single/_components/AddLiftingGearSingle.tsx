@@ -74,13 +74,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
  const[locationOptions,setLocationOptions] = useState<any>([])
   const { watch, setValue, formState } = methods
-  const { equipment_no, standard } = watch()
+  const { equipment_no, standard,owner_name } = watch()
+  console.log(owner_name,"owner_name");
   
   useEffect(() => {
     if (equipment_no) {
       // Find the associated data for the current equipment_no
       const selectedEquipment = equipmentNoOptions.find((item: any) => item.id == equipment_no);
-
+console.log(selectedEquipment,"selectedEquipment");
       if (selectedEquipment) {
 
         setValue('standard', selectedEquipment.standard || ''); // Update standard
@@ -94,7 +95,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         setValue('title', String(selectedEquipment.title) || ''); // Update title
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
-        setValue('owner_name', String(selectedEquipment.owner_name) || ''); // Update owner
+        setValue('owner_name', String(selectedEquipment.owner_id) || ''); // Update owner
         
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
         setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
@@ -151,6 +152,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     const fetchOwners = async () => {
       const data = await getAllSingleSubtopic('owner')
       if (data) {
+        console.log(data);
+        
         setOwnerOptions(data)
       }
     }
@@ -235,6 +238,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
+console.log(values,"values_name");
 
     try {
       const formData = {
@@ -658,7 +662,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         const currentOwner = String(
                           equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.owner_id
                         );
-
+                        console.log(currentOwner,"currentOwner");
+         
                         return (
                           <Select
                             value={currentOwner || field.value} // Use field value or fallback to currentOwner
@@ -669,8 +674,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                             </SelectTrigger>
                             <SelectContent>
                               {ownerOptions?.map((owner: any) => (
-                                <SelectItem key={owner.id} value={String(owner.id)}>
-                                  {owner?.owner}
+                                <SelectItem key={owner?.id} value={String(owner?.id)}>
+                                  {owner?.id}
                                 </SelectItem>
                               ))}
                             </SelectContent>
