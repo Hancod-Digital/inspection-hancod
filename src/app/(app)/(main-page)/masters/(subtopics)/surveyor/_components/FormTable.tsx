@@ -30,7 +30,7 @@ export default function Component({onFunction,competencies}:{onFunction: ()=>voi
               <TableCell className="border-r p-2 h-12">{index + 1}</TableCell>
               <TableCell className="border-r p-2 h-12">{item.competency}</TableCell>
               <TableCell className="border-r p-2 h-12">{item.validity}</TableCell>
-              <TableCell className="p-2 h-12"><a href={item.attachment} target="_blank">Document</a></TableCell>
+              <TableCell className="p-2 h-12"><a href={item.attachment} className="text-blue-600 underline" download={item.attachment} target="_blank">Document</a></TableCell>
             </TableRow>
           ))}
         </TableBody>

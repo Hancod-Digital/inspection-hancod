@@ -4,7 +4,7 @@ import { PlusIcon, Search } from "lucide-react"
 import { useSubtopic } from "@/context/SubtopicContext"
 import * as XLSX from 'xlsx';
 
-export default function Component({ onOpen }:{onOpen: () => void}) {
+export default function Component({ onOpen,onSearchChange }:{onOpen: () => void , onSearchChange: (value: string) => void}) {
     const { data } = useSubtopic()
         const exportToExcel = () => {
         const worksheet = XLSX.utils.json_to_sheet(data!);
@@ -13,6 +13,7 @@ export default function Component({ onOpen }:{onOpen: () => void}) {
         XLSX.writeFile(workbook, "surveyor.xlsx");
 
     };
+
     return (
         <div className="flex items-center space-x-4 w-full p-4">
             <div className="flex w-full space-x-3">
@@ -22,6 +23,7 @@ export default function Component({ onOpen }:{onOpen: () => void}) {
                         type="search"
                         placeholder="Search"
                         className="pl-10 pr-4 focus:border-primary w-full"
+                        onChange={(e) => onSearchChange(e.target.value)}
                     />
                 </div>
                 <Button variant="link" className="flex-[1]  text-primary bg-white">

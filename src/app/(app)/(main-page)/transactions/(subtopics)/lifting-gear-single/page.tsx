@@ -11,7 +11,7 @@ const Table = dynamic(
   )
 const LiftingEquipment = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
-
+    const [searchValue, setSearchValue] = useState<string>('');
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
@@ -19,7 +19,9 @@ const LiftingEquipment = () => {
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
-
+    const handleSearchChange = (value: string) => {
+        setSearchValue(value);
+    };
     return (
         <motion.div 
             className='w-full bg-[#fafbfb]'
@@ -45,7 +47,7 @@ const LiftingEquipment = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Header onOpen={handleOpenAdd} />
+                        <Header onOpen={handleOpenAdd} onSearchChange={setSearchValue} />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -59,7 +61,7 @@ const LiftingEquipment = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table />
+                        <Table searchValue={searchValue} />
                     </motion.div>
                 ) : (
                     <motion.div

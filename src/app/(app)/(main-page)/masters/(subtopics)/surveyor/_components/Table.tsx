@@ -17,7 +17,7 @@ import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 
-export default function SurveyorTable() {
+export default function SurveyorTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { data, isLoading, error,deleteRecord } = useSubtopic();
 
@@ -48,7 +48,7 @@ export default function SurveyorTable() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.map((item, idx) => (
+                        {data?.filter((item:any) => item.surveyor.toLowerCase().includes(searchValue.toLowerCase())).map((item, idx) => (
                             <React.Fragment key={idx + 1}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>

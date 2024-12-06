@@ -237,7 +237,12 @@ console.log(id);
         if (error) throw error;
         return data;
     }
-
+    async fetchEquipmentDetails(id: string) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('equipment').select('*').eq('id', id);
+        if (error) throw error;
+        return data;
+    }
     async updatePropertyToAnnexure(id: number, updates: object) {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase.from('property_list').update(updates).eq('id', id);
@@ -248,6 +253,20 @@ console.log(id);
     async deletePropertyFromAnnexure(id: number) {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase.from('property_list').delete().eq('id', id);
+        if (error) throw error;
+        return data;
+    }
+
+    async getAnnexures(id: string) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('annexure').select('*').eq('id', id);
+        if (error) throw error;
+        return data;
+    }
+
+    async getPropertyList(id: string) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('property_list').select('*').eq('annexure_id', id);
         if (error) throw error;
         return data;
     }

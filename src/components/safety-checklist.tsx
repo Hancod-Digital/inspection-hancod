@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface SafetyChecklistProps {
   values: Record<string, string>;
@@ -64,26 +65,31 @@ interface ChecklistItemProps {
   value: string;
   onChange: (name: string, value: string) => void;
 }
-
 function ChecklistItem({ question, name, value, onChange }: ChecklistItemProps) {
   return (
     <TableRow>
       <TableCell className="font-medium border-r p-4">{question}</TableCell>
       <TableCell className="text-center border-r p-4">
-        <RadioGroup value={value} onValueChange={(val) => onChange(name, val)} name={name} className="flex justify-center">
-          <div className="flex items-center">
-            <RadioGroupItem value="yes" id={`${name}-yes`} />
-            <Label htmlFor={`${name}-yes`} className="sr-only">Yes</Label>
-          </div>
-        </RadioGroup>
+        <div className="flex justify-center items-center space-x-2">
+          <Checkbox 
+            className="w-5 h-5"
+            checked={value === "yes"}
+            onCheckedChange={(checked) => onChange(name, checked ? "yes" : "no")}
+            id={`${name}-yes`}
+          />
+          <Label htmlFor={`${name}-yes`}>Yes</Label>
+        </div>
       </TableCell>
       <TableCell className="text-center p-4">
-        <RadioGroup value={value} onValueChange={(val) => onChange(name, val)} name={name} className="flex justify-center">
-          <div className="flex items-center">
-            <RadioGroupItem value="no" id={`${name}-no`} />
-            <Label htmlFor={`${name}-no`} className="sr-only">No</Label>
-          </div>
-        </RadioGroup>
+        <div className="flex justify-center items-center space-x-2">
+          <Checkbox
+            className="w-5 h-5"
+            checked={value === "no"} 
+            onCheckedChange={(checked) => onChange(name, checked ? "no" : "yes")}
+            id={`${name}-no`}
+          />
+          <Label htmlFor={`${name}-no`}>No</Label>
+        </div>
       </TableCell>
     </TableRow>
   )

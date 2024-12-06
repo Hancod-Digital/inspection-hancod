@@ -257,6 +257,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       console.error('Form submission error:', error);
     } finally {
       setLoading(false);
+      onClose();
     }
   };
 
@@ -439,7 +440,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                           <SelectContent>
                             {equipmentNoOptions?.map((equipment: any) => (
                               <SelectItem key={equipment.id} value={String(equipment.id)}>
-                                {equipment?.title}
+                                {equipment?.equipment_no}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -635,8 +636,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                             <SelectValue placeholder="Select result" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Active">Active</SelectItem>
-                            <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="Satisfactory">Satisfactory</SelectItem>
+                            <SelectItem value="Scrap">Scrap</SelectItem>
                           </SelectContent>
                         </Select>
                       )}

@@ -125,13 +125,13 @@ export default function SurveyorCompetencyPopup({
             <div className="p-6 space-y-6">
               <div className="flex justify-between items-center border-b pb-4">
                 <h2 className="text-lg font-semibold">Add Surveyor Competency</h2>
-                <button
+                {/* <button
                   type="button"
                   onClick={() => setIsPopupOpen(false)}
                   className="text-gray-500 hover:text-gray-700"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </button> */}
               </div>
               <div className="space-y-4">
                 {/* Competency Field */}
@@ -173,23 +173,28 @@ export default function SurveyorCompetencyPopup({
                 </div>
 
                 {/* Attachment Field */}
-                <div className="flex items-center border">
-                  <label
-                    htmlFor="attachment"
-                    className="ml-auto py-2 px-4 rounded-md border-0 text-black font-bold bg-[#F0F6FD] hover:bg-[#F0F6FD] cursor-pointer"
-                  >
-                    Upload Attachment<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="attachment"
-                    type="file"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
+                <div className="space-y-2">
+                  <div className="flex items-center border">
+                    <label
+                      htmlFor="attachment"
+                      className="ml-auto py-2 px-4 rounded-md border-0 text-black font-bold bg-[#F0F6FD] hover:bg-[#F0F6FD] cursor-pointer"
+                    >
+                      Upload Attachment<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="attachment"
+                      type="file"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                  </div>
+                  {attachmentFile && (
+                    <p className="text-sm text-gray-600">Selected file: {attachmentFile.name}</p>
+                  )}
+                  {errors.attachment && (
+                    <p className="text-red-500 mt-1">{errors.attachment}</p>
+                  )}
                 </div>
-                {errors.attachment && (
-                  <p className="text-red-500 mt-1">{errors.attachment}</p>
-                )}
               </div>
               <Button
                 type="button"

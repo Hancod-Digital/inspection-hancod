@@ -66,7 +66,7 @@ export default function EquipmentTable() {
         </TableHeader>
         <TableBody>
           {data && data.length > 0 ? (
-            data.map((item, idx) => (
+            data?.map((item, idx) => (
               <React.Fragment key={item.id}>
                 <TableRow>
                   <TableCell className="py-4">{idx + 1}</TableCell>
@@ -78,12 +78,12 @@ export default function EquipmentTable() {
                   <TableCell className="py-4">{item?.inspectionDate}</TableCell>
                   <TableCell
                     className={`py-4 ${
-                      item.status.toLowerCase() === 'approved'
+                      item?.status?.toLowerCase() === 'approved'
                         ? 'text-green-500'
                         : 'text-red-500'
                     }`}
                   >
-                    {item.status}
+                    {item?.status}
                   </TableCell>
                   <TableCell className="py-4">
                     <DropdownMenu>

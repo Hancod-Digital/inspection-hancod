@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PlusIcon, Search } from "lucide-react"
 
-export default function Component({ onOpen }:{onOpen: () => void}) {
+export default function Component({ onOpen, onSearchChange }:{onOpen: () => void, onSearchChange: (value: string) => void}) {
     return (
         <div className="flex items-center space-x-4 w-full p-4">
             <div className="flex w-full space-x-3">
@@ -12,12 +12,13 @@ export default function Component({ onOpen }:{onOpen: () => void}) {
                     <Input
                         type="search"
                         placeholder="Search"
+                        onChange={(e) => onSearchChange(e.target.value)}
                         className="pl-10 pr-4 focus:border-primary w-full"
                     />
                 </div>
-                <Button variant="link" className="flex-[1]  text-primary bg-white">
+                {/* <Button variant="link" className="flex-[1]  text-primary bg-white">
                     Advanced Search
-                </Button>
+                </Button> */}
                 <Button variant="outline" onClick={onOpen} className="flex-[1]  hover:bg-secondary hover:text-primary hover:border-primary border bg-primary text-primary-foreground">
                 <PlusIcon className="h-4 w-4 mr-1" />
   New

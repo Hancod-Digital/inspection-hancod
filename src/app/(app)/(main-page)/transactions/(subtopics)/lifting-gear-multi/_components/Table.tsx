@@ -315,7 +315,7 @@ const htmlElement = document.createElement('div');
                                             </button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => handleEditClick(item?.slNo)}>Edit</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleEditClick(item?.id)}>Edit</DropdownMenuItem>
                                             <DropdownMenuItem>Delete</DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>
                                         </DropdownMenuContent>
@@ -323,7 +323,7 @@ const htmlElement = document.createElement('div');
                                 </TableCell>
                             </TableRow>
                             <AnimatePresence>
-                                {editingRow === item.slNo && (
+                                {editingRow === item.id && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}

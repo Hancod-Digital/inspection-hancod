@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -6,102 +6,135 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { useState } from 'react';
-import ColumnModal from './ColumnModal'; // Import ColumnModal
+} from "@/components/ui/table"
+import { makeApiCall } from "@/lib/apicaller"
+import { MasterService } from "@/services/api/masters-service"
+import { useEffect, useState } from "react"
 
-export default function AnnexureTable() {
-  const [open, setOpen] = useState(false);
-  const [columns, setColumns] = useState<string[]>([]); // State to store column names
-  const [data, setData] = useState<{ [key: string]: string }[]>([]); // State to store rows of data
+interface Annexure {
+  id: string
+  property: string
+  property_group: string
+  condition: string
+}
 
-  // Handle saving the new column
-  const handleSaveColumn = (columnName: string) => {
-    setColumns((prevColumns) => {
-      // Add the new column
-      const newColumns = [...prevColumns, columnName];
+interface EquipmentDetail {
+  annexure: string
+}
 
-      // Update each row to add the new column with an empty value
-      setData((prevData) => 
-        prevData.map((row) => ({
-          ...row,
-          [columnName]: '', // Add empty value for the new column in all rows
-        }))
-      );
+export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:string,propertyList:any,setPropertyList:any}) {
+  const [equipmentDetails, setEquipmentDetails] = useState<EquipmentDetail[]>([])
 
-      return newColumns;
-    });
-  };
+  const [annexureData, setAnnexureData] = useState<Annexure[]>([])
+ 
+  useEffect(() => {
+    makeApiCall(()=>new MasterService().fetchEquipmentDetails(id),{afterSuccess:(data: EquipmentDetail[])=>{
+      setEquipmentDetails(data)
+    }})
+  }, [id])
 
-  // Handle adding a new row
-  const handleAddRow = () => {
-    const newRow = columns.reduce((acc, column) => {
-      acc[column] = ''; // Initialize each column with an empty value
-      return acc;
-    }, {} as { [key: string]: string });
-    
-    setData((prevData) => [...prevData, newRow]);
-  };
+  useEffect(() => {
+    if (equipmentDetails[0]?.annexure) {
+      makeApiCall(()=>new MasterService().getAnnexures(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
+        console.log(data)
+        setAnnexureData(data)
+      }})
+    }
+  }, [equipmentDetails])
+
+  useEffect(() => {
+    if (equipmentDetails[0]?.annexure) {
+      makeApiCall(()=>new MasterService().getPropertyList(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
+        console.log(data)
+        setPropertyList(data)
+      }})
+    }
+  }, [equipmentDetails])
+
+  const handleReset = () => {
+    setPropertyList(propertyList.map(item => ({
+      ...item,
+      property_group: '',
+      condition: ''
+    })))
+  }
+
+  const handlePropertyChange = (id: string, value: string) => {
+    setPropertyList(propertyList.map(item => 
+      item.id === id ? { ...item, property: value } : item
+    ))
+  }
+
+  const handleValueChange = (id: string, value: string) => {
+    setPropertyList(propertyList.map(item =>
+      item.id === id ? { ...item, property_group: value } : item  
+    ))
+  }
+
+  const handleRemarksChange = (id: string, value: string) => {
+    setPropertyList(propertyList.map(item =>
+      item.id === id ? { ...item, condition: value } : item
+    ))
+  }
 
   return (
-    <div className="w-full mx-auto py-5">
+    <div className="w-full mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <span className="font-bold">Annexures</span>
-        <div className="flex space-x-2">
-          <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
-            Create Column
-          </Button>
-          <Button type="button" variant="secondary" onClick={handleAddRow}>
-            Add Row
-          </Button>
-        </div>
+        <h2 className="text-md font-semibold">Annexures</h2>
+        <Button
+          variant="default"
+          className="text-destructive hover:text-destructive bg-white"
+          onClick={handleReset}
+        >
+          Reset
+        </Button>
       </div>
-      <Table className="border border-gray-200">
-        <TableHeader>
-          <TableRow className="border-b">
-            <TableHead className="border-r p-2 text-left">Condition</TableHead>
-           
-            {columns.map((column, index) => (
-              <TableHead key={index} className="p-2 text-left border-r">
-                {column}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.length === 0 ? (
+      <div className="border rounded-lg overflow-hidden">
+        <Table className="border-collapse">
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={columns.length + 3} className="p-2 text-center text-gray-500">
-                No data to display
-              </TableCell>
+              <TableHead className="border border-gray-200 w-[200px]">Property</TableHead>
+              <TableHead className="border border-gray-200 w-[200px]">Value</TableHead>
+              <TableHead className="border border-gray-200 w-[200px]">Remarks</TableHead>
+              <TableHead className="border border-gray-200 w-[100px]"></TableHead>
             </TableRow>
-          ) : (
-            data.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell className="p-2">{row.property || ''}</TableCell>
-                 
-                {columns.map((column) => (
-                  <TableCell key={column} className="p-2">
-                    <input
-                      type="text"
-                      value={row[column] || ''}
-                      className="w-full border rounded px-2 py-2"
-                      onChange={(e) => {
-                        const updatedData = [...data];
-                        updatedData[index][column] = e.target.value;
-                        setData(updatedData);
-                      }}
-                    />
-                  </TableCell>
-                ))}
+          </TableHeader>
+          <TableBody>
+            {propertyList.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell className="border border-gray-200">
+                  <input
+                    type="text"
+                    className="w-full bg-gray-50 border-0 focus:outline-none rounded p-1"
+                    placeholder="Enter property"
+                    value={item.property}
+                    onChange={(e) => handlePropertyChange(item.id, e.target.value)}
+                  />
+                </TableCell>
+                <TableCell className="border border-gray-200">
+                  <input
+                    type="text"
+                    className="w-full bg-gray-50 border-0 focus:outline-none rounded p-1"
+                    placeholder="Enter value"
+                    value={item.property_group}
+                    onChange={(e) => handleValueChange(item.id, e.target.value)}
+                  />
+                </TableCell>
+                <TableCell className="border border-gray-200">
+                  <input
+                    type="text"
+                    className="w-full bg-gray-50 border-0 focus:outline-none rounded p-1"
+                    placeholder="Enter remarks"
+                    value={item.condition}
+                    onChange={(e) => handleRemarksChange(item.id, e.target.value)}
+                  />
+                </TableCell>
+                <TableCell className="border border-gray-200"></TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-
-      {/* Column Modal */}
-      <ColumnModal open={open} onOpenChange={setOpen} onSave={handleSaveColumn} />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
-  );
+  )
 }

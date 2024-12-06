@@ -280,6 +280,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       toastWithTimeout(ToastVariant.Error, 'An error occurred while updating the equipment details');
     } finally {
       setLoading(false);
+      onClose();
     }
   };
 
@@ -610,8 +611,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select result" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Active">Active</SelectItem>
-                            <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="Satisfactory">Satisfactory</SelectItem>
+                            <SelectItem value="Scrap">Scrap</SelectItem>
                           </SelectContent>
                         </Select>
                       )}
