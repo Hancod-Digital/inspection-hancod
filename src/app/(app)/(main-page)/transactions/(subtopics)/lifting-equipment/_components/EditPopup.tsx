@@ -612,7 +612,7 @@ export default function EditEquipmentDetailsForm({
                       <Checkbox
                         className='w-6 h-6'
                         checked={testExamChecked}
-                        onCheckedChange={(checked) => setTestExamChecked(checked)}
+                        onCheckedChange={(checked:boolean) => setTestExamChecked(checked)}
                       />
                       <span className="text-[13px]">Not Applicable</span>
                       {errors.next_test_exam && (
@@ -640,7 +640,7 @@ export default function EditEquipmentDetailsForm({
                       <Checkbox
                         className='w-6 h-6'
                         checked={thoroughExamChecked}
-                        onCheckedChange={(checked) => setThoroughExamChecked(checked)}
+                        onCheckedChange={(checked:boolean) => setThoroughExamChecked(checked)}
                       />
                       <span className="text-[13px]">Not Applicable</span>
                       {errors.next_thorough_exam && (
