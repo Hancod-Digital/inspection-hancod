@@ -23,7 +23,7 @@ import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
   site: string().nonempty('Site is required'),
-  authority: string().nonempty('Authority is required'),
+  authority: string().nonempty('Authority is required'),  
   standard: string().nonempty('Standard is required'),
   type_of_exam: string().nonempty('Type of Exam is required'),
   job_order_no: string().nonempty('Job Order No. is required'),

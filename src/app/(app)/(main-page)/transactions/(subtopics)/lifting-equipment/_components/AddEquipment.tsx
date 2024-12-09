@@ -254,6 +254,8 @@ console.log(errors);
     safeToUse: 'no'
   });
 
+   
+  
   const handleSafetyChecklistChange = (name: string, value: string) => {
     setSafetyChecklistValues(prev => ({
       ...prev,
@@ -267,11 +269,19 @@ console.log(errors);
     try {
       const formData = {
         ...values,
-      
+        first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
+        six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
+        twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
+        correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
+        examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
+        exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
+        safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
         approval_status: values.approval_status === "Approved" ? true : false,
         next_test_exam: testExamChecked ? "Not Applicable" : values.next_test_exam,
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam
       };
+
+     
       const { authority, site, ...formDataWithoutOptional } = formData;
       
       const res = await addRecord({...formData,properties:data,annexures:propertyList});
