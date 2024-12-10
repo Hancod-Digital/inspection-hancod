@@ -153,7 +153,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
       status: values.status === true ? "ACTIVE" : "INACTIVE",
       next_test_date: testExamChecked ? values.next_test_date : null,
       next_thorough_date: thoroughExamChecked ? values.next_thorough_date : null,
-      property_table_type: selectedItemType === 'Elevator Certificate' ? values.property_table_type : null,
+      property_table_type: selectedItemType === 'Lifting_Equipment' ? values.property_table_type : null,
 
     });
         setLoading(false);
@@ -738,12 +738,21 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                                 <SelectValue placeholder="Select Property Table Type" />
                               </SelectTrigger>
                               <SelectContent>
+                              <SelectItem   value={'CRANE CERTIFICATE'}>
+                                    CRANE CERTIFICATE
+                                  </SelectItem>
                                 
-                                  <SelectItem   value={'Elevator Certificate'}>
-                                   Elevator Certificate
+                                  <SelectItem   value={'ELEVATOR CERTIFICATE'}>
+                                   ELEVATOR CERTIFICATE
                                   </SelectItem>
 
-                                
+                                  <SelectItem   value={'MEWP AND FORKLIFT Certificate'}>
+                                    MEWP AND FORKLIFT Certificate
+                                  </SelectItem>
+                                  <SelectItem   value={'EARTH MOVING EQUIPMENTS'}>
+                                    EARTH MOVING EQUIPMENTS
+                                  </SelectItem>
+                                  
                               </SelectContent>
                             </Select>
                           )}

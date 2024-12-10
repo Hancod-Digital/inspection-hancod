@@ -7,39 +7,62 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ColumnModal from './ColumnModal'; // Import ColumnModal
 
-export default function PropertyTable({data,setData}:{data:any,setData:any}) {
+export default function PropertyTable({ data, setData, item_type }: { data: any; setData: any; item_type: any }) {
   const [open, setOpen] = useState(false);
-  const [columns, setColumns] = useState<string[]>([]); // State to store column names
+  const [columns, setColumns] = useState<string[]>([]);
+
+  // Set initial columns based on item_type
+  useEffect(() => {
+    if (item_type === "CRANE CERTIFICATE") {
+      setColumns(["CONDITION", "BOOM LENGTH", "RADIUS", "TEST LOAD", "SWL"]);
+    } else if (item_type === "MEWP AND FORKLIFT" || item_type === "ELEVATOR CERTIFICATE") {
+      setColumns(["TEST LOAD", "SWL"]);
+    } else {
+      setColumns([]);
+    }
+  }, [item_type]);
+
+  // If columns change, ensure data rows contain those columns
+  useEffect(() => {
+    setData((prevData: any[]) => {
+      // For each row, if a column doesn't exist, initialize it
+      return prevData.map((row) => {
+        const updatedRow = { ...row };
+        columns.forEach((col) => {
+          if (!(col in updatedRow)) {
+            updatedRow[col] = '';
+          }
+        });
+        return updatedRow;
+      });
+    });
+  }, [columns, setData]);
 
   // Handle saving the new column
   const handleSaveColumn = (columnName: string) => {
     setColumns((prevColumns) => {
-      // Add the new column
       const newColumns = [...prevColumns, columnName];
-
-      // Update each row to add the new column with an empty value
-      setData((prevData:any) =>
-        prevData.map((row:any) => ({
+      // Add the new column with empty values to each row
+      setData((prevData: any) =>
+        prevData.map((row: any) => ({
           ...row,
-          [columnName]: '', // Add empty value for the new column in all rows
+          [columnName]: ''
         }))
       );
-
       return newColumns;
     });
   };
 
   // Handle adding a new row
   const handleAddRow = () => {
-    const newRow = columns.reduce((acc, column) => {
-      acc[column] = ''; // Initialize each column with an empty value
-      return acc;
-    }, { property: '' } as { [key: string]: string }); // Include 'property' key
-
-    setData((prevData:any) => [...prevData, newRow]);
+    const newRow: { [key: string]: string } = {};
+    columns.forEach((col) => {
+      newRow[col] = '';
+    });
+    setData((prevData: any) => [...prevData, newRow]);
   };
 
   return (
@@ -53,16 +76,12 @@ export default function PropertyTable({data,setData}:{data:any,setData:any}) {
           <Button type="button" variant="secondary" onClick={handleAddRow}>
             Add Row
           </Button>
-          {/* <Button type="button" variant="secondary" onClick={()=>console.log(data)}>
-            Submit
-          </Button> */}
         </div>
       </div>
       <Table className="border border-gray-200">
         <TableHeader>
           <TableRow className="border-b">
-            <TableHead className="border-r p-2 text-left">Condition</TableHead>
-            {columns?.map((column, index) => (
+            {columns.map((column, index) => (
               <TableHead key={index} className="p-2 text-left border-r">
                 {column}
               </TableHead>
@@ -72,34 +91,22 @@ export default function PropertyTable({data,setData}:{data:any,setData:any}) {
         <TableBody>
           {data?.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={columns.length + 1} className="p-2 text-center text-gray-500">
+              <TableCell colSpan={columns.length || 1} className="p-2 text-center text-gray-500">
                 No data to display
               </TableCell>
             </TableRow>
           ) : (
-            data?.map((row:any, index:any) => (
-              <TableRow key={index}>
-                <TableCell className="p-2">
-                  <input
-                    type="text"
-                    value={row.property || ''}
-                    className="w-full  rounded p-2  border-r"
-                    onChange={(e) => {
-                      const updatedData = [...data];
-                      updatedData[index]['property'] = e.target.value;
-                      setData(updatedData);
-                    }}
-                  />
-                </TableCell>
-                {columns?.map((column) => (
-                  <TableCell key={column} className="p-2  border-r">
+            data?.map((row: any, rowIndex: number) => (
+              <TableRow key={rowIndex}>
+                {columns.map((column) => (
+                  <TableCell key={column} className="p-2 border-r">
                     <input
                       type="text"
                       value={row[column] || ''}
-                      className="w-full border-none rounded px-2 py-2"
+                      className="w-full border rounded px-2 py-2"
                       onChange={(e) => {
                         const updatedData = [...data];
-                        updatedData[index][column] = e.target.value;
+                        updatedData[rowIndex][column] = e.target.value;
                         setData(updatedData);
                       }}
                     />

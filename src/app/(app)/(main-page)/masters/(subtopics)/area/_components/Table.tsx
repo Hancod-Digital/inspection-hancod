@@ -17,7 +17,7 @@ import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 
-export default function EquipmentTable() {
+export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { data, isLoading, error, deleteRecord } = useSubtopic();
 
@@ -28,7 +28,11 @@ export default function EquipmentTable() {
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
-
+    const rearrangedData  = data
+    ? data.filter((item: any) =>
+        item.thumbnail.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    : [];
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
             <Table className="w-full">
@@ -41,7 +45,7 @@ export default function EquipmentTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((item, idx) => (
+                    {rearrangedData?.map((item, idx) => (
                         <React.Fragment key={idx + 1}>
                             <TableRow>
                                 <TableCell className="py-4">{idx + 1}</TableCell>

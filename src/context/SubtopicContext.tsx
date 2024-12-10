@@ -131,13 +131,13 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(siteDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(locationDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(minorCategoryDataRange), subtopic] });
-
+      queryClient.invalidateQueries({ queryKey: ['locationDetails'] });
       queryClient.invalidateQueries({ queryKey: ['subtopics', subtopic] });
       queryClient.refetchQueries({ queryKey: ['mergedData', JSON.stringify(majorCategoryDataRange), subtopic] });
       queryClient.refetchQueries({ queryKey: ['mergedData', JSON.stringify(siteDataRange), subtopic] });
       queryClient.refetchQueries({ queryKey: ['mergedData', JSON.stringify(locationDataRange), subtopic] });
       queryClient.refetchQueries({ queryKey: ['mergedData', JSON.stringify(minorCategoryDataRange), subtopic] });
-
+      queryClient.refetchQueries({ queryKey: ['locationDetails'] });
       queryClient.refetchQueries({ queryKey: ['subtopics', subtopic] });
     },
   });

@@ -15,7 +15,7 @@ import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 
-export default function EquipmentTable() {
+export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { FetchLocationDetails , deleteRecord} = useSubtopic(); // Assuming this is a hook from your context
  const {data,error} =  FetchLocationDetails()
@@ -29,7 +29,11 @@ export default function EquipmentTable() {
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
-
+    const rearrangedData  = data
+    ? data.filter((item: any) =>
+        item.location.name.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    : [];
     
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
@@ -45,7 +49,7 @@ export default function EquipmentTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((item: { id: number; location: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; status: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; site: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; area: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; }, idx: number) => (
+                    {rearrangedData?.map((item: { id: number; location: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; status: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; site: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; area: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; }, idx: number) => (
                         <React.Fragment key={item.id}> 
                             <TableRow>
                                 <TableCell className="py-4">{idx + 1}</TableCell>

@@ -53,7 +53,9 @@ const equipmentDetailsSchema = object({
   location: string().nonempty('Location is required'),
   serial_no: string().nonempty('Serial No. is required'),
   model: string().nonempty('Model is required'),
-  owner_id: string().nonempty('Owner ID is required')
+  owner_id: string().nonempty('Owner ID is required'),
+  defect_description: string().nonempty('Defect Description is required'),
+  test_particulars: string().nonempty('Test Particulars is required'),
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
@@ -84,7 +86,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const { watch, setValue, formState } = methods
   const { equipment_no, inspection_date, type_of_exam, standard, title, equipment_description, test_cert_coc_no, safe_working_load, last_test_exam, last_thorough_exam, next_test_exam, next_thorough_exam, owner_name, manufacturer, approval_status, result, surveyor, location } = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
-console.log(errors);
+ 
 
   //manufacturer
   const addEquipmentToMulti = async () => {
@@ -102,12 +104,13 @@ console.log(errors);
     }
     )
   }
+  const [selectedEquipment, setSelectedEquipment] = useState<any>(null)
   useEffect(() => {
     if (equipment_no) {
       // Find the associated data for the current equipment_no
       const selectedEquipment = equipmentNoOptions.find((item: any) => item.id == equipment_no);
-
-
+console.log(selectedEquipment)
+setSelectedEquipment(selectedEquipment)
       if (selectedEquipment) {
 
         setValue('standard', selectedEquipment.standard || ''); // Update standard
@@ -283,17 +286,15 @@ console.log(errors);
 
      
       const { authority, site, ...formDataWithoutOptional } = formData;
-      
+      console.log({...formData,properties:data,annexures:propertyList})
       const res = await addRecord({...formData,properties:data,annexures:propertyList});
-      console.log(res)
-       
-
+      onClose()
       localStorage.removeItem('equipmentData')
     } catch (error) {
       console.error('Form submission error:', error);
     } finally {
       setLoading(false);
-      onClose()
+    
     }
   };
   
@@ -854,12 +855,14 @@ console.log(errors);
 
                   </div>
                 </div>
-
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-                    <Table data={data} setData={setData} />
-                  </div>
-                </div>
+{selectedEquipment?.item_type !== 'Lifting Accessories' && (
+ <div className="space-y-4">
+ <div className="grid gap-4 grid-cols-1">
+   <Table data={data} setData={setData} item_type={selectedEquipment?.property_table_type} />
+ </div>
+</div>
+)}
+               
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                     <div className="w-full">
@@ -888,6 +891,36 @@ console.log(errors);
                    <AnnexuresTable propertyList={propertyList} setPropertyList={setPropertyList}  id={equipment_no} /> 
                 </section>
                 </section>
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                    <SafetyChecklist
+                      values={safetyChecklistValues}
+                      onChange={handleSafetyChecklistChange}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+
+                    <Label htmlFor="defect_description" className="mt-3">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
+                    <Input id="defect_description" {...register('defect_description')} />
+                    {errors.defect_description && (
+                      <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
+                    )}
+
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+
+                    <Label htmlFor="test_particulars" className="mt-3">Particulars of any tests carried out as part of the examination</Label>
+                    <Input id="test_particulars" {...register('test_particulars')} />
+                    {errors.test_particulars && (
+                      <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
+                    )}
+
+                  </div>
+                </div>
                 <div className="grid gap-4 grid-cols-2 tex">
                 <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="approval_status" className="mt-3">Approval Status</Label>

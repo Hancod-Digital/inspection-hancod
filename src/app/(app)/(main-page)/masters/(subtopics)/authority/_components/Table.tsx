@@ -17,9 +17,15 @@ import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 
-export default function AuthorityTable() {
+export default function AuthorityTable({ searchValue }: { searchValue: string }) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { data, isLoading, error ,deleteRecord} = useSubtopic();
+    const rearrangedData  = data
+    ? data.filter((item: any) =>
+        item.authority.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    : [];
+
 
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
@@ -42,7 +48,7 @@ export default function AuthorityTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((item, idx) => (
+                    {rearrangedData?.map((item, idx) => (
                         <React.Fragment key={idx + 1}>
                             <TableRow>
                                 <TableCell className="py-4">{idx + 1}</TableCell>

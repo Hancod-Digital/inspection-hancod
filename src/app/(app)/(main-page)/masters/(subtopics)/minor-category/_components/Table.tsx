@@ -49,15 +49,20 @@ export default function MinorCategory({searchValue}:{searchValue:string}) {
         deleteRecord(id);
     };
 
-    const rearrangedData = minorCategories
-    ? [...minorCategories].sort((a:any, b:any) => {
-        const aMatch = a.minor_category.toLowerCase().includes(searchValue.toLowerCase());
-        const bMatch = b.minor_category.toLowerCase().includes(searchValue.toLowerCase());
-        if (aMatch && !bMatch) return -1;
-        if (!aMatch && bMatch) return 1;
-        return 0;
-      })
+    const rearrangedData  = minorCategories
+    ? minorCategories.filter((item: any) =>
+        item.minor_category.toLowerCase().includes(searchValue.toLowerCase())
+      )
     : [];
+    // const rearrangedData = minorCategories
+    // ? [...minorCategories].sort((a:any, b:any) => {
+    //     const aMatch = a.minor_category.toLowerCase().includes(searchValue.toLowerCase());
+    //     const bMatch = b.minor_category.toLowerCase().includes(searchValue.toLowerCase());
+    //     if (aMatch && !bMatch) return -1;
+    //     if (!aMatch && bMatch) return 1;
+    //     return 0;
+    //   })
+    // : [];
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">

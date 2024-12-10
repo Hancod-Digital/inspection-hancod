@@ -157,7 +157,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="location" className="mt-3">Location</Label>
                     <div>
-                      <Input id="location" {...methods.register('location')} />
+                      <Input id="location" type='text' {...methods.register('location')} />
                       {errors.location && (
                         <p className="text-red-500 mt-1">{errors.location.message}</p>
                       )}

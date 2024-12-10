@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
 const Area = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
-
+    const [searchValue, setSearchValue] = useState("");
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
@@ -40,7 +40,7 @@ const Area = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Header onOpen={handleOpenAdd} />
+                        <Header onOpen={handleOpenAdd} onSearchChange={setSearchValue} />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -54,7 +54,7 @@ const Area = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table />
+                        <Table searchValue={searchValue} />
                     </motion.div>
                 ) : (
                     <motion.div

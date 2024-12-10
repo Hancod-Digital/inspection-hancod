@@ -68,7 +68,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                     <TableHeader>
                         <TableRow>
                             <TableHead className="py-4">Sl. No.</TableHead>
-                            <TableHead className="py-4">Major Category</TableHead>
+                            <TableHead className="py-4">Site</TableHead>
                             <TableHead className="py-4">Area</TableHead>
                             <TableHead className="py-4">Status</TableHead>
                             <TableHead className="py-4">Action</TableHead>

@@ -3,17 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { z, object, string, TypeOf, optional } from 'zod';
+import { z, object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dynamic from 'next/dynamic';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
-  Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,9 +18,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import SafetyChecklist from '@/components/safety-checklist';
-import { equipmentDataRange, generateEquipmentCertificateHTML } from '@/lib/utils';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
+import { makeApiCall } from '@/lib/apicaller';
+import { MasterService } from '@/services/api/masters-service';
 
 // Define schema for validation
 const equipmentDetailsSchema = object({
@@ -42,11 +39,11 @@ const equipmentDetailsSchema = object({
   last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
   next_thorough_exam: string().optional(),
   result: string().nonempty('Result is required'),
-  
+  type_of_exam: string().nonempty('Type of Exam is required'),
   surveyor: string().nonempty('Surveyor is required'),
   defect_description: string().nonempty('Defect Description is required'),
   test_particulars: string().nonempty('Test Particulars is required'),
-  
+  location: string().nonempty('Location is required'),
   owner_name: string().nonempty('Owner Name is required'),
   proof_load: string().nonempty('Proof Load is required'),
   description: string().nonempty('Description is required'),
@@ -68,34 +65,36 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const { getAllSingleSubtopic, findRecordById, updateRecord } = useSubtopic();
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
-
+  const existingData = id ? findRecordById(id) : null;
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      inspection_date: '',
-      site: '',
-      authority: '',
-      standard: '',
-      job_order_no: '',
-      equipment_no: '',
-      title: '',
-      test_cert_coc_no: '',
-      safe_working_load: '',
-      last_test_exam: '',
-      next_test_exam: '',
-      last_thorough_exam: '',
-      next_thorough_exam: '',
-      result: '',
-      surveyor: '',
-      defect_description: '',
-      test_particulars: '',
-      owner_name: '',
-      proof_load: '',
-      description: '',
-      equipment_description: '',
-      manufacturer: '',
-      tested_standard: '',
-      approval_status: '',
+      inspection_date: existingData?.inspection_date || '',
+      site: String(existingData?.site) || '',
+      authority: String(existingData?.authority) || '',
+      standard: String(existingData?.standard) || '',
+      job_order_no: String(existingData?.job_order_no) || '',
+      equipment_no: String(existingData?.equipment_no) || '',
+      title: existingData?.title || '',
+      test_cert_coc_no: existingData?.test_cert_coc_no || '',
+      safe_working_load: existingData?.safe_working_load || '',
+      last_test_exam: existingData?.last_test_exam || '',
+      next_test_exam: existingData?.next_test_exam || '',
+      last_thorough_exam: existingData?.last_thorough_exam || '',
+      next_thorough_exam: existingData?.next_thorough_exam || '',
+      result: existingData?.result || '',
+      type_of_exam: existingData?.type_of_exam || '',
+      surveyor: String(existingData?.surveyor) || '',
+      defect_description: existingData?.defect_description || '',
+      test_particulars: existingData?.test_particulars || '',
+      location: existingData?.location || '',
+      owner_name: existingData?.owner_name || '',
+      proof_load: String(existingData?.proof_load) || '',
+      description: String(existingData?.description) || '',
+      equipment_description: String(existingData?.equipment_description) || '',
+      manufacturer: String(existingData?.manufacturer) || '',
+      tested_standard: String(existingData?.tested_standard) || '',
+      approval_status: existingData?.approval_status ? 'Approved' : 'Not Approved',
     },
   });
 
@@ -117,6 +116,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [manufacturerOptions, setManufacturerOptions] = useState<any[]>([]);
   const [surveyorOptions, setSurveyorOptions] = useState<any[]>([]);
   const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
+  const [locationOptions, setLocationOptions] = useState<any[]>([]);
 
   const [safetyChecklistValues, setSafetyChecklistValues] = useState({
     firstExamination: 'no',
@@ -132,15 +132,14 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-      if (data) {
-        // Populate form fields with existing data
+      if (data) { 
         reset({
           inspection_date: data.inspection_date || '',
-          site: data.site || '',
-          authority: data.authority || '',
-          standard: data.standard || '',
-          job_order_no: data.job_order_no || '',
-          equipment_no: data.equipment_no || '',
+          site: String(data.site) || '',
+          authority: String(data.authority) || '',
+          standard: String(data.standard) || '',
+          job_order_no: String(data.job_order_no) || '',
+          equipment_no: String(data.equipment_no) || '',
           title: data.title || '',
           test_cert_coc_no: data.test_cert_coc_no || '',
           safe_working_load: data.safe_working_load || '',
@@ -149,14 +148,16 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           last_thorough_exam: data.last_thorough_exam || '',
           next_thorough_exam: data.next_thorough_exam || '',
           result: data.result || '',
-          surveyor: data.surveyor || '',
+          type_of_exam: data.type_of_exam || '',
+          surveyor: String(data.surveyor) || 'sdsd',
           defect_description: data.defect_description || '',
           test_particulars: data.test_particulars || '',
-          owner_name: data.owner_name || '',
-          proof_load: data.proof_load || '',
-          description: data.description || '',
-          equipment_description: data.equipment_description || '',
-          manufacturer: data.manufacturer || '',
+          location: String(data.location) || '',
+          owner_name: String(data.owner_name) || '',
+          proof_load: String(data.proof_load) || 'sdsdsd',
+          description: String(data.description) || '',
+          equipment_description: String(data.equipment_description) || '',
+          manufacturer: String(data.manufacturer) || '',
           tested_standard: data.tested_standard || '',
           approval_status: data.approval_status ? 'Approved' : 'Not Approved',
         });
@@ -179,7 +180,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     };
 
     fetchEquipmentData();
-  }, [id, findRecordById, reset]);
+  }, [id]);
 
   // Fetch select options on mount
   useEffect(() => {
@@ -193,8 +194,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         getAllSingleSubtopic("manufacturer"),
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
-      ]);
-
+      ]); 
       setSiteOptions(sites || []);
       setAuthorityOptions(authorities || []);
       setJobOrderNoOptions(jobOrders || []);
@@ -208,16 +208,29 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     fetchOptions();
   }, [getAllSingleSubtopic]);
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      await makeApiCall(() => new MasterService().getLocationDetails(), {
+        afterSuccess: (data: any) => {
+          if (data) {
+            setLocationOptions(data);
+          }
+        }
+      });
+    };
+    fetchLocations();
+  }, []);
+
   // Watch equipment_no and update related fields
   const equipment_no = watch('equipment_no');
-
+ 
   useEffect(() => {
     if (equipment_no) {
-      const selectedEquipment = equipmentNoOptions.find((item) => item.id === equipment_no);
+      const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
       if (selectedEquipment) {
-        setValue('standard', selectedEquipment.standard || '');
+        setValue('standard', String(selectedEquipment.standard) || '');
         setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
-        setValue('owner_name', String(selectedEquipment.owner_name) || '');
+        setValue('owner_name', String(selectedEquipment.owner_id) || '');
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
         setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
         setValue('proof_load', String(selectedEquipment.proof_load) || '');
@@ -234,7 +247,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
   // Handle "Not Applicable" checkboxes based on equipment data
   useEffect(() => {
-    const selectedEquipment = equipmentNoOptions.find((item) => item.id === equipment_no);
+    const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
     if (selectedEquipment) {
       setTestExamChecked(!selectedEquipment.next_test_date);
       setThoroughExamChecked(!selectedEquipment.next_thorough_date);
@@ -268,7 +281,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
         approval_status: values.approval_status === "Approved" ? true : false,
         next_test_exam: testExamChecked ? "Not Applicable" : values.next_test_exam,
-        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam  
+        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam
       };
 
       await updateRecord(id, formData);
@@ -306,7 +319,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                 <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Gear</h2>
 
                 <div className={"grid gap-4 grid-cols-2"}>
-                  {/* Certificate For Lifting Gear Section */}
+                  {/* Inspection Date */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="inspection_date" className="mt-3">Inspection Date</Label>
                     <Input id="inspection_date" type="date" {...register('inspection_date')} />
@@ -314,6 +327,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.inspection_date.message}</p>
                     )}
                   </div>
+
+                  {/* Site */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
@@ -325,9 +340,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select site" />
                           </SelectTrigger>
                           <SelectContent>
-                            {siteOptions?.map((site) => (
+                            {siteOptions?.map((site: any) => (
                               <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.site}
+                                {site?.name ?? site?.site}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -338,6 +353,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
                   </div>
+
+                  {/* Authority */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="authority" className="mt-3">Authority</Label>
                     <Controller
@@ -349,7 +366,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select authority" />
                           </SelectTrigger>
                           <SelectContent>
-                            {authorityOptions?.map((authority) => (
+                            {authorityOptions?.map((authority: any) => (
                               <SelectItem key={authority.id} value={String(authority.id)}>
                                 {authority?.authority}
                               </SelectItem>
@@ -362,6 +379,31 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.authority.message}</p>
                     )}
                   </div>
+
+                  {/* Type of Exam */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="type_of_exam" className="mt-3">Type of Exam</Label>
+                    <Controller
+                      name="type_of_exam"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="type_of_exam">
+                            <SelectValue placeholder="Select type of exam" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Test">Test</SelectItem>
+                            <SelectItem value="Thorough">Thorough</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.type_of_exam && (
+                      <p className="text-red-500 text-[12px] ">{errors.type_of_exam.message}</p>
+                    )}
+                  </div>
+
+                  {/* Job Order No. */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="job_order_no" className="mt-3">Job Order No.</Label>
                     <Controller
@@ -373,7 +415,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select job order no." />
                           </SelectTrigger>
                           <SelectContent>
-                            {jobOrderNoOptions?.map((jobOrder) => (
+                            {jobOrderNoOptions?.map((jobOrder: any) => (
                               <SelectItem key={jobOrder.id} value={String(jobOrder.id)}>
                                 {jobOrder?.job_no}
                               </SelectItem>
@@ -384,6 +426,32 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     />
                     {errors.job_order_no && (
                       <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
+                    )}
+                  </div>
+
+                  {/* Location */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <Controller
+                      name="location"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="location">
+                            <SelectValue placeholder="Select location" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {locationOptions?.map((loc: any) => (
+                              <SelectItem key={loc.id} value={String(loc.location.id)}>
+                                {loc.location.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.location && (
+                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                     )}
                   </div>
                 </div>
@@ -404,9 +472,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select equipment no." />
                           </SelectTrigger>
                           <SelectContent>
-                            {equipmentNoOptions?.map((equipment) => (
+                            {equipmentNoOptions?.map((equipment: any) => (
                               <SelectItem key={equipment.id} value={String(equipment.id)}>
-                                {equipment?.title}
+                                {equipment?.equipment_no}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -422,8 +490,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Input 
                       id="title"  
                       {...register('title')} 
-                      value={watch('title')} 
-                      readOnly // Make it read-only since it's auto-populated
+                      readOnly
                     />
                     {errors.title && (
                       <p className="text-red-500 text-[12px] ">{errors.title.message}</p>
@@ -436,8 +503,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Input 
                       id="equipment_description"  
                       {...register('equipment_description')} 
-                      value={watch('equipment_description')} 
-                      readOnly // Make it read-only since it's auto-populated
+                      readOnly
                     />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
@@ -450,8 +516,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Input 
                       id="test_cert_coc_no"  
                       {...register('test_cert_coc_no')} 
-                      value={watch('test_cert_coc_no')} 
-                      readOnly // Make it read-only since it's auto-populated
+                      readOnly
                     />
                     {errors.test_cert_coc_no && (
                       <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
@@ -462,8 +527,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Input 
                       id="safe_working_load"  
                       {...register('safe_working_load')} 
-                      value={watch('safe_working_load')} 
-                      readOnly // Make it read-only since it's auto-populated
+                      readOnly
                     />
                     {errors.safe_working_load && (
                       <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
@@ -474,8 +538,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Input 
                       id="proof_load"  
                       {...register('proof_load')} 
-                      value={watch('proof_load')} 
-                      readOnly // Make it read-only since it's auto-populated
+                      readOnly
                     />
                     {errors.proof_load && (
                       <p className="text-red-500 text-[12px] ">{errors.proof_load.message}</p>
@@ -486,26 +549,20 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Controller
                       name="standard"
                       control={control}
-                      render={({ field }) => {
-                        const currentStandard = String(watch('standard') || '');
-                        return (
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger id="standard">
-                              <SelectValue placeholder="Select standard" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {standardOptions?.map((standard) => (
-                                <SelectItem key={standard.id} value={String(standard.id)}>
-                                  {standard.standard}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="standard">
+                            <SelectValue placeholder="Select standard" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {standardOptions?.map((standard: any) => (
+                              <SelectItem key={standard.id} value={String(standard.id)}>
+                                {standard.standard}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     />
                     {errors.standard && (
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
@@ -518,8 +575,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       id="last_test_exam"
                       type="date"
                       {...register('last_test_exam')}
-                      value={watch('last_test_exam')}
-                      readOnly // Make it read-only since it's auto-populated
+                      readOnly
                     />
                     {errors.last_test_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
@@ -532,8 +588,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       id="last_thorough_exam"
                       type="date"
                       {...register('last_thorough_exam')}
-                      value={watch('last_thorough_exam')}
-                      readOnly // Make it read-only since it's auto-populated
+                      readOnly
                     />
                     {errors.last_thorough_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
@@ -553,7 +608,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             type="date" 
                             {...field} 
                             disabled={testExamChecked} 
-                            value={testExamChecked ? "" : field.value}
+                            value={testExamChecked ? "" : field.value || ""}
                           />
                         )}
                       />
@@ -581,7 +636,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             type="date" 
                             {...field} 
                             disabled={thoroughExamChecked} 
-                            value={thoroughExamChecked ? "" : field.value}
+                            value={thoroughExamChecked ? "" : field.value || ""}
                           />
                         )}
                       />
@@ -632,7 +687,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select owner" />
                           </SelectTrigger>
                           <SelectContent>
-                            {ownerOptions?.map((owner) => (
+                            {ownerOptions?.map((owner: any) => (
                               <SelectItem key={owner.id} value={String(owner.id)}>
                                 {owner?.owner}
                               </SelectItem>
@@ -656,7 +711,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select surveyor" />
                           </SelectTrigger>
                           <SelectContent>
-                            {surveyorOptions?.map((surveyor) => (
+                            {surveyorOptions?.map((surveyor: any) => (
                               <SelectItem key={surveyor.id} value={String(surveyor.id)}>
                                 {surveyor.surveyor}
                               </SelectItem>
@@ -674,7 +729,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Input 
                       id="tested_standard" 
                       {...register('tested_standard')} 
-                      value={watch('tested_standard')} 
                     />
                     {errors.tested_standard && (
                       <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
@@ -691,7 +745,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select manufacturer" />
                           </SelectTrigger>
                           <SelectContent>
-                            {manufacturerOptions?.map((manufacturer) => (
+                            {manufacturerOptions?.map((manufacturer: any) => (
                               <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
                                 {manufacturer.manufacturer}
                               </SelectItem>
@@ -759,7 +813,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Input 
                       id="defect_description" 
                       {...register('defect_description')} 
-                      value={watch('defect_description')}
                     />
                     {errors.defect_description && (
                       <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
@@ -774,7 +827,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Input 
                       id="test_particulars" 
                       {...register('test_particulars')} 
-                      value={watch('test_particulars')}
                     />
                     {errors.test_particulars && (
                       <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>

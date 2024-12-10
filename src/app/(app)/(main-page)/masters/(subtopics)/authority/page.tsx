@@ -6,8 +6,8 @@ import AddForm from './_components/AddEquipment'
 import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
 const Authority = () => {
-    const [isAdd, setIsAdd] = useState<boolean>(false);
-
+    const [isAdd,  setIsAdd] = useState<boolean>(false);
+    const [searchValue, setSearchValue] = useState<string>('');
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
@@ -40,7 +40,7 @@ const Authority = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Header onOpen={handleOpenAdd} />
+                        <Header onOpen={handleOpenAdd} setSearchValue={setSearchValue} />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -54,7 +54,7 @@ const Authority = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table />
+                        <Table searchValue={searchValue} />
                     </motion.div>
                 ) : (
                     <motion.div

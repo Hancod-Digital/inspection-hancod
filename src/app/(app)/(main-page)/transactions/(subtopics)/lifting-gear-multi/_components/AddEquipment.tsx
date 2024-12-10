@@ -284,6 +284,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       });
       
       localStorage.removeItem('equipmentData')
+      onClose()
     } catch (error) {
       console.error('Form submission error:', error);
     } finally {
@@ -841,6 +842,15 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} />
                   </div>
                 </div>
+                
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                    <SafetyChecklist
+                      values={safetyChecklistValues}
+                      onChange={handleSafetyChecklistChange}
+                    />
+                  </div>
+                </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
 
@@ -861,14 +871,6 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
                     )}
 
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-                    <SafetyChecklist
-                      values={safetyChecklistValues}
-                      onChange={handleSafetyChecklistChange}
-                    />
                   </div>
                 </div>
                 <div className="flex justify-end gap-4">

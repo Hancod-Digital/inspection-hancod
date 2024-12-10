@@ -7,13 +7,14 @@ import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
 const Location = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
-
+    const [searchValue, setSearchValue] = useState("");
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
+    const [location,setLocation] = useState<boolean>(false)
 
     return (
         <motion.div 
@@ -40,7 +41,7 @@ const Location = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Header onOpen={handleOpenAdd} />
+                        <Header onOpen={handleOpenAdd}  onSearchChange={setSearchValue} />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -54,7 +55,7 @@ const Location = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table />
+                        <Table searchValue={searchValue} />
                     </motion.div>
                 ) : (
                     <motion.div

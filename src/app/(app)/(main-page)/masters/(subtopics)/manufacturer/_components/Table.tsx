@@ -30,13 +30,9 @@ export default function ManufacturerTable({searchValue}:{searchValue:string}) {
     };
 
     const rearrangedData = data
-    ? [...data].sort((a:any, b:any) => {
-        const aMatch = a.manufacturer.toLowerCase().includes(searchValue.toLowerCase());
-        const bMatch = b.manufacturer.toLowerCase().includes(searchValue.toLowerCase());
-        if (aMatch && !bMatch) return -1;
-        if (!aMatch && bMatch) return 1;
-        return 0;
-      })
+    ? data.filter((item: any) =>
+        item.manufacturer.toLowerCase().includes(searchValue.toLowerCase())
+      )
     : [];
 
     return (

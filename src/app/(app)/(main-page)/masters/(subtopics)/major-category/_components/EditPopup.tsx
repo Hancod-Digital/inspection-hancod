@@ -63,7 +63,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
         setData(recordData);
         reset({
           major_category: recordData?.major_category || '',
-          equipment_type: String(recordData?.equipment_type?.id) || 'xcxcc  ',
+          equipment_type: String(recordData?.equipment_type?.id) || '',
           status: recordData?.status || '',
         });
       })
@@ -92,8 +92,9 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
+     console.log(values);
      
-    await updateRecord(id, {...data,equipment_type:Number(values?.equipment_type)});
+    await updateRecord(id, {equipment_type:Number(values?.equipment_type),major_category:values?.major_category,status:values?.status});
     setLoading(false);
     onClose(); // Close the form after saving
   };

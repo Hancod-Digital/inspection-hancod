@@ -90,12 +90,11 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
   const printCertificate = async(item: any) => {
        makeApiCall(()=>new MasterService().fetchEquipmentDetails(item?.equipment_no),{
         afterSuccess:async(data:any)=>{
-          console.log(data);
+      
           setSerialNo(data[0]?.serial_no)
         }})
             const response = await fetch('/equ-certificate/index.html'); 
             let htmlString = await response.text();
-            console.log(item);
             
             htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no);
 htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no);
@@ -193,32 +192,7 @@ printWindow?.document.write(`
 printWindow?.document.close();
 document.body.removeChild(htmlElement);
 document.head.removeChild(styleElement);
-//         const iframe: any = window.document.createElement('iframe');
-//         iframe.style.visibility = 'hidden';
-//         iframe.style.position = 'fixed';
-//         iframe.style.right = '0';
-//         iframe.style.bottom = '0';
-//         iframe.style.width = '3000px';
-//         iframe.style.height = '5000px';
-      
-//         const certificate = state.find(cert => cert.includes(item.id));
-     
-//         const blob = new Blob([certificate], { type: 'text/html' });
-// const url = URL.createObjectURL(blob);
-// console.log(url);
-
-//         iframe.src=url
-//             document.body.appendChild(iframe);
-      
-//             iframe.onload = function () {
-//               iframe.contentWindow.focus();
-//               iframe.contentWindow.print();
-      
-//               // Remove the iframe after printing
-//               iframe.contentWindow.onafterprint = function () {
-//                 document.body.removeChild(iframe);
-//               };
-//             };
+ 
         
       };
     

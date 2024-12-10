@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
+import { flushSync } from 'react-dom';
 
 const equipmentDetailsSchema = object({
    standard: z.string().nonempty('Standard is required'),
@@ -28,9 +29,27 @@ interface EquipmentDetailsFormProps {
 export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const { updateRecord, findRecordById } = useSubtopic();
+  const [data, setData] = useState<any>(null);
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      const recordData = await findRecordById(id);
+     console.log(recordData);
+      flushSync(() => {
+        setData(recordData);
+        methods.reset({
+          standard: recordData?.standard || '',
+          standard_type: String(recordData?.standard_type) || "",
+          remarks: recordData?.remarks || '',
+          status: recordData?.status || '',
+        });
+      });
+    };
+
+    fetchData();
+  }, [id]);
 
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
 

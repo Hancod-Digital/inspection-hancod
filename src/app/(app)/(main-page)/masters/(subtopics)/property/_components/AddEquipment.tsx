@@ -91,7 +91,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="Annexure">Annexure</SelectItem>
-                              <SelectItem value="Equipment">Annexure</SelectItem>
+                              <SelectItem value="Equipment">Equipment</SelectItem>
                             </SelectContent>
                           </Select>
                         )}

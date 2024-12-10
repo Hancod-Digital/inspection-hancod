@@ -74,14 +74,13 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
  const[locationOptions,setLocationOptions] = useState<any>([])
   const { watch, setValue, formState } = methods
-  const { equipment_no, standard,owner_name } = watch()
-  console.log(owner_name,"owner_name");
+  const { equipment_no, standard,owner_name } = watch() 
   
   useEffect(() => {
     if (equipment_no) {
       // Find the associated data for the current equipment_no
       const selectedEquipment = equipmentNoOptions.find((item: any) => item.id == equipment_no);
-console.log(selectedEquipment,"selectedEquipment");
+ 
       if (selectedEquipment) {
 
         setValue('standard', selectedEquipment.standard || ''); // Update standard
@@ -152,7 +151,6 @@ console.log(selectedEquipment,"selectedEquipment");
     const fetchOwners = async () => {
       const data = await getAllSingleSubtopic('owner')
       if (data) {
-        console.log(data);
         
         setOwnerOptions(data)
       }
@@ -238,7 +236,7 @@ console.log(selectedEquipment,"selectedEquipment");
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-console.log(values,"values_name");
+ 
 
     try {
       const formData = {
@@ -314,7 +312,7 @@ console.log(values,"values_name");
                           <SelectContent>
                             {siteOptions?.map((site: any) => (
                               <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.site}
+                                {site?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -662,7 +660,7 @@ console.log(values,"values_name");
                         const currentOwner = String(
                           equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.owner_id
                         );
-                        console.log(currentOwner,"currentOwner");
+                       
          
                         return (
                           <Select

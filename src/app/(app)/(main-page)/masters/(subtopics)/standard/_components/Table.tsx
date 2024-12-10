@@ -21,14 +21,11 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { data, isLoading, error ,deleteRecord} = useSubtopic();
     const rearrangedData = data
-    ? [...data].sort((a:any, b:any) => {
-        const aMatch = a.standard.toLowerCase().includes(searchValue.toLowerCase());
-        const bMatch = b.standard.toLowerCase().includes(searchValue.toLowerCase());
-        if (aMatch && !bMatch) return -1;
-        if (!aMatch && bMatch) return 1;
-        return 0;
-      })
+    ? data.filter((item: any) =>
+        item.standard.toLowerCase().includes(searchValue.toLowerCase())
+      )
     : [];
+    
     const handleEditClick = (idx: number) => {
         setEditingRow(idx === editingRow ? null : idx);
     };

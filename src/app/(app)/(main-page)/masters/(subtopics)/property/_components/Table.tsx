@@ -28,15 +28,10 @@ export default function EquipmentTable({ searchValue }: { searchValue: string })
     };
 
     const rearrangedData = data
-        ? [...data].sort((a, b) => {
-            const aMatch = a.property.toLowerCase().includes(searchValue.toLowerCase());
-            const bMatch = b.property.toLowerCase().includes(searchValue.toLowerCase());
-            if (aMatch && !bMatch) return -1;
-            if (!aMatch && bMatch) return 1;
-            return 0;
-        })
-        : [];
-
+    ? data.filter((item: any) =>
+        item.property.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    : [];
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
             <Table className="w-full">
