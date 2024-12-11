@@ -54,9 +54,9 @@ export default function SurveyorDetailsForm({ onClose, id }: SurveyorDetailsForm
     handleSubmit,
     control,
     setValue,
-    formState: { isSubmitSuccessful, errors },
+    formState: { isSubmitSuccessful, errors:typedErrors },
   } = methods;
-
+  const errors:any = typedErrors;
   const [competencies, setCompetencies] = useState<any[]>([]);
   const [dummy, setDummy] = useState<any>([]);
   const record = findRecordById(id);
