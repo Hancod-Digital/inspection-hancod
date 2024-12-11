@@ -155,7 +155,7 @@ console.log(data)
         }
       };
     
-    async fetchAllEquipments(id:string) {
+    async fetchAllEquipments(id:number|string) {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase
             .from("lifting_gear_multi_equipments")
