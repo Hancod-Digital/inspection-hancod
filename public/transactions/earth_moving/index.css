@@ -1075,7 +1075,7 @@ button {
   justify-content: center;
   flex-shrink: 0;
   position: relative;
-  width: calc(51 * var(--rpx));
+  /* width: calc(51 * var(--rpx)); */
   height: calc(24 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -1170,7 +1170,7 @@ button {
   width: 1.8%;
   height: 16.07%;
   top: 18.75%;
-  left: 96.47%;
+  left: {{eighteen}};
   background: url(./earth_moving/assets/images/a1227254-5157-40e6-9065-9f4f202bdbae.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1300,7 +1300,7 @@ button {
   width: 1.8%;
   height: 16.07%;
   top: 74.7%;
-  left: 89.17%;
+  left: {{nineteen}};
   background: url(./earth_moving/assets/images/c35b3410-36fd-4247-8157-196a6040920a.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1454,7 +1454,7 @@ button {
   width: 1.8%;
   height: 15.06%;
   top: 18.98%;
-  left: 89.17%;
+  left: {{twentyone}};
   background: url(./earth_moving/assets/images/066ba541-3f5b-41c6-a7a6-3c6a51d1b5a3.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1512,12 +1512,25 @@ button {
   white-space: nowrap;
   z-index: 54;
 }
+
+.vector-406 {
+  position: absolute;
+  width: 1.9%;
+  height: 15.06%;
+  top: 37.89%;
+  left: {{seventeen}};
+  background: url(./crane_certificate/assets/images/2830d43a-769f-476f-bbb7-a13d51de9455.png)
+    no-repeat center;
+  background-size: 100% 100%;
+  z-index: 101;
+}
+
 .vector-39 {
   position: absolute;
   width: 1.9%;
   height: 15.06%;
   top: 47.89%;
-  left: 43.79%;
+  left: {{twenty}};
   background: url(./earth_moving/assets/images/5b9ac063-310f-43ef-8633-9232c7695221.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1574,7 +1587,7 @@ button {
   width: 1.8%;
   height: 15.06%;
   top: 75.6%;
-  left: 96.47%;
+  left: {{twentytwo}};
   background: url(./earth_moving/assets/images/b6b84c50-5317-4c28-b7cd-71fdd74dffc8.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1734,7 +1747,7 @@ button {
   width: 1.77%;
   height: 33.75%;
   top: 26.88%;
-  left: 89.28%;
+  left: {{jacob}};
   background: url(./earth_moving/assets/images/50ed6efd-5015-4e63-a4b1-db3a40ff4796.png)
     no-repeat center;
   background-size: 100% 100%;

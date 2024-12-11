@@ -63,6 +63,13 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
+  const deleteRecord = async (id:number) => {
+    await makeApiCall(()=>new MasterService().deleteMultiEquipment(id),{
+      afterSuccess:()=>{
+        toastWithTimeout(ToastVariant.Default,'Equipment deleted successfully')
+      }
+    })
+   }
   const [testExamChecked, setTestExamChecked] = useState<any>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
   const { reset, handleSubmit, control, register, formState: { isSubmitSuccessful, errors } } = methods;
@@ -79,7 +86,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const { watch, setValue, formState } = methods
   const { equipment_no,inspection_date,type_of_exam, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
- 
+  const [existingData, setExistingData] = useState<any[]>([]);
   //manufacturer
   const addEquipmentToMulti = async() => {
     const datas = {equipment_no,inspection_date,type_of_exam,title,equipment_description,test_cert_coc_no,safe_working_load,proof_load,standard:standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard,last_test_exam,last_thorough_exam:last_thorough_exam == null ?"Not Applicable": last_thorough_exam,next_test_exam,next_thorough_exam:next_thorough_exam==null ? "Not Applicable":next_thorough_exam,owner_name:ownerOptions?.filter((item: any) => item?.id == owner_name)[0]?.owner,manufacturer:manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,result,surveyor,approval_status};
@@ -87,9 +94,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     await makeApiCall(
       ()=>new MasterService().addEquipment(datas),{
           afterSuccess: (data:any) => {
-              const existingData = JSON.parse(localStorage.getItem('equipmentData') || '[]');
-              existingData.push(data);
-              localStorage.setItem('equipmentData', JSON.stringify(existingData));
+              
+               
+              setExistingData([...existingData,data])
               toastWithTimeout(ToastVariant.Success,"Equipment addded")
               setIsSubmitted(true)
           }
@@ -270,7 +277,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
       console.log('Form submission:', formData);
       const data = await addRecord(formData);
-      const existingData = JSON.parse(localStorage.getItem('equipmentData') || '[]');
+      
       Promise.all(existingData.map((item:any) => {
         return makeApiCall(
           () => new MasterService().updateSubtopicDetails('lifting_gear_multi_equipments', item.id, { lifting_gear_multi_id: data[0]?.id }),{}
@@ -283,7 +290,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         console.error('Error updating records:', error);
       });
       
-      localStorage.removeItem('equipmentData')
+      // localStorage.removeItem('equipmentData')
       onClose()
     } catch (error) {
       console.error('Form submission error:', error);
@@ -472,7 +479,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                           <SelectContent>
                             {equipmentNoOptions?.map((equipment: any) => (
                               <SelectItem key={equipment.id} value={String(equipment.id)}>
-                                {equipment?.title}
+                                {equipment?.equipment_no}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -839,7 +846,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                    <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} />
+                    <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
                   </div>
                 </div>
                 

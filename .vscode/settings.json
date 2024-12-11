@@ -6,5 +6,6 @@
     },
     "editor.suggestOnTriggerCharacters": true,
     "editor.acceptSuggestionOnEnter": "on",
-    "editor.snippetSuggestions": "top"
+    "editor.snippetSuggestions": "top",
+    "liveServer.settings.port": 5501
 }

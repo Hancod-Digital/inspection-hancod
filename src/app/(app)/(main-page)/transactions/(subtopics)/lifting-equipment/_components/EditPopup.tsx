@@ -24,7 +24,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import AnnexuresTable from './AnnexureTable';
-import Table from './PropertyTable';
+import Table from './EditPropertyTable';
 import SafetyChecklist from '@/components/safety-checklist';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { makeApiCall } from '@/lib/apicaller';
@@ -154,7 +154,7 @@ export default function EditEquipmentDetailsForm({
   }, [isSubmitSuccessful, reset, onClose]);
 
   // Fetch all select options on component mount
-
+  const [item_type,setItem_type]=useState<any>("");
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -171,8 +171,8 @@ export default function EditEquipmentDetailsForm({
             afterSuccess: (data: any) => setLocationOptions(data),
           }),
         ]);
-        
-
+  
+        console.log(equipmentNos, "jpk");
         setSiteOptions(sites || []);
         setAuthorityOptions(authorities || []);
         setJobOrderNoOptions(jobOrders || []);
@@ -181,55 +181,58 @@ export default function EditEquipmentDetailsForm({
         setManufacturerOptions(manufacturers || []);
         setSurveyorOptions(surveyors || []);
         setOwnerOptions(owners || []);
-        
       } catch (error) {
-        console.error('Error fetching select options:', error);
+        console.error("Error fetching select options:", error);
         toastWithTimeout(ToastVariant.Error, "Failed to load form options.");
       }
     };
-
+  
     fetchOptions();
-  }, [getAllSingleSubtopic]);
-  const [item_type,setItem_type]=useState<any>("");
-  // Handle equipment_no changes to set related fields
-  useEffect(() => {
-    if (equipment_no) {
-      const selectedEquipment = equipmentNoOptions.find(item => item.id === equipment_no);
-     console.log(selectedEquipment,"loki");
-     setItem_type(selectedEquipment.item_type);
+  
+    // Handle equipment_no changes to set related fields
+    if (equipment_no && equipmentNoOptions.length > 0) {
+      console.log(equipment_no, "loki", equipmentNoOptions);
+      const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
+      console.log(selectedEquipment, "loki",selectedEquipment?.property_table_type);
+      setItem_type(selectedEquipment?.property_table_type);
+  
       if (selectedEquipment) {
-        setValue('location', String(existingData.location) || '');
-        setValue('inspection_date', existingData.inspection_date || '');
-        setValue('site', String(existingData.site) || '');
-        setValue('authority', String(existingData.authority) || '');
-        setValue('standard', String(existingData.standard) || '');
-        setValue('type_of_exam', existingData.type_of_exam || '');
-        setValue('description_of_test', existingData.description_of_test || '');
-        setValue('job_order_no', String(existingData.job_order_no) || '');
-        setValue('equipment_no', String(selectedEquipment.id) || '');
-        setValue('title', String(selectedEquipment.title) || '');
-        setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
-        setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
-        setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
-        setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
-        setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
-        setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
-        setValue('result', selectedEquipment.result || '');
-        setValue('surveyor', selectedEquipment.surveyor || '');
-        setValue('result_description', selectedEquipment.result_description || '');
-        setValue('owner_name', String(selectedEquipment.owner_id) || '');
-        setValue('description', String(selectedEquipment.description) || '');
-        setValue('equipment_description', String(selectedEquipment.description) || '');
-        setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
-        setValue('tested_standard', existingData.tested_standard || '');
-        setValue('approval_status', selectedEquipment.approval_status || '');
-        
-        setValue('serial_no', String(selectedEquipment.serial_no) || '');
-        setValue('model', String(selectedEquipment.model) || '');
-        setValue('owner_id', String(selectedEquipment.owner_id) || '');
+        setValue("location", String(existingData.location) || "");
+        setValue("inspection_date", existingData.inspection_date || "");
+        setValue("site", String(existingData.site) || "");
+        setValue("authority", String(existingData.authority) || "");
+        setValue("standard", String(existingData.standard) || "");
+        setValue("type_of_exam", existingData.type_of_exam || "");
+        setValue("description_of_test", existingData.description_of_test || "");
+        setValue("job_order_no", String(existingData.job_order_no) || "");
+        setValue("equipment_no", String(selectedEquipment.id) || "");
+        setValue("title", String(selectedEquipment.title) || "");
+        setValue("test_cert_coc_no", String(selectedEquipment.test_certificate_no) || "");
+        setValue("safe_working_load", String(selectedEquipment.safe_working_load) || "");
+        setValue("last_test_exam", String(selectedEquipment.last_test_date) || "");
+        setValue("next_test_exam", String(selectedEquipment.next_test_date) || "");
+        setValue("last_thorough_exam", String(selectedEquipment.last_thorough_date) || "");
+        setValue("next_thorough_exam", String(selectedEquipment.next_thorough_date) || "");
+        setValue("result", selectedEquipment.result || "");
+        setValue("surveyor", selectedEquipment.surveyor || "");
+        setValue("result_description", selectedEquipment.result_description || "");
+        setValue("owner_name", String(selectedEquipment.owner_id) || "");
+        setValue("description", String(selectedEquipment.description) || "");
+        setValue("equipment_description", String(selectedEquipment.description) || "");
+        setValue("manufacturer", String(selectedEquipment.manufacturer) || "");
+        setValue("tested_standard", existingData.tested_standard || "");
+        setValue("approval_status", selectedEquipment.approval_status || "");
+        setValue("serial_no", String(selectedEquipment.serial_no) || "");
+        setValue("model", String(selectedEquipment.model) || "");
+        setValue("owner_id", String(selectedEquipment.owner_id) || "");
       }
     }
-  }, [equipment_no, equipmentNoOptions, setValue]);
+  }, [
+    equipment_no,
+    equipmentNoOptions,
+    setValue,
+  ]); // Add all dependencies here
+  
 
   // Handle checkboxes to disable date inputs
   useEffect(() => {
@@ -466,7 +469,7 @@ export default function EditEquipmentDetailsForm({
                           <SelectContent>
                             {equipmentNoOptions.map((equipment) => (
                               <SelectItem key={equipment.id} value={String(equipment.id)}>
-                                {equipment.title}
+                                {equipment.equipment_no}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -836,7 +839,7 @@ export default function EditEquipmentDetailsForm({
                 <div className="space-y-4">
                   {/* Properties Table */}
                   <div className="grid gap-4 grid-cols-1">
-                    <Table data={data} setData={setData} item_type={item_type} />
+                    <Table data={existingData?.properties} setData={setData} item_type={item_type} />
                   </div>
 
                   {/* Annexures Table */}

@@ -75,6 +75,12 @@ export class MasterService extends Supabase {
         }
         return data[0];
     }
+
+    async deleteMultiEquipment(id:number){
+        const {data,error} = await this.supabase.from('lifting_gear_multi_equipments').delete().eq('id',id)
+        if(error) throw error;
+        return data;
+    }
     async getMajorCategoryDetails() {
         const { data, error } = await this.supabase
             .rpc('get_major_category_data');  // Calling the SQL function

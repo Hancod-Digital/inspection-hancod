@@ -1091,7 +1091,7 @@ button {
   justify-content: center;
   flex-shrink: 0;
   position: relative;
-  width: calc(51 * var(--rpx));
+  /* width: calc(51 * var(--rpx)); */
   height: calc(24 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);

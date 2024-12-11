@@ -475,7 +475,7 @@ setSelectedEquipment(selectedEquipment)
                           <SelectContent>
                             {equipmentNoOptions?.map((equipment: any) => (
                               <SelectItem key={equipment.id} value={String(equipment.id)}>
-                                {equipment?.title}
+                                {equipment?.equipment_no}
                               </SelectItem>
                             ))}
                           </SelectContent>

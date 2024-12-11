@@ -11,7 +11,7 @@ const Table = dynamic(
   )
 const LiftingGearMulti = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
-
+    const [searchValue, setSearchValue] = useState<string>('');
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
@@ -44,7 +44,7 @@ const LiftingGearMulti = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Header onOpen={handleOpenAdd} />
+                        <Header onOpen={handleOpenAdd} onSearchChange={setSearchValue} />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -58,7 +58,7 @@ const LiftingGearMulti = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table />
+                        <Table searchValue={searchValue} />
                     </motion.div>
                 ) : (
                     <motion.div

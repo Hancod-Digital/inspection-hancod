@@ -16,7 +16,7 @@ import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
 
-export default function EquipmentTable() {
+export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { data, isLoading, error } = useSubtopic();
 
@@ -40,7 +40,7 @@ export default function EquipmentTable() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((item, idx) => (
+                    {data?.filter((item:any)=>item?.annexure?.toLowerCase()?.includes(searchValue?.toLowerCase()))?.map((item, idx) => (
                         <React.Fragment key={idx + 1}>
                             <TableRow>
                                 <TableCell className="py-4">{idx + 1}</TableCell>

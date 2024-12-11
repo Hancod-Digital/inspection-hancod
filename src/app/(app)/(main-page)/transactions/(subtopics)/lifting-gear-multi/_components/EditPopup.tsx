@@ -6,8 +6,6 @@ import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-for
 import { z, object, string, TypeOf, optional } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dynamic from 'next/dynamic';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import {
   Dialog,
   DialogContent,
@@ -25,30 +23,37 @@ import SafetyChecklist from '@/components/safety-checklist';
 import { equipmentDataRange, generateEquipmentCertificateHTML } from '@/lib/utils';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
+import Table from './AnnexureTable';
+import { makeApiCall } from '@/lib/apicaller';
+import { MasterService } from '@/services/api/masters-service';
+import 'react-quill/dist/quill.snow.css';
+
+// Dynamically import ReactQuill to prevent SSR issues
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 // Define schema for validation
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
   site: string().nonempty('Site is required'),
   authority: string().nonempty('Authority is required'),
-  standard: string().nonempty('Standard is required'),
+  type_of_exam: string().nonempty('Type of Exam is required'),
   job_order_no: string().nonempty('Job Order No. is required'),
+  location: string().nonempty('Location is required'),
   equipment_no: string().nonempty('Equipment No. is required'),
   title: string().nonempty('Title is required'),
   test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
   safe_working_load: string().nonempty('Safe Working Load is required'),
+  proof_load: string().nonempty('Proof Load is required'),
+  standard: string().nonempty('Standard is required'),
   last_test_exam: string().nonempty('Last Test Exam is required'),
   next_test_exam: string().optional(),
   last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
   next_thorough_exam: string().optional(),
   result: string().nonempty('Result is required'),
-  
   surveyor: string().nonempty('Surveyor is required'),
   defect_description: string().nonempty('Defect Description is required'),
   test_particulars: string().nonempty('Test Particulars is required'),
-  
   owner_name: string().nonempty('Owner Name is required'),
-  proof_load: string().nonempty('Proof Load is required'),
   description: string().nonempty('Description is required'),
   equipment_description: string().nonempty('Equipment Description is required'),
   manufacturer: string().nonempty('Manufacturer is required'),
@@ -75,12 +80,15 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       inspection_date: '',
       site: '',
       authority: '',
-      standard: '',
+      type_of_exam: '',
       job_order_no: '',
+      location: '',
       equipment_no: '',
       title: '',
       test_cert_coc_no: '',
       safe_working_load: '',
+      proof_load: '',
+      standard: '',
       last_test_exam: '',
       next_test_exam: '',
       last_thorough_exam: '',
@@ -90,7 +98,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       defect_description: '',
       test_particulars: '',
       owner_name: '',
-      proof_load: '',
       description: '',
       equipment_description: '',
       manufacturer: '',
@@ -117,6 +124,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [manufacturerOptions, setManufacturerOptions] = useState<any[]>([]);
   const [surveyorOptions, setSurveyorOptions] = useState<any[]>([]);
   const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
+  const [locationOptions, setLocationOptions] = useState<any[]>([]);
 
   const [safetyChecklistValues, setSafetyChecklistValues] = useState({
     firstExamination: 'no',
@@ -128,22 +136,35 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     safeToUse: 'no'
   });
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const deleteRecord = async (id:number) => {
+    await makeApiCall(()=>new MasterService().deleteMultiEquipment(id),{
+      afterSuccess:()=>{
+        toastWithTimeout(ToastVariant.Default,'Equipment deleted successfully')
+      }
+    })
+   }
   // Fetch existing equipment data
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
+      console.log(data);
+      
       if (data) {
         // Populate form fields with existing data
         reset({
           inspection_date: data.inspection_date || '',
           site: data.site || '',
           authority: data.authority || '',
-          standard: data.standard || '',
+          type_of_exam: data.type_of_exam || '',
           job_order_no: data.job_order_no || '',
+          location: data.location || '',
           equipment_no: data.equipment_no || '',
           title: data.title || '',
           test_cert_coc_no: data.test_cert_coc_no || '',
           safe_working_load: data.safe_working_load || '',
+          proof_load: data.proof_load || '',
+          standard: data.standard || '',
           last_test_exam: data.last_test_exam || '',
           next_test_exam: data.next_test_exam || '',
           last_thorough_exam: data.last_thorough_exam || '',
@@ -152,11 +173,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           surveyor: data.surveyor || '',
           defect_description: data.defect_description || '',
           test_particulars: data.test_particulars || '',
-          owner_name: data.owner_name || '',
-          proof_load: data.proof_load || '',
+          owner_name: String(data.owner_name) || '',
           description: data.description || '',
           equipment_description: data.equipment_description || '',
-          manufacturer: data.manufacturer || '',
+          manufacturer: String(data.manufacturer) || '',
           tested_standard: data.tested_standard || '',
           approval_status: data.approval_status ? 'Approved' : 'Not Approved',
         });
@@ -208,12 +228,57 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     fetchOptions();
   }, [getAllSingleSubtopic]);
 
+  // Fetch location options separately
+  const [existingData, setExistingData] = useState<any[]>([]);
+  const [equipmentData, setEquipmentData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const data = await makeApiCall(() => new MasterService().getLocationDetails(), {
+        afterSuccess: (data:any)=>{
+          if (data) {
+            setLocationOptions(data); // Set the location options to the fetched data
+          }
+        }
+      });
+    };
+    fetchLocations();
+    const fetchEquipment = async() => {
+        await makeApiCall(() => new MasterService().fetchAllEquipments(id), {
+        afterSuccess: (data:any)=>{
+          console.log(data);
+          if (data) {
+            setExistingData(data); // Set the location options to the fetched data
+          }
+        }
+      });
+    }
+    fetchEquipment();
+  }, []);
+
+  // Watch location and update site options accordingly
+  const location = watch('location');
+
+  useEffect(() => {
+    const fetchSites = async () => {
+      const res = locationOptions.filter((item: any) => item.location.id == location);
+
+      if (res.length > 0) {
+        setSiteOptions([res[0].site]); // Set the site options based on selected location
+      } else {
+        setSiteOptions([]); // Clear site options if no location is selected
+      }
+    };
+    fetchSites();
+  }, [location, locationOptions]);
+
   // Watch equipment_no and update related fields
   const equipment_no = watch('equipment_no');
 
   useEffect(() => {
     if (equipment_no) {
-      const selectedEquipment = equipmentNoOptions.find((item) => item.id === equipment_no);
+      const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
+      console.log(selectedEquipment);
       if (selectedEquipment) {
         setValue('standard', selectedEquipment.standard || '');
         setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
@@ -243,7 +308,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      reset();
+      // Optionally reset the form or perform other actions
+      // reset();
     }
   }, [isSubmitSuccessful, reset]);
 
@@ -254,8 +320,46 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     }));
   };
 
+  // Function to handle adding equipment to multi-equipments (AnnexureTable)
+  const addEquipmentToMulti = async () => {
+    const datas = {
+      equipment_no,
+      inspection_date: watch('inspection_date'),
+      type_of_exam: watch('type_of_exam'),
+      title: watch('title'),
+      equipment_description: watch('equipment_description'),
+      test_cert_coc_no: watch('test_cert_coc_no'),
+      safe_working_load: watch('safe_working_load'),
+      proof_load: watch('proof_load'),
+      standard: standardOptions?.find((item: any) => item.id === watch('standard'))?.standard || '',
+      last_test_exam: watch('last_test_exam') || '',
+      last_thorough_exam: watch('last_thorough_exam') || '',
+      next_test_exam: testExamChecked ? "Not Applicable" : watch('next_test_exam'),
+      next_thorough_exam: thoroughExamChecked ? "Not Applicable" : watch('next_thorough_exam'),
+      owner_name: ownerOptions?.find((item: any) => item.id === watch('owner_name'))?.owner || '',
+      manufacturer: manufacturerOptions?.find((item: any) => item.id === watch('manufacturer'))?.manufacturer || '',
+      result: watch('result'),
+      surveyor: surveyorOptions?.find((item: any) => item.id === watch('surveyor'))?.surveyor || '',
+      approval_status: watch('approval_status'),
+    };
+    const otherfields = { result: watch('result'), equipment_no };
+
+    await makeApiCall(
+      () => new MasterService().addEquipment(datas),
+      {
+        afterSuccess: (data:any) => {
+          setExistingData([...existingData,data])
+          toastWithTimeout(ToastVariant.Success, "Equipment added");
+          setIsSubmitted(true);
+        }
+      }
+    );
+  };
+
+  // Handle form submission
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
+
     try {
       const formData = {
         ...values,
@@ -271,7 +375,20 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam  
       };
 
+      console.log('Form submission:', formData);
       await updateRecord(id, formData);
+
+      // Handle updating multi-equipments if any
+     
+      if (existingData.length > 0) {
+        await Promise.all(existingData.map((item:any) => {
+          return makeApiCall(
+            () => new MasterService().updateSubtopicDetails('lifting_gear_multi_equipments', item.id, { lifting_gear_multi_id: id }), {}
+          );
+        }));
+        console.log('All updates completed successfully');
+        
+      }
 
       toastWithTimeout(ToastVariant.Success, 'Equipment details updated successfully');
       onClose();
@@ -313,6 +430,32 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.inspection_date.message}</p>
                     )}
                   </div>
+
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <Controller
+                      name="location"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="location">
+                            <SelectValue placeholder="Select location" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {locationOptions?.map((location: any) => (
+                              <SelectItem key={location.id} value={String(location?.location?.id)}>
+                                {location?.location?.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.location && (
+                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
+                    )}
+                  </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
@@ -324,9 +467,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select site" />
                           </SelectTrigger>
                           <SelectContent>
-                            {siteOptions?.map((site) => (
+                            {siteOptions?.map((site: any) => (
                               <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.site}
+                                {site?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -337,6 +480,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="authority" className="mt-3">Authority</Label>
                     <Controller
@@ -348,7 +492,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select authority" />
                           </SelectTrigger>
                           <SelectContent>
-                            {authorityOptions?.map((authority) => (
+                            {authorityOptions?.map((authority: any) => (
                               <SelectItem key={authority.id} value={String(authority.id)}>
                                 {authority?.authority}
                               </SelectItem>
@@ -361,6 +505,29 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.authority.message}</p>
                     )}
                   </div>
+
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="type_of_exam" className="mt-3">Type of Exam</Label>
+                    <Controller
+                      name="type_of_exam"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="type_of_exam">
+                            <SelectValue placeholder="Select type of exam" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={"Test"}>Test</SelectItem>
+                            <SelectItem value={"Thorough"}>Thorough</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.type_of_exam && (
+                      <p className="text-red-500 text-[12px] ">{errors.type_of_exam.message}</p>
+                    )}
+                  </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="job_order_no" className="mt-3">Job Order No.</Label>
                     <Controller
@@ -405,7 +572,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                           <SelectContent>
                             {equipmentNoOptions?.map((equipment) => (
                               <SelectItem key={equipment.id} value={String(equipment.id)}>
-                                {equipment?.title}
+                                {equipment?.equipment_no}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -416,6 +583,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">Title</Label>
                     <Input 
@@ -429,6 +597,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
                 </div>
+
                 <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
@@ -443,6 +612,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
                 </section>
+
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
@@ -456,6 +626,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
                     <Input 
@@ -468,6 +639,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="proof_load" className="mt-3">Proof Load:</Label>
                     <Input 
@@ -480,6 +652,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.proof_load.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="standard" className="mt-3">Standard</Label>
                     <Controller
@@ -539,6 +712,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
                 </div>
+
                 <div className="grid gap-4 grid-cols-1 w-full">
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                     <Label className='mt-3' htmlFor="next_test_exam">Next Test Exam</Label>
@@ -620,6 +794,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.result.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="owner_name" className="mt-3">Owner Name</Label>
                     <Controller
@@ -644,6 +819,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
                     <Controller
@@ -668,6 +844,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
                     <Input 
@@ -679,6 +856,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
                     <Controller
@@ -703,6 +881,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                     )}
                   </div>
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="approval_status" className="mt-3">Approval Status</Label>
                     <Controller
@@ -750,6 +929,25 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     </div>
                   </div>
                 </div>
+
+                {/* Annexure Table Section */}
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                    <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
+                  </div> 
+                </div>
+
+                {/* Safety Checklist Section */}
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                    <SafetyChecklist 
+                      values={safetyChecklistValues}
+                      onChange={handleSafetyChecklistChange}
+                    />
+                  </div>
+                </div>
+
+                {/* Defect Description Section */}
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                     <Label htmlFor="defect_description" className="mt-3">
@@ -765,6 +963,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
                 </div>
+
+                {/* Test Particulars Section */}
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                     <Label htmlFor="test_particulars" className="mt-3">
@@ -780,14 +980,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-                    <SafetyChecklist 
-                      values={safetyChecklistValues}
-                      onChange={handleSafetyChecklistChange}
-                    />
-                  </div>
-                </div>
+
+                {/* Submit and Cancel Buttons */}
                 <div className="flex justify-end gap-4">
                   <Button 
                     type="reset" 

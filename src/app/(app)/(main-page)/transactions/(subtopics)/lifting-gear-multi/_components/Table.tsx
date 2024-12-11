@@ -17,6 +17,8 @@ import { generateEquipmentCertificateHTMLBody } from '@/lib/utils';
 import { fetchMultiCertificate } from '@/lib/html';
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
+import DeleteDialogue from '@/components/ui/delete-dialog';
+import DeleteIcon from '@/components/icons/DeleteIcon';
 interface EquipmentData {
     slNo: number;
     equipmentID: string;
@@ -29,9 +31,9 @@ interface EquipmentData {
 
  
 
-export default function EquipmentTable() {
+export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const {getAllSingleSubtopic} = useSubtopic()
+    const {getAllSingleSubtopic,deleteRecord,data} = useSubtopic()
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
     };
@@ -39,7 +41,6 @@ export default function EquipmentTable() {
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
-    const {data} = useSubtopic();
     
     const [jobOrderNoOptions,setJobOrderNoOptions] = useState<any>([])
     const [siteOptions,setSiteOptions] = useState<any>([])
@@ -185,18 +186,18 @@ htmlString = htmlString.replace(/\{\{sixteen\}\}/g, item?.next_thorough_exam);
              
 const cssResponse = await fetch('/equ-certificate/index.css');
   let cssText = await cssResponse.text();
-  
-cssText = cssText.replace(/\{\{seventeen\}\}/g, !item?.first_examination ? " 36%" :" 43.79%");
+  console.log("first examination ",item?.first_examination,"six month interval",item?.six_month_interval,"twelve month interval",item?.twelve_month_interval,"correct installation",item?.correct_installation,"examination scheme",item?.examination_scheme,"exceptional circumstances",item?.exceptional_circumstances)
+cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination ? " 36%" :" 43.79%");
 
 cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval ? " 89%" :" 96%");
 
-cssText = cssText.replace(/\{\{nineteen\}\}/g,  !item?.twelve_month_interval ? " 89.17%;" : "  96.47%;");
+cssText = cssText.replace(/\{\{nineteen\}\}/g,  item?.twelve_month_interval ? " 89.17%;" : "  96.47%;");
 
-cssText = cssText.replace(/\{\{twenty\}\}/g,  !item?.correct_installation ? "36%" : "43.79%;");
+cssText = cssText.replace(/\{\{twenty\}\}/g,  item?.correct_installation ? "36%" : "43.79%;");
 
-cssText = cssText.replace(/\{\{twentyone\}\}/g,  item?.examination_scheme ? "89.17%;" : "  96.47%;");
+cssText = cssText.replace(/\{\{twentyone\}\}/g,  item?.examination_scheme ? "89.17%;" : "96.47%;");
 
-cssText = cssText.replace(/\{\{twentytwo\}\}/g,  item?.exceptional_circumstances ? "96.47%;" : " 89.47%;");
+cssText = cssText.replace(/\{\{twentytwo\}\}/g,  !item?.exceptional_circumstances ? "96.47%;" : "89.47%;");
 
 htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description);
 
@@ -281,9 +282,8 @@ const htmlElement = document.createElement('div');
                 <TableHeader>
                     <TableRow className='flex justify-start'>
                         <TableHead className="py-4 flex-[1]">Sl. No.</TableHead>
-                        <TableHead className="py-4 flex-[1]">Equipment ID</TableHead>
-                        <TableHead className="py-4 flex-[2]">Title</TableHead>
-                        <TableHead className="py-4 flex-[1]">Equipment Type</TableHead>
+            
+                        <TableHead className="py-4 flex-[2]">Title</TableHead> 
                         <TableHead className="py-4 flex-[1]">Inspection Date</TableHead>
                         <TableHead className="py-4 flex-[1]">Next Test Exam</TableHead>
                         <TableHead className="py-4 flex-[1]">Result</TableHead>
@@ -292,13 +292,12 @@ const htmlElement = document.createElement('div');
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((item:any,idx:number) => (
+                    {data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase()))?.map((item:any,idx:number) => (
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
                                 <TableCell className="py-4 flex-[1]">{idx}</TableCell>
-                                <TableCell className="py-4 flex-[1]">{item?.equipment_no}</TableCell>
-                                <TableCell className="py-4 flex-[2]">{item?.title}</TableCell>
-                                <TableCell className="py-4 flex-[1]">{item?.equipmentType}</TableCell>
+                               
+                                <TableCell className="py-4 flex-[2]">{item?.title}</TableCell> 
                                 <TableCell className="py-4 flex-[1]">{item?.last_thorough_exam}</TableCell>
                                 
                                 <TableCell className="py-4 flex-[1]">{item?.next_thorough_exam}</TableCell>
@@ -316,7 +315,14 @@ const htmlElement = document.createElement('div');
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
                                             <DropdownMenuItem onClick={() => handleEditClick(item?.id)}>Edit</DropdownMenuItem>
-                                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                                            <DeleteDialogue
+                                                onConfirm={async () => await deleteRecord(item.id)}
+                                                triggerButton={
+                                                  <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                                  Delete
+                                              </button>
+                                                }
+                                            />
                                             <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

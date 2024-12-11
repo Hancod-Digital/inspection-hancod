@@ -18,10 +18,12 @@ import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
+import DeleteDialogue from '@/components/ui/delete-dialog';
+import DeleteIcon from '@/components/icons/DeleteIcon';
 
 export default function EquipmentTable() {
   const [editingRow, setEditingRow] = useState<number | null>(null);
-  const { data, isLoading, error, getAllSingleSubtopic } = useSubtopic();
+  const { data, isLoading, error, getAllSingleSubtopic,deleteRecord } = useSubtopic();
 
   const [jobOrderNoOptions, setJobOrderNoOptions] = useState<any>([]);
   const [siteOptions, setSiteOptions] = useState<any>([]);
@@ -96,14 +98,15 @@ export default function EquipmentTable() {
         },
       }
     );
-    console.log(equipment.property_table_type ,"equipment",equipment);
+    
+    console.log(equipment,equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT" || equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/mewp_and_forklift/index.css" : "/transactions/earth_moving/index.css");
     
     // Fetch the HTML template
-    const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_type == "MEWP AND FORKLIFT" || equipment.property_type == "ELEVATOR CERTIFICATE" ? "/transactions/mewp_and_forklift/index.html" : "/transactions/earth_moving/index.html"}`);
+    const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT" || equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/mewp_and_forklift/index.html" : "/transactions/earth_moving/index.html"}`);
     let htmlString = await response.text();
 
     // Fetch the CSS template 
-    const cssResponse = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_type == "MEWP AND FORKLIFT" || equipment.property_type == "ELEVATOR CERTIFICATE" ? "/transactions/mewp_and_forklift/index.css" : "/transactions/earth_moving/index.css"}`);
+    const cssResponse = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT" || equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/mewp_and_forklift/index.css" : "/transactions/earth_moving/index.css"}`);
     let cssText = await cssResponse.text();
 
     // Replace placeholders in HTML:
@@ -120,26 +123,67 @@ export default function EquipmentTable() {
     htmlString = htmlString.replace(/\{\{six3\}\}/g, serialNo || '');
     htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
     htmlString = htmlString.replace(/\{\{six5\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_name)?.owner || '');
-console.log(ownerOptions.find((owner: any) => owner.id == item.owner_name),item);
     
     htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
-
-    htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.equipment_details || '');
-
-    const conditions = item?.properties?.map((item: any) => item.CONDITION);
-    const swls = item?.properties?.map((item: any) => item.SWL);
-    const radii = item?.properties?.map((item: any) => item.RADIUS);
-    const testLoads = item?.properties?.map((item: any) => item["TEST LOAD"]);
-    const boomLengths = item?.properties?.map((item: any) => item["BOOM LENGTH"]);
-    
+    htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
+    const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
+    .filter((v: any) => v != null)
+    .map((condition: string) => {
+      // If length exceeds 10 characters, break it into two lines
+      if (condition.length > 6) {
+        return `<li>${condition.substring(0, 6)}<br>${condition.substring(6)}</li>`;
+      } else {
+        return `<li>${condition}</li>`;
+      }
+    });
   
-
-    htmlString = htmlString.replace(/\{\{nine\}\}/g, `<ul>${conditions.map((condition: any) => `<li>${condition}</li>`).join('')}</ul>`);
-    
-    htmlString = htmlString.replace(/\{\{ten\}\}/g, `<ul>${boomLengths.map((boomLength: any) => `<li>${boomLength}</li>`).join('')}</ul>`);
-    htmlString = htmlString.replace(/\{\{eleven\}\}/g, `<ul>${radii.map((radius: any) => `<li>${radius}</li>`).join('')}</ul>`);
-    htmlString = htmlString.replace(/\{\{twelve\}\}/g, `<ul>${testLoads.map((testLoad: any) => `<li>${testLoad}</li>`).join('')}</ul>`);
-    htmlString = htmlString.replace(/\{\{twelve1\}\}/g, `<ul>${swls.map((swl: any) => `<li>${swl}</li>`).join('')}</ul>`);
+  // Repeat similar logic for boomLengths, radii, testLoads, and swls
+  const boomLengths = (item?.properties?.map((p: any) => p["BOOM LENGTH"]) || [])
+    .filter((v: any) => v != null)
+    .map((boomLength: string) => {
+      if (boomLength.length > 6) {
+        return `<li>${boomLength.substring(0, 6)}<br>${boomLength.substring(6)}</li>`;
+      } else {
+        return `<li>${boomLength}</li>`;
+      }
+    });
+  
+  const radii = (item?.properties?.map((p: any) => p.RADIUS) || [])
+    .filter((v: any) => v != null)
+    .map((radius: string) => {
+      if (radius.length > 6) {
+        return `<li>${radius.substring(0,6)}<br>${radius.substring(6)}</li>`;
+      } else {
+        return `<li>${radius}</li>`;
+      }
+    });
+  
+  const testLoads = (item?.properties?.map((p: any) => p["TEST LOAD"]) || [])
+    .filter((v: any) => v != null)
+    .map((testLoad: string) => {
+      if (testLoad.length > 6) {
+        return `<li>${testLoad.substring(0, 6)}<br>${testLoad.substring(6)}</li>`;
+      } else {
+        return `<li>${testLoad}</li>`;
+      }
+    });
+  
+  const swls = (item?.properties?.map((p: any) => p.SWL) || [])
+    .filter((v: any) => v != null)
+    .map((swl: string) => {
+      if (swl.length > 6) {
+        return `<li>${swl.substring(0, 6)}<br>${swl.substring(6)}</li>`;
+      } else {
+        return `<li>${swl}</li>`;
+      }
+    });
+  
+  htmlString = htmlString.replace(/\{\{nine\}\}/g, conditions.length ? `<ul>${conditions.join('')}</ul>` : '');
+  htmlString = htmlString.replace(/\{\{ten\}\}/g, boomLengths.length ? `<ul>${boomLengths.join('')}</ul>` : '');
+  htmlString = htmlString.replace(/\{\{eleven\}\}/g, radii.length ? `<ul>${radii.join('')}</ul>` : '');
+  htmlString = htmlString.replace(/\{\{twelve\}\}/g, testLoads.length ? `<ul>${testLoads.join('')}</ul>` : '');
+  htmlString = htmlString.replace(/\{\{twelve1\}\}/g, swls.length ? `<ul>${swls.join('')}</ul>` : '');
+  
 
 
     htmlString = htmlString.replace(/\{\{thirteen\}\}/g, item?.last_test_exam || '');
@@ -167,7 +211,7 @@ console.log(ownerOptions.find((owner: any) => owner.id == item.owner_name),item)
     cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use ? "89.28%" : "96%");
 
     // Open a new window for printing
-    const printWindow = window.open('', '', 'width=1133,height=1823');
+    const printWindow = window.open('', '', 'width=1033,height=1823');
     if (!printWindow) return;
 
     // Write the combined HTML/CSS into the new window
@@ -208,8 +252,7 @@ console.log(ownerOptions.find((owner: any) => owner.id == item.owner_name),item)
           <TableRow>
             <TableHead className="py-4">Sl. No.</TableHead>
             <TableHead className="py-4">Equipment ID</TableHead>
-            <TableHead className="py-4">Title</TableHead>
-            <TableHead className="py-4">Equipment Type</TableHead>
+            <TableHead className="py-4">Title</TableHead> 
             <TableHead className="py-4">Inspection Date</TableHead>
             <TableHead className="py-4">Next Thorough Date</TableHead>
             <TableHead className="py-4">Inspection Date</TableHead>
@@ -224,8 +267,7 @@ console.log(ownerOptions.find((owner: any) => owner.id == item.owner_name),item)
                 <TableRow>
                   <TableCell className="py-4">{idx + 1}</TableCell>
                   <TableCell className="py-4">{item?.equipment_no}</TableCell>
-                  <TableCell className="py-4">{item?.title}</TableCell>
-                  <TableCell className="py-4">{item?.equipment_type}</TableCell>
+                  <TableCell className="py-4">{item?.title}</TableCell> 
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
                   <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
@@ -247,7 +289,14 @@ console.log(ownerOptions.find((owner: any) => owner.id == item.owner_name),item)
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuItem onClick={() => handleEditClick(item.id)}>Edit</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleDeleteClick(item.id)}>Delete</DropdownMenuItem>
+                        <DeleteDialogue
+                                                onConfirm={async () => await deleteRecord(item.id)}
+                                                triggerButton={
+                                                  <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                                  Delete
+                                              </button>
+                                                }
+                                            />
                         <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

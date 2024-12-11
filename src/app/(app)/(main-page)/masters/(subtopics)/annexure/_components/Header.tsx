@@ -5,7 +5,7 @@ import { PlusIcon, Search } from "lucide-react"
 import { useState } from "react";
 import * as XLSX from 'xlsx';
 
-export default function Component({ onOpen }: { onOpen: () => void }) {
+export default function Component({ onOpen,onSearchChange }: { onOpen: () => void,onSearchChange: (value: string) => void }) {
     const { data, isLoading, error } = useSubtopic();
    
     const exportToExcel = () => {
@@ -24,6 +24,7 @@ export default function Component({ onOpen }: { onOpen: () => void }) {
                         type="search"
                         placeholder="Search"
                         className="pl-10 pr-4 focus:border-primary w-full"
+                        onChange={(e) => onSearchChange(e.target.value)}
                     />
                 </div>
                 <Button variant="link" className="flex-[1]  text-primary bg-white">

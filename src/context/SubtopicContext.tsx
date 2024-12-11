@@ -246,6 +246,8 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
     await deleteRecordMutation.mutateAsync({id})
   }
 
+  
+
   return (
     <SubtopicContext.Provider
       value={{

@@ -978,7 +978,8 @@ button {
   width: calc(420.21484375 * var(--rpx));
   height: calc(82 * var(--rpx));
   top: calc(64.4296875 * var(--rpx));
-  left: calc(439.4921875 * var(--rpx));
+  left: calc(424.4921875* var(--rpx));
+
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -996,7 +997,7 @@ button {
   width: calc(420.21484375 * var(--rpx));
   height: calc(82 * var(--rpx));
   top: calc(64.4296875 * var(--rpx));
-  left: calc(569.4921875 * var(--rpx));
+  left: calc(557.4921875 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -1005,7 +1006,9 @@ button {
   text-align: left;
   z-index: 60;
 }
-
+ul {
+  list-style-type: none;
+}
 .radius1{
   display: flex;
   align-items: center;
@@ -1014,7 +1017,7 @@ button {
   width: calc(420.21484375 * var(--rpx));
   height: calc(82 * var(--rpx));
   top: calc(64.4296875 * var(--rpx));
-  left: calc(695.4921875 * var(--rpx));
+  left: calc(672.4921875 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -1032,7 +1035,7 @@ button {
   width: calc(420.21484375 * var(--rpx));
   height: calc(82 * var(--rpx));
   top: calc(64.4296875 * var(--rpx));
-  left: calc(815.4921875 * var(--rpx));
+  left: calc(802.4921875 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -1051,7 +1054,7 @@ button {
   width: calc(420.21484375 * var(--rpx));
   height: calc(82 * var(--rpx));
   top: calc(64.4296875 * var(--rpx));
-  left: calc(939.4921875 * var(--rpx));
+  left: calc(926.4921875 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -1322,7 +1325,7 @@ button {
   justify-content: center;
   flex-shrink: 0;
   position: relative;
-  width: calc(51 * var(--rpx));
+  /* width: calc(51 * var(--rpx)); */
   height: calc(24 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
