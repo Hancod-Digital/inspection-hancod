@@ -190,13 +190,13 @@ export default function EditEquipmentDetailsForm({
 
     fetchOptions();
   }, [getAllSingleSubtopic]);
-
+  const [item_type,setItem_type]=useState<any>("");
   // Handle equipment_no changes to set related fields
   useEffect(() => {
     if (equipment_no) {
       const selectedEquipment = equipmentNoOptions.find(item => item.id === equipment_no);
      console.log(selectedEquipment,"loki");
-     
+     setItem_type(selectedEquipment.item_type);
       if (selectedEquipment) {
         setValue('location', String(existingData.location) || '');
         setValue('inspection_date', existingData.inspection_date || '');
@@ -836,7 +836,7 @@ export default function EditEquipmentDetailsForm({
                 <div className="space-y-4">
                   {/* Properties Table */}
                   <div className="grid gap-4 grid-cols-1">
-                    <Table data={data} setData={setData} />
+                    <Table data={data} setData={setData} item_type={item_type} />
                   </div>
 
                   {/* Annexures Table */}

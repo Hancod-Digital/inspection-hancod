@@ -148,14 +148,22 @@ console.log(ownerOptions.find((owner: any) => owner.id == item.owner_name),item)
     htmlString = htmlString.replace(/\{\{sixteen\}\}/g, item?.next_thorough_exam || '');
     htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description || '');
     htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars || '');
-
-    // Replace placeholders in CSS:
-    cssText = cssText.replace(/\{\{seventeen\}\}/g, !item?.first_examination ? "36%" : "43.79%");
+    console.log(
+      "First Examination: " + item?.first_examination,
+      " | Six Month Interval: " + item?.six_month_interval,
+      " | Twelve Month Interval: " + item?.twelve_month_interval,
+      " | Correct Installation: " + item?.correct_installation,
+      " | Examination Scheme: " + item?.examination_scheme,
+      " | Exceptional Circumstances: " + item?.exceptional_circumstances,
+      " | Safe to Use: " + item?.safe_to_use
+    );
+        // Replace placeholders in CSS:
+    cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination ? "36%" : "43.79%");
     cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval ? "89%" : "96%");
-    cssText = cssText.replace(/\{\{nineteen\}\}/g, !item?.twelve_month_interval ? "89.17%;" : "96.47%;");
-    cssText = cssText.replace(/\{\{twenty\}\}/g, !item?.correct_installation ? "36%" : "43.79%;");
+    cssText = cssText.replace(/\{\{nineteen\}\}/g, item?.twelve_month_interval ? "89.17%;" : "96.47%;");
+    cssText = cssText.replace(/\{\{twenty\}\}/g, item?.correct_installation ? "36%" : "43.79%;");
     cssText = cssText.replace(/\{\{twentyone\}\}/g, item?.examination_scheme ? "89.17%;" : "96.47%;");
-    cssText = cssText.replace(/\{\{twentytwo\}\}/g, item?.exceptional_circumstances ? "96.47%;" : "89.47%;");
+    cssText = cssText.replace(/\{\{twentytwo\}\}/g, item?.exceptional_circumstances ? "89.47%;" : "96.47%;");
     cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use ? "89.28%" : "96%");
 
     // Open a new window for printing

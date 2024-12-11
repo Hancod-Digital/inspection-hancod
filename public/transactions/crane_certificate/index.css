@@ -1417,7 +1417,7 @@ button {
   width: 1.8%;
   height: 16.07%;
   top: 18.75%;
-  left: 96.47%;
+  left: {{eighteen}};
   background: url(./crane_certificate/assets/images/12250403-3069-4d42-87b5-9f5f0b57bc20.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1702,7 +1702,7 @@ button {
   width: 1.8%;
   height: 15.06%;
   top: 18.98%;
-  left: 89.17%;
+  left: {{twentyone}};
   background: url(./crane_certificate/assets/images/83359f22-6ae7-4080-91c8-48ba392a0553.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1765,7 +1765,7 @@ button {
   width: 1.9%;
   height: 15.06%;
   top: 47.89%;
-  left: 43.79%;
+  left: {{twenty}};
   background: url(./crane_certificate/assets/images/2830d43a-769f-476f-bbb7-a13d51de9455.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1781,7 +1781,7 @@ p {
   width: 1.9%;
   height: 15.06%;
   top: 37.89%;
-  left: 43.79%;
+  left: {{seventeen}};
   background: url(./crane_certificate/assets/images/2830d43a-769f-476f-bbb7-a13d51de9455.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -1839,7 +1839,7 @@ p {
   width: 1.8%;
   height: 15.06%;
   top: 75.6%;
-  left: 96.47%;
+  left: {{twentytwo}};
   background: url(./crane_certificate/assets/images/304242fb-81cb-4cf4-b842-00eff5b8806b.png)
     no-repeat center;
   background-size: 100% 100%;
@@ -2000,7 +2000,7 @@ p {
   width: 1.77%;
   height: 33.75%;
   top: 26.88%;
-  left: 89.28%;
+  left: {{jacob}};
   background: url(./crane_certificate/assets/images/110c6c68-a50c-4cdc-8e0e-7c9fc2ef120c.png)
     no-repeat center;
   background-size: 100% 100%;
