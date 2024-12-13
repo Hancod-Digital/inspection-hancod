@@ -238,7 +238,7 @@ document.head.removeChild(styleElement);
                                             </button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => handleEditClick(item?.slNo)}>Edit</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleEditClick(item?.id)}>Edit</DropdownMenuItem>
                                             <DeleteDialogue
                                                 onConfirm={async () => await deleteRecord(item.id)}
                                                 triggerButton={
@@ -253,7 +253,7 @@ document.head.removeChild(styleElement);
                                 </TableCell>
                             </TableRow>
                             <AnimatePresence>
-                                {editingRow === item.slNo && (
+                                {editingRow === item.id && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
