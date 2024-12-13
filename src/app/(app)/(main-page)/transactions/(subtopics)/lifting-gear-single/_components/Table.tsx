@@ -219,7 +219,7 @@ document.head.removeChild(styleElement);
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
                                 <TableCell className="py-4 flex-[1]">{idx}</TableCell>
-                                <TableCell className="py-4 flex-[1]">{item?.equipment_no}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
                                 <TableCell className="py-4 flex-[2]">{item?.title}</TableCell>
                                 
                                 <TableCell className="py-4 flex-[1]">{item?.last_thorough_exam}</TableCell>

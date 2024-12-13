@@ -125,7 +125,7 @@ export default function EditEquipmentDetailsForm({
       manufacturer: existingData.manufacturer || '',
       tested_standard: existingData.tested_standard || '',
       approval_status: existingData.approval_status || '',
-      location: existingData.location || '',
+      location: String(existingData.location) || '',
       serial_no: existingData.serial_no || '',
       model: existingData.model || '',
       owner_id: existingData.owner_id || '',

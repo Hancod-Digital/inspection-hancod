@@ -84,12 +84,37 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [locationOptions, setLocationOptions] = useState<any>([]);
 
   const { watch, setValue, formState } = methods
-  const { equipment_no,inspection_date,type_of_exam, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
+  const { equipment_no,inspection_date,type_of_exam,tested_standard, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [existingData, setExistingData] = useState<any[]>([]);
   //manufacturer
   const addEquipmentToMulti = async() => {
-    const datas = {equipment_no,inspection_date,type_of_exam,title,equipment_description,test_cert_coc_no,safe_working_load,proof_load,standard:standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard,last_test_exam,last_thorough_exam:last_thorough_exam == null ?"Not Applicable": last_thorough_exam,next_test_exam,next_thorough_exam:next_thorough_exam==null ? "Not Applicable":next_thorough_exam,owner_name:ownerOptions?.filter((item: any) => item?.id == owner_name)[0]?.owner,manufacturer:manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,result,surveyor,approval_status};
+    if(!result){
+      toastWithTimeout(ToastVariant.Default,"Result is required")
+      return
+    }else if(!surveyor){
+      toastWithTimeout(ToastVariant.Default,"Surveyor is required")
+      return
+
+    }else if(!approval_status){
+      toastWithTimeout(ToastVariant.Default,"Approval Status is required")
+      return
+    }else if(!inspection_date){
+      toastWithTimeout(ToastVariant.Default,"Inspection Date is required")
+      return
+
+    }else if(!type_of_exam){
+      toastWithTimeout(ToastVariant.Default,"Type of Exam is required")
+      return
+
+    }else if(!equipment_no){
+      toastWithTimeout(ToastVariant.Default,"Equipment No. is required")
+      return
+    } else if(!tested_standard){
+      toastWithTimeout(ToastVariant.Default,"Tested Standard is required")
+      return
+    }
+        const datas = {equipment_no,inspection_date,type_of_exam,title,equipment_description,test_cert_coc_no,safe_working_load,proof_load,standard:standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard,last_test_exam,last_thorough_exam:last_thorough_exam == null ?"Not Applicable": last_thorough_exam,next_test_exam,next_thorough_exam:next_thorough_exam==null ? "Not Applicable":next_thorough_exam,owner_name:ownerOptions?.filter((item: any) => item?.id == owner_name)[0]?.owner,manufacturer:manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,result,surveyor,approval_status,tested_standard};
     const otherfields = {result,equipment_no}
     await makeApiCall(
       ()=>new MasterService().addEquipment(datas),{
@@ -275,7 +300,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam
       };
 
-      console.log('Form submission:', formData);
+     
       const data = await addRecord(formData);
       
       Promise.all(existingData.map((item:any) => {

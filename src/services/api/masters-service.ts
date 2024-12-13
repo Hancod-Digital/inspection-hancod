@@ -77,7 +77,9 @@ export class MasterService extends Supabase {
     }
 
     async deleteMultiEquipment(id:number){
-        const {data,error} = await this.supabase.from('lifting_gear_multi_equipments').delete().eq('id',id)
+        console.log(id,"id");
+        
+        const {data,error} = await this.supabase.from('lifting_gear_multi_equipments').delete().eq('id',Number(id))
         if(error) throw error;
         return data;
     }
@@ -160,7 +162,7 @@ console.log(data)
         const { data, error } = await this.supabase
             .from("lifting_gear_multi_equipments")
             .select("*")
-            .eq('lifting_gear_multi_id', id);
+            .eq('lifting_gear_multi_id', Number(id));
         
         if (error) {
             throw new Error(error.message);
@@ -273,6 +275,13 @@ console.log(id);
     async getPropertyList(id: string) {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase.from('property_list').select('*').eq('annexure_id', id);
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteProperty(id: number) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('property_list').delete().eq('id', id);
         if (error) throw error;
         return data;
     }

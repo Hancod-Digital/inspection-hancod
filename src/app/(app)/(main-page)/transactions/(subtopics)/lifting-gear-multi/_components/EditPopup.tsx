@@ -73,36 +73,37 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const { getAllSingleSubtopic, findRecordById, updateRecord } = useSubtopic();
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
-
+  const currentData = id ? findRecordById(id) : null;
+  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      inspection_date: '',
-      site: '',
-      authority: '',
-      type_of_exam: '',
-      job_order_no: '',
-      location: '',
-      equipment_no: '',
-      title: '',
-      test_cert_coc_no: '',
-      safe_working_load: '',
-      proof_load: '',
-      standard: '',
-      last_test_exam: '',
-      next_test_exam: '',
-      last_thorough_exam: '',
-      next_thorough_exam: '',
-      result: '',
-      surveyor: '',
-      defect_description: '',
-      test_particulars: '',
-      owner_name: '',
-      description: '',
-      equipment_description: '',
-      manufacturer: '',
-      tested_standard: '',
-      approval_status: '',
+      inspection_date: String(currentData?.inspection_date) || '',
+      site: String(currentData?.site) || '',
+      authority: String(currentData?.authority) || '',
+      type_of_exam: currentData?.type_of_exam || '',
+      job_order_no: String(currentData?.job_order_no) || '',
+      location: String(currentData?.location) || '',
+      equipment_no: String(currentData?.equipment_no) || '',
+      title: currentData?.title || '',
+      test_cert_coc_no: currentData?.test_cert_coc_no || '',
+      safe_working_load: currentData?.safe_working_load || '',
+      proof_load: currentData?.proof_load || '',
+      standard: String(currentData?.standard) || '',
+      last_test_exam: currentData?.last_test_exam || '',
+      next_test_exam: currentData?.next_test_exam || '',
+      last_thorough_exam: currentData?.last_thorough_exam || '',
+      next_thorough_exam: currentData?.next_thorough_exam || '',
+      result: String(currentData?.result) || '',
+      surveyor: String(currentData?.surveyor) || '',
+      defect_description: currentData?.defect_description || '',
+      test_particulars: currentData?.test_particulars || '',
+      owner_name: String(currentData?.owner_name) || '',
+      description: currentData?.description || '',
+      equipment_description: currentData?.equipment_description || '',
+      manufacturer: String(currentData?.manufacturer) || '',
+      tested_standard: currentData?.tested_standard || '',
+      approval_status: currentData?.approval_status ? 'Approved' : 'Not Approved',
     },
   });
 
@@ -140,6 +141,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const deleteRecord = async (id:number) => {
     await makeApiCall(()=>new MasterService().deleteMultiEquipment(id),{
       afterSuccess:()=>{
+        setExistingData(existingData.filter(item => item.id !== id));
         toastWithTimeout(ToastVariant.Default,'Equipment deleted successfully')
       }
     })
@@ -148,29 +150,28 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-      console.log(data);
       
       if (data) {
         // Populate form fields with existing data
         reset({
-          inspection_date: data.inspection_date || '',
-          site: data.site || '',
-          authority: data.authority || '',
+          inspection_date: String(data.inspection_date) || '',
+          site: String(data.site) || '',
+          authority: String(data.authority) || '',
           type_of_exam: data.type_of_exam || '',
-          job_order_no: data.job_order_no || '',
-          location: data.location || '',
-          equipment_no: data.equipment_no || '',
+          job_order_no: String(data.job_order_no) || '',
+          location: String(data.location) || '',
+          equipment_no: String(data.equipment_no) || '',
           title: data.title || '',
           test_cert_coc_no: data.test_cert_coc_no || '',
           safe_working_load: data.safe_working_load || '',
           proof_load: data.proof_load || '',
-          standard: data.standard || '',
+          standard: String(data.standard) || '',
           last_test_exam: data.last_test_exam || '',
           next_test_exam: data.next_test_exam || '',
           last_thorough_exam: data.last_thorough_exam || '',
           next_thorough_exam: data.next_thorough_exam || '',
-          result: data.result || '',
-          surveyor: data.surveyor || '',
+          result: String(data.result) || '',
+          surveyor: String(data.surveyor) || '',
           defect_description: data.defect_description || '',
           test_particulars: data.test_particulars || '',
           owner_name: String(data.owner_name) || '',
@@ -214,7 +215,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
       ]);
-
+ 
       setSiteOptions(sites || []);
       setAuthorityOptions(authorities || []);
       setJobOrderNoOptions(jobOrders || []);
@@ -278,7 +279,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     if (equipment_no) {
       const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
-      console.log(selectedEquipment);
+    
       if (selectedEquipment) {
         setValue('standard', selectedEquipment.standard || '');
         setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
@@ -343,7 +344,28 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       approval_status: watch('approval_status'),
     };
     const otherfields = { result: watch('result'), equipment_no };
+    if(!watch('result')){
+      toastWithTimeout(ToastVariant.Default,"Result is required")
+      return
+    }else if(!watch('surveyor')){
+      toastWithTimeout(ToastVariant.Default,"Surveyor is required")
+      return
 
+    }else if(!watch('approval_status')){
+      toastWithTimeout(ToastVariant.Default,"Approval Status is required")
+      return
+    }else if(!watch('inspection_date')){
+      toastWithTimeout(ToastVariant.Default,"Inspection Date is required")
+      return
+
+    }else if(!watch('type_of_exam')){
+      toastWithTimeout(ToastVariant.Default,"Type of Exam is required")
+      return
+
+    }else if(!watch('equipment_no')){
+      toastWithTimeout(ToastVariant.Default,"Equipment No. is required")
+      return
+    }  
     await makeApiCall(
       () => new MasterService().addEquipment(datas),
       {
@@ -375,7 +397,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam  
       };
 
-      console.log('Form submission:', formData);
+    
       await updateRecord(id, formData);
 
       // Handle updating multi-equipments if any
@@ -469,7 +491,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                           <SelectContent>
                             {siteOptions?.map((site: any) => (
                               <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.name}
+                                {site?.site} 
                               </SelectItem>
                             ))}
                           </SelectContent>

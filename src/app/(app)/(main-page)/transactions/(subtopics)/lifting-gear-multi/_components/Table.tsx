@@ -123,10 +123,11 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
         const generateCertificates = async () => {
             const certificates = await Promise.all(data?.map(async (item) => {
                 const serialNo:any = await fetchEquipments(item?.id);
-                 
+                console.log(item?.id,"item?.id",serialNo);
                 const serialNoGroups = await Promise.all(serialNo.map(async (item: any) => {
                     return await fetchSerialNos(item.equipment_no);
                 }));
+                console.log(serialNoGroups,"serialNoGroups");
                 setSerialNo(serialNoGroups)
                 return fetchMultiCertificate({
                     ...item,
@@ -162,6 +163,7 @@ htmlString = htmlString.replace(/\{\{five\}\}/g, siteOptions.find((site: any) =>
 htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date);
 
 htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);
+console.log(serialNo,"serialNo");
 
 htmlString = htmlString.replace(/\{\{eight\}\}/g, serialNo
   .map((serial: any) => `${serial[0]["serial_no"]}<br />`)

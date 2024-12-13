@@ -233,30 +233,30 @@ export default function Sidebar() {
                     title: "Lifting Equipment",
                     identifier: "lifting-equipment",
                     icon: <Square
-                        fill={currentPath.includes('lifting-equipment') ? "#962c3d" : "#75829C"}
-                        className={`me-2 ${currentPath.includes('lifting-equipment') ? "text-primary" : "text-[#75829C]"}`}
-                        size="0.5em"
-                    />,
+                    style={{ fill: currentPath.includes('lifting-equipment') ? "#962c3d" : "#75829C" ,width:'0.6em',height:'0.6em'}}
+                    className={`me-2 ${currentPath.includes('lifting-equipment') ? "text-primary" : "text-[#75829C]"}`}
+                    size="0.5em"
+                />,
                     url: "/transactions/lifting-equipment",
                 },
                 {
                     title: "Lifting Gear Single",
                     identifier: "lifting-gear-single",
                     icon: <Square
-                        fill={currentPath.includes('lifting-gear-single') ? "#962c3d" : "#75829C"}
-                        className={`me-2 ${currentPath.includes('lifting-gear-single') ? "text-primary" : "text-[#75829C]"}`}
-                        size="0.5em"
-                    />,
+                    style={{ fill: currentPath.includes('lifting-gear-single') ? "#962c3d" : "#75829C" ,width:'0.6em',height:'0.6em'}}
+                    className={`me-2 ${currentPath.includes('lifting-gear-single') ? "text-primary" : "text-[#75829C]"}`}
+                    size="0.5em"
+                />,
                     url: "/transactions/lifting-gear-single"
                 },
                 {
                     title: "Lifting Gear Multi",
                     identifier: "lifting-gear-multi",
                     icon: <Square
-                        fill={currentPath.includes('lifting-gear-multi') ? "#962c3d" : "#75829C"}
-                        className={`me-2 ${currentPath.includes('lifting-gear-multi') ? "text-primary" : "text-[#75829C]"}`}
-                        size="0.5em"
-                    />,
+                    style={{ fill: currentPath.includes('lifting-gear-multi') ? "#962c3d" : "#75829C" ,width:'0.6em',height:'0.6em'}}
+                    className={`me-2 ${currentPath.includes('lifting-gear-multi') ? "text-primary" : "text-[#75829C]"}`}
+                    size="0.5em"
+                />,
                     url: "/transactions/lifting-gear-multi",
                 },
             ]

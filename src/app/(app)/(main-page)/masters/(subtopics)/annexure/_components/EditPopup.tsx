@@ -12,6 +12,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
 import FormTable from './FormTable'; // Ensure the correct import path
+import { makeApiCall } from '@/lib/apicaller';
+import { MasterService } from '@/services/api/masters-service';
 
 // Define the property schema
 const propertySchema = object({
@@ -41,15 +43,24 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
 
   // Fetch existing data if in edit mode
   const existingData = id ? findRecordById(id) : null;
-
+  const [properties,setProperties] = useState([])
+  useEffect(()=>{
+    const getProperty = async()=>{
+      await makeApiCall(()=>new MasterService().getPropertyList(existingData?.id),{
+           afterSuccess: (res:any)=>{
+            setProperties(res)
+           }
+      })
+      
+    }
+    getProperty()
+  },[existingData])
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       annexure: existingData?.annexure || '',
       status: existingData?.status || '',
-      properties: existingData?.properties || [
-         
-      ],
+      
     },
   });
 
@@ -62,10 +73,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     register,
   } = methods;
 
-  // Manage properties state
-  const [properties, setProperties] = useState(existingData?.properties || [
    
-  ]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -78,7 +86,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     setValue('properties', properties);
   }, [register, setValue, properties]);
 
-  const handlePropertiesChange = (newProperties: typeof properties) => {
+  const handlePropertiesChange = (newProperties: any) => {
     setProperties(newProperties);
     setValue('properties', newProperties, { shouldValidate: true });
   };

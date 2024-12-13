@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TrashIcon } from "@heroicons/react/solid";
 import { useFormContext } from "react-hook-form";
+import { makeApiCall } from "@/lib/apicaller";
+import { MasterService } from "@/services/api/masters-service";
 
 interface Property {
+  id?: number;
   property: string;
   property_group: string;
   condition: string;
@@ -33,8 +36,12 @@ export default function Component({ onFunction, properties, setProperties }: Com
     setProperties(newProperties);
   };
 
-  const handleDelete = (index: number) => {
-    setProperties(properties.filter((_, i) => i !== index));
+  const handleDelete = async (index: number) => {
+    await makeApiCall(()=>new MasterService().deleteProperty(properties[index]?.id!),{
+      afterSuccess: (res:any)=>{
+        setProperties(properties.filter((_, i) => i !== index));
+      }
+    })
   };
 
   return (

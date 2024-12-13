@@ -13,7 +13,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import FormTable from './FormTable';
 
 const propertySchema = object({
-  id: string().or(number()),
+ 
   property: string().nonempty('Property is required'),
   property_group: string().nonempty('Property Group is required'),
   condition: string().nonempty('Condition is required'),
@@ -39,6 +39,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   });
   
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+console.log(errors,"errors");
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -54,18 +55,20 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     };
     
    const response:any = await addRecord(dataToSubmit)
-  
-    await addProperty(values.properties.map(property => ({
+  console.log(response,"response");
+    const d = values.properties.map(property => ({
       ...property,
       annexure_id: response[0].id
-    })))
+    }))
+    console.log(d,"d");
+    await addProperty(d)
     setLoading(false);
     onClose()
   };
   const [properties, setProperties] = useState([
-    { id: 1, property: "Main Structure", property_group: "Nil", condition: "In Order" },
-    { id: 2, property: "Steering System", property_group: "Nil", condition: "In Order" },
-    { id: 3, property: "Counter Weight", property_group: "Nil", condition: "In Order" },
+    // { id: 1, property: "Main Structure", property_group: "Nil", condition: "In Order" },
+    // { id: 2, property: "Steering System", property_group: "Nil", condition: "In Order" },
+    // { id: 3, property: "Counter Weight", property_group: "Nil", condition: "In Order" },
   ]);
 
   useEffect(() => {

@@ -88,7 +88,7 @@ export default function AuthorityDetailsForm({ onClose, id }: AuthorityDetailsFo
             >
               <div className="space-y-4">
                 <div className="grid gap-4">
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4 w-1/2">
                     <Label htmlFor="authority">Authority</Label>
                     <div>
                       <Input id="authority" {...methods.register('authority')} />
@@ -98,7 +98,7 @@ export default function AuthorityDetailsForm({ onClose, id }: AuthorityDetailsFo
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4 w-1/2">
                     <Label htmlFor="designation">Designation</Label>
                     <div>
                       <Input id="designation" {...methods.register('designation')} />
@@ -108,7 +108,7 @@ export default function AuthorityDetailsForm({ onClose, id }: AuthorityDetailsFo
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4 w-1/2">
                     <Label htmlFor="status">Status</Label>
                     <div>
                       <Controller

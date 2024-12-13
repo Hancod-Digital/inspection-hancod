@@ -66,6 +66,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
   const existingData = id ? findRecordById(id) : null;
+  console.log(existingData,"existingData");
+  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -87,7 +89,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       surveyor: String(existingData?.surveyor) || '',
       defect_description: existingData?.defect_description || '',
       test_particulars: existingData?.test_particulars || '',
-      location: existingData?.location || '',
+      location: String(existingData?.location) || '5',
       owner_name: existingData?.owner_name || '',
       proof_load: String(existingData?.proof_load) || '',
       description: String(existingData?.description) || '',
@@ -132,6 +134,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
+      console.log(data,"data");
+      
       if (data) { 
         reset({
           inspection_date: data.inspection_date || '',
@@ -152,7 +156,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           surveyor: String(data.surveyor) || 'sdsd',
           defect_description: data.defect_description || '',
           test_particulars: data.test_particulars || '',
-          location: String(data.location) || '',
+          location: String(data.location) || '5',
           owner_name: String(data.owner_name) || '',
           proof_load: String(data.proof_load) || 'sdsdsd',
           description: String(data.description) || '',
@@ -213,6 +217,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       await makeApiCall(() => new MasterService().getLocationDetails(), {
         afterSuccess: (data: any) => {
           if (data) {
+            console.log(data,"data");
+            
             setLocationOptions(data);
           }
         }
