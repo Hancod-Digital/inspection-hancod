@@ -66,6 +66,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const deleteRecord = async (id:number) => {
     await makeApiCall(()=>new MasterService().deleteMultiEquipment(id),{
       afterSuccess:()=>{
+        setExistingData(existingData.filter(item => item.id != id));
         toastWithTimeout(ToastVariant.Default,'Equipment deleted successfully')
       }
     })
