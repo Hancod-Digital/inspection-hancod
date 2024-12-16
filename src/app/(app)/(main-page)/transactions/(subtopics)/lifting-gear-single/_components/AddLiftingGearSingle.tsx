@@ -288,7 +288,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               <div className="space-y-4 pt-10">
 
                 {/* CERTIFICATE For Lifting Gear Title */}
-                <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Gear</h2>
+                <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Gear Single</h2>
 
                 <div className={"grid gap-4 grid-cols-2"}>
                   {/* Certificate For Lifting Gear Section */}

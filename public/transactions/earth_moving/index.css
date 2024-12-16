@@ -1069,6 +1069,15 @@ button {
   text-align: left;
   z-index: 38;
 }
+p {
+  all: unset;
+  display: block;
+}
+.footer-text{
+  position: absolute;
+  top: 14.904px;
+  left: 427.793px;
+}
 .none {
   display: flex;
   align-items: center;

@@ -52,7 +52,8 @@ const equipmentDetailsSchema = object({
   approval_status: string().nonempty('Approval Status is required'),
   location: string().nonempty('Location is required'),
   serial_no: string().nonempty('Serial No. is required'),
-  model: string().nonempty('Model is required'),
+  lift_location: string().nonempty('Lift Location is required'),
+  model_no: string().nonempty('Model_no is required'),
   owner_id: string().nonempty('Owner ID is required'),
   defect_description: string().nonempty('Defect Description is required'),
   test_particulars: string().nonempty('Test Particulars is required'),
@@ -130,7 +131,7 @@ setSelectedEquipment(selectedEquipment)
         setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || ''); // Update last thorough exam
         setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || ''); // Update next thorough exam
         setValue('serial_no', String(selectedEquipment.serial_no) || ''); // Update serial no
-        setValue('model', String(selectedEquipment.model) || ''); // Update model
+        setValue('model_no', String(selectedEquipment.model_no) || ''); // Update model_no
         setValue('owner_id', String(selectedEquipment.owner_id) || ''); // Update owner id
         // Add additional fields here if necessary
       }
@@ -320,7 +321,7 @@ setSelectedEquipment(selectedEquipment)
               <div className="space-y-4 pt-10">
 
                 {/* CERTIFICATE For Lifting Gear Title */}
-                <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Gear</h2>
+                <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Equipment Certificate</h2>
 
                 <div className={"grid gap-4 grid-cols-2"}>
                   {/* Certificate For Lifting Gear Section */}
@@ -513,10 +514,10 @@ setSelectedEquipment(selectedEquipment)
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="model" className="mt-3">Model</Label>
-                    <Input id="model" {...register('model')} />
-                    {errors.model && (
-                      <p className="text-red-500 text-[12px] ">{errors.model.message}</p>
+                    <Label htmlFor="model_no" className="mt-3">Model_no</Label>
+                    <Input id="model_no" {...register('model_no')} />
+                    {errors.model_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.model_no.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -667,14 +668,16 @@ setSelectedEquipment(selectedEquipment)
                       )}
                     </div>
                   </div>
-
-                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="nextThoroughExam" className="mt-3">Next Thorough Exam</Label>
-                    <Input id="nextThoroughExam" type="date" {...register('nextThoroughExam')} />
-                    {errors.nextThoroughExam && (
-                      <p className="text-red-500 text-[12px] ">{errors.nextThoroughExam.message}</p>
+                   {
+                    equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.property_table_type === 'ELEVATOR_CERTIFICATE' && (
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="lift_location" className="mt-3">Lift Location</Label>
+                    <Input id="lift_location" type="date" {...register('lift_location')} />
+                    {errors.lift_location && (
+                      <p className="text-red-500 text-[12px] ">{errors.lift_location.message}</p>
                     )}
-                  </div> */}
+                  </div>
+)}
                 </div>
 
                 {/* Result Section */}

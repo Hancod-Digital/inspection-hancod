@@ -1711,7 +1711,15 @@ button {
   text-align: left;
   z-index: 60;
 }
-
+.footer-text{
+  position: absolute;
+  top: 14.904px;
+  left: 427.793px;
+}
+p {
+  all: unset;
+  display: block;
+}
 .swl1{
 
   display: flex;

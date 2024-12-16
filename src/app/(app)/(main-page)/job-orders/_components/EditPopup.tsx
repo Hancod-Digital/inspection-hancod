@@ -9,44 +9,102 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
+import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 
 const formSchema = object({
-  clientName: string().nonempty('Client name is required'),
-  contactNumber: string().nonempty('Contact number is required'),
+  client_name: string().nonempty('Client name is required'),
+  contact_number: string().nonempty('Contact number is required'),
   email: string().nonempty('Email is required'),
-  surveyorName: string().nonempty('Surveyor name is required'),
-  siteContactPerson: string(),
+  surveyor: string().nonempty('Surveyor name is required'),
+  site_contact_person: string(),
   location: string().nonempty('Location is required'),
-  equipmentDetails: string(),
-  jobOrderStatus: string().nonempty('Job order status is required'),
-  date: string().nonempty('Date is required'),
+  equipment_details: string().nonempty('Equipment details is required'),
+  job_order_status: string().nonempty('Job order status is required'),
 });
 
 type FormInput = TypeOf<typeof formSchema>;
 
 interface SurveyFormProps {
   onClose: () => void;
+  id: string;
 }
 
-export default function SurveyForm({ onClose }: SurveyFormProps) {
+export default function SurveyForm({ onClose, id }: SurveyFormProps) {
   const [loading, setLoading] = useState(false);
+  const [defaultValues, setDefaultValues] = useState<FormInput | undefined>(undefined);
+  
+  const { getSingleJobOrder, getAllSingleSubtopic,editJobOrder } = useSubtopic();
 
   const methods = useForm<FormInput>({
     resolver: zodResolver(formSchema),
+    defaultValues: defaultValues,
   });
 
-  const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+  const { handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
+
+  const [surveyorOptions, setSurveyorOptions] = useState<any[]>([]);
+  const [locationOptions, setLocationOptions] = useState<any[]>([]);
+  const [equipmentOptions, setEquipmentOptions] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const jobOrderData = await getSingleJobOrder(id);
+      console.log(jobOrderData);
+      if (jobOrderData && jobOrderData.length > 0) {
+        const newValues = {
+          ...jobOrderData[0],
+          email: String(jobOrderData[0].email),
+          surveyor: String(jobOrderData[0].surveyor),
+          location: String(jobOrderData[0].location),
+          equipment_details: String(jobOrderData[0].equipment_details),
+          job_order_status: String(jobOrderData[0].job_order_status),
+          client_name: String(jobOrderData[0].client_name),
+          contact_number: String(jobOrderData[0].contact_number),
+          site_contact_person: jobOrderData[0].site_contact_person ? String(jobOrderData[0].site_contact_person) : ''
+        };
+        setDefaultValues(newValues);
+        methods.reset(newValues); // <-- This ensures the form is updated
+      }
+  
+      const surveyors = await getAllSingleSubtopic("surveyor");
+      if (surveyors) setSurveyorOptions(surveyors);
+  
+      const locations = await getAllSingleSubtopic("location");
+      if (locations) setLocationOptions(locations);
+  
+      const equipments = await getAllSingleSubtopic("equipment");
+      if (equipments) setEquipmentOptions(equipments);
+    };
+  
+    fetchData();
+  }, [getSingleJobOrder, getAllSingleSubtopic, id, methods]);
+  
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      reset();
+      // Reset form if needed
     }
-  }, [isSubmitSuccessful, reset]);
+  }, [isSubmitSuccessful]);
 
-  const onSubmitHandler: SubmitHandler<FormInput> = (values) => {
-    setLoading(true); 
+  const onSubmitHandler: SubmitHandler<FormInput> = async (values) => {
+    setLoading(true);
+    // Add your form submission logic here
+    const updates = {
+      ...values,
+      surveyor: Number(values.surveyor),
+      location: Number(values.location),
+      equipment_details: Number(values.equipment_details),
+    };
+    const data = await editJobOrder(id,updates);
+    toastWithTimeout(ToastVariant.Default, 'Job order updated successfully');
     setLoading(false);
   };
+
+  // If defaultValues are not yet loaded, return a loading state
+  if (defaultValues === undefined) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <motion.div
@@ -67,69 +125,81 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
               {/* First: Client Details Section */}
               <div className="space-y-4 py-7">
                 <h3 className="text-lg font-semibold">Client Details</h3>
-
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="clientName">Client Name</Label>
-                    <Input id="clientName" {...methods.register('clientName')} />
-                    {errors.clientName && (
-                      <p className="text-red-500">{errors.clientName.message}</p>
+                    <Label htmlFor="client_name">Client Name</Label>
+                    <Input 
+                      id="client_name" 
+                      defaultValue={defaultValues.client_name} 
+                      {...methods.register('client_name')} 
+                    />
+                    {errors.client_name && (
+                      <p className="text-red-500">{errors.client_name.message}</p>
                     )}
                   </div>
 
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" {...methods.register('email')} />
+                    <Input 
+                      id="email" 
+                      defaultValue={defaultValues.email} 
+                      {...methods.register('email')} 
+                    />
                     {errors.email && (
                       <p className="text-red-500">{errors.email.message}</p>
                     )}
                   </div>
 
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="contactNumber">Contact Number</Label>
-                    <Input id="contactNumber" {...methods.register('contactNumber')} />
-                    {errors.contactNumber && (
-                      <p className="text-red-500">{errors.contactNumber.message}</p>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="date">Date</Label>
-                    <Input id="date" type="date" {...methods.register('date')} />
-                    {errors.date && (
-                      <p className="text-red-500">{errors.date.message}</p>
+                    <Label htmlFor="contact_number">Contact Number</Label>
+                    <Input 
+                      id="contact_number" 
+                      defaultValue={defaultValues.contact_number} 
+                      {...methods.register('contact_number')} 
+                    />
+                    {errors.contact_number && (
+                      <p className="text-red-500">{errors.contact_number.message}</p>
                     )}
                   </div>
                 </div>
               </div>
 
-              {/* Second: Surveyor Section */}
+              {/* Surveyor & Additional Details Section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Surveyor</h3>
-
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="surveyorName">Surveyor Name</Label>
+                    <Label htmlFor="surveyor">Surveyor Name</Label>
                     <Controller
-                      name="surveyorName"
+                      name="surveyor"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="surveyorName">
+                          <SelectTrigger id="surveyor">
                             <SelectValue placeholder="Select surveyor" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Surveyor 1">Surveyor 1</SelectItem>
-                            <SelectItem value="Surveyor 2">Surveyor 2</SelectItem>
+                            {surveyorOptions.map((surveyor) => (
+                              <SelectItem key={surveyor.id} value={String(surveyor.id)}>
+                                {surveyor.surveyor}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
+                    {errors.surveyor && (
+                      <p className="text-red-500">{errors.surveyor.message}</p>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="siteContactPerson">Site Contact Person</Label>
-                    <Input id="siteContactPerson" {...methods.register('siteContactPerson')} />
+                    <Label htmlFor="site_contact_person">Site Contact Person</Label>
+                    <Input 
+                      id="site_contact_person" 
+                      defaultValue={defaultValues.site_contact_person} 
+                      {...methods.register('site_contact_person')} 
+                    />
                   </div>
 
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
@@ -143,36 +213,66 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
                             <SelectValue placeholder="Select location" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Location 1">Location 1</SelectItem>
-                            <SelectItem value="Location 2">Location 2</SelectItem>
+                            {locationOptions.map((loc) => (
+                              <SelectItem key={loc.id} value={String(loc.id)}>
+                                {loc.location}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
+                    {errors.location && (
+                      <p className="text-red-500">{errors.location.message}</p>
+                    )}
                   </div>
 
+                  {/* Equipment Details as a dropdown */}
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="equipmentDetails">Equipment Details</Label>
-                    <Input id="equipmentDetails" {...methods.register('equipmentDetails')} />
-                  </div>
-
-                  <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="jobOrderStatus">Job Order Status</Label>
+                    <Label htmlFor="equipment_details">Equipment Details</Label>
                     <Controller
-                      name="jobOrderStatus"
+                      name="equipment_details"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="jobOrderStatus">
-                            <SelectValue placeholder="Select status" />
+                          <SelectTrigger id="equipment_details">
+                            <SelectValue placeholder="Select equipment" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Completed">Completed</SelectItem>
-                            <SelectItem value="Pending">Pending</SelectItem>
+                            {equipmentOptions.map((eq) => (
+                              <SelectItem key={eq.id} value={String(eq.id)}>
+                                {eq.equipment_no || eq.name}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
+                    {errors.equipment_details && (
+                      <p className="text-red-500">{errors.equipment_details.message}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+                    <Label htmlFor="job_order_status">Job Order Status</Label>
+                    <Controller
+                      name="job_order_status"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="job_order_status">
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="PENDING">PENDING</SelectItem>
+                            <SelectItem value="COMPLETED">COMPLETED</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.job_order_status && (
+                      <p className="text-red-500">{errors.job_order_status.message}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -181,7 +281,11 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
                 <Button type="reset" onClick={onClose} variant="outline">
                   Cancel
                 </Button>
-                <Button className='hover:bg-secondary hover:text-primary hover:border-primary border ' type="submit" disabled={loading}>
+                <Button 
+                  className='hover:bg-secondary hover:text-primary hover:border-primary border' 
+                  type="submit" 
+                  disabled={loading}
+                >
                   {loading ? 'Saving...' : 'Save'}
                 </Button>
               </div>

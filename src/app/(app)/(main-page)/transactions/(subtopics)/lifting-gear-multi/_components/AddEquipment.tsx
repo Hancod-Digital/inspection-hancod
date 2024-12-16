@@ -350,7 +350,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               <div className="space-y-4 pt-10">
 
                 {/* CERTIFICATE For Lifting Gear Title */}
-                <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Gear</h2>
+                <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Gear Multi</h2>
 
                 <div className={"grid gap-4 grid-cols-2"}>
                   {/* Certificate For Lifting Gear Section */}
@@ -362,27 +362,27 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                    <Label htmlFor="location" className="mt-3">Location</Label>
                     <Controller
-                      name="site"
+                      name="location"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="site">
-                            <SelectValue placeholder="Select site" />
+                          <SelectTrigger id="location">
+                            <SelectValue placeholder="Select location" />
                           </SelectTrigger>
                           <SelectContent>
-                            {siteOptions?.map((site: any) => (
-                              <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.name}
+                            {locationOptions?.map((location: any) => (
+                              <SelectItem key={location.id} value={String(location?.location?.id)}>
+                                {location?.location?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
-                    {errors.site && (
-                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
+                    {errors.location && (
+                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -461,27 +461,27 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
-                      name="location"
+                      name="site"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="location">
-                            <SelectValue placeholder="Select location" />
+                          <SelectTrigger id="site">
+                            <SelectValue placeholder="Select site" />
                           </SelectTrigger>
                           <SelectContent>
-                            {locationOptions?.map((location: any) => (
-                              <SelectItem key={location.id} value={String(location?.location?.id)}>
-                                {location?.location?.name}
+                            {siteOptions?.map((site: any) => (
+                              <SelectItem key={site.id} value={String(site.id)}>
+                                {site?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
-                    {errors.location && (
-                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
+                    {errors.site && (
+                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
                   </div>
 

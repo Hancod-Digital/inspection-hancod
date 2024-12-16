@@ -25,11 +25,23 @@ export class MasterService extends Supabase {
         const { data, error } = await this.supabase
             .from(subtopic)
             .select('*');
-
+console.log(data,"data",subtopic); 
         if (error) {
             throw new Error(error.message);
         }
       
+        return data;
+    }
+
+    async getSingleSubtopicDetails(subtopic: string,id:string) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase
+            .from(subtopic)
+            .select('*')
+            .eq('id',id);
+        if (error) {
+            throw new Error(error.message);
+        }
         return data;
     }
 
@@ -175,7 +187,7 @@ console.log(data)
             const { data, error } = await this.supabase
                 .from(subtopic)
                 .update(updates)
-                .eq('id', id)
+                .eq('id', Number(id))
                 .select();
 
             if (error) throw error;

@@ -74,7 +74,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
   const currentData = id ? findRecordById(id) : null;
-  
+  console.log(currentData);
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -150,6 +150,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
+      console.log(data,"dat");
       
       if (data) {
         // Populate form fields with existing data
@@ -283,7 +284,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       if (selectedEquipment) {
         setValue('standard', selectedEquipment.standard || '');
         setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
-        setValue('owner_name', String(selectedEquipment.owner_name) || '');
+        setValue('owner_name', String(selectedEquipment.owner_id) || '');
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
         setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
         setValue('proof_load', String(selectedEquipment.proof_load) || '');
@@ -337,7 +338,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       last_thorough_exam: watch('last_thorough_exam') || '',
       next_test_exam: testExamChecked ? "Not Applicable" : watch('next_test_exam'),
       next_thorough_exam: thoroughExamChecked ? "Not Applicable" : watch('next_thorough_exam'),
-      owner_name: ownerOptions?.find((item: any) => item.id === watch('owner_name'))?.owner || '',
+      owner_name: ownerOptions?.find((item: any) => item.id == watch('owner_name'))?.owner || '',
       manufacturer: manufacturerOptions?.find((item: any) => item.id === watch('manufacturer'))?.manufacturer || '',
       result: watch('result'),
       surveyor: surveyorOptions?.find((item: any) => item.id === watch('surveyor'))?.surveyor || '',
@@ -441,7 +442,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
               <div className="space-y-4 pt-10">
 
                 {/* CERTIFICATE For Lifting Gear Title */}
-                <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Gear</h2>
+                <h2 className={"text-base font-bold"}>CERTIFICATE For Lifting Gear Multi</h2>
 
                 <div className={"grid gap-4 grid-cols-2"}>
                   {/* Certificate For Lifting Gear Section */}

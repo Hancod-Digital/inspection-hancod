@@ -1109,6 +1109,11 @@ ul {
   white-space: nowrap;
   z-index: 34;
 }
+.footer-text{
+  position: absolute;
+  top: 14.904px;
+  left: 427.793px;
+}
 .last-examination {
   display: flex;
   align-items: center;

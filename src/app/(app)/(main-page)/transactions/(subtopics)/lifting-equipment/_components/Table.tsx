@@ -20,6 +20,7 @@ import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import DeleteIcon from '@/components/icons/DeleteIcon';
+import { generateRows } from '@/lib/utils';
 
 export default function EquipmentTable() {
   const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -99,14 +100,14 @@ export default function EquipmentTable() {
       }
     );
     
-    console.log(equipment,equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT" || equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/mewp_and_forklift/index.css" : "/transactions/earth_moving/index.css");
+    console.log(equipment,equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.css" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.css" :"/transactions/earth_moving/index.css");
     
     // Fetch the HTML template
-    const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT" || equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/mewp_and_forklift/index.html" : "/transactions/earth_moving/index.html"}`);
+    const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html"}`);
     let htmlString = await response.text();
 
     // Fetch the CSS template 
-    const cssResponse = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT" || equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/mewp_and_forklift/index.css" : "/transactions/earth_moving/index.css"}`);
+    const cssResponse = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.css" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.css" : "/transactions/earth_moving/index.css"}`);
     let cssText = await cssResponse.text();
 
     // Replace placeholders in HTML:
@@ -118,14 +119,16 @@ export default function EquipmentTable() {
     htmlString = htmlString.replace(/\{\{five\}\}/g, siteOptions.find((site: any) => site.id == item.site)?.site || '');
     htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date || '');
 
-    htmlString = htmlString.replace(/\{\{six1\}\}/g, manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer || '');
+    htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location :  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer );
     htmlString = htmlString.replace(/\{\{six2\}\}/g, equipment?.registration_no || '');
-    htmlString = htmlString.replace(/\{\{six3\}\}/g, serialNo || '');
+    htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer :serialNo || '');
     htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
     htmlString = htmlString.replace(/\{\{six5\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_name)?.owner || '');
     
     htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
     htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
+
+
     const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
     .filter((v: any) => v != null)
     .map((condition: string) => {
@@ -184,7 +187,7 @@ export default function EquipmentTable() {
   htmlString = htmlString.replace(/\{\{twelve\}\}/g, testLoads.length ? `<ul>${testLoads.join('')}</ul>` : '');
   htmlString = htmlString.replace(/\{\{twelve1\}\}/g, swls.length ? `<ul>${swls.join('')}</ul>` : '');
   
-
+htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 
     htmlString = htmlString.replace(/\{\{thirteen\}\}/g, item?.last_test_exam || '');
     htmlString = htmlString.replace(/\{\{forteen\}\}/g, item?.next_test_exam || '');
@@ -237,6 +240,108 @@ export default function EquipmentTable() {
     // printWindow.close();
   };
 
+  const printAnnexure = async (item: any) => {
+    console.log(item,"item");
+   const data = generateRows(item?.annexures)
+   console.log(data,"data");
+   const response = await fetch("/backside1/annex-certificate-elevator.html");
+   let htmlString = await response.text();
+   htmlString = htmlString.replace(/\{\{html\}\}/g, data.rowsHtml);
+   htmlString = htmlString.replace(/\{\{css\}\}/g, data.rowsCss);
+   htmlString = htmlString.replace(/\{\{four\}\}/g, item?.version);
+  //  htmlString = htmlString.replace(/\{\{five\}\}/g, item?.revision_date);
+
+   htmlString = htmlString.replace(/\{\{one\}\}/g, item?.inspection_date);
+   htmlString = htmlString.replace(/\{\{two\}\}/g, item?.certificate_no);
+   htmlString = htmlString.replace(/\{\{three\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
+   console.log(htmlString,"htmlString");
+    // Open a new window for printing
+    const printWindow = window.open('', '', 'width=1033,height=1823');
+    if (!printWindow) return;
+
+    // Write the combined HTML/CSS into the new window
+    printWindow.document.open();
+    printWindow.document.write(`
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Equipment Certificate</title>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BentonSans+Black:wght@400&display=swap" />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+          
+        </head>
+        <body>
+          ${htmlString}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    
+  };
+  const printBackside = async (item: any) => {
+    try {
+      // Fetch and process HTML template
+      const htmlResponse = await fetch("/backside2/index.html");
+      if (!htmlResponse.ok) {
+        console.error("Failed to fetch HTML template");
+        return;
+      }
+      let htmlString = await htmlResponse.text();
+  
+      // Replace placeholders
+      htmlString = htmlString.replace(/\{\{one\}\}/g, item?.description || '');
+      htmlString = htmlString.replace(/\{\{two\}\}/g, item?.inspection_date || '');
+      htmlString = htmlString.replace(/\{\{three\}\}/g, item?.certificate_no || '');
+      htmlString = htmlString.replace(/\{\{four\}\}/g, 
+        jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || ''
+      );
+      htmlString = htmlString.replace(/\{\{five\}\}/g, item?.version || '');
+  
+      // Fetch CSS
+      const cssResponse = await fetch('/backside2/index.css');
+      if (!cssResponse.ok) {
+        console.error("Failed to fetch CSS");
+        return;
+      }
+      const cssText = await cssResponse.text();
+  
+      // Open a new window for printing
+      const printWindow = window.open('', '', 'width=1033,height=1823');
+      if (!printWindow) {
+        console.error("Failed to open print window");
+        return;
+      }
+  
+      printWindow.document.open();
+      // Write HTML and CSS into the print window directly
+      printWindow.document.write(`
+        <html>
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Equipment Certificate</title>
+            <style>${cssText}</style>
+          </head>
+          <body>
+            ${htmlString}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+  
+      // Focus on the print window
+      printWindow.focus();
+  
+      // If you want to auto-trigger print:
+      // printWindow.print();
+      // printWindow.close();
+    } catch (error) {
+      console.error("An error occurred while printing the backside:", error);
+    }
+  };
+  
   if (isLoading) {
     return <p className="text-center py-10">Loading...</p>;
   }
@@ -266,7 +371,7 @@ export default function EquipmentTable() {
               <React.Fragment key={item.id}>
                 <TableRow>
                   <TableCell className="py-4">{idx + 1}</TableCell>
-                  <TableCell className="py-4">{item?.equipment_no}</TableCell>
+                  <TableCell className="py-4">{equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.equipment_no}</TableCell>
                   <TableCell className="py-4">{item?.title}</TableCell> 
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
                   <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
@@ -298,6 +403,8 @@ export default function EquipmentTable() {
                                                 }
                                             />
                         <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>
+                       {equipmentOptions?.find((equipment:any)=>equipment.equipment_no == item.equipment_no)?.property_table_type != 'ELEVATOR_CERTIFICATE' && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

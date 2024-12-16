@@ -42,6 +42,7 @@ const equipmentDetailsSchema = object({
   description_of_test: string().nonempty('Description of Test is required'),
   job_order_no: string().nonempty('Job Order No. is required'),
   equipment_no: string().nonempty('Equipment No. is required'),
+  lift_location: string().nonempty('Lift Location is required'),
   title: string().nonempty('Title is required'),
   test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
   safe_working_load: string().nonempty('Safe Working Load is required'),
@@ -49,7 +50,7 @@ const equipmentDetailsSchema = object({
   next_test_exam: string().optional(),
   last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
   next_thorough_exam: string().optional(),
-   
+  registration_no: string().nonempty('Registration No. is required'),
   result: string().nonempty('Result is required'),
   surveyor: string().nonempty('Surveyor is required'), 
   result_description: string().nonempty('Test Particulars is required'),
@@ -123,6 +124,7 @@ export default function EditEquipmentDetailsForm({
       description: existingData.description || '',
       equipment_description: existingData.equipment_description || '',
       manufacturer: existingData.manufacturer || '',
+      registration_no: existingData.registration_no || '',
       tested_standard: existingData.tested_standard || '',
       approval_status: existingData.approval_status || '',
       location: String(existingData.location) || '',
@@ -201,6 +203,7 @@ export default function EditEquipmentDetailsForm({
         setValue("inspection_date", existingData.inspection_date || "");
         setValue("site", String(existingData.site) || "");
         setValue("authority", String(existingData.authority) || "");
+        setValue("registration_no", String(existingData.registration_no) || "");
         setValue("standard", String(existingData.standard) || "");
         setValue("type_of_exam", existingData.type_of_exam || "");
         setValue("description_of_test", existingData.description_of_test || "");
@@ -310,7 +313,7 @@ export default function EditEquipmentDetailsForm({
             >
               <div className="space-y-4 pt-10">
                 {/* CERTIFICATE For Lifting Gear Title */}
-                <h2 className="text-base font-bold">CERTIFICATE For Lifting Gear</h2>
+                <h2 className="text-base font-bold">CERTIFICATE For Lifting Equipment Certificate</h2>
 
                 <div className="grid gap-4 grid-cols-2">
                   {/* Inspection Date */}
@@ -525,6 +528,13 @@ export default function EditEquipmentDetailsForm({
                       <p className="text-red-500 text-[12px] ">{errors.owner_id.message}</p>
                     )}
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="registration_no" className="mt-3">Registration No.</Label>
+                    <Input id="registration_no" {...register('registration_no')} />
+                    {errors.registration_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.registration_no.message}</p>
+                    )}
+                  </div>
 
                   {/* Test Cert/COC No. */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -595,62 +605,70 @@ export default function EditEquipmentDetailsForm({
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
                     )}
                   </div>
+                  
 
                   {/* Next Test Exam */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="next_test_exam" className="mt-3">Next Test Exam</Label>
+                 
+                </div>
+                <div className="grid gap-4 grid-cols-1 w-[64%]">
+                  <div className="grid grid-cols-[200px_1fr]   items-start gap-4">
+                    <Label className='mt-3' htmlFor="next_test_date">Next Test Exam</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name="next_test_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input
-                            id="next_test_exam"
-                            type="date"
-                            disabled={testExamChecked}
-                            {...field}
-                          />
+                          <Input id="next_test_date" defaultValue={
+                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
+                              ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date).toISOString().split('T')[0]
+                              : ''
+                          } disabled={testExamChecked} type="date" {...field} />
                         )}
                       />
-                      <Checkbox
-                        className='w-6 h-6'
-                        checked={testExamChecked}
-                        onCheckedChange={(checked:boolean) => setTestExamChecked(checked)}
-                      />
-                      <span className="text-[13px]">Not Applicable</span>
+                      <Checkbox className='w-6 h-6' checked={testExamChecked} onCheckedChange={(checked:boolean) => setTestExamChecked(checked!)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
                       {errors.next_test_exam && (
-                        <p className="text-red-500 text-[12px] ">{errors.next_test_exam.message}</p>
+                        <p className="text-red-500 text-[12px]  text-[13px] ">
+                          {errors.next_test_exam.message}
+                        </p>
                       )}
                     </div>
                   </div>
 
-                  {/* Next Thorough Exam */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="next_thorough_exam" className="mt-3">Next Thorough Exam</Label>
+                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
+                    <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
                     <div className="flex items-center gap-4">
                       <Controller
-                        name="next_thorough_exam"
+                        name={"next_thorough_exam"}
                         control={control}
                         render={({ field }) => (
-                          <Input
-                            id="next_thorough_exam"
-                            type="date"
-                            disabled={thoroughExamChecked}
-                            {...field}
-                          />
+                          <Input id={"next_thorough_exam"} defaultValue={
+                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
+                              ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date).toISOString().split('T')[0]
+                              : ''
+                          } disabled={thoroughExamChecked} type="date" {...field} />
                         )}
                       />
-                      <Checkbox
-                        className='w-6 h-6'
-                        checked={thoroughExamChecked}
-                        onCheckedChange={(checked:boolean) => setThoroughExamChecked(checked)}
-                      />
-                      <span className="text-[13px]">Not Applicable</span>
+                      <Checkbox className={'w-6 h-6'} checked={thoroughExamChecked} onCheckedChange={(checked:boolean) => setThoroughExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
                       {errors.next_thorough_exam && (
-                        <p className="text-red-500 text-[12px]">{errors.next_thorough_exam.message}</p>
+                        <p className="text-red-500 text-[12px]    ">
+                          {errors.next_thorough_exam.message}
+                        </p>
                       )}
                     </div>
                   </div>
+                   {
+                   
+                    equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.property_table_type != 'ELEVATOR_CERTIFICATE' && (
+                      <div className='grid grid-cols-1 gap-4'>
+                  <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+                    <Label htmlFor="lift_location" className="mt-3">Lift Location</Label>
+                    <Input id="lift_location" type="text" {...register('lift_location')} />
+                    {errors.lift_location && (
+                      <p className="text-red-500 text-[12px] ">{errors.lift_location.message}</p>
+                    )}
+                  </div>
+                  </div>
+)}
                 </div>
 
                 {/* Result Section */}

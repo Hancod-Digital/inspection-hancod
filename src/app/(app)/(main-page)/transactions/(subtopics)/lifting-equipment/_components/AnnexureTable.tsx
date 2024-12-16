@@ -65,13 +65,13 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
     ))
   }
 
-  const handleValueChange = (id: string, value: string) => {
+  const handleRemarksChange = (id: string, value: string) => {
     setPropertyList(propertyList.map((item:any) =>
-      item.id === id ? { ...item, property_group: value } : item  
+      item.id === id ? { ...item, remarks: value } : item  
     ))
   }
 
-  const handleRemarksChange = (id: string, value: string) => {
+  const handleConditionChange = (id: string, value: string) => {
     setPropertyList(propertyList.map((item:any) =>
       item.id === id ? { ...item, condition: value } : item
     ))
@@ -112,12 +112,12 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
                   />
                 </TableCell>
                 <TableCell className="border border-gray-200">
-                  <input
+                <input
                     type="text"
                     className="w-full bg-gray-50 border-0 focus:outline-none rounded p-1"
-                    placeholder="Enter value"
-                    value={item.property_group}
-                    onChange={(e) => handleValueChange(item.id, e.target.value)}
+                    placeholder="Enter remarks"
+                    value={item.condition}
+                    onChange={(e) => handleConditionChange(item.id, e.target.value)}
                   />
                 </TableCell>
                 <TableCell className="border border-gray-200">
@@ -125,7 +125,7 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
                     type="text"
                     className="w-full bg-gray-50 border-0 focus:outline-none rounded p-1"
                     placeholder="Enter remarks"
-                    value={item.condition}
+                    value={item.remarks}
                     onChange={(e) => handleRemarksChange(item.id, e.target.value)}
                   />
                 </TableCell>

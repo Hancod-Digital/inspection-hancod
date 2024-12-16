@@ -159,7 +159,7 @@ htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any)
 htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard);
 
 htmlString = htmlString.replace(/\{\{five\}\}/g, siteOptions.find((site: any) => site.id == item.site)?.site);
-
+htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date);
 
 htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);

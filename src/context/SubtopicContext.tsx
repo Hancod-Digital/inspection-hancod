@@ -29,6 +29,10 @@ interface SubtopicContextType {
   properties: any[] | undefined;
   propertiesLoading: boolean;
   propertiesError: any;
+  getAllJobOrders: () => Promise<any[] | undefined>;
+  getSingleJobOrder: (id:string) => Promise<any[] | undefined>;
+  editJobOrder: (id:string,updates:object) => Promise<any[] | undefined>;
+  deleteJobOrder:any
 }
 
 const SubtopicContext = createContext<SubtopicContextType | undefined>(undefined);
@@ -48,6 +52,25 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
     queryFn: () => masterService.getAllSubtopicDetails(subtopic),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+  const getAllJobOrders = async () => {
+    const data = await masterService.getAllSubtopicDetails('job_orders')
+    return data
+  }
+
+  const editJobOrder = async (id:string,updates:object) => {
+    const data = await masterService.updateSubtopicDetails('job_orders',Number(id),updates)
+    return data
+  }
+
+  const deleteJobOrder = async (id:string) => {
+    const data = await masterService.deleteSubtopicDetails('job_orders',Number(id))
+    return data
+  }
+
+  const getSingleJobOrder = async (id:string) => {
+    const data = await masterService.getSingleSubtopicDetails('job_orders',id)
+    return data
+  }
 
   const { data:properties, isLoading:propertiesLoading, error:propertiesError } = useQuery({
     queryKey: ['properties'],
@@ -66,8 +89,6 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
     }
     return data;
   };
-
-
   
   const getMergedData = async (
     dateRange: DateRange[],
@@ -270,7 +291,11 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
         deleteProperty,
         properties,
         propertiesLoading,
-        propertiesError
+        propertiesError,
+        getAllJobOrders,
+        getSingleJobOrder,
+        editJobOrder,
+        deleteJobOrder
       }}
     >
       {children}

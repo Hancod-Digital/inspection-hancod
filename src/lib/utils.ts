@@ -11,6 +11,55 @@ export const equipmentDataRange = [{from:'equipment_type',to:'equipment_type'}]
 
 export const locationDataRange = [{from:'site',to:'site'}]
 export const minorCategoryDataRange = [{from:'major_category',to:'major_category'},{from:'standard',to:'standard'}]
+export function generateRows(rows:any) {
+  // Base top values for the first row
+  const baseTopStatus = 4.129;
+  const baseTopDescription = 8.012;
+  const baseTopSlNo = 11.012;
+  const baseTopRemark = 5.883;
+
+  // Increment for each subsequent row
+  const increment = 40;
+
+  let rowsHtml = '';
+  let rowsCss = '';
+
+  rows.forEach((rowData:any, index:any) => {
+    console.log(rowData,"rowData");
+    
+    
+    const rowNumber = index === 0 ? '' : (index + 1).toString();
+
+    // Calculate top offsets for this row
+    const offset = index * increment;
+    const statusTop = (baseTopStatus + offset).toFixed(3);
+    const descriptionTop = (baseTopDescription + offset).toFixed(3);
+    const slNoTop = (baseTopSlNo + offset).toFixed(3);
+    const remarkTop = (baseTopRemark + offset).toFixed(3);
+
+    const { condition, property
+      , slNo, remarks,remark } = rowData;
+console.log(condition,"condition",property,"property",slNo,"slNo",remarks,"remarks");
+
+    // Append HTML for this row (no inline styles, rely on classes)
+    rowsHtml += `
+      <span class="table-header header${rowNumber}-status">${condition}</span>
+      <span class="table-header header${rowNumber}-description">${property}</span>
+      <span class="table-header header${rowNumber}-sl-no">${index+1}</span>
+      <span class="table-header header${rowNumber}-remark">${remarks}</span>
+    `;
+
+    // Append CSS for this row
+    rowsCss += `
+      .header${rowNumber}-status { top: ${statusTop}px; left: 553.213px; position: absolute; }
+      .header${rowNumber}-description { top: ${descriptionTop}px; left: 115.41px; position: absolute; }
+      .header${rowNumber}-sl-no { top: ${slNoTop}px; left: 15.449px; position: absolute; }
+      .header${rowNumber}-remark { top: ${remarkTop}px; left: 762.461px; position: absolute; }
+    `;
+  });
+
+  return { rowsHtml, rowsCss };
+}
 
 
 

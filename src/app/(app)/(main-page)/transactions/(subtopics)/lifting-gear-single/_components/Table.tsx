@@ -102,6 +102,7 @@ htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any
 htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_name)?.owner);
 
 htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard);
+htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 
 htmlString = htmlString.replace(/\{\{five\}\}/g, siteOptions.find((site: any) => site.id == item.site)?.site);
 

@@ -47,9 +47,9 @@ export default function Component({ onFunction ,isSubmitted,existingData,setValu
               <TableCell className="border-r border-gray-300 p-3">{item.type_of_exam}</TableCell>
               <TableCell className="border-r border-gray-300 p-3">{item.result}</TableCell>
               <TableCell className="p-3 flex space-x-2">
-                <button type="button" className="text-red-600" onClick={()=>setValue('equipment_no',String(item?.equipment_no))}>
+                {/* <button type="button" className="text-red-600" onClick={()=>setValue('equipment_no',String(item?.equipment_no))}>
                   <EditIcon />
-                </button>
+                </button> */}
 
          
                                             <DeleteDialogue
