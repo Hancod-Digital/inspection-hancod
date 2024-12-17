@@ -340,29 +340,39 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                   </div>
 
                   {/* Site */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                 {/* Location */}
+                 <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <div className='relative'>
                     <Controller
-                      name="site"
+                      name="location"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="site">
-                            <SelectValue placeholder="Select site" />
+                          <SelectTrigger id="location">
+                            <SelectValue placeholder="Select location" />
                           </SelectTrigger>
                           <SelectContent>
-                            {siteOptions?.map((site: any) => (
-                              <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.name ?? site?.site}
+                            {locationOptions?.map((loc: any) => (
+                              <SelectItem key={loc.id} value={String(loc.location.id)}>
+                                {loc.location.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
-                    {errors.site && (
-                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
-                    )}
+                    <Button
+                    size="icon"
+                    variant="outline"
+                    className="absolute bg-primary text-white font-bold right-0 top-0"
+                    onClick={()=>setIsLocation(true)}>
+
+                    <PlusIcon className="h-4 w-4" />
+                  </Button>
+                    {errors.location && (
+                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
+                    )}</div>
                   </div>
 
                   {/* Authority */}
@@ -440,40 +450,31 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                     )}
                   </div>
 
-                  {/* Location */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="location" className="mt-3">Location</Label>
-                    <div className='relative'>
+                    <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
-                      name="location"
+                      name="site"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="location">
-                            <SelectValue placeholder="Select location" />
+                          <SelectTrigger id="site">
+                            <SelectValue placeholder="Select site" />
                           </SelectTrigger>
                           <SelectContent>
-                            {locationOptions?.map((loc: any) => (
-                              <SelectItem key={loc.id} value={String(loc.location.id)}>
-                                {loc.location.name}
+                            {siteOptions?.map((site: any) => (
+                              <SelectItem key={site.id} value={String(site.id)}>
+                                {site?.name ?? site?.site}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
-                    <Button
-                    size="icon"
-                    variant="outline"
-                    className="absolute bg-primary text-white font-bold right-0 top-0"
-                    onClick={()=>setIsLocation(true)}>
-
-                    <PlusIcon className="h-4 w-4" />
-                  </Button>
-                    {errors.location && (
-                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
-                    )}</div>
+                    {errors.site && (
+                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
+                    )}
                   </div>
+
                 </div>
 
                 {/* Equipment Information Title */}

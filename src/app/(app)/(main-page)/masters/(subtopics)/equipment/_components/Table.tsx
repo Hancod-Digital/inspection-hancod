@@ -5,6 +5,7 @@ import {
     Table,
     TableBody,
     TableCell,
+    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -18,7 +19,7 @@ import DeleteDialogue from '@/components/ui/delete-dialog';
 import Standard from '../../_common/Standard';
 import Manufacturer from '../../_common/Manufacturer';
 import Location from '../../_common/Location';
-
+import { PaginationDemo } from '@/components/pagination-demo';
 
 export default function Component({searchValue,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation}:{searchValue:string,isManufacturer:boolean,isStandard:boolean,isLocation:boolean, setIsManufacturer: (value: boolean) => void, setIsStandard: (value: boolean) => void, setIsLocation: (value: boolean) => void}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -36,16 +37,38 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
     };
      
     const rearrangedData = data
-    ? [...data].sort((a:any, b:any) => {
-        const aMatch = a.title.toLowerCase().includes(searchValue.toLowerCase());
-        const bMatch = b.title.toLowerCase().includes(searchValue.toLowerCase());
-        if (aMatch && !bMatch) return -1;
-        if (!aMatch && bMatch) return 1;
-        return 0;
-      })
-    : [];
+      ? [...data].sort((a:any, b:any) => {
+          const aMatch = a.title.toLowerCase().includes(searchValue.toLowerCase());
+          const bMatch = b.title.toLowerCase().includes(searchValue.toLowerCase());
+          if (aMatch && !bMatch) return -1;
+          if (!aMatch && bMatch) return 1;
+          return 0;
+        })
+      : [];
+
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 10; // Number of items per page
+    const totalPages = Math.ceil(rearrangedData.length / pageSize);
+
+    // Get current page data
+    const startIndex = (currentPage - 1) * pageSize;
+    const currentData = rearrangedData.slice(startIndex, startIndex + pageSize);
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(prev => prev - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(prev => prev + 1);
+        }
+    };
+
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white min-h-[500px] w-[98%] mx-auto relative">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow>
@@ -60,66 +83,88 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {rearrangedData.map((item: any, idx: number) => (
-                        <React.Fragment key={idx + 1}>
-                            <TableRow>
-                                <TableCell className="py-4">{idx + 1}</TableCell>
-                                <TableCell className="py-4">{item?.equipment_no}</TableCell>
-                                <TableCell className="py-4">{item?.title}</TableCell>
-                               
-                                <TableCell className="py-4">{item?.last_thorough_date}</TableCell>
-                                <TableCell className="py-4">{item.next_thorough_date === null ||item.next_thorough_date === '' ? "NOT APPLICABLE": item.next_thorough_date}</TableCell>
-                                <TableCell className="py-4">{item?.last_test_date}</TableCell>
-                                <TableCell className="py-4">{item?.status}</TableCell>
-                                <TableCell className="py-4">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <button>
-                                                <ActionButtonIcon />
-                                            </button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => handleEditClick(idx + 1)}>
-                                                Edit
-                                            </DropdownMenuItem>
-                                            <DeleteDialogue
-                                                onConfirm={async () => await deleteRecord(item.id)}
-                                                triggerButton={
-                                                    <DropdownMenuItem 
-                                                        onSelect={(event) => event.preventDefault()}
-                                                    >
-                                                        Delete
-                                                    </DropdownMenuItem>
-                                                }
-                                            />
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                    {currentData.map((item: any, idx: number) => {
+                        const actualIndex = startIndex + idx + 1; // Adjusted index based on pagination
+                        return (
+                            <React.Fragment key={actualIndex}>
+                                <TableRow>
+                                    <TableCell className="py-4">{actualIndex}</TableCell>
+                                    <TableCell className="py-4">{item?.equipment_no}</TableCell>
+                                    <TableCell className="py-4">{item?.title}</TableCell>
+                                    <TableCell className="py-4">{item?.last_thorough_date}</TableCell>
+                                    <TableCell className="py-4">{item?.next_thorough_date === null || item?.next_thorough_date === '' ? "NOT APPLICABLE": item?.next_thorough_date}</TableCell>
+                                    <TableCell className="py-4">{item?.last_test_date}</TableCell>
+                                    <TableCell className="py-4">{item?.status}</TableCell>
+                                    <TableCell className="py-4">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <button>
+                                                    <ActionButtonIcon />
+                                                </button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <DropdownMenuItem onClick={() => handleEditClick(actualIndex)}>
+                                                    Edit
+                                                </DropdownMenuItem>
+                                                <DeleteDialogue
+                                                    onConfirm={async () => await deleteRecord(item.id)}
+                                                    triggerButton={
+                                                        <DropdownMenuItem 
+                                                            onSelect={(event) => event.preventDefault()}
+                                                        >
+                                                            Delete
+                                                        </DropdownMenuItem>
+                                                    }
+                                                />
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
 
-                                </TableCell>
-                            </TableRow>
-                            <AnimatePresence>
-                                {editingRow === idx + 1 && (
-                                    <motion.tr
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <TableCell colSpan={9}>
-                                            <div className="overflow-hidden">
-                                            {isManufacturer&& (<Manufacturer onClose={()=>setIsManufacturer(false)}/>)}
-                                                {isStandard&& (<Standard onClose={()=>setIsStandard(false)} />)}
-                                                {isLocation&& (<Location onClose={()=>setIsLocation(false)}/>)}
-                                                {!isManufacturer && !isStandard && !isLocation && (<EditPopup onClose={handleCloseEdit} id={item.id} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>)}
-                                            </div>
-                                        </TableCell>
-                                    </motion.tr>
-                                )}
-                            </AnimatePresence>
-                        </React.Fragment>
-                    ))}
+                                    </TableCell>
+                                </TableRow>
+                                <AnimatePresence>
+                                    {editingRow === actualIndex && (
+                                        <motion.tr
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <TableCell colSpan={9}>
+                                                <div className="overflow-hidden">
+                                                    {isManufacturer && (<Manufacturer onClose={()=>setIsManufacturer(false)}/>)}
+                                                    {isStandard && (<Standard onClose={()=>setIsStandard(false)} />)}
+                                                    {isLocation && (<Location onClose={()=>setIsLocation(false)}/>)}
+                                                    {!isManufacturer && !isStandard && !isLocation && (
+                                                        <EditPopup 
+                                                            onClose={handleCloseEdit} 
+                                                            id={item.id} 
+                                                            isManufacturer={isManufacturer} 
+                                                            isStandard={isStandard} 
+                                                            isLocation={isLocation}  
+                                                            setIsManufacturer={setIsManufacturer} 
+                                                            setIsStandard={setIsStandard} 
+                                                            setIsLocation={setIsLocation}
+                                                        />
+                                                    )}
+                                                </div>
+                                            </TableCell>
+                                        </motion.tr>
+                                    )}
+                                </AnimatePresence>
+                            </React.Fragment>
+                        );
+                    })}
                 </TableBody>
+                <TableFooter className='w-full '>
+                   
+                </TableFooter>
+                
             </Table>
+            <div className='absolute bottom-0 right-0'>
+                <PaginationDemo />
+                </div>
+            {/* Pagination Controls */}
+           
         </div>
     );
 }

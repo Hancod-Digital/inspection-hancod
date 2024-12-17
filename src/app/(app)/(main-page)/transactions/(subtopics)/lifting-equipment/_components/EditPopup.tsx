@@ -43,7 +43,7 @@ const equipmentDetailsSchema = object({
   description_of_test: string().nonempty('Description of Test is required'),
   job_order_no: string().nonempty('Job Order No. is required'),
   equipment_no: string().nonempty('Equipment No. is required'),
-  lift_location: string().nonempty('Lift Location is required'),
+  lift_location: string().nonempty('Lift Location is required').optional(),
   title: string().nonempty('Title is required'),
   test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
   safe_working_load: string().nonempty('Safe Working Load is required'),
@@ -56,7 +56,7 @@ const equipmentDetailsSchema = object({
   surveyor: string().nonempty('Surveyor is required'), 
   result_description: string().nonempty('Test Particulars is required'),
   owner_name: string().nonempty('Owner Name is required'),
-  description: string().nonempty('Description is required'),
+  description: string().nonempty('Description is required').optional(),
   equipment_description: string().nonempty('Equipment Description is required'),
   manufacturer: string().nonempty('Manufacturer is required'),
   tested_standard: string().nonempty('Tested Standard is required'),
@@ -338,30 +338,38 @@ export default function EditEquipmentDetailsForm({
 
                   {/* Site */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <div className='relative'>
                     <Controller
-                      name="site"
+                      name="location"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="site">
-                            <SelectValue placeholder="Select site" />
+                          <SelectTrigger id="location">
+                            <SelectValue placeholder="Select location" />
                           </SelectTrigger>
                           <SelectContent>
-                            {siteOptions.map((site) => (
-                              <SelectItem key={site.id} value={String(site.id)}>
-                                {site.name}
+                            {locationOptions.map((location) => (
+                              <SelectItem key={location.id} value={String(location.location.id)}>
+                                {location.location.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
-                    {errors.site && (
-                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
-                    )}
-                  </div>
+                     <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsLocation(true)}>
 
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                    {errors.location && (
+                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
+                    )}</div>
+                  </div>
                   {/* Authority */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="authority" className="mt-3">Authority</Label>
@@ -440,38 +448,31 @@ export default function EditEquipmentDetailsForm({
 
                   {/* Location */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="location" className="mt-3">Location</Label>
-                    <div className='relative'>
+                    <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
-                      name="location"
+                      name="site"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="location">
-                            <SelectValue placeholder="Select location" />
+                          <SelectTrigger id="site">
+                            <SelectValue placeholder="Select site" />
                           </SelectTrigger>
                           <SelectContent>
-                            {locationOptions.map((location) => (
-                              <SelectItem key={location.id} value={String(location.location.id)}>
-                                {location.location.name}
+                            {siteOptions.map((site) => (
+                              <SelectItem key={site.id} value={String(site.id)}>
+                                {site.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
-                     <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsLocation(true)}>
-
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                    {errors.location && (
-                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
-                    )}</div>
+                    {errors.site && (
+                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
+                    )}
                   </div>
+
+                  
                 </div>
 
                 {/* Equipment Information Title */}

@@ -46,7 +46,7 @@ const equipmentDetailsSchema = object({
   surveyor: string().nonempty('Surveyor is required'), 
   result_description: string().nonempty('Test Particulars is required'),
   owner_name: string().nonempty('Owner Name is required'),
-  description: string().nonempty('Description Date is required'),
+  description: string().nonempty('Description Date is required').optional(),
   equipment_description: string().nonempty('Equipment Description is required'),
   manufacturer: string().nonempty('Manufacturer is required'),
   tested_standard: string().nonempty('Tested Standard is required'),
@@ -54,7 +54,7 @@ const equipmentDetailsSchema = object({
   location: string().nonempty('Location is required'),
   serial_no: string().nonempty('Serial No. is required'),
   registration_no: string().nonempty('Registration No. is required'),
-  lift_location: string().nonempty('Lift Location is required'),
+  lift_location: string().nonempty('Lift Location is required').optional(),
   model_no: string().nonempty('Model_no is required'),
   year_of_manufacture: string().nonempty('Year of Manufacture is required'),
   owner_id: string().nonempty('Owner ID is required'),
@@ -91,7 +91,7 @@ export default function EquipmentDetailsForm({ onClose ,setIsLocation,setIsEquip
   const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
   const [ownerOptions, setOwnerOptions] = useState<any>([])
   const [locationOptions, setLocationOptions] = useState<any>([]);
-
+  console.log(errors)
   const { watch, setValue, formState } = methods
   const { equipment_no, inspection_date, type_of_exam, standard, title, equipment_description, test_cert_coc_no, safe_working_load, last_test_exam, last_thorough_exam, next_test_exam, next_thorough_exam, owner_name, manufacturer, approval_status, result, surveyor, location } = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -341,28 +341,38 @@ setSelectedEquipment(selectedEquipment)
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                    <Label htmlFor="location" className="mt-3">Location</Label>
+                    <div className="relative">
                     <Controller
-                      name="site"
+                      name="location"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="site">
-                            <SelectValue placeholder="Select site" />
+                          <SelectTrigger id="location">
+                            <SelectValue placeholder="Select location" />
                           </SelectTrigger>
                           <SelectContent>
-                            {siteOptions?.map((site: any) => (
-                              <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.name}
+                            {locationOptions?.map((location: any) => (
+                              <SelectItem key={location.id} value={String(location?.location?.id)}>
+                                {location?.location?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
-                    {errors.site && (
-                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsLocation(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                    {errors.location && (
+                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                     )}
+                    </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="authority" className="mt-3">Authority</Label>
@@ -440,39 +450,30 @@ setSelectedEquipment(selectedEquipment)
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="location" className="mt-3">Location</Label>
-                    <div className="relative">
+                    <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
-                      name="location"
+                      name="site"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="location">
-                            <SelectValue placeholder="Select location" />
+                          <SelectTrigger id="site">
+                            <SelectValue placeholder="Select site" />
                           </SelectTrigger>
                           <SelectContent>
-                            {locationOptions?.map((location: any) => (
-                              <SelectItem key={location.id} value={String(location?.location?.id)}>
-                                {location?.location?.name}
+                            {siteOptions?.map((site: any) => (
+                              <SelectItem key={site.id} value={String(site.id)}>
+                                {site?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
-                    <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsLocation(true)}>
-
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                    {errors.location && (
-                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
+                    {errors.site && (
+                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
-                    </div>
                   </div>
+                 
 
                 </div>
 

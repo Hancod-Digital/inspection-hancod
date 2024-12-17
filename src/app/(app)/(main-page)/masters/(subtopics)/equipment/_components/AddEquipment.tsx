@@ -145,7 +145,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
     control,
     formState: { isSubmitSuccessful, errors },
   } = methods;
-
+console.log(errors)
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();

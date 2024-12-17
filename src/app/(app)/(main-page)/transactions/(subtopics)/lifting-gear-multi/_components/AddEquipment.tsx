@@ -366,6 +366,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       <p className="text-red-500 text-[12px] ">{errors.inspection_date.message}</p>
                     )}
                   </div>
+                  
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="location" className="mt-3">Location</Label>
                     <div className='relative'>
@@ -474,7 +475,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
                     )}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
                       name="site"
@@ -497,7 +498,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                     {errors.site && (
                       <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
-                  </div>
+                  </div> */}
 
                 </div>
 
