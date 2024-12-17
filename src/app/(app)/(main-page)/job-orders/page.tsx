@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
 const JobOrders = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
-
+    const [isState, setIsState] = useState<boolean>(false)
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
@@ -53,7 +53,7 @@ const JobOrders = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table />
+                        <Table isState={isState} setIsState={setIsState} />
                     </motion.div>
                 ) : (
                     <motion.div
@@ -63,7 +63,7 @@ const JobOrders = () => {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <AddForm onClose={handleCloseAdd} />
+                        <AddForm onClose={handleCloseAdd} setIsState={setIsState} isState={isState} />
                     </motion.div>
                 )}
             </AnimatePresence>

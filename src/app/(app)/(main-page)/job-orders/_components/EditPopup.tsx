@@ -28,9 +28,11 @@ type FormInput = TypeOf<typeof formSchema>;
 interface SurveyFormProps {
   onClose: () => void;
   id: string;
+  setIsState: any
+  isState: boolean
 }
 
-export default function SurveyForm({ onClose, id }: SurveyFormProps) {
+export default function SurveyForm({ onClose, id,setIsState,isState }: SurveyFormProps) {
   const [loading, setLoading] = useState(false);
   const [defaultValues, setDefaultValues] = useState<FormInput | undefined>(undefined);
   
@@ -99,6 +101,7 @@ export default function SurveyForm({ onClose, id }: SurveyFormProps) {
     const data = await editJobOrder(id,updates);
     toastWithTimeout(ToastVariant.Default, 'Job order updated successfully');
     setLoading(false);
+    setIsState(!isState)
   };
 
   // If defaultValues are not yet loaded, return a loading state

@@ -9,27 +9,36 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSubtopic } from '@/context/SubtopicContext';
+import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 
 const formSchema = object({
   clientName: string().nonempty('Client name is required'),
   contactNumber: string().nonempty('Contact number is required'),
   email: string().nonempty('Email is required'),
   surveyorName: string().nonempty('Surveyor name is required'),
-  siteContactPerson: string(),
+  siteContactPerson: string().optional(),
   location: string().nonempty('Location is required'),
-  equipmentDetails: string(),
+  equipmentDetails: string().optional(),
   jobOrderStatus: string().nonempty('Job order status is required'),
-  date: string().nonempty('Date is required'),
+  
 });
 
 type FormInput = TypeOf<typeof formSchema>;
 
 interface SurveyFormProps {
   onClose: () => void;
+  setIsState: any
+  isState: boolean
 }
 
-export default function SurveyForm({ onClose }: SurveyFormProps) {
+export default function SurveyForm({ onClose,setIsState,isState }: SurveyFormProps) {
   const [loading, setLoading] = useState(false);
+  const [surveyorOptions, setSurveyorOptions] = useState<any[]>([]);
+  const [locationOptions, setLocationOptions] = useState<any[]>([]);
+  const [equipmentOptions, setEquipmentOptions] = useState<any[]>([]);
+
+  const { addJobOrder, getAllSingleSubtopic } = useSubtopic();
 
   const methods = useForm<FormInput>({
     resolver: zodResolver(formSchema),
@@ -38,15 +47,46 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
 
   useEffect(() => {
+    // Fetch surveyors, locations, and equipment options
+    const fetchData = async () => {
+      const surveyors = await getAllSingleSubtopic("surveyor");
+      if (surveyors) setSurveyorOptions(surveyors);
+
+      const locations = await getAllSingleSubtopic("location");
+      if (locations) setLocationOptions(locations);
+
+      const equipments = await getAllSingleSubtopic("equipment");
+      if (equipments) setEquipmentOptions(equipments);
+    };
+
+    fetchData();
+  }, [getAllSingleSubtopic]);
+
+  useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<FormInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<FormInput> = async (values) => {
     setLoading(true);
-   
-    // Handle form submission logic here
+
+    const payload = {
+      client_name: values.clientName,
+      contact_number: values.contactNumber,
+      email: values.email,
+      surveyor: Number(values.surveyorName),
+      site_contact_person: values.siteContactPerson || '',
+      location: Number(values.location),
+      equipment_details: values.equipmentDetails ? Number(values.equipmentDetails) : null,
+      job_order_status: values.jobOrderStatus,
+    
+    };
+
+    await addJobOrder(payload);
+    toastWithTimeout(ToastVariant.Default, 'Job order added successfully');
+    onClose();
+    setIsState(!isState)
     setLoading(false);
   };
 
@@ -66,10 +106,9 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
               autoComplete="off"
               onSubmit={handleSubmit(onSubmitHandler)}
             >
-              {/* First: Client Details Section */}
+              {/* Client Details Section */}
               <div className="space-y-4 py-7">
-                <h3 className="text-base font-semibold">Client Details</h3>
-
+                <h3 className="text-lg font-semibold">Client Details</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="clientName">Client Name</Label>
@@ -95,21 +134,15 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="date">Date</Label>
-                    <Input id="date" type="date" {...methods.register('date')} />
-                    {errors.date && (
-                      <p className="text-red-500">{errors.date.message}</p>
-                    )}
-                  </div>
+                  
                 </div>
               </div>
 
-              {/* Second: Surveyor Section */}
+              {/* Surveyor & Other Details Section */}
               <div className="space-y-4">
-                <h3 className="text-base font-semibold">Surveyor</h3>
-
+                <h3 className="text-lg font-semibold">Surveyor & Details</h3>
                 <div className="grid grid-cols-2 gap-4">
+                  {/* Surveyor Name */}
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="surveyorName">Surveyor Name</Label>
                     <Controller
@@ -121,19 +154,27 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
                             <SelectValue placeholder="Select surveyor" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Surveyor 1">Surveyor 1</SelectItem>
-                            <SelectItem value="Surveyor 2">Surveyor 2</SelectItem>
+                            {surveyorOptions.map((surveyor) => (
+                              <SelectItem key={surveyor.id} value={String(surveyor.id)}>
+                                {surveyor.surveyor}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
+                    {errors.surveyorName && (
+                      <p className="text-red-500">{errors.surveyorName.message}</p>
+                    )}
                   </div>
 
+                  {/* Site Contact Person */}
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="siteContactPerson">Site Contact Person</Label>
                     <Input id="siteContactPerson" {...methods.register('siteContactPerson')} />
                   </div>
 
+                  {/* Location */}
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="location">Location</Label>
                     <Controller
@@ -145,19 +186,44 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
                             <SelectValue placeholder="Select location" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Location 1">Location 1</SelectItem>
-                            <SelectItem value="Location 2">Location 2</SelectItem>
+                            {locationOptions.map((loc) => (
+                              <SelectItem key={loc.id} value={String(loc.id)}>
+                                {loc.location}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.location && (
+                      <p className="text-red-500">{errors.location.message}</p>
+                    )}
+                  </div>
+
+                  {/* Equipment Details */}
+                  <div className="grid grid-cols-[150px_1fr] items-center gap-4">
+                    <Label htmlFor="equipmentDetails">Equipment Details</Label>
+                    <Controller
+                      name="equipmentDetails"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="equipmentDetails">
+                            <SelectValue placeholder="Select equipment" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {equipmentOptions.map((eq) => (
+                              <SelectItem key={eq.id} value={String(eq.id)}>
+                                {eq.equipment_no || eq.name}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       )}
                     />
                   </div>
 
-                  <div className="grid grid-cols-[150px_1fr] items-center gap-4">
-                    <Label htmlFor="equipmentDetails">Equipment Details</Label>
-                    <Input id="equipmentDetails" {...methods.register('equipmentDetails')} />
-                  </div>
-
+                  {/* Job Order Status */}
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="jobOrderStatus">Job Order Status</Label>
                     <Controller
@@ -169,21 +235,29 @@ export default function SurveyForm({ onClose }: SurveyFormProps) {
                             <SelectValue placeholder="Select status" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Completed">Completed</SelectItem>
-                            <SelectItem value="Pending">Pending</SelectItem>
+                            <SelectItem value="PENDING">PENDING</SelectItem>
+                            <SelectItem value="COMPLETED">COMPLETED</SelectItem>
                           </SelectContent>
                         </Select>
                       )}
                     />
+                    {errors.jobOrderStatus && (
+                      <p className="text-red-500">{errors.jobOrderStatus.message}</p>
+                    )}
                   </div>
                 </div>
               </div>
 
+              {/* Actions */}
               <div className="flex justify-end gap-4 mt-6">
                 <Button type="reset" onClick={onClose} variant="outline">
                   Cancel
                 </Button>
-                <Button className='hover:bg-secondary hover:text-primary hover:border-primary border ' type="submit" disabled={loading}>
+                <Button
+                  className="hover:bg-secondary hover:text-primary hover:border-primary border"
+                  type="submit"
+                  disabled={loading}
+                >
                   {loading ? 'Saving...' : 'Save'}
                 </Button>
               </div>

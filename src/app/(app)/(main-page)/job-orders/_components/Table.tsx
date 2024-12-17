@@ -11,7 +11,7 @@ import DeleteIcon from '@/components/icons/DeleteIcon';
 
 
 
-export default function JobTable() {
+export default function JobTable({isState,setIsState}:{isState:boolean,setIsState:any}) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const { getAllJobOrders, getAllSingleSubtopic, deleteJobOrder } = useSubtopic()
   const handleEditClick = (slNo: number) => {
@@ -23,7 +23,7 @@ export default function JobTable() {
       console.log(data, "data")
       setJobOrders(data)
     })
-  }, [])
+  }, [isState])
   const [surveyorOptions, setSurveyorOptions] = useState<any>([])
   const [locationOptions, setLocationOptions] = useState<any>([])
   const [equipmentOptions, setEquipmentOptions] = useState<any>([])
@@ -88,7 +88,11 @@ export default function JobTable() {
 
                     </button>
                     <DeleteDialogue
-                      onConfirm={async () => await deleteJobOrder(item.id)}
+                      onConfirm={async () => {
+                        await deleteJobOrder(item.id)
+                        setIsState(!isState)
+                      }
+                      }
                       triggerButton={
                         <button>
                           <DeleteIcon />
@@ -102,7 +106,7 @@ export default function JobTable() {
                 <TableRow>
                   <TableCell colSpan={7} className="p-4">
                     <AnimatePresence>
-                      <JobDetailsForm onClose={handleCloseEdit} id={item.id} />
+                      <JobDetailsForm setIsState={setIsState} isState={isState} onClose={handleCloseEdit} id={item.id} />
                     </AnimatePresence>
                   </TableCell>
                 </TableRow>

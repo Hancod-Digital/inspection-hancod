@@ -33,6 +33,7 @@ interface SubtopicContextType {
   getSingleJobOrder: (id:string) => Promise<any[] | undefined>;
   editJobOrder: (id:string,updates:object) => Promise<any[] | undefined>;
   deleteJobOrder:any
+  addJobOrder:any
 }
 
 const SubtopicContext = createContext<SubtopicContextType | undefined>(undefined);
@@ -64,6 +65,11 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
 
   const deleteJobOrder = async (id:string) => {
     const data = await masterService.deleteSubtopicDetails('job_orders',Number(id))
+    return data
+  }
+
+  const addJobOrder = async (record:object) => {
+    const data = await masterService.addRecordToSubtopic('job_orders',record)
     return data
   }
 
@@ -295,7 +301,8 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
         getAllJobOrders,
         getSingleJobOrder,
         editJobOrder,
-        deleteJobOrder
+        deleteJobOrder,
+        addJobOrder
       }}
     >
       {children}
