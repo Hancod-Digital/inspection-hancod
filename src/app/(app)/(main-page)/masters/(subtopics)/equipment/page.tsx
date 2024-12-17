@@ -4,15 +4,29 @@ import Table from './_components/Table'
 import Header from './_components/Header'
 import AddForm from './_components/AddEquipment'
 import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
-
+import Manufacturer from '../_common/Manufacturer'
+import Standard from '../_common/Standard'
+import Location from '../_common/Location'
 const Equipment = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState("");
+    const [isManufacturer, setIsManufacturer] = useState<boolean>(false);
+    const [isStandard, setIsStandard] = useState<boolean>(false);
+    const [isLocation, setIsLocation] = useState<boolean>(false);
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
     const handleOpenAdd = () => {
         setIsAdd(true)
+    }
+    const handleCloseManufacturer = () => {
+        setIsManufacturer(false);
+    }
+    const handleCloseStandard = () => {
+        setIsStandard(false);
+    }
+    const handleCloseLocation = () => {
+        setIsLocation(false);
     }
 
     return (
@@ -54,7 +68,7 @@ const Equipment = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table searchValue={searchValue} />
+                        <Table searchValue={searchValue} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>
                     </motion.div>
                 ) : (
                     <motion.div
@@ -63,8 +77,12 @@ const Equipment = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
-                    >
-                        <AddForm onClose={handleCloseAdd} />
+                    >  
+                        {isManufacturer && (<Manufacturer onClose={handleCloseManufacturer}/>)}
+                        {isStandard && (<Standard onClose={handleCloseStandard} />)}
+                        {isLocation && (<Location onClose={handleCloseLocation}/>)}
+                    
+                        {!isManufacturer && !isStandard && !isLocation && (<AddForm onClose={handleCloseAdd} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>)}
                     </motion.div>
                 )}
             </AnimatePresence>

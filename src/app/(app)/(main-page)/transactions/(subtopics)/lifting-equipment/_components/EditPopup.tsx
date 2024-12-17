@@ -30,6 +30,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import { toastWithTimeout, ToastVariant } from '@/components/ui/use-toast';
+import { PlusIcon } from 'lucide-react';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -71,11 +72,21 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 interface EditEquipmentDetailsFormProps {
   onClose: () => void;
   id: number;
+  setIsLocation: (value: boolean) => void;
+  setIsEquipment: (value: boolean) => void;
+  setIsStandard: (value: boolean) => void;
+  setIsOwner: (value: boolean) => void;
+  setIsManufacturer: (value: boolean) => void;
 }
 
 export default function EditEquipmentDetailsForm({
   onClose,
   id,
+  setIsLocation,
+  setIsEquipment,
+  setIsStandard,
+  setIsOwner,
+  setIsManufacturer,
 }: EditEquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const { getAllSingleSubtopic, updateRecord, findRecordById } = useSubtopic();
@@ -430,6 +441,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Location */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="location" className="mt-3">Location</Label>
+                    <div className='relative'>
                     <Controller
                       name="location"
                       control={control}
@@ -448,9 +460,17 @@ export default function EditEquipmentDetailsForm({
                         </Select>
                       )}
                     />
+                     <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsLocation(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.location && (
                       <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
-                    )}
+                    )}</div>
                   </div>
                 </div>
 
@@ -461,6 +481,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Equipment No. */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_no" className="mt-3">Equipment No.</Label>
+                    <div className='relative'>
                     <Controller
                       name="equipment_no"
                       control={control}
@@ -479,9 +500,17 @@ export default function EditEquipmentDetailsForm({
                         </Select>
                       )}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsEquipment(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.equipment_no && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
-                    )}
+                    )}</div>
                   </div>
 
                   {/* Title */}
@@ -557,6 +586,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Standard */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="standard" className="mt-3">Standard</Label>
+                    <div className='relative'>
                     <Controller
                       name="standard"
                       control={control}
@@ -575,9 +605,17 @@ export default function EditEquipmentDetailsForm({
                         </Select>
                       )}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsStandard(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.standard && (
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
-                    )}
+                    )}</div>
                   </div>
 
                   {/* Last Test Exam */}
@@ -676,6 +714,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Owner Name */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="owner_name" className="mt-3">Owner Name</Label>
+                    <div className='relative'>
                     <Controller
                       name="owner_name"
                       control={control}
@@ -694,9 +733,17 @@ export default function EditEquipmentDetailsForm({
                         </Select>
                       )}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsOwner(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.owner_name && (
                       <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
-                    )}
+                    )}</div>
                   </div>
 
                   {/* Surveyor */}
@@ -737,6 +784,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Manufacturer */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
+                    <div className='relative'>
                     <Controller
                       name="manufacturer"
                       control={control}
@@ -755,9 +803,17 @@ export default function EditEquipmentDetailsForm({
                         </Select>
                       )}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsManufacturer(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.manufacturer && (
                       <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
-                    )}
+                    )}</div>
                   </div>
                 </div>
 

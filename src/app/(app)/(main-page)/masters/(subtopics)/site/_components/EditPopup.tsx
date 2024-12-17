@@ -18,6 +18,7 @@ import {
 import { useSubtopic } from '@/context/SubtopicContext';
 import { flushSync } from 'react-dom';
 import { siteDataRange } from '@/lib/utils';
+import { PlusIcon } from 'lucide-react';
 
 const equipmentDetailsSchema = object({
   site: string().nonempty('Site is required'),
@@ -30,9 +31,10 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 interface EquipmentDetailsFormProps {
   onClose: () => void;
   id: number;
+  setIsArea: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id, setIsArea }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [areaData, setAreaData] = useState<any[]>([]);
   const [data, setData] = useState<any>(null);
@@ -137,7 +139,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                     <Label htmlFor="area" className="mt-3">
                       Area
                     </Label>
-                    <div>
+                    <div className="relative">
                       <Controller
                         name="area"
                         control={control}
@@ -156,6 +158,15 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                           </Select>
                         )}
                       />
+                      <Button
+                          size="icon"
+                          variant="outline"
+                          type="button"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsArea(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                       {errors.area && (
                         <p className="text-red-500 mt-1">{errors.area.message}</p>
                       )}

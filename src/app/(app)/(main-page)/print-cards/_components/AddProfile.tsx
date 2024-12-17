@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf } from 'zod';
+import { object, string, TypeOf, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ReactCrop, { type Crop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -28,25 +28,9 @@ import { StudentService } from '@/services/api/students-service';
 import { useQuery } from '@tanstack/react-query';
 import { fetchUserDetails } from '@/services/api/auth-service';
 import { getLastTwoDigitsOfCurrentYear } from '@/lib/utils';
+import { countryCodes } from '@/lib/constants';
 
-// Define schema for validation
-const userFormSchema = object({
-  name: string().nonempty('Name is required'),
-  email: string().nonempty('Email is required').email('Invalid email address').transform(val => val.toLowerCase()),
-  contact_number: string().nonempty('Contact number is required'),
-  address: string().nonempty('Address is required'),
-  gender: string().nonempty('Gender is required'),
-  company: string().nonempty('Company is required'),
-  id_no: string().nonempty('ID Number is required'),
-  designation: string().max(49).nonempty('Designation is required'),
-  model_level: string().nonempty('Model/Level is required'),
-  issued_on: string().nonempty('Issued On date is required'),
-  valid_untill: string().nonempty('Valid Until date is required'),
-  course_duration: string().nonempty('Course duration is required'), // Added field
-  image: string().nonempty('Profile image is required'), // Add this field
-});
 
-type UserFormInput = TypeOf<typeof userFormSchema>;
 
 interface UserFormProps {
   onClose: () => void;
@@ -62,7 +46,45 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   const [loading, setLoading] = useState(false);
   const [croppedFile, setCroppedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [countryCode, setCountryCode] = useState('+974');  // Default country code
+  const getPhoneValidationSchema = (code: string) => {
+     
+    const countryInfo = countryCodes.find((country:any) => country.e164_cc === code.replace('+', ''));
+  
+    if (!countryInfo) {
+      return z.string().nonempty("Phone number is required");
+    }
+  
+    const maxLength = countryInfo.example.length;
+  
+    return z.string()
+      .nonempty("Phone number is required")
+      .refine
+      (
+        (value) => value.length == maxLength,
+        `Phone number should be ${maxLength} digits for ${countryInfo.name}`
+      );
+  };
 
+  // Define schema for validation
+const userFormSchema = object({
+  name: string().nonempty('Name is required'),
+  email: string().nonempty('Email is required').email('Invalid email address').transform(val => val.toLowerCase()),
+  contact_number: getPhoneValidationSchema(countryCode),
+  address: string().nonempty('Address is required'),
+  gender: string().nonempty('Gender is required'),
+  company: string().nonempty('Company is required'),
+  id_no: string().nonempty('ID Number is required'),
+  designation: string().max(49).nonempty('Designation is required'),
+  model_level: string().nonempty('Model/Level is required'),
+  issued_on: string().nonempty('Issued On date is required'),
+  valid_untill: string().nonempty('Valid Until date is required'),
+  course_duration: string().nonempty('Course duration is required'), // Added field
+  image: string().nonempty('Profile image is required'), // Add this field
+});
+type UserFormInput = TypeOf<typeof userFormSchema>;
+
+  // Update image handling
   // Cropping state
   const [crop, setCrop] = useState<any>({
     unit: '%',
@@ -276,9 +298,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   }, [previewUrl]);
 
   const fallbackAvatar = generateFallbackAvatar('User');
-  const [countryCode, setCountryCode] = useState('+974');  // Default country code
-
-  // Update image handling
+  
   useEffect(() => {
     if (croppedFile) {
       // When image is cropped, update the form value

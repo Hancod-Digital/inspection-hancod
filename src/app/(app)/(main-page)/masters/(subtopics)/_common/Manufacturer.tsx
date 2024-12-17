@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, z } from 'zod';
+import { object, string, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,48 +10,28 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
-import { PlusIcon } from 'lucide-react';
 
-const equipmentDetailsSchema = z.object({
-  site: z.string().nonempty('Site is required'),
-  area: z.string().nonempty('Area is required'),
+const manufacturerDetailsSchema = object({
+ 
+  manufacturer: z.string().nonempty('Manufacturer is required'),
+  address: z.string().nonempty('Address is required'),
   status: z.string().nonempty('Status is required')
 });
 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+type ManufacturerDetailsInput = z.infer<typeof manufacturerDetailsSchema>;
 
-interface EquipmentDetailsFormProps {
+interface ManufacturerDetailsFormProps {
   onClose: () => void;
-  setIsArea: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose, setIsArea }: EquipmentDetailsFormProps) {
+export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const [areaOptions, setAreaOptions] = useState<any[]>([]); // State to hold the area options
-  const { addRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
-
-  const methods = useForm<EquipmentDetailsInput>({
-    resolver: zodResolver(equipmentDetailsSchema),
-    defaultValues: {
-      site: '',  // Default values can be set as empty or pre-populated
-      area: '',
-      status: ''
-    },
+  const { addRecord } = useSubtopic();
+  const methods = useForm<ManufacturerDetailsInput>({
+    resolver: zodResolver(manufacturerDetailsSchema),
   });
 
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
-
-  // Fetch areas and set them to state
-  useEffect(() => {
-    const fetchAreas = async () => {
-      const data = await getAllSingleSubtopic("area"); // Fetch the areas
-      if (data) {
- 
-        setAreaOptions(data); // Set the area options to the fetched data
-      }
-    };
-    fetchAreas();
-  }, [getAllSingleSubtopic]); // Runs once on component mount
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -59,11 +39,11 @@ export default function EquipmentDetailsForm({ onClose, setIsArea }: EquipmentDe
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
+  const onSubmitHandler: SubmitHandler<ManufacturerDetailsInput> = async(values) => {
     setLoading(true); 
-    await addRecord(values);  // Assuming you're adding a new record
+    await addRecord(values)
     setLoading(false);
-    onClose();
+    onClose()
   };
 
   return (
@@ -84,68 +64,29 @@ export default function EquipmentDetailsForm({ onClose, setIsArea }: EquipmentDe
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-                  
-                  {/* Site Field */}
+
+                   
+
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="site" className="mt-3">Site</Label>
+                    <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
                     <div>
-                      <Input id="site" {...methods.register('site')} />
-                      {errors.site && (
-                        <p className="text-red-500 mt-1">{errors.site.message}</p>
+                      <Input id="manufacturer" {...methods.register('manufacturer')} />
+                      {errors.manufacturer && (
+                        <p className="text-red-500 mt-1">{errors.manufacturer.message}</p>
                       )}
                     </div>
                   </div>
 
-                  {/* Area Field with dynamic dropdown */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="area" className="mt-3">Area</Label>
-                    <div className="relative">
-                     <Controller
-  name="area"
-  control={control}
-  render={({ field }) => (
-    <Select
-      onValueChange={(value) => {
-        // `value` will be the `id` of the selected area
-        field.onChange(value); // Pass the `id` to the field's `onChange` method
-      }}
-      value={field.value}
-    >
-      <SelectTrigger id="area">
-        <SelectValue placeholder="Select area" />
-      </SelectTrigger>
-      <SelectContent>
-        {areaOptions?.length > 0 ? (
-          areaOptions?.map((area: any, index: number) => (
-            <SelectItem key={index} value={""+area?.id}>
-              {area?.thumbnail}
-            </SelectItem>
-          ))
-        ) : (
-          <SelectItem disabled value="No areas available">
-            No areas available
-          </SelectItem>
-        )}
-      </SelectContent>
-    </Select>
-  )}
-/>
-<Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsArea(true)}>
-
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-
-                      {errors.area && (
-                        <p className="text-red-500 mt-1">{errors.area.message}</p>
+                    <Label htmlFor="address" className="mt-3">Address</Label>
+                    <div>
+                      <Input id="address" {...methods.register('address')} />
+                      {errors.address && (
+                        <p className="text-red-500 mt-1">{errors.address.message}</p>
                       )}
                     </div>
                   </div>
 
-                  {/* Status Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
                     <Label htmlFor="status" className="mt-3">Status</Label>
                     <div>
@@ -158,7 +99,7 @@ export default function EquipmentDetailsForm({ onClose, setIsArea }: EquipmentDe
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="ACTIVE">Active</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
                               <SelectItem value="INACTIVE">Inactive</SelectItem>
                             </SelectContent>
                           </Select>
@@ -171,7 +112,6 @@ export default function EquipmentDetailsForm({ onClose, setIsArea }: EquipmentDe
                   </div>
                 </div>
 
-                {/* Buttons */}
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

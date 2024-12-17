@@ -4,7 +4,7 @@ import Table from './_components/Table'
 import Header from './_components/Header'
 import AddForm from './_components/AddSite'
 import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
-
+import Area from '../../(subtopics)/area/_components/AddEquipment'
 const Site = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState("");
@@ -14,7 +14,13 @@ const Site = () => {
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
-
+    const [isArea, setIsArea] = useState<boolean>(false);
+    const handleCloseArea = () => {
+        setIsArea(false);
+    };
+    const handleOpenArea = () => {
+        setIsArea(true)
+    }
     return (
         <motion.div 
             className='w-full bg-[#fafbfb]'
@@ -54,7 +60,7 @@ const Site = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table searchValue={searchValue} />
+                        <Table searchValue={searchValue} setIsArea={setIsArea} isArea={isArea}/>
                     </motion.div>
                 ) : (
                     <motion.div
@@ -64,7 +70,8 @@ const Site = () => {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <AddForm onClose={handleCloseAdd} />
+                        {isArea&& (<Area onClose={handleCloseArea} />)}
+                        {!isArea && (<AddForm setIsArea={setIsArea} onClose={handleCloseAdd} />)}
                     </motion.div>
                 )}
             </AnimatePresence>

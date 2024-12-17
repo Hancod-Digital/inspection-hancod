@@ -56,9 +56,15 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 interface EquipmentDetailsFormProps {
   onClose: () => void;
   id?: number; // Optional, only required for edit
+  isManufacturer: boolean;
+  isStandard: boolean;
+  isLocation: boolean;
+  setIsManufacturer: (value: boolean) => void;
+  setIsStandard: (value: boolean) => void;
+  setIsLocation: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isStandard, isLocation, setIsManufacturer, setIsStandard, setIsLocation }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState<any>(false);
   const { addRecord, updateRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
 
@@ -374,6 +380,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                           size="icon"
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsManufacturer(true)}
                         >
                           <PlusIcon className="h-4 w-4" />
                         </Button>
@@ -428,7 +435,8 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                           size="icon"
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
-                        >
+                          onClick={()=>setIsLocation(true)}>
+
                           <PlusIcon className="h-4 w-4" />
                         </Button>
                         {errors.location && (
@@ -459,7 +467,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                     {/* Standard */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                       <Label htmlFor="standard">Standard</Label>
-                      <div>
+                      <div className="relative">
                         <Controller
                           name="standard"
                           control={control}
@@ -478,6 +486,14 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                             </Select>
                           )}
                         />
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsStandard(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                         {errors.standard && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.standard.message}

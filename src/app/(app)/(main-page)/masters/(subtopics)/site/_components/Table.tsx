@@ -15,8 +15,9 @@ import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { siteDataRange } from '@/lib/utils';
 import DeleteDialogue from '@/components/ui/delete-dialog';
+import Area from '../../area/_components/AddEquipment';
 
-export default function EquipmentTable({searchValue}:{searchValue:string}) {
+export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchValue:string, setIsArea: (value: boolean) => void, isArea: boolean}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { isLoading, error, getMergedData, deleteRecord } = useSubtopic();
     const [subtopics, setSubtopics] = useState<any[]>([]); // Define the type as needed
@@ -111,7 +112,8 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                                         >
                                             <TableCell colSpan={5}>
                                                 <div className="overflow-hidden">
-                                                    <EditPopup onClose={handleCloseEdit} id={item.id} />
+                                                    {isArea && (<Area onClose={()=>setIsArea(false)}/>)}
+                                                    {!isArea && (<EditPopup setIsArea={setIsArea} onClose={handleCloseEdit} id={item.id} />)}
                                                 </div>
                                             </TableCell>
                                         </motion.tr>

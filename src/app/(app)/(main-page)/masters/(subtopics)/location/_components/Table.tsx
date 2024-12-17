@@ -14,8 +14,9 @@ import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
+import Site from '../../site/_components/AddSite';
 
-export default function EquipmentTable({searchValue}:{searchValue:string}) {
+export default function EquipmentTable({searchValue, setIsSite, isSite, setIsArea, isArea}:{searchValue:string, setIsSite: (value: boolean) => void, isSite: boolean, setIsArea: (value: boolean) => void, isArea: boolean}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { FetchLocationDetails , deleteRecord} = useSubtopic(); // Assuming this is a hook from your context
  const {data,error} =  FetchLocationDetails()
@@ -78,7 +79,8 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                                     >
                                         <TableCell colSpan={6}>
                                             <div className="overflow-hidden">
-                                                <EditPopup onClose={handleCloseEdit} id={item.id!} />
+                                                {isSite && (<Site onClose={()=>setIsSite(false)} setIsArea={setIsArea}/>)}
+                                                {!isSite && (<EditPopup onClose={handleCloseEdit} id={item.id!} setIsSite={setIsSite}/>)}
                                             </div>
                                         </TableCell>
                                     </motion.tr>

@@ -23,6 +23,7 @@ import { ToastVariant } from '@/components/ui/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import AnnexuresTable from './AnnexureTable';
 import { toastWithTimeout } from '@/components/ui/use-toast';
+import { PlusIcon } from 'lucide-react';
 
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
@@ -52,8 +53,10 @@ const equipmentDetailsSchema = object({
   approval_status: string().nonempty('Approval Status is required'),
   location: string().nonempty('Location is required'),
   serial_no: string().nonempty('Serial No. is required'),
+  registration_no: string().nonempty('Registration No. is required'),
   lift_location: string().nonempty('Lift Location is required'),
   model_no: string().nonempty('Model_no is required'),
+  year_of_manufacture: string().nonempty('Year of Manufacture is required'),
   owner_id: string().nonempty('Owner ID is required'),
   defect_description: string().nonempty('Defect Description is required'),
   test_particulars: string().nonempty('Test Particulars is required'),
@@ -63,9 +66,14 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  setIsLocation: (value: boolean) => void;
+  setIsEquipment: (value: boolean) => void;
+  setIsStandard: (value: boolean) => void;
+  setIsOwner: (value: boolean) => void;
+  setIsManufacturer: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose ,setIsLocation,setIsEquipment,setIsStandard,setIsOwner,setIsManufacturer}: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const { getAllSingleSubtopic, addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
@@ -116,7 +124,7 @@ setSelectedEquipment(selectedEquipment)
 
         setValue('standard', selectedEquipment.standard || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
-
+        setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || ''); // Update year of manufacture
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || ''); // Update test cert/coc no
         setValue('safe_working_load', String(selectedEquipment.safe_working_load) || ''); // Update safe working load
         setValue('description', String(selectedEquipment.description) || ''); // Update description
@@ -125,7 +133,7 @@ setSelectedEquipment(selectedEquipment)
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
         setValue('owner_name', String(selectedEquipment.owner_id) || ''); // Update owner
-
+        setValue('registration_no', String(selectedEquipment.registration_no) || ''); // Update registration no
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
         setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
         setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || ''); // Update last thorough exam
@@ -433,6 +441,7 @@ setSelectedEquipment(selectedEquipment)
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="location" className="mt-3">Location</Label>
+                    <div className="relative">
                     <Controller
                       name="location"
                       control={control}
@@ -451,9 +460,18 @@ setSelectedEquipment(selectedEquipment)
                         </Select>
                       )}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsLocation(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.location && (
                       <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                     )}
+                    </div>
                   </div>
 
                 </div>
@@ -465,6 +483,7 @@ setSelectedEquipment(selectedEquipment)
                   {/* Equipment Information Section */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_no" className="mt-3">Equipment No.</Label>
+                    <div className="relative">
                     <Controller
                       name="equipment_no"
                       control={control}
@@ -483,9 +502,17 @@ setSelectedEquipment(selectedEquipment)
                         </Select>
                       )}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsEquipment(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.equipment_no && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
-                    )}
+                    )}</div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">Title</Label>
@@ -528,7 +555,13 @@ setSelectedEquipment(selectedEquipment)
                     )}
                   </div>
 
-
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="registration_no" className="mt-3">Reg No.</Label>
+                    <Input id="registration_no" {...register('registration_no')} />
+                    {errors.registration_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.registration_no.message}</p>
+                    )}
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
@@ -538,10 +571,18 @@ setSelectedEquipment(selectedEquipment)
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
-                    <Input id="safe_working_load" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.safe_working_load} {...register('safe_working_load')} />
-                    {errors.safe_working_load && (
-                      <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
+                    <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
+                    <Input id="test_cert_coc_no" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.test_certificate_no} {...register('test_cert_coc_no')} />
+                    {errors.test_cert_coc_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="year_of_manufacture" className="mt-3">Year of Manufacture</Label>
+                    
+                    <Input id="year_of_manufacture" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.year_of_manufacture} {...register('year_of_manufacture')} />
+                    {errors.year_of_manufacture && (
+                      <p className="text-red-500 text-[12px] ">{errors.year_of_manufacture.message}</p>
                     )}
                   </div>
 
@@ -549,6 +590,7 @@ setSelectedEquipment(selectedEquipment)
                     <Label htmlFor="standard" className="mt-3">
                       Standard
                     </Label>
+                    <div className="relative">
                     <Controller
                       name="standard"
                       control={control}
@@ -577,9 +619,17 @@ setSelectedEquipment(selectedEquipment)
                         );
                       }}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsStandard(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.standard && (
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
-                    )}
+                    )}</div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -687,6 +737,7 @@ setSelectedEquipment(selectedEquipment)
                     <Label htmlFor="owners" className="mt-3">
                       Owner Name
                     </Label>
+                    <div className="relative">
                     <Controller
                       name="owner_name"
                       control={control}
@@ -715,9 +766,17 @@ setSelectedEquipment(selectedEquipment)
                         );
                       }}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsOwner(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.owner_name && (
                       <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
-                    )}
+                    )}</div>
                   </div>
 
 
@@ -760,6 +819,7 @@ setSelectedEquipment(selectedEquipment)
                     <Label htmlFor="manufacturer" className="mt-3">
                       Manufacturer
                     </Label>
+                    <div className="relative">
                     <Controller
                       name="manufacturer"
                       control={control}
@@ -788,9 +848,17 @@ setSelectedEquipment(selectedEquipment)
                         );
                       }}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsManufacturer(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.manufacturer && (
                       <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
-                    )}
+                    )}</div>
                   </div>
 
 

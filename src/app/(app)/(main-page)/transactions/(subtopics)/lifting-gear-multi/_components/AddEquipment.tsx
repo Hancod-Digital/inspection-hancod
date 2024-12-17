@@ -20,6 +20,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
+import { PlusIcon } from 'lucide-react';
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
   site: string().nonempty('Site is required'),
@@ -53,11 +54,15 @@ const equipmentDetailsSchema = object({
  
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
-interface EquipmentDetailsFormProps {
+interface AddEquipmentProps {
   onClose: () => void;
+  setIsLocation: (value: boolean) => void;
+  setIsEquipment: (value: boolean) => void;
+  setIsStandard: (value: boolean) => void;
+  setIsManufacturer: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setIsStandard,setIsManufacturer }: AddEquipmentProps) {
   const [loading, setLoading] = useState(false);
   const { getAllSingleSubtopic, addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
@@ -363,6 +368,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="location" className="mt-3">Location</Label>
+                    <div className='relative'>
                     <Controller
                       name="location"
                       control={control}
@@ -381,9 +387,17 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         </Select>
                       )}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsLocation(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.location && (
                       <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
-                    )}
+                    )}</div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="authority" className="mt-3">Authority</Label>
@@ -494,6 +508,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   {/* Equipment Information Section */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_no" className="mt-3">Equipment No.</Label>
+                    <div className='relative'>
                     <Controller
                       name="equipment_no"
                       control={control}
@@ -512,9 +527,18 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         </Select>
                       )}
                     />
+                       <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsEquipment(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                        
                     {errors.equipment_no && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
-                    )}
+                    )}</div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">Title</Label>
@@ -559,6 +583,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     <Label htmlFor="standard" className="mt-3">
                       Standard
                     </Label>
+                    <div className='relative'>
                     <Controller
                       name="standard"
                       control={control}
@@ -587,9 +612,17 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         );
                       }}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsStandard(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.standard && (
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
-                    )}
+                    )}</div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -632,6 +665,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
 
                 </div>
+                
                 <div className="grid gap-4 grid-cols-1 w-[64%]">
                   <div className="grid grid-cols-[200px_1fr]   items-start gap-4">
                     <Label className='mt-3' htmlFor="next_test_date">Next Test Exam</Label>
@@ -788,6 +822,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     <Label htmlFor="manufacturer" className="mt-3">
                       Manufacturer
                     </Label>
+                    <div className='relative'>
                     <Controller
                       name="manufacturer"
                       control={control}
@@ -816,6 +851,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         );
                       }}
                     />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsManufacturer(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                     {errors.manufacturer && (
                       <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                     )}
@@ -869,6 +912,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       </div>
                     </div>
                   </div>
+                </div>
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">

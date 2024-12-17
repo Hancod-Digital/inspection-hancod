@@ -18,6 +18,7 @@ import {
 import { useSubtopic } from '@/context/SubtopicContext';
 import { flushSync } from 'react-dom'; // Import flushSync for synchronous state updates
 import { locationDataRange } from '@/lib/utils';
+import { PlusIcon } from 'lucide-react';
 
 // Define the Zod schema for form validation (Area removed)
 const equipmentDetailsSchema = object({
@@ -31,9 +32,10 @@ type EquipmentDetailsSchemaType = TypeOf<typeof equipmentDetailsSchema>;
 interface EquipmentDetailsFormProps {
   onClose: () => void;
   id: number;
+  setIsSite: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id, setIsSite }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [siteData, setSiteData] = useState<any[]>([]); // State for site dropdown options
   const [data, setData] = useState<any>(null); // State for existing record data
@@ -145,7 +147,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
               <div className="space-y-4">
                 <div className="grid gap-4 grid-cols-1">
                   {/* Location Field */}
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="location">Location</Label>
                     <div>
                       <Input id="location" {...methods.register('location')} />
@@ -156,9 +158,9 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                   </div>
 
                   {/* Site Dropdown */}
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site">Site</Label>
-                    <div>
+                    <div className="relative">
                       <Controller
                         name="site"
                         control={control}
@@ -177,6 +179,14 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                           </Select>
                         )}
                       />
+                      <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsSite(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                       {errors.site && (
                         <p className="text-red-500 mt-1">{errors.site.message}</p>
                       )}
@@ -184,7 +194,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                   </div>
 
                   {/* Status Dropdown */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="status">Status</Label>
                     <div>
                       <Controller

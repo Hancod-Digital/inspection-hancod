@@ -30,9 +30,15 @@ import { useSubtopic } from '@/context/SubtopicContext';
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  isManufacturer: boolean;
+  isStandard: boolean;
+  isLocation: boolean;
+  setIsManufacturer: (value: boolean) => void;
+  setIsStandard: (value: boolean) => void;
+  setIsLocation: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState<any>(false);
   const { addRecord, getAllSingleSubtopic } = useSubtopic();
 
@@ -328,6 +334,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         />
                         <Button
                           size="icon"
+                          onClick={()=>setIsManufacturer(true)}
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
                         >
@@ -382,6 +389,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         />
                         <Button
                           size="icon"
+                          onClick={()=>setIsLocation(true)}
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
                         >
@@ -415,7 +423,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     {/* Standard */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                       <Label  className='mt-3' htmlFor="standard">Standard</Label>
-                      <div>
+                      <div className='relative'>
                         <Controller
                           name="standard"
                           control={control}
@@ -434,6 +442,19 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                             </Select>
                           )}
                         />
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          onClick={()=>setIsStandard(true)}
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                        {errors.manufacturer && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.manufacturer.message}
+                          </p>
+                        )}
                         {errors.standard && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.standard.message}

@@ -21,8 +21,13 @@ import { MasterService } from '@/services/api/masters-service';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { generateRows } from '@/lib/utils';
+import Manufacturer from '../../../../masters/(subtopics)/manufacturer/_components/AddEquipment'
+import Location from '../../../../masters/(subtopics)/location/_components/AddEquipment'
+import Equipment from '../../../../masters/(subtopics)/equipment/_components/AddEquipment'
+import Standard from '../../../../masters/(subtopics)/standard/_components/AddEquipment'
+import Owner from '../../../../masters/(subtopics)/owner/_components/AddEquipment'
 
-export default function EquipmentTable() {
+export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsEquipment,setIsStandard,setIsOwner,setIsManufacturer,isLocation,isEquipment,isStandard,isOwner,isManufacturer}:any) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const { data, isLoading, error, getAllSingleSubtopic,deleteRecord } = useSubtopic();
 
@@ -419,7 +424,12 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                     >
                       <TableCell colSpan={9}>
                         <div className="overflow-hidden">
-                          <EditPopup onClose={handleCloseEdit} id={item.id} />
+                          {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
+                          {isEquipment && <Equipment onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
+                          {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
+                          {isOwner && <Owner onClose={()=>setIsOwner(false)} />}
+                          {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}
+                          {!isLocation && !isEquipment && !isStandard && !isOwner && !isManufacturer && <EditPopup onClose={handleCloseEdit} id={item.id} setIsLocation={setIsLocation} setIsEquipment={setIsEquipment} setIsStandard={setIsStandard} setIsOwner={setIsOwner} setIsManufacturer={setIsManufacturer} />}
                         </div>
                       </TableCell>
                     </motion.tr>

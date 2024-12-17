@@ -15,8 +15,12 @@ import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { equipmentDataRange, majorCategoryDataRange } from '@/lib/utils';
 import DeleteDialogue from '@/components/ui/delete-dialog';
+import Standard from '../../_common/Standard';
+import Manufacturer from '../../_common/Manufacturer';
+import Location from '../../_common/Location';
 
-export default function Component({searchValue}:{searchValue:string}) {
+
+export default function Component({searchValue,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation}:{searchValue:string,isManufacturer:boolean,isStandard:boolean,isLocation:boolean, setIsManufacturer: (value: boolean) => void, setIsStandard: (value: boolean) => void, setIsLocation: (value: boolean) => void}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
 
     const { isLoading, error, getAllSingleSubtopic, getMergedData, deleteRecord, data } = useSubtopic();
@@ -103,7 +107,10 @@ export default function Component({searchValue}:{searchValue:string}) {
                                     >
                                         <TableCell colSpan={9}>
                                             <div className="overflow-hidden">
-                                                <EditPopup onClose={handleCloseEdit} id={item.id} />
+                                            {isManufacturer&& (<Manufacturer onClose={()=>setIsManufacturer(false)}/>)}
+                                                {isStandard&& (<Standard onClose={()=>setIsStandard(false)} />)}
+                                                {isLocation&& (<Location onClose={()=>setIsLocation(false)}/>)}
+                                                {!isManufacturer && !isStandard && !isLocation && (<EditPopup onClose={handleCloseEdit} id={item.id} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>)}
                                             </div>
                                         </TableCell>
                                     </motion.tr>

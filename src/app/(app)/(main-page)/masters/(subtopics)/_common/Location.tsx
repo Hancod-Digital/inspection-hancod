@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
-import { PlusIcon } from 'lucide-react';
 
 // Define TypeScript interfaces for type safety
 export interface Site {
@@ -37,11 +36,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
-  setIsSite: (value: boolean) => void;
-  setIsArea: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [siteOptions, setSiteOptions] = useState<Site[]>([]); // State for site options
   const [areaOptions, setAreaOptions] = useState<Area[]>([]); // State for area options
@@ -170,7 +167,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
                   {/* Site Field with dynamic dropdown */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
-                    <div className="relative">
+                    <div>
                       <Controller
                         name="site"
                         control={control}
@@ -200,14 +197,6 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
                           </Select>
                         )}
                       />
-                      <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsSite(true)}>
-
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
                       {errors.site && (
                         <p className="text-red-500 mt-1">{errors.site.message}</p>
                       )}

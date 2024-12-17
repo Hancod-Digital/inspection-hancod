@@ -27,10 +27,13 @@ interface EquipmentData {
     nextTestExam: string;
     status: string;
 }
-
+import Location from '@/app/(app)/(main-page)/masters/(subtopics)/location/_components/AddEquipment'
+import Equipment from '@/app/(app)/(main-page)/masters/(subtopics)/equipment/_components/AddEquipment'
+import Standard from '@/app/(app)/(main-page)/masters/(subtopics)/standard/_components/AddEquipment'
+import Manufacturer from '@/app/(app)/(main-page)/masters/(subtopics)/manufacturer/_components/AddEquipment'
  
 
-export default function EquipmentTable({searchValue}:{searchValue:string}) {
+export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment,setIsStandard,setIsManufacturer,isLocation,isEquipment,isStandard,isManufacturer,setIsSite,setIsArea}:{searchValue:string,setIsLocation: (value: boolean) => void,setIsEquipment: (value: boolean) => void,setIsStandard: (value: boolean) => void,setIsManufacturer: (value: boolean) => void,isLocation:boolean,isEquipment:boolean,isStandard:boolean,isManufacturer:boolean,setIsSite: (value: boolean) => void,setIsArea: (value: boolean) => void}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const {getAllSingleSubtopic,deleteRecord,data} = useSubtopic()
     const handleEditClick = (slNo: number) => {
@@ -260,9 +263,14 @@ document.head.removeChild(styleElement);
                                         animate={{ opacity: 1, height: 'auto' }}
                                         exit={{ opacity: 0, height: 0 }}
                                         transition={{ duration: 0.2 }}
-                                    >
+                                    > 
                                         <TableCell colSpan={5}>
-                                        <EditPopup onClose={handleCloseEdit} id={item?.id} />
+                                            {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
+                                            {isEquipment && <Equipment onClose={()=>setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
+                                            {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
+                                            {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}
+
+                                        {!isLocation && !isEquipment && !isStandard && !isManufacturer && <EditPopup onClose={handleCloseEdit} id={item?.id} setIsLocation={setIsLocation} setIsEquipment={setIsEquipment} setIsStandard={setIsStandard} setIsManufacturer={setIsManufacturer} />}
                                         </TableCell>
                                     </motion.tr>
                                 )}
