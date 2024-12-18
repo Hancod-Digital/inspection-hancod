@@ -852,26 +852,27 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                   </div>
                 </div>
                 
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-
-                    <Label htmlFor="defect_description" className="mt-3">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                    <Input id="defect_description" {...register('defect_description')} />
+                <div className="space-y-4 w-full">
+                  <div className="grid gap-4 grid-cols-1 w-full">
+                  <div className="grid grid-cols-[400px_1fr]  gap-4">
+                    <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
+                    <Input id="defect_description" className='my-auto' {...register('defect_description')} />
                     {errors.defect_description && (
                       <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                     )}
-
+ 
+</div>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-
-                    <Label htmlFor="test_particulars" className="mt-3">Particulars of any tests carried out as part of the examination</Label>
-                    <Input id="test_particulars" {...register('test_particulars')} />
+                  <div className="grid grid-cols-[400px_1fr]  gap-4">
+                    <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
+                    <Input id="test_particulars" className='' {...register('test_particulars')} />
                     {errors.test_particulars && (
                       <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
                     )}
-
+                     </div>
                   </div>
                 </div>
                 <div className="space-y-4">

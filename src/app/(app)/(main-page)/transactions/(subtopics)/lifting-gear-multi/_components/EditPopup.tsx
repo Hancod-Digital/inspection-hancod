@@ -953,54 +953,27 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                   </div>
                 </div>
 
-                {/* Annexure Table Section */}
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-                    <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
-                  </div> 
-                </div>
-
-                {/* Safety Checklist Section */}
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-                    <SafetyChecklist 
-                      values={safetyChecklistValues}
-                      onChange={handleSafetyChecklistChange}
-                    />
-                  </div>
-                </div>
-
-                {/* Defect Description Section */}
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-                    <Label htmlFor="defect_description" className="mt-3">
-                      Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:
-                    </Label>
-                    <Input 
-                      id="defect_description" 
-                      {...register('defect_description')} 
-                      value={watch('defect_description')}
-                    />
+                <div className="space-y-4 w-full">
+                  <div className="grid gap-4 grid-cols-1 w-full">
+                  <div className="grid grid-cols-[400px_1fr]  gap-4">
+                    <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
+                    <Input id="defect_description" className='my-auto' {...register('defect_description')} />
                     {errors.defect_description && (
                       <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                     )}
+ 
+</div>
                   </div>
                 </div>
-
-                {/* Test Particulars Section */}
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                    <Label htmlFor="test_particulars" className="mt-3">
-                      Particulars of any tests carried out as part of the examination
-                    </Label>
-                    <Input 
-                      id="test_particulars" 
-                      {...register('test_particulars')} 
-                      value={watch('test_particulars')}
-                    />
+                  <div className="grid grid-cols-[400px_1fr]  gap-4">
+                    <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
+                    <Input id="test_particulars" className='' {...register('test_particulars')} />
                     {errors.test_particulars && (
                       <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
                     )}
+                     </div>
                   </div>
                 </div>
 

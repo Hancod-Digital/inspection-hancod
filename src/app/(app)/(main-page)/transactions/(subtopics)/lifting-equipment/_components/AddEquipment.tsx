@@ -27,11 +27,11 @@ import { PlusIcon } from 'lucide-react';
 
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
-  site: string().nonempty('Site is required'),
+  site: string().nonempty('Site is required'), 
   authority: string().nonempty('Authority is required'),
   standard: string().nonempty('Standard is required'),
   type_of_exam: string().nonempty('Type of Exam is required'),
-  description_of_test: string().nonempty('Description of Test is required'),
+  description_of_test: string().nonempty('Description of Test is required').optional(),
   job_order_no: string().nonempty('Job Order No. is required'),
   equipment_no: string().nonempty('Equipment No. is required'),
   title: string().nonempty('Title is required'),
@@ -532,7 +532,15 @@ setSelectedEquipment(selectedEquipment)
                     )}
                   </div>
                 </section>
+                
                 <div className="grid gap-4 grid-cols-2">
+                <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
+                    <Input id="test_cert_coc_no" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.test_certificate_no} {...register('test_cert_coc_no')} />
+                    {errors.test_cert_coc_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
+                    )}
+                  </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="serial_no" className="mt-3">Serial No.</Label>
                     <Input id="serial_no" {...register('serial_no')} />
@@ -540,7 +548,13 @@ setSelectedEquipment(selectedEquipment)
                       <p className="text-red-500 text-[12px] ">{errors.serial_no.message}</p>
                     )}
                   </div>
-
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="owner_id" className="mt-3">Owner No/ID</Label>
+                    <Input id="owner_id" {...register('owner_id')} />
+                    {errors.owner_id && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_id.message}</p>
+                    )}
+                  </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="model_no" className="mt-3">Model_no</Label>
                     <Input id="model_no" {...register('model_no')} />
@@ -548,35 +562,51 @@ setSelectedEquipment(selectedEquipment)
                       <p className="text-red-500 text-[12px] ">{errors.model_no.message}</p>
                     )}
                   </div>
+                  
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_id" className="mt-3">Owner ID</Label>
-                    <Input id="owner_id" {...register('owner_id')} />
-                    {errors.owner_id && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_id.message}</p>
-                    )}
-                  </div>
+                    <Label htmlFor="manufacturer" className="mt-3">
+                      Manufacturer
+                    </Label>
+                    <div className="relative">
+                    <Controller
+                      name="manufacturer"
+                      control={control}
+                      render={({ field }) => {
+                        // Extract the current manufacturer value based on equipment_no
+                        const currentManufacturer = String(
+                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.manufacturer
+                        );
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="registration_no" className="mt-3">Reg No.</Label>
-                    <Input id="registration_no" {...register('registration_no')} />
-                    {errors.registration_no && (
-                      <p className="text-red-500 text-[12px] ">{errors.registration_no.message}</p>
-                    )}
-                  </div>
+                        return (
+                          <Select
+                            value={currentManufacturer || field.value} // Use field value or fallback to currentManufacturer
+                            onValueChange={(value) => field.onChange(value)} // Update the form's value
+                          >
+                            <SelectTrigger id="manufacturer">
+                              <SelectValue defaultValue={currentManufacturer || field.value} placeholder="Select manufacturer" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {manufacturerOptions?.map((manufacturer: any) => (
+                                <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
+                                  {manufacturer.manufacturer}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        );
+                      }}
+                    />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsManufacturer(true)}>
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
-                    <Input id="test_cert_coc_no" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.test_certificate_no} {...register('test_cert_coc_no')} />
-                    {errors.test_cert_coc_no && (
-                      <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
-                    <Input id="test_cert_coc_no" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.test_certificate_no} {...register('test_cert_coc_no')} />
-                    {errors.test_cert_coc_no && (
-                      <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
-                    )}
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                    {errors.manufacturer && (
+                      <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
+                    )}</div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="year_of_manufacture" className="mt-3">Year of Manufacture</Label>
@@ -584,6 +614,13 @@ setSelectedEquipment(selectedEquipment)
                     <Input id="year_of_manufacture" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.year_of_manufacture} {...register('year_of_manufacture')} />
                     {errors.year_of_manufacture && (
                       <p className="text-red-500 text-[12px] ">{errors.year_of_manufacture.message}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="registration_no" className="mt-3">Reg No.</Label>
+                    <Input id="registration_no" {...register('registration_no')} />
+                    {errors.registration_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.registration_no.message}</p>
                     )}
                   </div>
 
@@ -632,6 +669,95 @@ setSelectedEquipment(selectedEquipment)
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                     )}</div>
                   </div>
+                 
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
+                    <Input id="safe_working_load" {...register('safe_working_load')} />
+                    {errors.safe_working_load && (
+                      <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
+                    )}
+                  </div>
+                  
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="owners" className="mt-3">
+                      Owner Name
+                    </Label>
+                    <div className="relative">
+                    <Controller
+                      name="owner_name"
+                      control={control}
+                      render={({ field }) => {
+                        // Extract the current owner value based on equipment_no
+                        const currentOwner = String(
+                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.owner_id
+                        );
+
+                        return (
+                          <Select
+                            value={currentOwner || field.value} // Use field value or fallback to currentOwner
+                            onValueChange={(value) => field.onChange(value)} // Update the form's value
+                          >
+                            <SelectTrigger id="owners">
+                              <SelectValue defaultValue={currentOwner || field.value} placeholder="Select owner" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {ownerOptions?.map((owner: any) => (
+                                <SelectItem key={owner.id} value={String(owner.id)}>
+                                  {owner?.owner}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        );
+                      }}
+                    />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsOwner(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                    {errors.owner_name && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
+                    )}</div>
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
+                    <Controller
+                      name="surveyor"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="surveyor">
+                            <SelectValue placeholder="Select surveyor" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {surveyorOptions?.map((surveyor: any) => (
+                              <SelectItem key={surveyor.id} value={String(surveyor.id)}>
+                                {surveyor.surveyor}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.surveyor && (
+                      <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
+                    )}
+                  </div>
+
+
+
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
+                    <Input id="tested_standard" {...register('tested_standard')} />
+                    {errors.tested_standard && (
+                      <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
+                    )}
+                  </div>
+
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">
@@ -730,141 +856,7 @@ setSelectedEquipment(selectedEquipment)
                   </div>
 )}
                 </div>
-
-                {/* Result Section */}
-                <div className="grid gap-4 grid-cols-2">
-
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owners" className="mt-3">
-                      Owner Name
-                    </Label>
-                    <div className="relative">
-                    <Controller
-                      name="owner_name"
-                      control={control}
-                      render={({ field }) => {
-                        // Extract the current owner value based on equipment_no
-                        const currentOwner = String(
-                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.owner_id
-                        );
-
-                        return (
-                          <Select
-                            value={currentOwner || field.value} // Use field value or fallback to currentOwner
-                            onValueChange={(value) => field.onChange(value)} // Update the form's value
-                          >
-                            <SelectTrigger id="owners">
-                              <SelectValue defaultValue={currentOwner || field.value} placeholder="Select owner" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {ownerOptions?.map((owner: any) => (
-                                <SelectItem key={owner.id} value={String(owner.id)}>
-                                  {owner?.owner}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        );
-                      }}
-                    />
-                    <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsOwner(true)}>
-
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                    {errors.owner_name && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
-                    )}</div>
-                  </div>
-
-
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
-                    <Controller
-                      name="surveyor"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="surveyor">
-                            <SelectValue placeholder="Select surveyor" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {surveyorOptions?.map((surveyor: any) => (
-                              <SelectItem key={surveyor.id} value={String(surveyor.id)}>
-                                {surveyor.surveyor}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                    {errors.surveyor && (
-                      <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
-                    )}
-                  </div>
-
-
-
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
-                    <Input id="tested_standard" {...register('tested_standard')} />
-                    {errors.tested_standard && (
-                      <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="manufacturer" className="mt-3">
-                      Manufacturer
-                    </Label>
-                    <div className="relative">
-                    <Controller
-                      name="manufacturer"
-                      control={control}
-                      render={({ field }) => {
-                        // Extract the current manufacturer value based on equipment_no
-                        const currentManufacturer = String(
-                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.manufacturer
-                        );
-
-                        return (
-                          <Select
-                            value={currentManufacturer || field.value} // Use field value or fallback to currentManufacturer
-                            onValueChange={(value) => field.onChange(value)} // Update the form's value
-                          >
-                            <SelectTrigger id="manufacturer">
-                              <SelectValue defaultValue={currentManufacturer || field.value} placeholder="Select manufacturer" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {manufacturerOptions?.map((manufacturer: any) => (
-                                <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
-                                  {manufacturer.manufacturer}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        );
-                      }}
-                    />
-                    <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsManufacturer(true)}>
-
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                    {errors.manufacturer && (
-                      <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
-                    )}</div>
-                  </div>
-
-
-                  
-                </div>
+ 
 
                 {/* Additional Information Section */}
                 <div className="space-y-4">
@@ -905,8 +897,8 @@ setSelectedEquipment(selectedEquipment)
                               <SelectValue placeholder="Select result" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                              <SelectItem value="SCRAP">SCRAP</SelectItem>
+                              <SelectItem value="SATISFACTORY">SATISFACTORY</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
@@ -971,26 +963,27 @@ setSelectedEquipment(selectedEquipment)
                     />
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-
-                    <Label htmlFor="defect_description" className="mt-3">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                    <Input id="defect_description" {...register('defect_description')} />
+                <div className="space-y-4 w-full">
+                  <div className="grid gap-4 grid-cols-1 w-full">
+                  <div className="grid grid-cols-[400px_1fr]  gap-4">
+                    <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
+                    <Input id="defect_description" className='my-auto' {...register('defect_description')} />
                     {errors.defect_description && (
                       <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                     )}
-
+ 
+</div>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-
-                    <Label htmlFor="test_particulars" className="mt-3">Particulars of any tests carried out as part of the examination</Label>
-                    <Input id="test_particulars" {...register('test_particulars')} />
+                  <div className="grid grid-cols-[400px_1fr]  gap-4">
+                    <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
+                    <Input id="test_particulars" className='' {...register('test_particulars')} />
                     {errors.test_particulars && (
                       <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
                     )}
-
+                     </div>
                   </div>
                 </div>
                 <div className="grid gap-4 grid-cols-2 tex">
@@ -1006,7 +999,7 @@ setSelectedEquipment(selectedEquipment)
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="Approved">Approved</SelectItem>
-                            <SelectItem value="Not Approved">Not Approved</SelectItem>
+                            <SelectItem value="Rejected">Rejected</SelectItem>
                           </SelectContent>
                         </Select>
                       )}

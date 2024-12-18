@@ -367,7 +367,8 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
             <TableHead className="py-4">Next Thorough Date</TableHead>
             <TableHead className="py-4">Inspection Date</TableHead>
             <TableHead className="py-4">Status</TableHead>
-            <TableHead className="py-4">Action</TableHead>
+            <TableHead className="py-4"></TableHead>
+            <TableHead className="py-4"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -381,14 +382,15 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
                   <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
+                  <TableCell className="py-4">{item?.result}</TableCell>
                   <TableCell
                     className={`py-4 ${
-                      item?.approval_status?.toLowerCase() === 'approved'
+                      item?.approval_status
                         ? 'text-green-500'
                         : 'text-red-500'
                     }`}
                   >
-                    {item?.approval_status.toLowerCase() === 'approved' ? 'Approved' : 'Rejected'}
+                    {item?.approval_status ? 'Approved' : 'Rejected'}
                   </TableCell>
                   <TableCell className="py-4">
                     <DropdownMenu>

@@ -37,11 +37,14 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
   site: string().nonempty('Site is required'),
+  year_of_manufacture: string().nonempty('Year of Manufacture is required'),
   authority: string().nonempty('Authority is required'),
   standard: string().nonempty('Standard is required'),
   type_of_exam: string().nonempty('Type of Exam is required'),
   description_of_test: string().nonempty('Description of Test is required'),
   job_order_no: string().nonempty('Job Order No. is required'),
+  test_particulars: string().nonempty('Test Particulars is required'),
+  defect_description: string().nonempty('Defect Description is required'),
   equipment_no: string().nonempty('Equipment No. is required'),
   lift_location: string().nonempty('Lift Location is required').optional(),
   title: string().nonempty('Title is required'),
@@ -51,6 +54,7 @@ const equipmentDetailsSchema = object({
   next_test_exam: string().optional(),
   last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
   next_thorough_exam: string().optional(),
+  model_no: string().nonempty('Model No. is required'),
   registration_no: string().nonempty('Registration No. is required'),
   result: string().nonempty('Result is required'),
   surveyor: string().nonempty('Surveyor is required'), 
@@ -63,7 +67,7 @@ const equipmentDetailsSchema = object({
   approval_status: string().nonempty('Approval Status is required'),
   location: string().nonempty('Location is required'),
   serial_no: string().nonempty('Serial No. is required'),
-  model: string().nonempty('Model is required'),
+  _no: string().nonempty('Model is required'),
   owner_id: string().nonempty('Owner ID is required')
 });
 
@@ -129,9 +133,12 @@ export default function EditEquipmentDetailsForm({
       last_thorough_exam: existingData.last_thorough_exam || '',
       next_thorough_exam: existingData.next_thorough_exam || '',
       result: existingData.result || '',
+      year_of_manufacture: existingData.year_of_manufacture || '',
       surveyor: existingData.surveyor || '',
       result_description: existingData.result_description || '',
       owner_name: existingData.owner_name || '',
+      defect_description: existingData.defect_description || '',
+      test_particulars: existingData.test_particulars || '',
       description: existingData.description || '',
       equipment_description: existingData.equipment_description || '',
       manufacturer: existingData.manufacturer || '',
@@ -140,7 +147,7 @@ export default function EditEquipmentDetailsForm({
       approval_status: existingData.approval_status || '',
       location: String(existingData.location) || '',
       serial_no: existingData.serial_no || '',
-      model: existingData.model || '',
+      _no: existingData._no || '',
       owner_id: existingData.owner_id || '',
     } : {},
   });
@@ -204,19 +211,22 @@ export default function EditEquipmentDetailsForm({
   
     // Handle equipment_no changes to set related fields
     if (equipment_no && equipmentNoOptions.length > 0) {
-      console.log(equipment_no, "loki", equipmentNoOptions);
+    
       const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
-      console.log(selectedEquipment, "loki",selectedEquipment?.property_table_type);
+     
       setItem_type(selectedEquipment?.property_table_type);
   
       if (selectedEquipment) {
         setValue("location", String(existingData.location) || "");
         setValue("inspection_date", existingData.inspection_date || "");
         setValue("site", String(existingData.site) || "");
+        setValue("year_of_manufacture", String(existingData.year_of_manufacture) || "");
         setValue("authority", String(existingData.authority) || "");
         setValue("registration_no", String(existingData.registration_no) || "");
         setValue("standard", String(existingData.standard) || "");
         setValue("type_of_exam", existingData.type_of_exam || "");
+        setValue("defect_description", existingData.defect_description || "");
+        setValue("test_particulars", existingData.test_particulars || "");
         setValue("description_of_test", existingData.description_of_test || "");
         setValue("job_order_no", String(existingData.job_order_no) || "");
         setValue("equipment_no", String(selectedEquipment.id) || "");
@@ -237,7 +247,7 @@ export default function EditEquipmentDetailsForm({
         setValue("tested_standard", existingData.tested_standard || "");
         setValue("approval_status", selectedEquipment.approval_status || "");
         setValue("serial_no", String(selectedEquipment.serial_no) || "");
-        setValue("model", String(selectedEquipment.model) || "");
+        setValue("model_no", String(selectedEquipment._no) || "");
         setValue("owner_id", String(selectedEquipment.owner_id) || "");
       }
     }
@@ -531,7 +541,14 @@ export default function EditEquipmentDetailsForm({
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
                     )}
                   </div>
-
+  {/* Test Cert/COC No. */}
+  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
+                    <Input id="test_cert_coc_no" {...register('test_cert_coc_no')} />
+                    {errors.test_cert_coc_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
+                    )}
+                  </div>
                   {/* Serial No. */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="serial_no" className="mt-3">Serial No.</Label>
@@ -540,49 +557,75 @@ export default function EditEquipmentDetailsForm({
                       <p className="text-red-500 text-[12px] ">{errors.serial_no.message}</p>
                     )}
                   </div>
-
-                  {/* Model */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="model" className="mt-3">Model</Label>
-                    <Input id="model" {...register('model')} />
-                    {errors.model && (
-                      <p className="text-red-500 text-[12px] ">{errors.model.message}</p>
-                    )}
-                  </div>
-
-                  {/* Owner ID */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_id" className="mt-3">Owner ID</Label>
+ {/* Owner ID */}
+ <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="owner_id" className="mt-3">Owner No/ID</Label>
                     <Input id="owner_id" {...register('owner_id')} />
                     {errors.owner_id && (
                       <p className="text-red-500 text-[12px] ">{errors.owner_id.message}</p>
                     )}
                   </div>
+                  {/* Model */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="registration_no" className="mt-3">Registration No.</Label>
+                    <Label htmlFor="model_no" className="mt-3">Model</Label>
+                    <Input id="model_no" {...register('model_no')} />
+                    {errors.model_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.model_no.message}</p>
+                    )}
+                  </div>
+{/* Manufacturer */}
+<div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
+                    <div className='relative'>
+                    <Controller
+                      name="manufacturer"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="manufacturer">
+                            <SelectValue placeholder="Select manufacturer" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {manufacturerOptions.map((manufacturer) => (
+                              <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
+                                {manufacturer.manufacturer}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsManufacturer(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                    {errors.manufacturer && (
+                      <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
+                    )}</div>
+                  </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="year_of_manufacture" className="mt-3">Year of Manufacture</Label>
+                    
+                    <Input id="year_of_manufacture" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.year_of_manufacture} {...register('year_of_manufacture')} />
+                    {errors.year_of_manufacture && (
+                      <p className="text-red-500 text-[12px] ">{errors.year_of_manufacture.message}</p>
+                    )}
+                  </div>
+                 
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="registration_no" className="mt-3">Reg No.</Label>
                     <Input id="registration_no" {...register('registration_no')} />
                     {errors.registration_no && (
                       <p className="text-red-500 text-[12px] ">{errors.registration_no.message}</p>
                     )}
                   </div>
 
-                  {/* Test Cert/COC No. */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
-                    <Input id="test_cert_coc_no" {...register('test_cert_coc_no')} />
-                    {errors.test_cert_coc_no && (
-                      <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
-                    )}
-                  </div>
+                
 
-                  {/* Safe Working Load */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
-                    <Input id="safe_working_load" {...register('safe_working_load')} />
-                    {errors.safe_working_load && (
-                      <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
-                    )}
-                  </div>
 
                   {/* Standard */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -617,6 +660,85 @@ export default function EditEquipmentDetailsForm({
                     {errors.standard && (
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                     )}</div>
+                  </div>
+
+                  {/* Safe Working Load */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
+                    <Input id="safe_working_load" {...register('safe_working_load')} />
+                    {errors.safe_working_load && (
+                      <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
+                    )}
+                  </div>
+
+
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="owner_name" className="mt-3">Owner Name</Label>
+                    <div className='relative'>
+                    <Controller
+                      name="owner_name"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="owner_name">
+                            <SelectValue placeholder="Select owner" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ownerOptions.map((owner) => (
+                              <SelectItem key={owner.id} value={String(owner.id)}>
+                                {owner.owner}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsOwner(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                    {errors.owner_name && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
+                    )}</div>
+                  </div>
+
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
+                    <Controller
+                      name="surveyor"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="surveyor">
+                            <SelectValue placeholder="Select surveyor" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {surveyorOptions.map((surveyor) => (
+                              <SelectItem key={surveyor.id} value={String(surveyor.id)}>
+                                {surveyor.surveyor}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.surveyor && (
+                      <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
+                    )}
+                  </div>
+
+
+  {/* Tested Standard */}
+  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
+                    <Input id="tested_standard" {...register('tested_standard')} />
+                    {errors.tested_standard && (
+                      <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
+                    )}
                   </div>
 
                   {/* Last Test Exam */}
@@ -710,114 +832,7 @@ export default function EditEquipmentDetailsForm({
 )}
                 </div>
 
-                {/* Result Section */}
-                <div className="grid gap-4 grid-cols-2">
-                  {/* Owner Name */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_name" className="mt-3">Owner Name</Label>
-                    <div className='relative'>
-                    <Controller
-                      name="owner_name"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="owner_name">
-                            <SelectValue placeholder="Select owner" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ownerOptions.map((owner) => (
-                              <SelectItem key={owner.id} value={String(owner.id)}>
-                                {owner.owner}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                    <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsOwner(true)}>
-
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                    {errors.owner_name && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
-                    )}</div>
-                  </div>
-
-                  {/* Surveyor */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
-                    <Controller
-                      name="surveyor"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="surveyor">
-                            <SelectValue placeholder="Select surveyor" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {surveyorOptions.map((surveyor) => (
-                              <SelectItem key={surveyor.id} value={String(surveyor.id)}>
-                                {surveyor.surveyor}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                    {errors.surveyor && (
-                      <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
-                    )}
-                  </div>
-
-                  {/* Tested Standard */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
-                    <Input id="tested_standard" {...register('tested_standard')} />
-                    {errors.tested_standard && (
-                      <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
-                    )}
-                  </div>
-
-                  {/* Manufacturer */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
-                    <div className='relative'>
-                    <Controller
-                      name="manufacturer"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="manufacturer">
-                            <SelectValue placeholder="Select manufacturer" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {manufacturerOptions.map((manufacturer) => (
-                              <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
-                                {manufacturer.manufacturer}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                    <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsManufacturer(true)}>
-
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                    {errors.manufacturer && (
-                      <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
-                    )}</div>
-                  </div>
-                </div>
-
+                 
                 {/* Description Section */}
                 <div className="space-y-4">
                   {/* Description */}
@@ -926,7 +941,30 @@ export default function EditEquipmentDetailsForm({
                     />
                   </div>
                 </div>
-
+                <div className="space-y-4 w-full">
+                  <div className="grid gap-4 grid-cols-1 w-full">
+                  <div className="grid grid-cols-[400px_1fr]  gap-4">
+                    <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
+                    <Input id="defect_description" className='my-auto' {...register('defect_description')} />
+                    {errors.defect_description && (
+                      <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
+                    )}
+ 
+</div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                  <div className="grid grid-cols-[400px_1fr]  gap-4">
+                    <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
+                    <Input id="test_particulars" className='' {...register('test_particulars')} />
+                    {errors.test_particulars && (
+                      <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
+                    )}
+                     </div>
+                  </div>
+                </div>
+                
                 {/* Approval Status */}
                 <div className="grid grid-cols-[200px_1fr] gap-4">
                   <Label htmlFor="approval_status" className="mt-3">Approval Status</Label>

@@ -110,10 +110,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
   }, [getAllSingleSubtopic, selectedSite,siteOptions]);
   
 
-  // Reset area field when the selected site changes
-  useEffect(() => {
-    setValue('location', '');
-  }, [selectedSite, setValue]);
+  
 
   // Reset form on successful submission
   useEffect(() => {

@@ -297,7 +297,7 @@ const htmlElement = document.createElement('div');
                     {data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase()))?.map((item:any,idx:number) => (
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
-                                <TableCell className="py-4 flex-[1]">{idx}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{idx+1}</TableCell>
                                
                                 <TableCell className="py-4 flex-[2]">{item?.title}</TableCell> 
                                 <TableCell className="py-4 flex-[1]">{item?.last_thorough_exam}</TableCell>
