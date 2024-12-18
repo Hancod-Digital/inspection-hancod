@@ -31,6 +31,8 @@ import Location from '@/app/(app)/(main-page)/masters/(subtopics)/location/_comp
 import Equipment from '@/app/(app)/(main-page)/masters/(subtopics)/equipment/_components/AddEquipment'
 import Standard from '@/app/(app)/(main-page)/masters/(subtopics)/standard/_components/AddEquipment'
 import Manufacturer from '@/app/(app)/(main-page)/masters/(subtopics)/manufacturer/_components/AddEquipment'
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
  
 
 export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment,setIsStandard,setIsManufacturer,isLocation,isEquipment,isStandard,isManufacturer,setIsSite,setIsArea}:{searchValue:string,setIsLocation: (value: boolean) => void,setIsEquipment: (value: boolean) => void,setIsStandard: (value: boolean) => void,setIsManufacturer: (value: boolean) => void,isLocation:boolean,isEquipment:boolean,isStandard:boolean,isManufacturer:boolean,setIsSite: (value: boolean) => void,setIsArea: (value: boolean) => void}) {
@@ -201,9 +203,10 @@ document.head.removeChild(styleElement);
            
         
       };
+      const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
     
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow className='flex justify-start'>
@@ -219,7 +222,7 @@ document.head.removeChild(styleElement);
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.filter((item:any)=>item?.title.toLowerCase().includes(searchValue.toLowerCase())).map((item:any,idx:number) => (
+                    {currentData?.map((item:any,idx:number) => (
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
                                 <TableCell className="py-4 flex-[1]">{idx}</TableCell>
@@ -279,6 +282,9 @@ document.head.removeChild(styleElement);
                     ))}
                 </TableBody>
             </Table>
+            <div className='absolute bottom-0 right-0'>
+                <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+            </div>
         </div>
     );
 }

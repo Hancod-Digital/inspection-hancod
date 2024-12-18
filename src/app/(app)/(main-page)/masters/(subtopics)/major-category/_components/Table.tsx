@@ -42,20 +42,12 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
         setEditingRow(null);
     };
 
-    const rearrangedData = subtopics
-    ? [...subtopics].sort((a:any, b:any) => {
-        const aMatch = a.major_category.toLowerCase().includes(searchValue.toLowerCase());
-        const bMatch = b.major_category.toLowerCase().includes(searchValue.toLowerCase());
-        if (aMatch && !bMatch) return -1;
-        if (!aMatch && bMatch) return 1;
-        return 0;
-      })
-    : [];
-   
+    const rearrangedData = subtopics?.filter((item:any)=>item?.major_category?.toLowerCase()?.includes(searchValue?.toLowerCase()))
+    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
      
 
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
             {isLoading ? (
                 <div>Loading...</div>
             ) : error ? (
@@ -73,7 +65,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {rearrangedData.map((item: any, idx: number) => (
+                            {currentData?.map((item: any, idx: number) => (
                                 <React.Fragment key={idx + 1}>
                                     <TableRow>
                                         <TableCell className="py-4">{idx + 1}</TableCell>
@@ -118,6 +110,9 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                             ))}
                         </TableBody>
                     </Table>
+                    <div className='absolute bottom-0 right-0'>
+                        <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                    </div>
                 </>
             )}
         </div>
@@ -137,6 +132,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 interface DeleteAlertDialogProps {
     onConfirm: () => void;

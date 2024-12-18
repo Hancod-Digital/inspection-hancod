@@ -16,6 +16,8 @@ import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 export default function SurveyorTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -29,13 +31,16 @@ export default function SurveyorTable({searchValue}:{searchValue:string}) {
         setEditingRow(null);
     };
 
+    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.surveyor?.toLowerCase()?.includes(searchValue?.toLowerCase())));
+
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
             {isLoading ? (
                 <div>Loading...</div>
             ) : error ? (
                 <div>Error loading data</div>
             ) : (
+                <>
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
@@ -48,7 +53,7 @@ export default function SurveyorTable({searchValue}:{searchValue:string}) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.filter((item:any) => item.surveyor.toLowerCase().includes(searchValue.toLowerCase())).map((item, idx) => (
+                        {currentData?.map((item:any, idx:any) => (
                             <React.Fragment key={idx + 1}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
@@ -92,6 +97,10 @@ export default function SurveyorTable({searchValue}:{searchValue:string}) {
                         ))}
                     </TableBody>
                 </Table>
+                <div className='absolute bottom-0 right-0'>
+                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                </div>
+                </>
             )}
         </div>
     );

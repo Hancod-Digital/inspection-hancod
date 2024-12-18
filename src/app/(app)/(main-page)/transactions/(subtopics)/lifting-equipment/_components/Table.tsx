@@ -26,8 +26,10 @@ import Location from '../../../../masters/(subtopics)/location/_components/AddEq
 import Equipment from '../../../../masters/(subtopics)/equipment/_components/AddEquipment'
 import Standard from '../../../../masters/(subtopics)/standard/_components/AddEquipment'
 import Owner from '../../../../masters/(subtopics)/owner/_components/AddEquipment'
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
-export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsEquipment,setIsStandard,setIsOwner,setIsManufacturer,isLocation,isEquipment,isStandard,isOwner,isManufacturer}:any) {
+export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsEquipment,setIsStandard,setIsOwner,setIsManufacturer,isLocation,isEquipment,isStandard,isOwner,isManufacturer,searchValue}:any) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const { data, isLoading, error, getAllSingleSubtopic,deleteRecord } = useSubtopic();
 
@@ -347,16 +349,10 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
     }
   };
   
-  if (isLoading) {
-    return <p className="text-center py-10">Loading...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-500 py-10">Error loading data.</p>;
-  }
-
+   
+  const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
   return (
-    <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+    <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
       <Table className="w-full">
         <TableHeader>
           <TableRow>
@@ -372,8 +368,8 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data && data.length > 0 ? (
-            data.map((item: any, idx: number) => (
+          {currentData?.length > 0 ? (
+            currentData?.map((item: any, idx: number) => (
               <React.Fragment key={item.id}>
                 <TableRow>
                   <TableCell className="py-4">{idx + 1}</TableCell>
@@ -448,6 +444,9 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
           )}
         </TableBody>
       </Table>
+      <div className='absolute bottom-0 right-0'>
+        <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+      </div>
     </div>
   );
 }

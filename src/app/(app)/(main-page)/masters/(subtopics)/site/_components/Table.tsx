@@ -16,6 +16,8 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import { siteDataRange } from '@/lib/utils';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import Area from '../../area/_components/AddEquipment';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchValue:string, setIsArea: (value: boolean) => void, isArea: boolean}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -58,6 +60,8 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
         // For example, confirming deletion is handled by DeleteAlertDialog
     };
 
+    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
+
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto">
             {isLoading ? (
@@ -65,7 +69,8 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
             ) : error ? (
                 <div>Error loading data</div>
             ) : (
-                <Table className="w-full">
+                <>
+                <Table className="w-full relative min-h-[500px]">
                     <TableHeader>
                         <TableRow>
                             <TableHead className="py-4">Sl. No.</TableHead>
@@ -76,7 +81,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {rearrangedData.map((item: any, idx: number) => (
+                        {currentData?.map((item: any, idx: number) => (
                             <React.Fragment key={item.id}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
@@ -123,6 +128,10 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
                         ))}
                     </TableBody>
                 </Table>
+                <div className='absolute bottom-0 right-0'>
+                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                </div>
+                </>
             )}
         </div>
     );

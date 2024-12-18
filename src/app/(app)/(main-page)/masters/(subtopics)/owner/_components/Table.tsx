@@ -16,20 +16,15 @@ import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 export default function OwnerTable({searchValue}:{searchValue:string}   ) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { data, isLoading, error,deleteRecord } = useSubtopic();
 
-    const rearrangedData = data
-    ? [...data].sort((a:any, b:any) => {
-        const aMatch = a.owner.toLowerCase().includes(searchValue.toLowerCase());
-        const bMatch = b.owner.toLowerCase().includes(searchValue.toLowerCase());
-        if (aMatch && !bMatch) return -1;
-        if (!aMatch && bMatch) return 1;
-        return 0;
-      })
-    : [];
+    const rearrangedData = data?.filter((item:any)=>item?.owner?.toLowerCase()?.includes(searchValue?.toLowerCase()))
+    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
 
     const handleEditClick = (idx: number) => {
         setEditingRow(idx === editingRow ? null : idx);
@@ -40,12 +35,13 @@ export default function OwnerTable({searchValue}:{searchValue:string}   ) {
     };
 
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
             {isLoading ? (
                 <div>Loading...</div>
             ) : error ? (
                 <div>Error loading data</div>
             ) : (
+                <>
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
@@ -58,7 +54,7 @@ export default function OwnerTable({searchValue}:{searchValue:string}   ) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {rearrangedData.map((item, idx) => (
+                        {currentData?.map((item:any, idx:any) => (
                             <React.Fragment key={idx + 1}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
@@ -102,6 +98,11 @@ export default function OwnerTable({searchValue}:{searchValue:string}   ) {
                         ))}
                     </TableBody>
                 </Table>
+                <div className='absolute bottom-0 right-0'>
+                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+
+                </div>
+                </>
             )}
         </div>
     );

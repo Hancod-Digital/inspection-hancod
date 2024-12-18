@@ -15,6 +15,8 @@ import EditPopup from './EditPopup';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { minorCategoryDataRange } from '@/lib/utils';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 // Define the TypeScript interface for better type safety
  
@@ -63,14 +65,16 @@ export default function MinorCategory({searchValue}:{searchValue:string}) {
     //     return 0;
     //   })
     // : [];
+    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
 
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
             {isLoading ? (
                 <div>Loading...</div>
             ) : error ? (
                 <div>Error loading data</div>
             ) : (
+                <>
                 <Table className="w-full">
                     <TableHeader>
                         <TableRow>
@@ -83,7 +87,7 @@ export default function MinorCategory({searchValue}:{searchValue:string}) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {rearrangedData.map((item:any, idx:number) => (
+                        {currentData?.map((item:any, idx:number) => (
                             <React.Fragment key={item.id}>
                                 <TableRow>
                                     <TableCell className="py-4">{idx + 1}</TableCell>
@@ -130,6 +134,10 @@ export default function MinorCategory({searchValue}:{searchValue:string}) {
                         ))}
                     </TableBody>
                 </Table>
+                <div className='absolute bottom-0 right-0'>
+                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                </div>
+                </>
             )}
         </div>
     );

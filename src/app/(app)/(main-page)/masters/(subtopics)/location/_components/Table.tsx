@@ -15,6 +15,8 @@ import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import Site from '../../site/_components/AddSite';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 export default function EquipmentTable({searchValue, setIsSite, isSite, setIsArea, isArea}:{searchValue:string, setIsSite: (value: boolean) => void, isSite: boolean, setIsArea: (value: boolean) => void, isArea: boolean}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -35,9 +37,10 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
         item.location.name.toLowerCase().includes(searchValue.toLowerCase())
       )
     : [];
+    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
     
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow>
@@ -50,7 +53,7 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {rearrangedData?.map((item: { id: number; location: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; status: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; site: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; area: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }; }, idx: number) => (
+                    {currentData?.map((item:any,idx:any) => (
                         <React.Fragment key={item.id}> 
                             <TableRow>
                                 <TableCell className="py-4">{idx + 1}</TableCell>
@@ -90,6 +93,9 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                     ))}
                 </TableBody>
             </Table>
+            <div className='absolute bottom-0 right-0'>
+                <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+            </div>
         </div>
     );
 }

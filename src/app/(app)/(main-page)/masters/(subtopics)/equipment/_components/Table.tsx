@@ -36,24 +36,15 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
         setEditingRow(null);
     };
      
-    const rearrangedData = data
-      ? [...data].sort((a:any, b:any) => {
-          const aMatch = a.title.toLowerCase().includes(searchValue.toLowerCase());
-          const bMatch = b.title.toLowerCase().includes(searchValue.toLowerCase());
-          if (aMatch && !bMatch) return -1;
-          if (!aMatch && bMatch) return 1;
-          return 0;
-        })
-      : [];
-
+    const rearrangedData:any = data?.filter((item:any)=>item.title.toLowerCase().includes(searchValue.toLowerCase()))
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 10; // Number of items per page
-    const totalPages = Math.ceil(rearrangedData.length / pageSize);
-
+    const pageSize = 5; // Number of items per page
+    const totalPages = Math.ceil(rearrangedData?.length / pageSize);
+    console.log(totalPages,currentPage)
     // Get current page data
     const startIndex = (currentPage - 1) * pageSize;
-    const currentData = rearrangedData.slice(startIndex, startIndex + pageSize);
+    const currentData = rearrangedData?.slice(startIndex, startIndex + pageSize);
 
     const handlePreviousPage = () => {
         if (currentPage > 1) {
@@ -83,7 +74,7 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {currentData.map((item: any, idx: number) => {
+                    {currentData?.map((item: any, idx: number) => {
                         const actualIndex = startIndex + idx + 1; // Adjusted index based on pagination
                         return (
                             <React.Fragment key={actualIndex}>
@@ -155,13 +146,11 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                         );
                     })}
                 </TableBody>
-                <TableFooter className='w-full '>
-                   
-                </TableFooter>
+                 
                 
             </Table>
             <div className='absolute bottom-0 right-0'>
-                <PaginationDemo />
+                <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
                 </div>
             {/* Pagination Controls */}
            

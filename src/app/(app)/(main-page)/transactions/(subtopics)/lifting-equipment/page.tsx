@@ -12,7 +12,7 @@ import Manufacturer from '../../../masters/(subtopics)/manufacturer/_components/
 import Area from '../../../masters/(subtopics)/area/_components/AddEquipment'
 const LiftingEquipment = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
-
+    const [searchValue, setSearchValue] = useState<string>('');
     const handleCloseAdd = () => {
         setIsAdd(false);
     };
@@ -53,7 +53,7 @@ const LiftingEquipment = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Header onOpen={handleOpenAdd} />
+                        <Header setSearchValue={setSearchValue} onOpen={handleOpenAdd} />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -67,7 +67,7 @@ const LiftingEquipment = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table  setIsSite={setIsSite} setIsArea={setIsArea} setIsLocation={setIsLocation} setIsEquipment={setIsEquipment} setIsStandard={setIsStandard} setIsOwner={setIsOwner} setIsManufacturer={setIsManufacturer} isLocation={isLocation} isEquipment={isEquipment} isStandard={isStandard} isOwner={isOwner} isManufacturer={isManufacturer} />
+                        <Table searchValue={searchValue}  setIsSite={setIsSite} setIsArea={setIsArea} setIsLocation={setIsLocation} setIsEquipment={setIsEquipment} setIsStandard={setIsStandard} setIsOwner={setIsOwner} setIsManufacturer={setIsManufacturer} isLocation={isLocation} isEquipment={isEquipment} isStandard={isStandard} isOwner={isOwner} isManufacturer={isManufacturer} />
                     </motion.div>
                 ) : (
                     <motion.div

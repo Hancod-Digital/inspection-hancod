@@ -16,6 +16,8 @@ import EditIcon from '@/components/icons/EditIcon';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
+import usePagination from '@/hooks/usePagination';
+import { PaginationDemo } from '@/components/pagination-demo';
 
 export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -33,8 +35,10 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
         item.thumbnail.toLowerCase().includes(searchValue.toLowerCase())
       )
     : [];
+    
+    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white  min-h-[500px] w-[98%] mx-auto relative ">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow>
@@ -45,7 +49,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {rearrangedData?.map((item, idx) => (
+                    {currentData?.map((item:any, idx:any) => (
                         <React.Fragment key={idx + 1}>
                             <TableRow>
                                 <TableCell className="py-4">{idx + 1}</TableCell>
@@ -90,6 +94,9 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                     ))}
                 </TableBody>
             </Table>
+            <div className='absolute bottom-0 right-0'>
+                <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                </div>
         </div>
     );
 }

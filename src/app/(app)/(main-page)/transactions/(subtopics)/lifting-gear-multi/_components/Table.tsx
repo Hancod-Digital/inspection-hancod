@@ -19,6 +19,8 @@ import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import DeleteIcon from '@/components/icons/DeleteIcon';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 interface EquipmentData {
     slNo: number;
     equipmentID: string;
@@ -278,8 +280,9 @@ const htmlElement = document.createElement('div');
 //             };
           
         };
+        const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[520px]">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow className='flex justify-start'>
@@ -294,7 +297,7 @@ const htmlElement = document.createElement('div');
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase()))?.map((item:any,idx:number) => (
+                    {currentData?.map((item:any,idx:number) => (
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
                                 <TableCell className="py-4 flex-[1]">{idx+1}</TableCell>
@@ -348,6 +351,9 @@ const htmlElement = document.createElement('div');
                     ))}
                 </TableBody>
             </Table>
+            <div className='absolute bottom-0 right-0'>
+              <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+            </div>
         </div>
     );
 }
