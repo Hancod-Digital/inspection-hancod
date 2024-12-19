@@ -103,11 +103,7 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
           console.log(data,"data");
           equipment = data[0]
           setSerialNo(data[0]?.serial_no);
-        },
-      }
-    );
-    
-    console.log(equipment,equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.css" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.css" :"/transactions/earth_moving/index.css");
+          console.log(equipment,equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.css" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.css" :"/transactions/earth_moving/index.css");
     
     // Fetch the HTML template
     const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html"}`);
@@ -246,6 +242,11 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
     printWindow.focus();
     // printWindow.print();
     // printWindow.close();
+        },
+      }
+    );
+    
+    
   };
 
   const printAnnexure = async (item: any) => {
