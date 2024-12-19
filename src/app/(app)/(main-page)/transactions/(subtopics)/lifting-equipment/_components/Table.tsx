@@ -187,6 +187,7 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
         return `<li>${swl}</li>`;
       }
     });
+  console.log(testLoads,"testLoads",swls,"swls");
   
   htmlString = htmlString.replace(/\{\{nine\}\}/g, conditions.length ? `<ul>${conditions.join('')}</ul>` : '');
   htmlString = htmlString.replace(/\{\{ten\}\}/g, boomLengths.length ? `<ul>${boomLengths.join('')}</ul>` : '');
