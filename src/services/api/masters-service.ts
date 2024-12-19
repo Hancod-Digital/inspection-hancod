@@ -24,7 +24,8 @@ export class MasterService extends Supabase {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase
             .from(subtopic)
-            .select('*');
+            .select('*')
+            .order('id', { ascending: false });
 console.log(data,"data",subtopic); 
         if (error) {
             throw new Error(error.message);

@@ -37,16 +37,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
         fetchSubtopics();
     }, [getMergedData]);
 
-    const rearrangedData = subtopics
-        ? [...subtopics].sort((a: any, b: any) => {
-            const aMatch = a.site.toLowerCase().includes(searchValue.toLowerCase());
-            const bMatch = b.site.toLowerCase().includes(searchValue.toLowerCase());
-            if (aMatch && !bMatch) return -1;
-            if (!aMatch && bMatch) return 1;
-            return 0;
-          })
-        : [];
-
+    const rearrangedData =  subtopics?.filter((item:any)=>item.site.toLowerCase().includes(searchValue.toLowerCase()))
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo);
     };
@@ -70,7 +61,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
                 <div>Error loading data</div>
             ) : (
                 <>
-                <Table className="w-full relative min-h-[500px]">
+                <Table className="w-full relative ">
                     <TableHeader>
                         <TableRow>
                             <TableHead className="py-4">Sl. No.</TableHead>
