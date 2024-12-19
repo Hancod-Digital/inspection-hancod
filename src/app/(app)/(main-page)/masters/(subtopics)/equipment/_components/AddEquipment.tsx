@@ -80,7 +80,7 @@ const equipmentDetailsSchema = object({
   last_thorough_date: string().nonempty('Last thorough date is required'),
   next_thorough_date: thoroughExamChecked ? string().optional() : string().nonempty('Next thorough date is required'),
   description: string().nonempty('Description is required'),
-  property_table_type: selectedItemType === 'Elevator Certificate' ? string().nonempty('Property table type is required') : string().optional(),
+  property_table_type: selectedItemType === 'Lifting Equipment' ? string().nonempty('Property table type is required') : string().optional(),
   item_type: string().nonempty('Item type is required'),
 });
 
@@ -157,11 +157,13 @@ console.log(errors)
     await addRecord({
       ...values,
       status: values.status === true ? "ACTIVE" : "INACTIVE",
-      next_test_date: testExamChecked ? values.next_test_date : null,
-      next_thorough_date: thoroughExamChecked ? values.next_thorough_date : null,
+      next_test_date: testExamChecked ? null : values.next_test_date,
+      next_thorough_date: thoroughExamChecked ? null : values.next_thorough_date,
       property_table_type: selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,
 
     });
+    console.log(selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,selectedItemType);
+    
         setLoading(false);
     onClose();
   };
@@ -169,6 +171,8 @@ console.log(errors)
   useEffect(() => {
     const subscription = methods.watch((value, { name }) => {
       if (name === 'item_type') {
+        console.log(value.item_type);
+        
         setSelectedItemType(value.item_type!);
       }
     });

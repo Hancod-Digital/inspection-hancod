@@ -189,7 +189,7 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
         next_test_date: testExamChecked ? null : values.next_test_date,
         next_thorough_date: thoroughExamChecked ? null : values.next_thorough_date,
         property_table_type:
-          selectedItemType === 'Elevator Certificate' ? values.property_table_type : null,
+          selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,
       };
 
       if (id) {
@@ -208,7 +208,7 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
 
   // Handle conditional requirement for property_table_type
   useEffect(() => {
-    if (selectedItemType === 'Elevator Certificate') {
+    if (selectedItemType === 'Lifting Equipment') {
       methods.register('property_table_type', { required: 'Property table type is required' });
     } else {
       methods.unregister('property_table_type');
@@ -802,10 +802,21 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
                                 <SelectValue placeholder="Select Property Table Type" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value={'Elevator Certificate'}>
-                                  Elevator Certificate
-                                </SelectItem>
-                                {/* Add more options if needed */}
+                              <SelectItem   value={'CRANE CERTIFICATE'}>
+                                    CRANE CERTIFICATE
+                                  </SelectItem>
+                                
+                                  <SelectItem   value={'ELEVATOR CERTIFICATE'}>
+                                   ELEVATOR CERTIFICATE
+                                  </SelectItem>
+
+                                  <SelectItem   value={'MEWP AND FORKLIFT'}>
+                                    MEWP AND FORKLIFT Certificate
+                                  </SelectItem>
+                                  <SelectItem   value={'EARTH MOVING EQUIPMENTS'}>
+                                    EARTH MOVING EQUIPMENTS
+                                  </SelectItem>
+                                  
                               </SelectContent>
                             </Select>
                           )}
