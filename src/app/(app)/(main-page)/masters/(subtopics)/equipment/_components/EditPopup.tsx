@@ -43,7 +43,7 @@ const equipmentDetailsSchema = object({
   last_test_date: string().nonempty('Last test date is required'),
   proof_load: string().nonempty('Proof load is required'),
   next_test_date: string().nonempty('Next test date is required'),
-  test_insp_frequency_months: string().nonempty('Test inspection frequency in months is required'),
+  test_insp_frequency: string().nonempty('Test inspection frequency in months is required'),
   last_thorough_date: string().nonempty('Last thorough date is required'),
   next_thorough_date: string().nonempty('Next thorough date is required'),
   description: string().nonempty('Description is required'),
@@ -84,7 +84,19 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
 
   // Get existing data if editing
   const data = id ? findRecordById(id) : null;
-
+console.log(data?.next_test_date);
+useEffect(()=>{
+  if(data?.next_test_date){
+    setValue('next_test_date', data?.next_test_date);
+  }else{
+    setTestExamChecked(true);
+  }
+  if(data?.next_thorough_date){
+    setValue('next_thorough_date', data?.next_thorough_date);
+  }else{
+    setThoroughExamChecked(true);
+  }
+},[data]);
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: data
@@ -97,6 +109,12 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
           standard: String(data.standard),
           annexure: String(data.annexure),
           owner_id: String(data.owner_id),
+          test_insp_frequency: String(data.test_insp_frequency),
+          last_test_date: String(data.last_test_date) ,
+          last_thorough_date: String(data.last_thorough_date),
+          next_test_date: data.next_test_date ? String(data.next_test_date) : '',
+          next_thorough_date: data.next_thorough_date ? String(data.next_thorough_date) : '',
+          
           status: data.status === 'ACTIVE',
           item_type: String(data.item_type),
           property_table_type: String(data.property_table_type) || '',
@@ -618,18 +636,18 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
 
                     {/* Test Insp. Frequency (Months) */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="test_insp_frequency_months">
+                      <Label htmlFor="test_insp_frequency">
                         Test Insp. Frequency (Months)
                       </Label>
                       <div>
                         <Controller
-                          name="test_insp_frequency_months"
+                          name="test_insp_frequency"
                           control={control}
-                          render={({ field }) => <Input id="test_insp_frequency_months" {...field} />}
+                          render={({ field }) => <Input id="test_insp_frequency" {...field} />}
                         />
-                        {errors.test_insp_frequency_months && (
+                        {errors.test_insp_frequency && (
                           <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.test_insp_frequency_months.message}
+                            {errors.test_insp_frequency.message}
                           </p>
                         )}
                       </div>
