@@ -22,7 +22,7 @@ interface ComponentProps {
 export default function Component({ onFunction, properties, setProperties }: ComponentProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const { formState } = useFormContext();
-  const { errors }:any = formState;
+  const { errors }: any = formState;
 
   const handleAddRow = () => {
     const newRow: Property = { property: "", property_group: "", condition: "" };
@@ -37,11 +37,25 @@ export default function Component({ onFunction, properties, setProperties }: Com
   };
 
   const handleDelete = async (index: number) => {
-    await makeApiCall(()=>new MasterService().deleteProperty(properties[index]?.id!),{
-      afterSuccess: (res:any)=>{
-        setProperties(properties.filter((_, i) => i !== index));
+    const property = properties[index];
+    console.log("Attempting to delete property:", property);
+
+    if (property.id) {
+      try {
+        await makeApiCall(() => new MasterService().deleteProperty(property.id!), {
+          afterSuccess: () => {
+            console.log("Property deleted successfully");
+            setProperties(properties.filter((_, i) => i !== index));
+          },
+          
+        });
+      } catch (error) {
+        console.error("Delete operation failed:", error);
       }
-    })
+    } else {
+      console.log("Property has no id, removing from local state");
+      setProperties(properties.filter((_, i) => i !== index));
+    }
   };
 
   return (
@@ -66,7 +80,7 @@ export default function Component({ onFunction, properties, setProperties }: Com
         </TableHeader>
         <TableBody>
           {properties.map((item: Property, index: number) => (
-            <TableRow key={index} className="border-b">
+            <TableRow key={item.id ?? index} className="border-b">
               <TableCell className="border-r p-2 h-12">
                 {editingIndex === index ? (
                   <div>
@@ -131,10 +145,13 @@ export default function Component({ onFunction, properties, setProperties }: Com
                 )}
               </TableCell>
               <TableCell className="p-2 h-12 text-center">
-                <TrashIcon
-                  className="h-5 w-5 text-red-600 cursor-pointer"
+                <button
                   onClick={() => handleDelete(index)}
-                />
+                  className="flex items-center justify-center p-1"
+                  aria-label="Delete Property"
+                >
+                  <TrashIcon className="h-5 w-5 text-red-600" />
+                </button>
               </TableCell>
             </TableRow>
           ))}
