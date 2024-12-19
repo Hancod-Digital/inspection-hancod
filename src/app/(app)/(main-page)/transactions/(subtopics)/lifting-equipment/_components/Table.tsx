@@ -382,15 +382,15 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
                   <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
-                  <TableCell className="py-4">{item?.result}</TableCell>
+                  <TableCell className="py-4">{item?.approval_status}</TableCell>
                   <TableCell
                     className={`py-4 ${
-                      item?.approval_status
+                      item.approval_status == 'true'
                         ? 'text-green-500'
                         : 'text-red-500'
                     }`}
                   >
-                    {item?.approval_status ? 'Approved' : 'Rejected'}
+                    {item.approval_status == 'true' ? 'Approved' : 'Rejected'}
                   </TableCell>
                   <TableCell className="py-4">
                     <DropdownMenu>

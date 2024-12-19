@@ -42,15 +42,16 @@ export default function EquipmentDetailsForm({
   const [majorCategories, setMajorCategories] = useState<any[]>([]);
   const [standardOptions, setStandardOptions] = useState<any[]>([]); // New state for standard options
   const [data, setData] = useState<any>(null);
-  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic } = useSubtopic();
-
-  const methods = useForm<EquipmentDetailsInput>({
+  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic ,findRecordById} = useSubtopic();
+  const selected = findRecordById(id);
+  console.log(selected,"selected",String(majorCategories.find(category => category.id == selected?.major_category)?.major_category));
+  const methods =   useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      minor_category: '',
-      major_category: '',
-      standard: '',
-      status: '',
+      minor_category: selected?.minor_category || '',
+      major_category: String(majorCategories.find(category => category.id == selected?.major_category)?.major_category)|| '',
+      standard: String(standardOptions.find(standard => standard.id == selected?.standard)?.standard) || '',
+      status: selected?.status || '',
     },
   });
 
@@ -102,6 +103,16 @@ export default function EquipmentDetailsForm({
       }
     };
     fetchMajorCategories();
+    const fetchStandardOptions = async () => {
+      try {
+        const standards = await getAllSingleSubtopic('standard'); // Adjust the key as per your API
+        setStandardOptions(standards || []);
+      } catch (error) {
+        console.error('Failed to fetch standard options:', error);
+        // Optionally, handle the error
+      }
+    };
+    fetchStandardOptions();
   }, [getAllSingleSubtopic]);
 
   // Fetch standard options when the component mounts

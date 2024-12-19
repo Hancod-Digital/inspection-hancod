@@ -113,7 +113,7 @@ export default function EditEquipmentDetailsForm({
 
   // Fetch existing data
   const existingData = findRecordById(id);
-  console.log(existingData,"where");
+  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: existingData ? {
@@ -151,6 +151,7 @@ export default function EditEquipmentDetailsForm({
       owner_id: existingData.owner_id || '',
     } : {},
   });
+console.log(methods.formState.errors);
 
   const {
     reset,
@@ -247,7 +248,7 @@ export default function EditEquipmentDetailsForm({
         setValue("tested_standard", existingData.tested_standard || "");
         setValue("approval_status", selectedEquipment.approval_status || "");
         setValue("serial_no", String(selectedEquipment.serial_no) || "");
-        setValue("model_no", String(selectedEquipment._no) || "");
+        setValue("model_no", String(selectedEquipment.model_no) || "");
         setValue("owner_id", String(selectedEquipment.owner_id) || "");
       }
     }
@@ -819,7 +820,7 @@ export default function EditEquipmentDetailsForm({
                   </div>
                    {
                    
-                    equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.property_table_type != 'ELEVATOR_CERTIFICATE' && (
+                    equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.property_table_type == 'ELEVATOR_CERTIFICATE' && (
                       <div className='grid grid-cols-1 gap-4'>
                   <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
                     <Label htmlFor="lift_location" className="mt-3">Lift Location</Label>
