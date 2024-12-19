@@ -794,7 +794,7 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
                           control={control}
                           render={({ field }) => (
                             <Select
-                              disabled={selectedItemType !== 'Elevator Certificate'}
+                              disabled={selectedItemType !== 'Lifting Equipment'}
                               onValueChange={field.onChange}
                               value={field.value}
                             >

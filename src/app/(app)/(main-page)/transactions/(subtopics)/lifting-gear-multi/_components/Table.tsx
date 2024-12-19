@@ -282,7 +282,7 @@ const htmlElement = document.createElement('div');
         };
         const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[520px]">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[600px]">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow className='flex justify-start'>

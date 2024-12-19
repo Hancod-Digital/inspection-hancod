@@ -726,7 +726,7 @@ console.log(errors)
                           render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger id="item_type">
-                                <SelectValue placeholder="Select Minor Category" />
+                                <SelectValue placeholder="Select Equipment Type" />
                               </SelectTrigger>
                               <SelectContent>
                               <SelectItem   value={'Lifting Equipment'}>

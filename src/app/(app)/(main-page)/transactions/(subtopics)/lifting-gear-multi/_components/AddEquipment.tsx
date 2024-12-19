@@ -508,7 +508,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                 <div className="grid gap-4 grid-cols-2">
                   {/* Equipment Information Section */} 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="equipment_no" className="mt-3">Equipment No.</Label>
+                    <Label htmlFor="equipment_no" className="mt-3">Equipment No </Label>
                     <div className='relative'>
                     <Controller
                       name="equipment_no"
