@@ -13,11 +13,13 @@ import SurveyorCompetencyPopup from './Popup';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { makeApiCall } from '@/lib/apicaller';
 import { UserService } from '@/services/api/user-service';
+import { Select, SelectContent,  SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const surveyorDetailsSchema = object({
   surveyor: z.string().nonempty('Surveyor is required'),
   qualification: z.string().nonempty('Qualification is required'),
   code: z.string().nonempty('Code is required'), 
+  status: z.string().nonempty('Status is required'),
   digital_signature: z
     .any()
     .refine((files) => files && files.length > 0, {
@@ -41,6 +43,7 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
 
   const {
     reset,
+    control,
     handleSubmit,
     formState: { isSubmitSuccessful, errors },
   } = methods;
@@ -146,7 +149,29 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
                       )}
                     </div>
                   </div>
-
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
+                    <Label htmlFor="status" className="mt-3">Status</Label>
+                    <div>
+                      <Controller
+                        name="status"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="status">
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.status && (
+                        <p className="text-red-500 mt-1">{errors.status.message}</p>
+                      )}
+                    </div>
+                  </div>
                 
 
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">

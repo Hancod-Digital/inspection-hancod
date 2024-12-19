@@ -359,8 +359,9 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
         <TableHeader>
           <TableRow>
             <TableHead className="py-4">Sl. No.</TableHead>
-            <TableHead className="py-4">Equipment ID</TableHead>
+            
             <TableHead className="py-4">Title</TableHead> 
+            <TableHead className="py-4">Equipment ID</TableHead>
             <TableHead className="py-4">Inspection Date</TableHead>
             <TableHead className="py-4">Next Thorough Date</TableHead>
             <TableHead className="py-4">Inspection Date</TableHead>
@@ -375,8 +376,9 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
               <React.Fragment key={item.id}>
                 <TableRow>
                   <TableCell className="py-4">{idx + 1}</TableCell>
-                  <TableCell className="py-4">{equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.equipment_no}</TableCell>
                   <TableCell className="py-4">{item?.title}</TableCell> 
+                  <TableCell className="py-4">{equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.equipment_no}</TableCell>
+                  
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
                   <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>

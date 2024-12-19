@@ -70,9 +70,7 @@ console.log(item_type,"jpk");
       <div className="flex justify-between items-center mb-4">
         <span className="font-bold">Properties</span>
         <div className="flex space-x-2">
-          <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
-            Create Column
-          </Button>
+          
           <Button type="button" variant="secondary" onClick={handleAddRow}>
             Add Row
           </Button>

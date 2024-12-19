@@ -48,7 +48,7 @@ export default function SurveyorTable({searchValue}:{searchValue:string}) {
                             <TableHead className="py-4">Surveyor</TableHead>
                             <TableHead className="py-4">Qualification</TableHead>
                             <TableHead className="py-4">Code</TableHead>
-                             
+                             <TableHead className="py-4">Status</TableHead>
                             <TableHead className="py-4">Action</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -60,7 +60,8 @@ export default function SurveyorTable({searchValue}:{searchValue:string}) {
                                     <TableCell className="py-4">{item.surveyor}</TableCell>
                                     <TableCell className="py-4">{item.qualification}</TableCell>
                                     <TableCell className="py-4">{item.code}</TableCell>
-                                      
+                                    <TableCell className="py-4">{item.status}</TableCell>
+
                                     <TableCell className="py-4">
                                         <div className="flex space-x-2">
                                             <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">

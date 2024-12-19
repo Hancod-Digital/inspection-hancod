@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
+import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
 import { z, object, string, TypeOf, any } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
@@ -21,6 +21,7 @@ const surveyorDetailsSchema = object({
   surveyor: z.string().nonempty('Surveyor is required'),
   qualification: z.string().nonempty('Qualification is required'),
   code: z.string().nonempty('Code is required'), 
+  status: z.string().nonempty('Status is required'),
   digital_signature: z
     .any()
     .optional()
@@ -198,7 +199,29 @@ export default function SurveyorDetailsForm({ onClose, id }: SurveyorDetailsForm
                       )}
                     </div>
                   </div>
-
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
+                    <Label htmlFor="status" className="mt-3">Status</Label>
+                    <div>
+                      <Controller
+                        name="status"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="status">
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.status && (
+                        <p className="text-red-500 mt-1">{errors.status.message}</p>
+                      )}
+                    </div>
+                  </div>
                   {/* Digital Signature Field */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="digital_signature" className="mt-3">
