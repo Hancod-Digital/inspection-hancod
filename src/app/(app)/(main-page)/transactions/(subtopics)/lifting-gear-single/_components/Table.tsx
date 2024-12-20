@@ -204,7 +204,7 @@ document.head.removeChild(styleElement);
         
       };
       const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
-    
+    console.log(equipmentOptions,"currentData");
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
             <Table className="w-full">

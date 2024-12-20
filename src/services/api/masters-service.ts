@@ -137,7 +137,7 @@ console.log(data,"data",subtopic);
         return data;
     }
     async liftingSingleGearView(){
-        const {data,error} = await this.supabase.from('v_lifting_single_gear').select('*');
+        const {data,error} = await this.supabase.from('lifting_gear_single_view').select('*');
         
         if(error) throw error;
         return data;

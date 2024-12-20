@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import SafetyChecklist from '@/components/safety-checklist';
-import { equipmentDataRange, generateEquipmentCertificateHTML } from '@/lib/utils';
+ 
 import { useSubtopic } from '@/context/SubtopicContext';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import Table from './AnnexureTable';
@@ -952,7 +952,20 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     </div>
                   </div>
                 </div>
-
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                    <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                    <SafetyChecklist
+                      values={safetyChecklistValues}
+                      onChange={handleSafetyChecklistChange}
+                    />
+                  </div>
+                </div>
                 <div className="space-y-4 w-full">
                   <div className="grid gap-4 grid-cols-1 w-full">
                   <div className="grid grid-cols-[400px_1fr]  gap-4">
