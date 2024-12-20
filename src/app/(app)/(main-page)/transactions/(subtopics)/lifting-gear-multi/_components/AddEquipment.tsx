@@ -14,8 +14,7 @@ import dynamic from 'next/dynamic';
 import Table from './AnnexureTable'
 import 'react-quill/dist/quill.snow.css';
 import { Checkbox } from '@/components/ui/checkbox';
-import SafetyChecklist from '@/components/safety-checklist';
-import { equipmentDataRange, generateEquipmentCertificateHTML } from '@/lib/utils';
+import SafetyChecklist from '@/components/safety-checklist'; 
 import { useSubtopic } from '@/context/SubtopicContext';
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
@@ -307,7 +306,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
       };
 
      
-      const data = await addRecord(formData);
+      const data = await addRecord(formData,null,"lifting_gear_multi");
       
       Promise.all(existingData.map((item:any) => {
         return makeApiCall(

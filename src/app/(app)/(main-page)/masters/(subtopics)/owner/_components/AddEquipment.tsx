@@ -53,7 +53,7 @@ export default function OwnerDetailsForm({ onClose }: OwnerDetailsFormProps) {
   const onSubmitHandler: SubmitHandler<OwnerDetailsInput> = async(values) => {
     setLoading(true);
  
-   await addRecord(values)
+   await addRecord(values,null,"owner")
     setLoading(false);
     onClose()
   };

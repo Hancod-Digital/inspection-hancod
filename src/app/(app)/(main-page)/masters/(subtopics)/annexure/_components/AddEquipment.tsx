@@ -54,7 +54,7 @@ console.log(errors,"errors");
       status: values.status
     };
     
-   const response:any = await addRecord(dataToSubmit)
+   const response:any = await addRecord(dataToSubmit,null,"annexure")
   console.log(response,"response");
     const d = values.properties.map(property => ({
       ...property,

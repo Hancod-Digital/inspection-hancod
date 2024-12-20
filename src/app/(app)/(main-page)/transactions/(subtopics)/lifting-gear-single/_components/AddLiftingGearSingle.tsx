@@ -14,8 +14,7 @@ import dynamic from 'next/dynamic';
 import Table from './AnnexureTable'
 import 'react-quill/dist/quill.snow.css';
 import { Checkbox } from '@/components/ui/checkbox';
-import SafetyChecklist from '@/components/safety-checklist';
-import { equipmentDataRange, generateEquipmentCertificateHTML } from '@/lib/utils';
+import SafetyChecklist from '@/components/safety-checklist'; 
 import { useSubtopic } from '@/context/SubtopicContext';
 import { MasterService } from '@/services/api/masters-service';
 import { makeApiCall } from '@/lib/apicaller';
@@ -259,7 +258,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
       };
 
       
-      await addRecord(formData);
+      await addRecord(formData,null,"lifting_gear_single");
     } catch (error) {
       console.error('Form submission error:', error);
     } finally {

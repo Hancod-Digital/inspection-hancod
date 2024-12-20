@@ -106,7 +106,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
         const response:any = await addRecord({
           annexure: values.annexure,
           status: values.status,
-        });
+        },null,"annexure");
         if (response && response[0]?.id) {
           await addProperty(values.properties.map(property => ({
             ...property,

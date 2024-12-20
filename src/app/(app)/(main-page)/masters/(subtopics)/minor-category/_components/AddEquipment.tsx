@@ -72,7 +72,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
  
-    await addRecord(values);
+    await addRecord(values,null,"minor_category");
     setLoading(false);
     onClose();
   };

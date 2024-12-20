@@ -39,7 +39,7 @@ export default function AuthorityDetailsForm({ onClose }: AuthorityDetailsFormPr
 
   const onSubmitHandler: SubmitHandler<AuthorityDetailsInput> = async(values) => {
     setLoading(true); 
-    await addRecord(values)
+    await addRecord(values,null,"authority")
     setLoading(false);
     onClose()
   };

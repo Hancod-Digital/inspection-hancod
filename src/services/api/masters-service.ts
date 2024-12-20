@@ -120,7 +120,24 @@ console.log(data,"data",subtopic);
     }
     async fetchEquipmentView(){
         const {data,error} = await this.supabase.from('v_equipment').select('*');
-        console.log(data,"data");
+        
+        if(error) throw error;
+        return data;
+    }
+    async liftingEquipmentView(){
+        const {data,error} = await this.supabase.from('lifting_equipment_view').select('*');
+        
+        if(error) throw error;
+        return data;
+    }
+    async liftingMultiGearView(){
+        const {data,error} = await this.supabase.from('v_lifting_multi_gear').select('*');
+        
+        if(error) throw error;
+        return data;
+    }
+    async liftingSingleGearView(){
+        const {data,error} = await this.supabase.from('v_lifting_single_gear').select('*');
         
         if(error) throw error;
         return data;
