@@ -124,7 +124,7 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
 
     htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location :  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer );
     htmlString = htmlString.replace(/\{\{six2\}\}/g, equipment?.registration_no || '');
-    htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer :serialNo || '');
+    htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer :data[0]?.serial_no || '');
     htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
     htmlString = htmlString.replace(/\{\{six5\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_name)?.owner || '');
     
@@ -410,8 +410,8 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                                                 }
                                             />
                         <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>
-                       {equipmentOptions?.find((equipment:any)=>equipment.equipment_no == item.equipment_no)?.property_table_type != 'ELEVATOR_CERTIFICATE' && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
+                       {equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == 'ELEVATOR CERTIFICATE' &&  <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>}
+                       {equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == 'ELEVATOR CERTIFICATE' && item?.description && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

@@ -6,7 +6,7 @@ export default function Component() {
   return (
      <>
       <Title />
-     <Form />
+      <Form />
      </>
   );
 }

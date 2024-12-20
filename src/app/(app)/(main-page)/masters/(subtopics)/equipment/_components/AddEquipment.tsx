@@ -161,7 +161,7 @@ console.log(errors)
       next_thorough_date: thoroughExamChecked ? null : values.next_thorough_date,
       property_table_type: selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,
 
-    });
+    },null,"equipment");
     console.log(selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,selectedItemType);
     
         setLoading(false);

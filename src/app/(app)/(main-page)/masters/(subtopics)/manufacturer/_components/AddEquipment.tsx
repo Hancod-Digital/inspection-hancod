@@ -41,7 +41,7 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
 
   const onSubmitHandler: SubmitHandler<ManufacturerDetailsInput> = async(values) => {
     setLoading(true); 
-    await addRecord(values)
+    await addRecord(values,null,"manufacturer")
     setLoading(false);
     onClose()
   };

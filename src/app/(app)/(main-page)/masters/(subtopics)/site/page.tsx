@@ -34,7 +34,8 @@ const Site = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-               Site
+               {isArea && "Area"}
+               {!isArea && "Site"}
             </motion.h2>
             
             <AnimatePresence mode="wait">

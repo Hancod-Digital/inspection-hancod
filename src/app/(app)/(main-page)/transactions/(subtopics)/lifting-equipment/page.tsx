@@ -41,7 +41,14 @@ const LiftingEquipment = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-               Lifting Equipment
+               {isSite && "Site"}
+               {isArea && "Area"}
+               {isLocation && "Location"}
+               {isEquipment && "Equipment"}
+               {isStandard && "Standard"}
+               {isOwner && "Owner"}
+               {isManufacturer && "Manufacturer"}
+               {!isSite && !isArea && !isLocation && !isEquipment && !isStandard && !isOwner && !isManufacturer && "Lifting Equipment"}
             </motion.h2>
             
             <AnimatePresence mode="wait">

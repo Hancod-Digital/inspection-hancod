@@ -30,7 +30,9 @@ const Location = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-               Location
+               {isArea && "Area"}
+               {isSite && "Site"}
+               {!isArea && !isSite && "Location"}
             </motion.h2>
             
             <AnimatePresence mode="wait">

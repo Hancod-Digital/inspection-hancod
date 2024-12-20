@@ -42,7 +42,14 @@ const LiftingGearMulti = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
-               Lifting Gear Multi
+               {isSite && "Site"}
+               {isArea && "Area"}
+               {isLocation && "Location"}
+               {isEquipment && "Equipment"}
+               {isStandard && "Standard"}
+                
+               {isManufacturer && "Manufacturer"}
+               {!isSite && !isArea && !isLocation && !isEquipment && !isStandard && !isManufacturer && "Lifting Gear Multi"}
             </motion.h2>
             
             <AnimatePresence mode="wait">

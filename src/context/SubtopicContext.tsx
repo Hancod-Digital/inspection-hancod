@@ -12,7 +12,7 @@ interface SubtopicContextType {
   data: any[] | undefined;
   isLoading: boolean;
   error: any;
-  addRecord: (record: object,surveyor_competency?:any) => Promise<any[]>;
+  addRecord: (record: object,surveyor_competency?:any,subtopic?:any) => Promise<any[]>;
   updateRecord: (id: number, updates: object,surveyor_competency?:any) => Promise<void>;
   findRecordById: (id: number) => any;
   getAllSingleSubtopic: (subtopic: string) => Promise<any[] | undefined>;
@@ -150,7 +150,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
   };
 
   const addRecordMutation = useMutation({
-    mutationFn: async ({ newRecord, surveyor_competency }: { newRecord: object; surveyor_competency?: any }) => {
+    mutationFn: async ({ newRecord, surveyor_competency,subtopic }: { newRecord: object; surveyor_competency?: any,subtopic?:any }) => {
       return await masterService.addRecordToSubtopic(subtopic, newRecord, surveyor_competency);
   },
     onSuccess: () => {
@@ -209,9 +209,9 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
   });
   
 
-  const addRecord = async (record: object,surveyor_competency?:any) => {
+  const addRecord = async (record: object,surveyor_competency?:any,subtopic?:any) => {
    
-    return await addRecordMutation.mutateAsync({ newRecord: record, surveyor_competency });
+    return await addRecordMutation.mutateAsync({ newRecord: record, surveyor_competency,subtopic });
     
   };
   
