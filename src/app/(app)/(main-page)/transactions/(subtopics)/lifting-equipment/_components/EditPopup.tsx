@@ -820,7 +820,7 @@ console.log(methods.formState.errors);
                   </div>
                    {
                    
-                    equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.property_table_type == 'ELEVATOR_CERTIFICATE' && (
+                    equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.property_table_type == 'ELEVATOR CERTIFICATE' && (
                       <div className='grid grid-cols-1 gap-4'>
                   <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
                     <Label htmlFor="lift_location" className="mt-3">Lift Location</Label>
