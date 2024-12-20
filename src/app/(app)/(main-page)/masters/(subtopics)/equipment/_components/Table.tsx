@@ -16,9 +16,9 @@ import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
 
 import DeleteDialogue from '@/components/ui/delete-dialog';
-import Standard from '../../_common/Standard';
-import Manufacturer from '../../_common/Manufacturer';
-import Location from '../../_common/Location';
+ import Standard from '../../standard/_components/AddEquipment'
+ import Manufacturer from '../../manufacturer/_components/AddEquipment'
+ import Location from '../../location/_components/AddEquipment'
 import { PaginationDemo } from '@/components/pagination-demo';
 
 export default function Component({searchValue,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation}:{searchValue:string,isManufacturer:boolean,isStandard:boolean,isLocation:boolean, setIsManufacturer: (value: boolean) => void, setIsStandard: (value: boolean) => void, setIsLocation: (value: boolean) => void}) {
@@ -45,7 +45,8 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
     // Get current page data
     const startIndex = (currentPage - 1) * pageSize;
     const currentData = rearrangedData?.slice(startIndex, startIndex + pageSize);
-
+    const [isSite, setIsSite] = useState(false);
+    const [isArea, setIsArea] = useState(false);
     const handlePreviousPage = () => {
         if (currentPage > 1) {
             setCurrentPage(prev => prev - 1);
@@ -124,7 +125,7 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                                                 <div className="overflow-hidden">
                                                     {isManufacturer && (<Manufacturer onClose={()=>setIsManufacturer(false)}/>)}
                                                     {isStandard && (<Standard onClose={()=>setIsStandard(false)} />)}
-                                                    {isLocation && (<Location onClose={()=>setIsLocation(false)}/>)}
+                                                    {isLocation && (<Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea}/>)}
                                                     {!isManufacturer && !isStandard && !isLocation && (
                                                         <EditPopup 
                                                             onClose={handleCloseEdit} 

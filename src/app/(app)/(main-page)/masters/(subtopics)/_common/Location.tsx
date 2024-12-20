@@ -36,9 +36,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  changed: boolean;
+  setChanged: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [siteOptions, setSiteOptions] = useState<Site[]>([]); // State for site options
   const [areaOptions, setAreaOptions] = useState<Area[]>([]); // State for area options
@@ -107,15 +109,13 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   }, [getAllSingleSubtopic, selectedSite,siteOptions]);
   
 
-  // Reset area field when the selected site changes
-  useEffect(() => {
-    setValue('location', '');
-  }, [selectedSite, setValue]);
+   
 
   // Reset form on successful submission
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
+      
       setAreaOptions([]); // Optionally, reset areas after submission
     }
   }, [isSubmitSuccessful, reset]);
@@ -125,6 +125,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     setLoading(true); 
     try {
       await addRecord(values,null,"location"); // Add new record
+      setChanged(!changed)
     } catch (error) {
       console.error("Error adding record:", error);
       // Optionally, handle the error (e.g., show a notification)

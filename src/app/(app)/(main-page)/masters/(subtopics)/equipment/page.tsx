@@ -19,6 +19,7 @@ const Equipment = () => {
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
+    const [changed,setChanged] = useState<any>(false);
     const handleCloseManufacturer = () => {
         setIsManufacturer(false);
     }
@@ -81,11 +82,11 @@ const Equipment = () => {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
                     >  
-                        {isManufacturer && (<Manufacturer onClose={handleCloseManufacturer}/>)}
-                        {isStandard && (<Standard onClose={handleCloseStandard} />)}
-                        {isLocation && (<Location onClose={handleCloseLocation}/>)}
+                        {isManufacturer && (<Manufacturer setChanged={setChanged} changed={changed} onClose={handleCloseManufacturer}/>)}
+                        {isStandard && (<Standard setChanged={setChanged} changed={changed} onClose={handleCloseStandard} />)}
+                        {isLocation && (<Location setChanged={setChanged} changed={changed} onClose={handleCloseLocation}/>)}
                     
-                        {!isManufacturer && !isStandard && !isLocation && (<AddForm onClose={handleCloseAdd} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>)}
+                        {!isManufacturer && !isStandard && !isLocation && (<AddForm changed={changed} onClose={handleCloseAdd} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>)}
                     </motion.div>
                 )}
             </AnimatePresence>

@@ -44,14 +44,17 @@ export default function EquipmentDetailsForm({
   const [data, setData] = useState<any>(null);
   const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic ,findRecordById} = useSubtopic();
   const selected = findRecordById(id);
-  console.log(selected,"selected",String(majorCategories.find(category => category.id == selected?.major_category)?.major_category));
+  const [recordData,setRecordData] = useState<any>(null);
+  findRecordByIdWithReference(id, minorCategoryDataRange).then((res:any)=>{
+    setRecordData(res)
+   })
   const methods =   useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      minor_category: selected?.minor_category || '',
-      major_category: String(majorCategories.find(category => category.id == selected?.major_category)?.major_category)|| '',
-      standard: String(standardOptions.find(standard => standard.id == selected?.standard)?.standard) || '',
-      status: selected?.status || '',
+      minor_category: recordData?.minor_category || '',
+      major_category: String(recordData?.major_category?.id) || "",
+      standard: String(recordData?.standard?.id) || '',  
+      status: recordData?.status || '',
     },
   });
 
@@ -71,7 +74,7 @@ export default function EquipmentDetailsForm({
 
         // Fetch the record with references
         const recordData = await findRecordByIdWithReference(id, minorCategoryDataRange);
-     
+     console.log(recordData,"recordData")
         flushSync(() => {
           setData(recordData);
           reset({

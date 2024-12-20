@@ -22,9 +22,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  changed: boolean;
+  setChanged: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const { addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
@@ -43,6 +45,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     setLoading(true);
     await addRecord(values,null,"standard");
     setLoading(false); onClose()
+    setChanged(!changed)
   };
 
   return (

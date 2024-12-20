@@ -36,9 +36,10 @@ interface EquipmentDetailsFormProps {
   setIsManufacturer: (value: boolean) => void;
   setIsStandard: (value: boolean) => void;
   setIsLocation: (value: boolean) => void;
+  changed: boolean;
 }
 
-export default function EquipmentDetailsForm({ onClose,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation,changed }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState<any>(false);
   const { addRecord, getAllSingleSubtopic } = useSubtopic();
 
@@ -137,7 +138,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
       }
     };
     fetchOptions();
-  }, [getAllSingleSubtopic]);
+  }, [getAllSingleSubtopic,changed]);
 
   const {
     reset,

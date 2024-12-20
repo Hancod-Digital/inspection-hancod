@@ -22,9 +22,11 @@ type ManufacturerDetailsInput = z.infer<typeof manufacturerDetailsSchema>;
 
 interface ManufacturerDetailsFormProps {
   onClose: () => void;
+  setChanged: (value: boolean) => void;
+  changed: boolean;
 }
 
-export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetailsFormProps) {
+export default function ManufacturerDetailsForm({ onClose ,setChanged,changed}: ManufacturerDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const { addRecord } = useSubtopic();
   const methods = useForm<ManufacturerDetailsInput>({
@@ -44,6 +46,7 @@ export default function ManufacturerDetailsForm({ onClose }: ManufacturerDetails
     await addRecord(values,null,"manufacturer");
     setLoading(false);
     onClose()
+    setChanged(!changed)
   };
 
   return (
