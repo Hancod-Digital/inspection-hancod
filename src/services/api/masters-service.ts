@@ -118,6 +118,13 @@ console.log(data,"data",subtopic);
         }
         return data;
     }
+    async fetchEquipmentView(){
+        const {data,error} = await this.supabase.from('v_equipment').select('*');
+        console.log(data,"data");
+        
+        if(error) throw error;
+        return data;
+    }
     async addRecordToSubtopic(subtopic: string, record: object, surveyorCompetency?: any) {
         await this.ensureAuthenticated();
         try {

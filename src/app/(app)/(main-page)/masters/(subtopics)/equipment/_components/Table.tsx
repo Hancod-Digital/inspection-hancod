@@ -14,7 +14,7 @@ import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
-import { equipmentDataRange, majorCategoryDataRange } from '@/lib/utils';
+
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import Standard from '../../_common/Standard';
 import Manufacturer from '../../_common/Manufacturer';

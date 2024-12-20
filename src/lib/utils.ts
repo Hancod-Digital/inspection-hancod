@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const majorCategoryDataRange = [{from:'equipment_type',to:'equipment_type'}]
 export const siteDataRange = [{from:'area',to:'area'}]
-export const equipmentDataRange = [{from:'equipment_type',to:'equipment_type'}]
+ 
 
 export const locationDataRange = [{from:'site',to:'site'}]
 export const minorCategoryDataRange = [{from:'major_category',to:'major_category'},{from:'standard',to:'standard'}]
