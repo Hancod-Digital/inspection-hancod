@@ -735,8 +735,8 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                             <SelectValue placeholder="Select result" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Active">Active</SelectItem>
-                            <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="Satisfactory">Satisfactory</SelectItem>
+                            <SelectItem value="Scrape">Scrape</SelectItem>
                           </SelectContent>
                         </Select>
                       )}
@@ -863,7 +863,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                     )}
                   </div>
-
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="approval_status" className="mt-3">Approval Status</Label>
@@ -877,7 +877,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="Approved">Approved</SelectItem>
-                            <SelectItem value="Not Approved">Not Approved</SelectItem>
+                            <SelectItem value="Rejected">Rejected</SelectItem>
                           </SelectContent>
                         </Select>
                       )}
@@ -887,8 +887,8 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                     )}
                   </div>
 
-                </div>
-
+              
+                </div> 
                 {/* Additional Information Section */}
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
@@ -912,7 +912,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       </div>
                     </div>
                   </div>
-                </div>
+                 
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">

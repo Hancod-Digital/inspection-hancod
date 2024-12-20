@@ -308,8 +308,8 @@ const htmlElement = document.createElement('div');
                                 <TableCell className="py-4 flex-[1]">{item?.next_thorough_exam}</TableCell>
                                 <TableCell className="py-4 flex-[1]  ">{item?.result}</TableCell>
                                 
-                                <TableCell className={`py-4 flex-[1] ${item?.approval_status   ? 'text-orange-500' : 'text-green-500'}`}>
-                                    {item?.approval_status ? "Rejected" : "Approved"}
+                                <TableCell className={`py-4 flex-[1] ${item?.approval_status=='true'   ? 'text-green-500' : 'text-orange-500'}`}>
+                                    {item?.approval_status=='true' ? "Approved" : "Rejected"}
                                 </TableCell>
                                 <TableCell className="py-4 flex-[1]">
                                 <DropdownMenu>

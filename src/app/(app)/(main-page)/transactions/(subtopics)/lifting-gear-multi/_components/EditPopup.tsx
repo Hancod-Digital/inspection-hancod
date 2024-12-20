@@ -282,7 +282,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
     
       if (selectedEquipment) {
-        setValue('standard', selectedEquipment.standard || '');
+        setValue('standard', String(selectedEquipment.standard) || '');
         setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
         setValue('owner_name', String(selectedEquipment.owner_id) || '');
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
@@ -807,8 +807,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select result" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Active">Active</SelectItem>
-                            <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="Satisfactory">Satisfactory</SelectItem>
+                            <SelectItem value="Scrape">Scrape</SelectItem>
                           </SelectContent>
                         </Select>
                       )}
@@ -917,7 +917,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="Approved">Approved</SelectItem>
-                            <SelectItem value="Not Approved">Not Approved</SelectItem>
+                            <SelectItem value="Rejected">Rejected</SelectItem>
                           </SelectContent>
                         </Select>
                       )}

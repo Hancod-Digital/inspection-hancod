@@ -131,8 +131,8 @@ console.log(data,"data",subtopic);
         return data;
     }
     async liftingMultiGearView(){
-        const {data,error} = await this.supabase.from('v_lifting_multi_gear').select('*');
-        
+        const {data,error} = await this.supabase.from('lifting_gear_multi_view').select('*');
+        console.log(data,"data");
         if(error) throw error;
         return data;
     }
@@ -143,6 +143,8 @@ console.log(data,"data",subtopic);
         return data;
     }
     async addRecordToSubtopic(subtopic: string, record: object, surveyorCompetency?: any) {
+        console.log(record,"record",subtopic,"subtopic");
+        
         await this.ensureAuthenticated();
         try {
             const { data, error } = await this.supabase
