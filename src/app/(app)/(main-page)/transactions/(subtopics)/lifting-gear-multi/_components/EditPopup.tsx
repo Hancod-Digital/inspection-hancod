@@ -79,7 +79,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       inspection_date: String(currentData?.inspection_date) || '',
-      site: String(currentData?.site) || '',
+       site: String(currentData?.site) || '',
       authority: String(currentData?.authority) || '',
       type_of_exam: currentData?.type_of_exam || '',
       job_order_no: String(currentData?.job_order_no) || '',
@@ -156,7 +156,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         // Populate form fields with existing data
         reset({
           inspection_date: String(data.inspection_date) || '',
-          site: String(data.site) || '',
+           site: String(data.site) || '',
           authority: String(data.authority) || '',
           type_of_exam: data.type_of_exam || '',
           job_order_no: String(data.job_order_no) || '',
@@ -216,7 +216,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
       ]);
- 
+console.log(sites,"sites");
+
       setSiteOptions(sites || []);
       setAuthorityOptions(authorities || []);
       setJobOrderNoOptions(jobOrders || []);

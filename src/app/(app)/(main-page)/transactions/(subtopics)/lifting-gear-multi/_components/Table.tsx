@@ -120,34 +120,21 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
         );
       });
     }
-    const [serialNo,setSerialNo] = useState<any>(null)
-    useEffect(() => {
-        const generateCertificates = async () => {
-            const certificates = await Promise.all(data?.map(async (item) => {
-                const serialNo:any = await fetchEquipments(item?.id);
-                console.log(item?.id,"item?.id",serialNo);
-                const serialNoGroups = await Promise.all(serialNo.map(async (item: any) => {
-                    return await fetchSerialNos(item.equipment_no);
-                }));
-                console.log(serialNoGroups,"serialNoGroups");
-                setSerialNo(serialNoGroups)
-                return fetchMultiCertificate({
-                    ...item,
-                    serial_no: serialNo,
-                    job_order_no: jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no,
-                    location_id: siteOptions.find((site: any) => site.id == item.site)?.site,
-                    owner_name: ownerOptions.find((owner: any) => owner.id == item.owner_name)?.owner,
-                    standard: standardOptions.find((standard: any) => standard.id == item.standard)?.standard
-                });
-            }) || []);
-            setState(certificates);
-        };
-        generateCertificates();
-    }, [data, equipmentOptions, jobOrderNoOptions, siteOptions, ownerOptions, standardOptions]);
+  
     const printCertificate = async(item: any) => {
 
       const response = await fetch('/equ-certificate/index.html'); 
       let htmlString = await response.text();
+       
+      const equipments:any = await fetchEquipments(item?.id);
+      console.log(equipments,"equipments");
+      const serialNo = await Promise.all(equipments.map(async (item:any)=>{
+        const serialNoGroups = await fetchSerialNos(item?.equipment_no);
+        console.log(serialNoGroups,"serialNoGroups");
+        
+        return serialNoGroups
+      }))
+      console.log(serialNo,"serialNo");
       console.log(
         serialNo
   .map((serial: any) => `${serial[0]["serial_no"]}<br />`)

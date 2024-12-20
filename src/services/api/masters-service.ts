@@ -251,7 +251,7 @@ console.log(id);
 
         const {data,error} = await this.supabase.from('equipment')
         .select('serial_no')
-        .eq('id',id)
+        .eq('id',Number(id))
         console.log(data);
         
         if (error) {

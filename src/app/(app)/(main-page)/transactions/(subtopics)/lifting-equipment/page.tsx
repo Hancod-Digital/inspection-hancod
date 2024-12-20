@@ -26,7 +26,7 @@ const LiftingEquipment = () => {
     const [isManufacturer, setIsManufacturer] = useState<boolean>(false);
     const [isSite, setIsSite] = useState<boolean>(false);
     const [isArea, setIsArea] = useState<boolean>(false);
-
+    const [changed,setChanged] = useState<any>(false);
 
     return (
         <motion.div 
@@ -84,7 +84,7 @@ const LiftingEquipment = () => {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
                     >{isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
-                        {isEquipment && <Equipment onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
+                        {isEquipment && <Equipment changed={changed}   onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
                         {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                         {isOwner && <Owner onClose={()=>setIsOwner(false)} />}
                         {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}
