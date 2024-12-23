@@ -8,7 +8,7 @@ import { useState, useMemo } from 'react';
  * @param {number} pageSize - Number of items per page (default is 5).
  * @returns {Object} Pagination state and handlers.
  */
-const usePagination:any = (data:any, initialPage = 1, pageSize = 7) => {
+const usePagination:any = (data:any, initialPage = 1, pageSize = 6) => {
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   // Calculate total pages
