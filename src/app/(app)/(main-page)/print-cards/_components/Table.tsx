@@ -162,9 +162,9 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
     };
 
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto min-h-[500px]">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto ">
             
-            <Table className="w-full h-full">
+            <Table className="w-full ">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="py-4">ID</TableHead>
@@ -179,7 +179,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                 <TableBody>
                     {data?.map((item: any, idx: number) => (
                         <React.Fragment key={idx + 1}>
-                            <TableRow>
+                            <TableRow className=''>
                                 <TableCell className="py-4">{item.id}</TableCell>
                                 <TableCell className="py-4">
                                     {item.name}
@@ -277,13 +277,13 @@ export const AvatarWithTooltip = ({ item, tooltipPosition = 'top' }:any) => {
     return (
       <div className={`tooltip ${tooltipPosition}`}>
          <img src={item.qr_url} alt="QR code" className="w-16 h-16" />
-        <span className="tooltiptext">
+        {/* <span className="tooltiptext">
           <img
             src={item.qr_url}
             alt="Tooltip Image"
             style={{ width: '150px', height: 'auto' }} // Adjust size as needed
           />
-        </span>
+        </span> */}
       </div>
     );
   };
