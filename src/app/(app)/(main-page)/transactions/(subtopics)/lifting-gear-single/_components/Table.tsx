@@ -203,6 +203,7 @@ document.head.removeChild(styleElement);
            
         
       };
+      const [changed, setChanged] = useState<boolean>(false);
       const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
     console.log(equipmentOptions,"currentData");
     return (
@@ -269,7 +270,7 @@ document.head.removeChild(styleElement);
                                     > 
                                         <TableCell colSpan={5}>
                                             {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
-                                            {isEquipment && <Equipment onClose={()=>setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
+                                            {isEquipment && <Equipment changed={changed} onClose={()=>setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
                                             {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                                             {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}
 
