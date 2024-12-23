@@ -334,7 +334,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
             <style>${cssText}</style>
           </head>
           <body>
-            ${htmlString}
+            ${htmlString} 
           </body>
         </html>
       `);
