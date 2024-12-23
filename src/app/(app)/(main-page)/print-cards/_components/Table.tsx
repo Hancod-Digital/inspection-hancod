@@ -162,8 +162,9 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
     };
 
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
-            <Table className="w-full">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto min-h-[500px]">
+            
+            <Table className="w-full h-full">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="py-4">ID</TableHead>
