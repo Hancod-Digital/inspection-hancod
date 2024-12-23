@@ -346,13 +346,14 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
       // If you want to auto-trigger print:
       // printWindow.print();
       // printWindow.close();
+      
+    
     } catch (error) {
       console.error("An error occurred while printing the backside:", error);
     }
   };
-  
-   
-  const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
+  const [changed,setChanged] = useState(false)
+   const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
   return (
     <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
       <Table className="w-full">
@@ -427,7 +428,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                       <TableCell colSpan={9}>
                         <div className="overflow-hidden">
                           {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
-                          {isEquipment && <Equipment onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
+                          {isEquipment && <Equipment onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} changed={changed} />}
                           {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                           {isOwner && <Owner onClose={()=>setIsOwner(false)} />}
                           {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}

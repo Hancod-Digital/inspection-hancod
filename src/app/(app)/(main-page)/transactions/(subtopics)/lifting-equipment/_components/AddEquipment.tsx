@@ -163,6 +163,7 @@ setSelectedEquipment(selectedEquipment)
   useEffect(() => {
     const fetchSites = async () => {
       const res = locationOptions.filter((item: any) => item.location.id == location);
+console.log(res);
 
 
       if (res.length > 0) {
@@ -238,6 +239,7 @@ setSelectedEquipment(selectedEquipment)
 
           if (data) {
 
+console.log(data);
 
             setLocationOptions(data); // Set the location options to the fetched data
           }

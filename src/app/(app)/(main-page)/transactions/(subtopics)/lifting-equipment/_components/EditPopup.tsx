@@ -118,7 +118,7 @@ export default function EditEquipmentDetailsForm({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: existingData ? {
       inspection_date: existingData.inspection_date || '',
-      site: existingData.site || '',
+      site: String(existingData.site) || '',
       authority: existingData.authority || '',
       standard: existingData.standard || '',
       type_of_exam: existingData.type_of_exam || '',

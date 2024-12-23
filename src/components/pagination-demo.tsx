@@ -30,7 +30,7 @@ export function PaginationDemo({
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
 
-    if (totalPages <= 5) {
+    if (totalPages <= 7) {
       // If total pages are 5 or less, show all pages
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);

@@ -39,7 +39,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
     return (
         <div className="px-8 py-3 bg-white  min-h-[500px] w-[98%] mx-auto relative ">
-            <Table className="w-full">
+            <Table className="w-full overflow-auto">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="py-4">Sl. No.</TableHead>
@@ -94,7 +94,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                     ))}
                 </TableBody>
             </Table>
-            <div className='absolute bottom-0 right-0'>
+            <div className='absolute bottom-[-2] right-0'>
                 <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
                 </div>
         </div>
