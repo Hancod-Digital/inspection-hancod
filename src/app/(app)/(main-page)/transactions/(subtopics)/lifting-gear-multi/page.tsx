@@ -23,6 +23,7 @@ const LiftingGearMulti = () => {
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
+    const [changed, setChanged] = useState<boolean>(false);
     const [isLocation, setIsLocation] = useState<boolean>(false);
     const [isEquipment, setIsEquipment] = useState<boolean>(false);
     const [isStandard, setIsStandard] = useState<boolean>(false);
@@ -88,7 +89,7 @@ const LiftingGearMulti = () => {
 
                     >
                         {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
-                        {isEquipment && <Equipment onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
+                        {isEquipment && <Equipment changed={changed} onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
                         {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                         {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}
                         {!isLocation && !isEquipment && !isStandard && !isManufacturer && (
