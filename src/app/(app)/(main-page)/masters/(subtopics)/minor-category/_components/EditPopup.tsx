@@ -42,16 +42,19 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
   // Single piece of state to hold the fetched record
   const [fetchedData, setFetchedData] = useState<any>(null);
 
-  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic } = useSubtopic();
+  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic,findRecordById } = useSubtopic();
 
   // Initialize react-hook-form with zod validation
+  const record = findRecordById(id)
+  console.log(record);
+  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      minor_category: '',
-      major_category: '',
-      standard: '',
-      status: '',
+      minor_category: record?.minor_category || '',
+      major_category: String(record?.major_category) || '',
+      standard: String(record?.standard) || '',
+      status: record?.status || '',
     },
   });
 

@@ -50,7 +50,7 @@ const equipmentDetailsSchema = object({
   item_type: string().nonempty('Item type is required'),
   property_table_type: string().optional(), // Conditionally required
 });
-
+ 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
