@@ -93,7 +93,7 @@ const Equipment = () => {
       }, [changed]);
     return (
         <motion.div 
-            className='w-full bg-[#fafbfb]'
+            className='w-full bg-[#fafbfb] h-full relative'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}

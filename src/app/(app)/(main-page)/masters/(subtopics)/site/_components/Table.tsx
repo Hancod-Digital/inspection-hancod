@@ -54,7 +54,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
     const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
 
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3  w-[98%] mx-auto ">
             {isLoading ? (
                 <div>Loading...</div>
             ) : error ? (
@@ -119,7 +119,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
                         ))}
                     </TableBody>
                 </Table>
-                <div className='absolute bottom-0 right-0'>
+                <div className='absolute bottom-0 right-0 '>
                     <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
                 </div>
                 </>

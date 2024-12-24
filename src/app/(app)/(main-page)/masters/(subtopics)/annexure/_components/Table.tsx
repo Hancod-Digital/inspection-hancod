@@ -34,7 +34,8 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.annexure?.toLowerCase()?.includes(searchValue?.toLowerCase())));
 
     return (
-        <div className="px-8 py-3 min-h-[500px] bg-white w-[98%] mx-auto relative ">
+        <> 
+        <div className="px-8 py-3   bg-white w-[98%] mx-auto relative ">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow>
@@ -90,9 +91,12 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                     ))}
                 </TableBody>
             </Table>
-            <div className='absolute bottom-0 right-0'>
-                <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
-            </div>
+           
         </div>
+         <div className='absolute bottom-0 right-0'>
+         <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+     </div>
+
+     </>
     );
 }

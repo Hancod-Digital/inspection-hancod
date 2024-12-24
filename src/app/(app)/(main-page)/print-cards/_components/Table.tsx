@@ -26,6 +26,8 @@ import { dataURLtoBlob, fetchHtml, loadImages } from '@/lib/utils';
 import { AvatarFallback } from '@/components/ui/avatar';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import TableSpinner from '@/components/animated/TableSpinner';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 export default function EquipmentTable({ data, setChanged, changed }: { data: any, setChanged: any, changed: boolean }) {
     const [editingRow, setEditingRow] = useState<any>(null);
@@ -160,6 +162,8 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
             return null;
         }
     };
+    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data);
+
 
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto ">
@@ -268,6 +272,9 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     ))}
                 </TableBody>
             </Table>
+            <div className='absolute bottom-0 right-0 '>
+                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                </div>
         </div>
     );
 }

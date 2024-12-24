@@ -148,7 +148,7 @@ export default function EditEquipmentDetailsForm({
       approval_status: existingData.approval_status || '',
       location: String(existingData.location) || '',
       serial_no: existingData.serial_no || '',
-      _no: existingData._no || '',
+      
       owner_id: existingData.owner_id || '',
     } : {},
   });

@@ -23,7 +23,7 @@ const Site = () => {
     }
     return (
         <motion.div 
-            className='w-full bg-[#fafbfb]'
+            className='w-full bg-[#fafbfb] h-full'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -59,6 +59,7 @@ const Site = () => {
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 50 }}
+                        className=''
                         transition={{ duration: 0.5 }}
                     >
                         <Table searchValue={searchValue} setIsArea={setIsArea} isArea={isArea}/>

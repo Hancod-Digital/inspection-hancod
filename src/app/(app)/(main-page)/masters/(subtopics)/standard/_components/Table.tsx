@@ -37,7 +37,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
     };
     const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto  ">
              
                 <Table className="w-full">
                     <TableHeader>

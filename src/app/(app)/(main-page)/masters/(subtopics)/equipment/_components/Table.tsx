@@ -60,7 +60,7 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
     };
 
     return (
-        <div className="px-8 py-3 bg-white min-h-[500px] w-[98%] mx-auto relative">
+        <div className="px-8 py-3 bg-white   w-[98%] mx-auto ">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow>
