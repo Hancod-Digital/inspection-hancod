@@ -85,6 +85,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
   });
 
   const getAllSingleSubtopic = async (subtopic: string) => {
+   await queryClient.invalidateQueries({ queryKey: ['subtopics', subtopic] });
     let data = queryClient.getQueryData<any[]>(['subtopics', subtopic]);
 
     if (!data) {

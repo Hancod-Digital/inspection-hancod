@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Table from './_components/Table'
 import Header from './_components/Header'
 import AddForm from './_components/AddEquipment'
@@ -7,9 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 import Manufacturer from '../_common/Manufacturer'
 import Standard from '../_common/Standard'
 import Location from '../_common/Location'
+import { useSubtopic } from '@/context/SubtopicContext'
+import { MasterService } from '@/services/api/masters-service'
 const Equipment = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState("");
+    const { getAllSingleSubtopic } = useSubtopic();
     const [isManufacturer, setIsManufacturer] = useState<boolean>(false);
     const [isStandard, setIsStandard] = useState<boolean>(false);
     const [isLocation, setIsLocation] = useState<boolean>(false);
@@ -29,7 +32,65 @@ const Equipment = () => {
     const handleCloseLocation = () => {
         setIsLocation(false);
     }
-
+    console.log(changed);
+    
+    const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
+    const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
+    const [standardOptions, setStandardOptions] = useState<any[]>([]);
+    const [annexureOptions, setAnnexureOptions] = useState<any[]>([]);
+    const [locationOptions, setLocationOptions] = useState<any[]>([]);
+    const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
+    useEffect(() => {
+        const fetchOptions = async () => {
+          try {
+            const masterService = new MasterService();
+            // Fetch minor category options
+            const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
+            if (minorCategories) {
+              setMinorCategoryOptions(minorCategories);
+            }
+    
+            // Fetch supplier options
+            const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
+            if (suppliers) {
+                console.log("suppliers",suppliers);
+                
+              setSupplierOptions(suppliers);
+            }
+    
+            // Fetch standard options
+            const standards = await masterService.getAllSubtopicDetails('standard');
+            if (standards) {
+              setStandardOptions(standards);
+            }
+    
+            // Fetch annexure options
+            const annexures = await masterService.getAllSubtopicDetails('annexure');
+            if (annexures) {
+              setAnnexureOptions(annexures);
+            }
+    
+            // Fetch location options
+            const locations = await masterService.getAllSubtopicDetails('location');
+            if (locations) {
+              setLocationOptions(locations);
+            }
+            // Fetch owner options
+            const owners = await masterService.getAllSubtopicDetails('owner');
+            if (owners) {
+              setOwnerOptions(owners);
+            }
+    
+          
+          } catch (error) {
+            console.error('Error fetching options:', error);
+            // Optionally, handle the error (e.g., show a notification)
+          }
+        };
+        fetchOptions();
+        console.log("refetchiongg");
+        
+      }, [changed]);
     return (
         <motion.div 
             className='w-full bg-[#fafbfb]'
@@ -86,7 +147,7 @@ const Equipment = () => {
                         {isStandard && (<Standard setChanged={setChanged} changed={changed} onClose={handleCloseStandard} />)}
                         {isLocation && (<Location setChanged={setChanged} changed={changed} onClose={handleCloseLocation}/>)}
                     
-                        {!isManufacturer && !isStandard && !isLocation && (<AddForm changed={changed} onClose={handleCloseAdd} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>)}
+                        {!isManufacturer && !isStandard && !isLocation && (<AddForm minorCategoryOptions={minorCategoryOptions} supplierOptions={supplierOptions} standardOptions={standardOptions} annexureOptions={annexureOptions} locationOptions={locationOptions} ownerOptions={ownerOptions} changed={changed} onClose={handleCloseAdd} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>)}
                     </motion.div>
                 )}
             </AnimatePresence>

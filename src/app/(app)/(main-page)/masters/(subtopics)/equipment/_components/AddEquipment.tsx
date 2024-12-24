@@ -37,21 +37,22 @@ interface EquipmentDetailsFormProps {
   setIsStandard: (value: boolean) => void;
   setIsLocation: (value: boolean) => void;
   changed: boolean;
+  minorCategoryOptions: any[];
+  supplierOptions: any[];
+  standardOptions: any[];
+  annexureOptions: any[];
+  locationOptions: any[];
+  ownerOptions: any[];
 }
 
-export default function EquipmentDetailsForm({ onClose,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation,changed }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ minorCategoryOptions, supplierOptions, standardOptions, annexureOptions, locationOptions, ownerOptions, onClose,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation,changed }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState<any>(false);
   const { addRecord, getAllSingleSubtopic } = useSubtopic();
 
   const [testExamChecked, setTestExamChecked] = useState<any>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
   // State variables for select options
-  const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
-  const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
-  const [standardOptions, setStandardOptions] = useState<any[]>([]);
-  const [annexureOptions, setAnnexureOptions] = useState<any[]>([]);
-  const [locationOptions, setLocationOptions] = useState<any[]>([]);
-  const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
+
 
   const [selectedItemType, setSelectedItemType] = useState<string>('');
 
@@ -92,53 +93,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
     mode: 'onSubmit',
   });
 
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        
-        // Fetch minor category options
-        const minorCategories = await getAllSingleSubtopic('minor_category');
-        if (minorCategories) {
-          setMinorCategoryOptions(minorCategories);
-        }
 
-        // Fetch supplier options
-        const suppliers = await getAllSingleSubtopic('manufacturer');
-        if (suppliers) {
-          setSupplierOptions(suppliers);
-        }
-
-        // Fetch standard options
-        const standards = await getAllSingleSubtopic('standard');
-        if (standards) {
-          setStandardOptions(standards);
-        }
-
-        // Fetch annexure options
-        const annexures = await getAllSingleSubtopic('annexure');
-        if (annexures) {
-          setAnnexureOptions(annexures);
-        }
-
-        // Fetch location options
-        const locations = await getAllSingleSubtopic('location');
-        if (locations) {
-          setLocationOptions(locations);
-        }
-        // Fetch owner options
-        const owners = await getAllSingleSubtopic('owner');
-        if (owners) {
-          setOwnerOptions(owners);
-        }
-
-      
-      } catch (error) {
-        console.error('Error fetching options:', error);
-        // Optionally, handle the error (e.g., show a notification)
-      }
-    };
-    fetchOptions();
-  }, [getAllSingleSubtopic,changed]);
 
   const {
     reset,

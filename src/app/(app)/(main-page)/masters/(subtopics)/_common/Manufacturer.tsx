@@ -45,8 +45,9 @@ export default function ManufacturerDetailsForm({ onClose ,setChanged,changed}: 
     setLoading(true); 
     await addRecord(values,null,"manufacturer");
     setLoading(false);
-    onClose()
     setChanged(!changed)
+    onClose()
+    
   };
 
   return (

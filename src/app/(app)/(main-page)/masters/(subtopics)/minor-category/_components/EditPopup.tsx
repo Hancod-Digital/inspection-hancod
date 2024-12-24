@@ -19,7 +19,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import { flushSync } from 'react-dom';
 import { minorCategoryDataRange } from '@/lib/utils';
 
-// Define the schema with Zod, including major_category and standard as required strings
+// Zod schema
 const equipmentDetailsSchema = object({
   minor_category: z.string().nonempty('Minor Category is required'),
   major_category: z.string().nonempty('Major Category is required'),
@@ -34,27 +34,24 @@ interface EquipmentDetailsFormProps {
   id: number;
 }
 
-export default function EquipmentDetailsForm({
-  onClose,
-  id,
-}: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [majorCategories, setMajorCategories] = useState<any[]>([]);
-  const [standardOptions, setStandardOptions] = useState<any[]>([]); // New state for standard options
-  const [data, setData] = useState<any>(null);
-  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic ,findRecordById} = useSubtopic();
-  const selected = findRecordById(id);
-  const [recordData,setRecordData] = useState<any>(null);
-  findRecordByIdWithReference(id, minorCategoryDataRange).then((res:any)=>{
-    setRecordData(res)
-   })
-  const methods =   useForm<EquipmentDetailsInput>({
+  const [standardOptions, setStandardOptions] = useState<any[]>([]);
+  
+  // Single piece of state to hold the fetched record
+  const [fetchedData, setFetchedData] = useState<any>(null);
+
+  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic } = useSubtopic();
+
+  // Initialize react-hook-form with zod validation
+  const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      minor_category: recordData?.minor_category || '',
-      major_category: String(recordData?.major_category?.id) || "",
-      standard: String(recordData?.standard?.id) || '',  
-      status: recordData?.status || '',
+      minor_category: '',
+      major_category: '',
+      standard: '',
+      status: '',
     },
   });
 
@@ -65,74 +62,49 @@ export default function EquipmentDetailsForm({
     formState: { isSubmitSuccessful, errors },
   } = methods;
 
-  // Fetch existing data with references when the component mounts
+  // Fetch data and set defaults
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Define the references you want to include
-        const references = ['majorCategory']; // Add other references if needed
+        // Fetch the single record with references
+        const record = await findRecordByIdWithReference(id, minorCategoryDataRange);
 
-        // Fetch the record with references
-        const recordData = await findRecordByIdWithReference(id, minorCategoryDataRange);
-     console.log(recordData,"recordData")
         flushSync(() => {
-          setData(recordData);
+          setFetchedData(record);
           reset({
-            minor_category: recordData?.minor_category || '',
-            major_category: String(recordData?.major_category?.id) || "",
-            standard: String(recordData?.standard?.id) || '',  
-            status: recordData?.status || '',
+            minor_category: record?.minor_category || '',
+            major_category: String(record?.major_category?.id) || '',
+            standard: String(record?.standard?.id) || '',
+            status: record?.status || '',
           });
         });
       } catch (error) {
         console.error('Error fetching record:', error);
-        // Optionally, handle the error by setting an error state or showing a notification
       }
     };
 
     fetchData();
-  }, [id, findRecordByIdWithReference, reset]);
+  }, [id, reset, findRecordByIdWithReference]);
 
-  // Fetch major categories when the component mounts
+  // Fetch major categories + standards
   useEffect(() => {
-    const fetchMajorCategories = async () => {
+    const fetchSelectOptions = async () => {
       try {
-        const categories = await getAllSingleSubtopic('major_category');
-        
+        const [categories, standards] = await Promise.all([
+          getAllSingleSubtopic('major_category'),
+          getAllSingleSubtopic('standard'),
+        ]); 
         setMajorCategories(categories || []);
-      } catch (error) {
-        console.error('Failed to fetch major categories:', error);
-        // Optionally, handle the error
-      }
-    };
-    fetchMajorCategories();
-    const fetchStandardOptions = async () => {
-      try {
-        const standards = await getAllSingleSubtopic('standard'); // Adjust the key as per your API
         setStandardOptions(standards || []);
       } catch (error) {
-        console.error('Failed to fetch standard options:', error);
-        // Optionally, handle the error
+        console.error('Failed to fetch select options:', error);
       }
     };
-    fetchStandardOptions();
+
+    fetchSelectOptions();
   }, [getAllSingleSubtopic]);
 
-  // Fetch standard options when the component mounts
-  useEffect(() => {
-    const fetchStandardOptions = async () => {
-      try {
-        const standards = await getAllSingleSubtopic('standard'); // Adjust the key as per your API
-        setStandardOptions(standards || []);
-      } catch (error) {
-        console.error('Failed to fetch standard options:', error);
-        // Optionally, handle the error
-      }
-    };
-    fetchStandardOptions();
-  }, [getAllSingleSubtopic]);
-
-  // Reset form and close modal upon successful submission
+  // Close form upon successful submit
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -140,27 +112,26 @@ export default function EquipmentDetailsForm({
     }
   }, [isSubmitSuccessful, reset, onClose]);
 
+  // Submit handler
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-   
 
-    // Prepare the updated data
     const updatedData = {
-      ...data,
+      // Merging data from the original record + new values
+      ...fetchedData,
       minor_category: values.minor_category,
-      major_category: Number(values?.major_category),
-      standard: values.standard, // Assuming standard is a string
+      major_category: Number(values.major_category),
+      standard: values.standard,
       status: values.status,
     };
 
     try {
       await updateRecord(id, updatedData);
-      setLoading(false);
       onClose();
     } catch (error) {
       console.error('Error updating record:', error);
+    } finally {
       setLoading(false);
-      // Optionally, handle the error by showing a notification
     }
   };
 
@@ -182,34 +153,48 @@ export default function EquipmentDetailsForm({
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-
-                  {/* Minor Category Field */}
+                  {/* Minor Category */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="minor_category" className="mt-3">Minor Category</Label>
+                    <Label htmlFor="minor_category" className="mt-3">
+                      Minor Category
+                    </Label>
                     <div>
-                      <Input id="minor_category" {...methods.register('minor_category')} />
+                      <Input
+                        id="minor_category"
+                        {...methods.register('minor_category')}
+                      />
                       {errors.minor_category && (
-                        <p className="text-red-500 mt-1">{errors.minor_category.message}</p>
+                        <p className="text-red-500 mt-1">
+                          {errors.minor_category.message}
+                        </p>
                       )}
                     </div>
                   </div>
 
-                  {/* Major Category Field with Select */}
+                  {/* Major Category */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="major_category" className="mt-3">Major Category</Label>
+                    <Label htmlFor="major_category" className="mt-3">
+                      Major Category
+                    </Label>
                     <div>
                       <Controller
                         name="major_category"
                         control={control}
                         render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={String(field.value)}>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
                             <SelectTrigger id="major_category">
                               <SelectValue placeholder="Select major category" />
                             </SelectTrigger>
                             <SelectContent>
-                              {majorCategories.map((category) => (
-                                <SelectItem key={category.id} value={String(category.id)}>
-                                  {category?.major_category}
+                              {majorCategories.map((cat) => (
+                                <SelectItem
+                                  key={cat.id}
+                                  value={String(cat.id)}
+                                >
+                                  {cat?.major_category}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -217,26 +202,36 @@ export default function EquipmentDetailsForm({
                         )}
                       />
                       {errors.major_category && (
-                        <p className="text-red-500 mt-1">{errors.major_category.message}</p>
+                        <p className="text-red-500 mt-1">
+                          {errors.major_category.message}
+                        </p>
                       )}
                     </div>
                   </div>
 
-                  {/* Standard Field with Select */}
+                  {/* Standard */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="standard" className="mt-3">Standard</Label>
+                    <Label htmlFor="standard" className="mt-3">
+                      Standard
+                    </Label>
                     <div>
                       <Controller
                         name="standard"
                         control={control}
                         render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
                             <SelectTrigger id="standard">
                               <SelectValue placeholder="Select standard" />
                             </SelectTrigger>
                             <SelectContent>
                               {standardOptions.map((standard) => (
-                                <SelectItem key={standard.id} value={String(standard.id)}>
+                                <SelectItem
+                                  key={standard.id}
+                                  value={String(standard.id)}
+                                >
                                   {standard.standard}
                                 </SelectItem>
                               ))}
@@ -245,20 +240,27 @@ export default function EquipmentDetailsForm({
                         )}
                       />
                       {errors.standard && (
-                        <p className="text-red-500 mt-1">{errors.standard.message}</p>
+                        <p className="text-red-500 mt-1">
+                          {errors.standard.message}
+                        </p>
                       )}
                     </div>
                   </div>
 
-                  {/* Status Field with Select */}
+                  {/* Status */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
-                    <Label htmlFor="status" className="mt-3">Status</Label>
+                    <Label htmlFor="status" className="mt-3">
+                      Status
+                    </Label>
                     <div>
                       <Controller
                         name="status"
                         control={control}
                         render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
                             <SelectTrigger id="status">
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
@@ -270,7 +272,9 @@ export default function EquipmentDetailsForm({
                         )}
                       />
                       {errors.status && (
-                        <p className="text-red-500 mt-1">{errors.status.message}</p>
+                        <p className="text-red-500 mt-1">
+                          {errors.status.message}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -278,16 +282,25 @@ export default function EquipmentDetailsForm({
 
                 {/* Action Buttons */}
                 <div className="flex justify-end gap-4">
-                  <Button type="reset" className="px-10" onClick={onClose} variant="outline">
+                  <Button
+                    type="reset"
+                    className="px-10"
+                    onClick={onClose}
+                    variant="outline"
+                  >
                     Cancel
                   </Button>
-                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
+                  <Button
+                    className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border"
+                    type="submit"
+                    disabled={loading}
+                  >
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>
               </div>
             </form>
-          </FormProvider>
+          </FormProvider> 
         </CardContent>
       </Card>
     </motion.div>

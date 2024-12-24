@@ -44,8 +44,9 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true);
     await addRecord(values,null,"standard");
-    setLoading(false); onClose()
+    setLoading(false); 
     setChanged(!changed)
+    onClose()
   };
 
   return (
