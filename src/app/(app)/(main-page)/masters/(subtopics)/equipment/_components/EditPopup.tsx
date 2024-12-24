@@ -38,7 +38,7 @@ const equipmentDetailsSchema = object({
   serial_no: string().nonempty('Serial No is required'),
   annexure: string().nonempty('Annexure is required'),
   year_of_manufacture: string().nonempty('Year of manufacture is required'),
-  status: boolean(),
+  status: boolean().optional(),
   safe_working_load: string().nonempty('Safe working load is required'),
   last_test_date: string().nonempty('Last test date is required'),
   proof_load: string().nonempty('Proof load is required'),
