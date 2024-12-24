@@ -46,7 +46,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
 
   // Initialize react-hook-form with zod validation
   const record = findRecordById(id)
-  console.log(record);
+ 
   
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),

@@ -71,8 +71,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
   const existingData = id ? findRecordById(id) : null;
-  console.log(existingData,"existingData");
-  
+   
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -139,7 +138,6 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-      console.log(data,"data");
       
       if (data) { 
         reset({
@@ -222,7 +220,6 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
       await makeApiCall(() => new MasterService().getLocationDetails(), {
         afterSuccess: (data: any) => {
           if (data) {
-            console.log(data,"data");
             
             setLocationOptions(data);
           }

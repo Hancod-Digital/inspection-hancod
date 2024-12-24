@@ -36,7 +36,7 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
   useEffect(() => {
     if (equipmentDetails[0]?.annexure) {
       makeApiCall(()=>new MasterService().getAnnexures(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
-        console.log(data)
+       
         setAnnexureData(data)
       }})
     }
@@ -45,7 +45,7 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
   useEffect(() => {
     if (equipmentDetails[0]?.annexure) {
       makeApiCall(()=>new MasterService().getPropertyList(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
-        console.log(data)
+    
         setPropertyList(data)
       }})
     }

@@ -92,7 +92,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
-     console.log(values);
+  
      
     await updateRecord(id, {equipment_type:Number(values?.equipment_type),major_category:values?.major_category,status:values?.status});
     setLoading(false);

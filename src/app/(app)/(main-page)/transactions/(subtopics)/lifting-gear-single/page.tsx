@@ -56,7 +56,6 @@ const LiftingEquipment = () => {
             // Fetch supplier options
             const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
             if (suppliers) {
-                console.log("suppliers",suppliers);
                 
               setSupplierOptions(suppliers);
             }
@@ -91,8 +90,7 @@ const LiftingEquipment = () => {
           }
         };
         fetchOptions();
-        console.log("refetchiongg");
-        
+         
       }, [changed]);
     return (
         <motion.div 

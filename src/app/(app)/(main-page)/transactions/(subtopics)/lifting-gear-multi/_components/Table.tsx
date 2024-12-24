@@ -127,19 +127,13 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
       let htmlString = await response.text();
        
       const equipments:any = await fetchEquipments(item?.id);
-      console.log(equipments,"equipments");
+    
       const serialNo = await Promise.all(equipments.map(async (item:any)=>{
         const serialNoGroups = await fetchSerialNos(item?.equipment_no);
-        console.log(serialNoGroups,"serialNoGroups");
         
         return serialNoGroups
       }))
-      console.log(serialNo,"serialNo");
-      console.log(
-        serialNo
-  .map((serial: any) => `${serial[0]["serial_no"]}<br />`)
-  .join("")
-      );
+      
       htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no);
 htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no);
 
@@ -152,7 +146,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date);
 
 htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);
-console.log(serialNo,"serialNo");
+ 
 
 htmlString = htmlString.replace(/\{\{eight\}\}/g, serialNo
   .map((serial: any) => `${serial[0]["serial_no"]}<br />`)
@@ -177,7 +171,7 @@ htmlString = htmlString.replace(/\{\{sixteen\}\}/g, item?.next_thorough_exam);
              
 const cssResponse = await fetch('/equ-certificate/index.css');
   let cssText = await cssResponse.text();
-  console.log("first examination ",item?.first_examination,"six month interval",item?.six_month_interval,"twelve month interval",item?.twelve_month_interval,"correct installation",item?.correct_installation,"examination scheme",item?.examination_scheme,"exceptional circumstances",item?.exceptional_circumstances)
+ 
 cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination ? " 36%" :" 43.79%");
 
 cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval ? " 89%" :" 96%");

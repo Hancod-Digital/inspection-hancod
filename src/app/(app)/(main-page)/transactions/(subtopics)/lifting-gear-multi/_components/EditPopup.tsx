@@ -74,7 +74,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
   const currentData = id ? findRecordById(id) : null;
-  console.log(currentData);
+ 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -150,7 +150,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-      console.log(data,"dat");
+     
       
       if (data) {
         // Populate form fields with existing data
@@ -215,8 +215,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         getAllSingleSubtopic("manufacturer"),
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
-      ]);
-console.log(sites,"sites");
+      ]); 
 
       setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
       setAuthorityOptions(authorities?.filter((item:any)=>item.status==="ACTIVE") || []);
@@ -249,7 +248,7 @@ console.log(sites,"sites");
     const fetchEquipment = async() => {
         await makeApiCall(() => new MasterService().fetchAllEquipments(id), {
         afterSuccess: (data:any)=>{
-          console.log(data);
+          
           if (data) {
             setExistingData(data); // Set the location options to the fetched data
           }

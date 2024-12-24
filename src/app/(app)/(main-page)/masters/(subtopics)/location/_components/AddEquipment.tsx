@@ -121,7 +121,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
   }, [isSubmitSuccessful, reset]);
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
-    console.log(values)
+    
     setLoading(true); 
     try {
       await addRecord(values,null,"equipment"); // Add new record

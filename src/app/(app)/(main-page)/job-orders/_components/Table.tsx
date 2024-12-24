@@ -20,7 +20,7 @@ export default function JobTable({isState,setIsState}:{isState:boolean,setIsStat
   const [jobOrders, setJobOrders] = useState<any>([])
   useEffect(() => {
     getAllJobOrders().then((data) => {
-      console.log(data, "data")
+     
       setJobOrders(data)
     })
   }, [isState])

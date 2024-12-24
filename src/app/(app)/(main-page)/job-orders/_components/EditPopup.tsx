@@ -52,7 +52,7 @@ export default function SurveyForm({ onClose, id,setIsState,isState }: SurveyFor
   useEffect(() => {
     const fetchData = async () => {
       const jobOrderData = await getSingleJobOrder(id);
-      console.log(jobOrderData);
+    
       if (jobOrderData && jobOrderData.length > 0) {
         const newValues = {
           ...jobOrderData[0],

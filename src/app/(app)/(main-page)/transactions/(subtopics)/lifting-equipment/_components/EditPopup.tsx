@@ -113,8 +113,7 @@ export default function EditEquipmentDetailsForm({
 
   // Fetch existing data
   const existingData = findRecordById(id);
-  console.log(existingData?.result);
-  
+   
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: existingData ? {
@@ -152,8 +151,7 @@ export default function EditEquipmentDetailsForm({
       owner_id: existingData.owner_id || '',
     } : {},
   });
-console.log(methods.formState.errors);
-
+ 
   const {
     reset,
     handleSubmit,
@@ -194,7 +192,7 @@ console.log(methods.formState.errors);
           }),
         ]);
   
-        console.log(equipmentNos, "jpk");
+       
         setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
         setAuthorityOptions(authorities?.filter((item:any)=>item.status==="ACTIVE") || []);
         setJobOrderNoOptions(jobOrders || []);

@@ -32,8 +32,7 @@ const Equipment = () => {
     const handleCloseLocation = () => {
         setIsLocation(false);
     }
-    console.log(changed);
-    
+   
     const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
     const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
     const [standardOptions, setStandardOptions] = useState<any[]>([]);
@@ -53,8 +52,7 @@ const Equipment = () => {
             // Fetch supplier options
             const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
             if (suppliers) {
-                console.log("suppliers",suppliers);
-                
+                 
               setSupplierOptions(suppliers.filter((item:any)=>item.status==="ACTIVE"));
             }
     
@@ -72,8 +70,10 @@ const Equipment = () => {
     
             // Fetch location options
             const locations = await masterService.getAllSubtopicDetails('location');
+     
+            
             if (locations) {
-              setLocationOptions(locations.filter((item:any)=>item.status==="ACTIVE"));
+              setLocationOptions(prev =>locations.filter((item:any)=>item.status==="ACTIVE"));
             }
             // Fetch owner options
             const owners = await masterService.getAllSubtopicDetails('owner');
@@ -91,6 +91,7 @@ const Equipment = () => {
         console.log("refetchiongg");
         
       }, [changed]);
+      
     return (
         <motion.div 
             className='w-full bg-[#fafbfb] h-full relative'

@@ -13,9 +13,7 @@ import ColumnModal from './ColumnModal'; // Import ColumnModal
 export default function PropertyTable({ data, setData, item_type }: { data: any; setData: any; item_type: any }) {
   const [open, setOpen] = useState(false);
   const [columns, setColumns] = useState<string[]>([]);
-
-  console.log(item_type, "jpk");
-
+ 
   // Set initial columns based on item_type
   useEffect(() => {
     if (item_type === "CRANE CERTIFICATE") {

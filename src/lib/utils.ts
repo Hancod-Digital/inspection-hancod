@@ -25,7 +25,6 @@ export function generateRows(rows:any) {
   let rowsCss = '';
 
   rows.forEach((rowData:any, index:any) => {
-    console.log(rowData,"rowData");
     
     
     const rowNumber = index === 0 ? '' : (index + 1).toString();
@@ -38,8 +37,7 @@ export function generateRows(rows:any) {
     const remarkTop = (baseTopRemark + offset).toFixed(3);
 
     const { condition, property
-      , slNo, remarks,remark } = rowData;
-console.log(condition,"condition",property,"property",slNo,"slNo",remarks,"remarks");
+      , slNo, remarks,remark } = rowData; 
 
     // Append HTML for this row (no inline styles, rely on classes)
     rowsHtml += `

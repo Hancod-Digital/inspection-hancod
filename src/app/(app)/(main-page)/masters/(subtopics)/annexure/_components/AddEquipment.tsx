@@ -39,8 +39,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   });
   
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
-console.log(errors,"errors");
-
+ 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -55,12 +54,11 @@ console.log(errors,"errors");
     };
     
    const response:any = await addRecord(dataToSubmit,null,"annexure")
-  console.log(response,"response");
+  
     const d = values.properties.map(property => ({
       ...property,
       annexure_id: response[0].id
-    }))
-    console.log(d,"d");
+    })) 
     await addProperty(d)
     setLoading(false);
     onClose()

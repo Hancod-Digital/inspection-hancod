@@ -38,13 +38,12 @@ export default function Component({ onFunction, properties, setProperties }: Com
 
   const handleDelete = async (index: number) => {
     const property = properties[index];
-    console.log("Attempting to delete property:", property);
-
+   
     if (property.id) {
       try {
         await makeApiCall(() => new MasterService().deleteProperty(property.id!), {
           afterSuccess: () => {
-            console.log("Property deleted successfully");
+         
             setProperties(properties.filter((_, i) => i !== index));
           },
           
@@ -53,7 +52,7 @@ export default function Component({ onFunction, properties, setProperties }: Com
         console.error("Delete operation failed:", error);
       }
     } else {
-      console.log("Property has no id, removing from local state");
+   
       setProperties(properties.filter((_, i) => i !== index));
     }
   };

@@ -36,7 +36,7 @@ export default function EquipmentDetailsForm({ onClose,id }: EquipmentDetailsFor
   useEffect(() => {
     const fetchData = async () => {
       const recordData = await findRecordById(id);
-     console.log(recordData);
+    
       flushSync(() => {
         setData(recordData);
         methods.reset({

@@ -113,8 +113,7 @@ export class StudentService extends Supabase {
     }
     async updateStudentCertificateUrl(id: number, card: string) {
         await this.ensureAuthenticated();
-      console.log(card,"card");
-      
+        
         const { data, error } = await this.supabase
             .from("students_credentials")
             .update({ certificate_url:card }) // Update only the qr_url field

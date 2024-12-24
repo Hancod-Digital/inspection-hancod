@@ -47,7 +47,6 @@ const LiftingEquipment = () => {
             // Fetch supplier options
             const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
             if (suppliers) {
-                console.log("suppliers",suppliers);
                 
               setSupplierOptions(suppliers.filter((item:any)=>item.status==="ACTIVE"));
             }

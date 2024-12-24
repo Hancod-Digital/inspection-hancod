@@ -84,7 +84,7 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
 
   // Get existing data if editing
   const data = id ? findRecordById(id) : null;
-console.log(data?.next_test_date);
+ 
 useEffect(()=>{
   if(data?.next_test_date){
     setValue('next_test_date', data?.next_test_date);

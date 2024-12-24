@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 
 export default function Component({ onFunction ,isSubmitted,existingData,setValue,deleteRecord}: { onFunction: () => void ,isSubmitted:boolean,existingData:any[],setValue:any,deleteRecord:any}) {
  
-   console.log(existingData);
+   
   return (
     <div className="w-full mx-auto py-5">
       <div className="flex justify-between items-center mb-4">

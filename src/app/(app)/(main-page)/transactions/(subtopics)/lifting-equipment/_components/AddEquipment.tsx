@@ -90,7 +90,7 @@ export default function EquipmentDetailsForm({ onClose ,setIsLocation,setIsEquip
   const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
   const [ownerOptions, setOwnerOptions] = useState<any>([])
   const [locationOptions, setLocationOptions] = useState<any>([]);
-  console.log(errors)
+ 
   const { watch, setValue, formState } = methods
   const { equipment_no, inspection_date, type_of_exam, standard, title, equipment_description, test_cert_coc_no, safe_working_load, last_test_exam, last_thorough_exam, next_test_exam, next_thorough_exam, owner_name, manufacturer, approval_status, result, surveyor, location } = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -117,7 +117,7 @@ export default function EquipmentDetailsForm({ onClose ,setIsLocation,setIsEquip
     if (equipment_no) {
       // Find the associated data for the current equipment_no
       const selectedEquipment = equipmentNoOptions.find((item: any) => item.id == equipment_no);
-console.log(selectedEquipment)
+ 
 setSelectedEquipment(selectedEquipment)
       if (selectedEquipment) {
 
@@ -163,9 +163,7 @@ setSelectedEquipment(selectedEquipment)
   useEffect(() => {
     const fetchSites = async () => {
       const res = locationOptions.filter((item: any) => item.location.id == location);
-console.log(res);
-
-
+  
       if (res.length > 0) {
 
         setSiteOptions([res[0].site]); // Set the area options to the fetched data
@@ -238,9 +236,7 @@ console.log(res);
         afterSuccess: (data: any) => {
 
           if (data) {
-
-console.log(data);
-
+ 
             setLocationOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the location options to the fetched data
           }
         }
@@ -323,7 +319,7 @@ console.log(data);
               noValidate
               autoComplete="off"
               onSubmit={handleSubmit((values) => {
-                console.log('Form submitted');
+               
                 onSubmitHandler(values);
               })}
             >

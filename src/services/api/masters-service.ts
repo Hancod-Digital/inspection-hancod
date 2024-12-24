@@ -26,7 +26,7 @@ export class MasterService extends Supabase {
             .from(subtopic)
             .select('*')
             .order('id', { ascending: false });
-console.log(data,"data",subtopic); 
+ 
         if (error) {
             throw new Error(error.message);
         }
@@ -81,7 +81,7 @@ console.log(data,"data",subtopic);
         const {data,error} = await this.supabase
                              .from('lifting_gear_multi_equipments').insert(result).select()
 
-              console.log(data);
+              
                              
         if (error) {
             throw new Error(error.message);
@@ -90,8 +90,7 @@ console.log(data,"data",subtopic);
     }
 
     async deleteMultiEquipment(id:number){
-        console.log(id,"id");
-        
+         
         const {data,error} = await this.supabase.from('lifting_gear_multi_equipments').delete().eq('id',Number(id))
         if(error) throw error;
         return data;
@@ -132,7 +131,7 @@ console.log(data,"data",subtopic);
     }
     async liftingMultiGearView(){
         const {data,error} = await this.supabase.from('lifting_gear_multi_view').select('*');
-        console.log(data,"data");
+       
         if(error) throw error;
         return data;
     }
@@ -143,8 +142,7 @@ console.log(data,"data",subtopic);
         return data;
     }
     async addRecordToSubtopic(subtopic: string, record: object, surveyorCompetency?: any) {
-        console.log(record,"record",subtopic,"subtopic");
-        
+         
         await this.ensureAuthenticated();
         try {
             const { data, error } = await this.supabase
@@ -166,7 +164,7 @@ console.log(data,"data",subtopic);
                     throw new Error(competencyError.message);
                 }
             }
-console.log(data)
+ 
 
 
             if (error) throw error;
@@ -247,12 +245,12 @@ console.log(data)
 
     async fetchSerialNos(id: string) {
         await this.ensureAuthenticated()
-console.log(id);
+ 
 
         const {data,error} = await this.supabase.from('equipment')
         .select('serial_no')
         .eq('id',Number(id))
-        console.log(data);
+ 
         
         if (error) {
             throw new Error(error.message);

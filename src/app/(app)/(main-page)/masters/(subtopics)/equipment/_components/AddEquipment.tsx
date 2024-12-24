@@ -100,8 +100,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
     handleSubmit,
     control,
     formState: { isSubmitSuccessful, errors },
-  } = methods;
-console.log(errors)
+  } = methods; 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -118,8 +117,7 @@ console.log(errors)
       property_table_type: selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,
 
     },null,"equipment");
-    console.log(selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,selectedItemType);
-    
+  
         setLoading(false);
     onClose();
   };
@@ -127,8 +125,7 @@ console.log(errors)
   useEffect(() => {
     const subscription = methods.watch((value, { name }) => {
       if (name === 'item_type') {
-        console.log(value.item_type);
-        
+       
         setSelectedItemType(value.item_type!);
       }
     });
@@ -333,7 +330,7 @@ console.log(errors)
                           name="location"
                           control={control}
                           render={({ field }) => (
-                            <Select onValueChange={field.onChange} value={field.value}>
+                            <Select onValueChange={field.onChange} value={field.value}  key={JSON.stringify(locationOptions)}>  
                               <SelectTrigger id="location">
                                 <SelectValue placeholder="Select Location" />
                               </SelectTrigger>

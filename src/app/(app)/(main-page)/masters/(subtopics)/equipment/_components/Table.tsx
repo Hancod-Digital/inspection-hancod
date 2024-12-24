@@ -41,7 +41,7 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 5; // Number of items per page
     const totalPages = Math.ceil(rearrangedData?.length / pageSize);
-    console.log(totalPages,currentPage)
+   
     // Get current page data
     const startIndex = (currentPage - 1) * pageSize;
     const currentData = rearrangedData?.slice(startIndex, startIndex + pageSize);

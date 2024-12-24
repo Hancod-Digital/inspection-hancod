@@ -100,11 +100,10 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
       () => new MasterService().fetchEquipmentDetails(item?.equipment_no),
       {
         afterSuccess: async (data: any) => {
-          console.log(data,"data");
+        
           equipment = data[0]
           setSerialNo(data[0]?.serial_no);
-          console.log(equipment,equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.css" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.css" :"/transactions/earth_moving/index.css");
-    
+      
     // Fetch the HTML template
     const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html"}`);
     let htmlString = await response.text();
@@ -183,8 +182,7 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
         return `<li>${swl}</li>`;
       }
     });
-  console.log(testLoads,"testLoads",swls,"swls");
-  
+ 
   htmlString = htmlString.replace(/\{\{nine\}\}/g, conditions.length ? `<ul>${conditions.join('')}</ul>` : '');
   htmlString = htmlString.replace(/\{\{ten\}\}/g, boomLengths.length ? `<ul>${boomLengths.join('')}</ul>` : '');
   htmlString = htmlString.replace(/\{\{eleven\}\}/g, radii.length ? `<ul>${radii.join('')}</ul>` : '');
@@ -199,15 +197,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
     htmlString = htmlString.replace(/\{\{sixteen\}\}/g, item?.next_thorough_exam || '');
     htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description || '');
     htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars || '');
-    console.log(
-      "First Examination: " + item?.first_examination,
-      " | Six Month Interval: " + item?.six_month_interval,
-      " | Twelve Month Interval: " + item?.twelve_month_interval,
-      " | Correct Installation: " + item?.correct_installation,
-      " | Examination Scheme: " + item?.examination_scheme,
-      " | Exceptional Circumstances: " + item?.exceptional_circumstances,
-      " | Safe to Use: " + item?.safe_to_use
-    );
+   
         // Replace placeholders in CSS:
     cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination ? "36%" : "43.79%");
     cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval ? "89%" : "96%");
@@ -250,9 +240,9 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
   };
 
   const printAnnexure = async (item: any) => {
-    console.log(item,"item");
+   
    const data = generateRows(item?.annexures)
-   console.log(data,"data");
+  
    const response = await fetch("/backside1/annex-certificate-elevator.html");
    let htmlString = await response.text();
    htmlString = htmlString.replace(/\{\{html\}\}/g, data.rowsHtml);
@@ -263,7 +253,6 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
    htmlString = htmlString.replace(/\{\{one\}\}/g, item?.inspection_date);
    htmlString = htmlString.replace(/\{\{two\}\}/g, item?.certificate_no);
    htmlString = htmlString.replace(/\{\{three\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
-   console.log(htmlString,"htmlString");
     // Open a new window for printing
     const printWindow = window.open('', '', 'width=1033,height=1823');
     if (!printWindow) return;
@@ -372,7 +361,6 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
         // Fetch supplier options
         const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
         if (suppliers) {
-            console.log("suppliers",suppliers);
             
           setSupplierOptions(suppliers?.filter((item:any)=>item.status==="ACTIVE"));
         }
