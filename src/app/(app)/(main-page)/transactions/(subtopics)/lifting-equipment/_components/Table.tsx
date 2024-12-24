@@ -412,7 +412,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
   }, [changed]);
    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
   return (
-    <div className="px-8 py-3 bg-white w-[98%] mx-auto relative flex-1 ">
+    <div className="px-8 py-3 bg-white w-[98%] mx-auto  ">
       <Table className="w-full">
         <TableHeader>
           <TableRow>

@@ -264,7 +264,7 @@ document.head.removeChild(styleElement);
         
       }, [changed]);
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto ">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow className='flex justify-start'>

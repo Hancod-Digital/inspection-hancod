@@ -20,6 +20,8 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { AvatarFallback } from '@/components/ui/avatar';
 import { formatDateWithHyphen, splitDesignation } from '@/lib/utils';
 import { AvatarWithTooltip } from './Table';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 export default function CertificateTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -454,7 +456,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             };
         };
     };
-    
+    const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage} = usePagination(data)
 
 
     return (
@@ -552,6 +554,9 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                     ))}
                 </TableBody>
             </Table>
+            <div className='absolute bottom-0 right-0 '>
+                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                </div>
         </div>
     );
 }

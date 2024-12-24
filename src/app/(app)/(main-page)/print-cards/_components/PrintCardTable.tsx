@@ -25,6 +25,8 @@ import { UserService } from '@/services/api/user-service';
 import TableSpinner from '@/components/animated/TableSpinner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarWithTooltip } from './Table';
+import { PaginationDemo } from '@/components/pagination-demo';
+import usePagination from '@/hooks/usePagination';
 
 export default function PrintCardTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -296,6 +298,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
   const handleCloseEdit = () => {
     setEditingRow(null);
   };
+  const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage} = usePagination(data)
 
   return (
     <div className="px-8 py-3 bg-white w-[98%] mx-auto">
@@ -387,6 +390,9 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
           ))}
         </TableBody>
       </Table>
+      <div className='absolute bottom-0 right-0 '>
+                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                </div>
     </div>
   );
 }

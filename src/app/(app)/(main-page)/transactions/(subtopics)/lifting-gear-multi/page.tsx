@@ -90,7 +90,7 @@ const LiftingGearMulti = () => {
       }, [changed]);
     return (
         <motion.div 
-            className='w-full bg-[#fafbfb]'
+            className='w-full bg-[#fafbfb] relative h-full'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
