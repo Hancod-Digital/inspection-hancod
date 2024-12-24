@@ -353,6 +353,63 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
     }
   };
   const [changed,setChanged] = useState(false)
+  const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
+  const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
+  
+  const [annexureOptions, setAnnexureOptions] = useState<any[]>([]);
+  const [locationOptions, setLocationOptions] = useState<any[]>([]);
+ 
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const masterService = new MasterService();
+        // Fetch minor category options
+        const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
+        if (minorCategories) {
+          setMinorCategoryOptions(minorCategories);
+        }
+
+        // Fetch supplier options
+        const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
+        if (suppliers) {
+            console.log("suppliers",suppliers);
+            
+          setSupplierOptions(suppliers);
+        }
+
+        // Fetch standard options
+        const standards = await masterService.getAllSubtopicDetails('standard');
+        if (standards) {
+          setStandardOptions(standards);
+        }
+
+        // Fetch annexure options
+        const annexures = await masterService.getAllSubtopicDetails('annexure');
+        if (annexures) {
+          setAnnexureOptions(annexures);
+        }
+
+        // Fetch location options
+        const locations = await masterService.getAllSubtopicDetails('location');
+        if (locations) {
+          setLocationOptions(locations);
+        }
+        // Fetch owner options
+        const owners = await masterService.getAllSubtopicDetails('owner');
+        if (owners) {
+          setOwnerOptions(owners);
+        }
+
+      
+      } catch (error) {
+        console.error('Error fetching options:', error);
+        // Optionally, handle the error (e.g., show a notification)
+      }
+    };
+    fetchOptions();
+    console.log("refetchiongg");
+    
+  }, [changed]);
    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
   return (
     <div className="px-8 py-3 bg-white w-[98%] mx-auto relative min-h-[500px]">
@@ -428,7 +485,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                       <TableCell colSpan={9}>
                         <div className="overflow-hidden">
                           {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
-                          {isEquipment && <Equipment onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} changed={changed} />}
+                          {isEquipment && <Equipment  onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} changed={changed} minorCategoryOptions={minorCategoryOptions} supplierOptions={supplierOptions} standardOptions={standardOptions} annexureOptions={annexureOptions} locationOptions={locationOptions} ownerOptions={ownerOptions} />}
                           {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                           {isOwner && <Owner onClose={()=>setIsOwner(false)} />}
                           {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react' 
+import React, { useEffect, useState } from 'react' 
 import Header from './_components/Header'
 import AddForm from './_components/AddEquipment'
 
@@ -14,6 +14,7 @@ const Table = dynamic(
   import Equipment from '@/app/(app)/(main-page)/masters/(subtopics)/equipment/_components/AddEquipment'
   import Standard from '@/app/(app)/(main-page)/masters/(subtopics)/standard/_components/AddEquipment'
   import Manufacturer from '@/app/(app)/(main-page)/masters/(subtopics)/manufacturer/_components/AddEquipment'
+import { MasterService } from '@/services/api/masters-service'
 const LiftingGearMulti = () => {
     const [isAdd, setIsAdd] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>('');
@@ -30,6 +31,63 @@ const LiftingGearMulti = () => {
     const [isSite, setIsSite] = useState<boolean>(false);
     const [isArea, setIsArea] = useState<boolean>(false);
     const [isManufacturer, setIsManufacturer] = useState<boolean>(false);
+    const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
+    const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
+    const [standardOptions, setStandardOptions] = useState<any[]>([]);
+    const [annexureOptions, setAnnexureOptions] = useState<any[]>([]);
+    const [locationOptions, setLocationOptions] = useState<any[]>([]);
+    const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
+    useEffect(() => {
+        const fetchOptions = async () => {
+          try {
+            const masterService = new MasterService();
+            // Fetch minor category options
+            const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
+            if (minorCategories) {
+              setMinorCategoryOptions(minorCategories);
+            }
+    
+            // Fetch supplier options
+            const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
+            if (suppliers) {
+                console.log("suppliers",suppliers);
+                
+              setSupplierOptions(suppliers);
+            }
+    
+            // Fetch standard options
+            const standards = await masterService.getAllSubtopicDetails('standard');
+            if (standards) {
+              setStandardOptions(standards);
+            }
+    
+            // Fetch annexure options
+            const annexures = await masterService.getAllSubtopicDetails('annexure');
+            if (annexures) {
+              setAnnexureOptions(annexures);
+            }
+    
+            // Fetch location options
+            const locations = await masterService.getAllSubtopicDetails('location');
+            if (locations) {
+              setLocationOptions(locations);
+            }
+            // Fetch owner options
+            const owners = await masterService.getAllSubtopicDetails('owner');
+            if (owners) {
+              setOwnerOptions(owners);
+            }
+    
+          
+          } catch (error) {
+            console.error('Error fetching options:', error);
+            // Optionally, handle the error (e.g., show a notification)
+          }
+        };
+        fetchOptions();
+        console.log("refetchiongg");
+        
+      }, [changed]);
     return (
         <motion.div 
             className='w-full bg-[#fafbfb]'
@@ -89,7 +147,7 @@ const LiftingGearMulti = () => {
 
                     >
                         {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
-                        {isEquipment && <Equipment changed={changed} onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} />}
+                        {isEquipment && <Equipment  changed={changed} onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} minorCategoryOptions={minorCategoryOptions} supplierOptions={supplierOptions} standardOptions={standardOptions} annexureOptions={annexureOptions} locationOptions={locationOptions} ownerOptions={ownerOptions} />}
                         {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                         {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}
                         {!isLocation && !isEquipment && !isStandard && !isManufacturer && (
