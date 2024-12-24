@@ -41,7 +41,7 @@ const equipmentDetailsSchema = object({
   authority: string().nonempty('Authority is required'),
   standard: string().nonempty('Standard is required'),
   type_of_exam: string().nonempty('Type of Exam is required'),
-  description_of_test: string().nonempty('Description of Test is required'),
+  description_of_test: string().optional(),
   job_order_no: string().nonempty('Job Order No. is required'),
   test_particulars: string().nonempty('Test Particulars is required'),
   defect_description: string().nonempty('Defect Description is required'),
@@ -58,7 +58,7 @@ const equipmentDetailsSchema = object({
   registration_no: string().nonempty('Registration No. is required'),
   result: string().nonempty('Result is required'),
   surveyor: string().nonempty('Surveyor is required'), 
-  result_description: string().nonempty('Test Particulars is required'),
+  result_description: string().optional(),
   owner_name: string().nonempty('Owner Name is required'),
   description: string().nonempty('Description is required').optional(),
   equipment_description: string().nonempty('Equipment Description is required'),
@@ -67,7 +67,7 @@ const equipmentDetailsSchema = object({
   approval_status: string().nonempty('Approval Status is required'),
   location: string().nonempty('Location is required'),
   serial_no: string().nonempty('Serial No. is required'),
-  _no: string().nonempty('Model is required'),
+ 
   owner_id: string().nonempty('Owner ID is required')
 });
 
@@ -113,6 +113,7 @@ export default function EditEquipmentDetailsForm({
 
   // Fetch existing data
   const existingData = findRecordById(id);
+  console.log(existingData?.result);
   
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -238,7 +239,7 @@ console.log(methods.formState.errors);
         setValue("next_test_exam", String(selectedEquipment.next_test_date) || "");
         setValue("last_thorough_exam", String(selectedEquipment.last_thorough_date) || "");
         setValue("next_thorough_exam", String(selectedEquipment.next_thorough_date) || "");
-        setValue("result", selectedEquipment.result || "");
+        setValue("result", selectedEquipment.result == "SCRAP" ? "SCRAP" : "SATISFACTORY" || "");
         setValue("surveyor", selectedEquipment.surveyor || "");
         setValue("result_description", selectedEquipment.result_description || "");
         setValue("owner_name", String(selectedEquipment.owner_id) || "");
@@ -246,7 +247,7 @@ console.log(methods.formState.errors);
         setValue("equipment_description", String(selectedEquipment.description) || "");
         setValue("manufacturer", String(selectedEquipment.manufacturer) || "");
         setValue("tested_standard", existingData.tested_standard || "");
-        setValue("approval_status", selectedEquipment.approval_status || "");
+        setValue("approval_status", selectedEquipment.approval_status == "true" ? "Approved" : "Rejected" || "");
         setValue("serial_no", String(selectedEquipment.serial_no) || "");
         setValue("model_no", String(selectedEquipment.model_no) || "");
         setValue("owner_id", String(selectedEquipment.owner_id) || "");
@@ -897,14 +898,15 @@ console.log(methods.formState.errors);
                       <Controller
                         name="result"
                         control={control}
+                        defaultValue={existingData?.result}
                         render={({ field }) => (
                           <Select onValueChange={field.onChange} value={field.value}>
                             <SelectTrigger id="result">
                               <SelectValue placeholder="Select result" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Active">Active</SelectItem>
-                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            <SelectItem value="SCRAP">SCRAP</SelectItem>
+                            <SelectItem value="SATISFACTORY">SATISFACTORY</SelectItem>
                             </SelectContent>
                           </Select>
                         )}
@@ -979,7 +981,7 @@ console.log(methods.formState.errors);
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Approved">Approved</SelectItem>
-                          <SelectItem value="Not Approved">Not Approved</SelectItem>
+                          <SelectItem value="Rejected">Rejected</SelectItem>
                         </SelectContent>
                       </Select>
                     )}
