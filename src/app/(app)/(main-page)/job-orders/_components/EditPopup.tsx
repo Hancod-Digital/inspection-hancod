@@ -73,10 +73,10 @@ export default function SurveyForm({ onClose, id,setIsState,isState }: SurveyFor
       if (surveyors) setSurveyorOptions(surveyors);
   
       const locations = await getAllSingleSubtopic("location");
-      if (locations) setLocationOptions(locations);
+      if (locations) setLocationOptions(locations.filter((item:any)=>item.status==="ACTIVE"));
   
       const equipments = await getAllSingleSubtopic("equipment");
-      if (equipments) setEquipmentOptions(equipments);
+      if (equipments) setEquipmentOptions(equipments.filter((item:any)=>item.status==="ACTIVE"));
     };
   
     fetchData();

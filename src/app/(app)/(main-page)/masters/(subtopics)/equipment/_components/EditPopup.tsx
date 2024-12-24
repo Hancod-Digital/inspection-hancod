@@ -142,37 +142,37 @@ useEffect(()=>{
         // Fetch minor category options
         const minorCategories = await getAllSingleSubtopic('minor_category');
         if (minorCategories) {
-          setMinorCategoryOptions(minorCategories);
+          setMinorCategoryOptions(minorCategories.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch supplier options
         const suppliers = await getAllSingleSubtopic('manufacturer');
         if (suppliers) {
-          setSupplierOptions(suppliers);
+          setSupplierOptions(suppliers.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch standard options
         const standards = await getAllSingleSubtopic('standard');
         if (standards) {
-          setStandardOptions(standards);
+          setStandardOptions(standards.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch annexure options
         const annexures = await getAllSingleSubtopic('annexure');
         if (annexures) {
-          setAnnexureOptions(annexures);
+          setAnnexureOptions(annexures.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch location options
         const locations = await getAllSingleSubtopic('location');
         if (locations) {
-          setLocationOptions(locations);
+          setLocationOptions(locations.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch owner options
         const owners = await getAllSingleSubtopic('owner');
         if (owners) {
-          setOwnerOptions(owners);
+          setOwnerOptions(owners.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch equipment type options

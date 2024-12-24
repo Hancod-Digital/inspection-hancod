@@ -63,7 +63,7 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
           const fetchEquipments = async () => {
             const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
             if (data) {
-              setEquipmentOptions(data); 
+              setEquipmentOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
           fetchEquipments();
@@ -71,7 +71,7 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
             const data = await getAllSingleSubtopic("site"); // Fetch the areas
             if (data) {
             
-              setSiteOptions(data); 
+              setSiteOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
           fetchSites();
@@ -79,14 +79,14 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
             const data = await getAllSingleSubtopic("owner"); // Fetch the areas
         
             if (data) {
-              setOwnerOptions(data); 
+              setOwnerOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
           fetchOwners();
           const fetchStandards = async () => {
             const data = await getAllSingleSubtopic("standard"); // Fetch the areas
             if (data) {
-              setStandardOptions(data); 
+              setStandardOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
           fetchStandards();
@@ -219,7 +219,7 @@ document.head.removeChild(styleElement);
             // Fetch minor category options
             const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
             if (minorCategories) {
-              setMinorCategoryOptions(minorCategories);
+              setMinorCategoryOptions(minorCategories?.filter((item:any)=>item.status==="ACTIVE"));
             }
     
             // Fetch supplier options
@@ -227,30 +227,30 @@ document.head.removeChild(styleElement);
             if (suppliers) {
                 console.log("suppliers",suppliers);
                 
-              setSupplierOptions(suppliers);
+              setSupplierOptions(suppliers?.filter((item:any)=>item.status==="ACTIVE"));
             }
     
             // Fetch standard options
             const standards = await masterService.getAllSubtopicDetails('standard');
             if (standards) {
-              setStandardOptions(standards);
+              setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE"));
             }
     
             // Fetch annexure options
             const annexures = await masterService.getAllSubtopicDetails('annexure');
             if (annexures) {
-              setAnnexureOptions(annexures);
+              setAnnexureOptions(annexures?.filter((item:any)=>item.status==="ACTIVE"));
             }
     
             // Fetch location options
             const locations = await masterService.getAllSubtopicDetails('location');
             if (locations) {
-              setLocationOptions(locations);
+              setLocationOptions(locations?.filter((item:any)=>item.status==="ACTIVE"));
             }
             // Fetch owner options
             const owners = await masterService.getAllSubtopicDetails('owner');
             if (owners) {
-              setOwnerOptions(owners);
+              setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE"));
             }
     
           

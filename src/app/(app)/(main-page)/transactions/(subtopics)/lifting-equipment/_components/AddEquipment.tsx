@@ -179,7 +179,7 @@ console.log(res);
     const fetchSurveyors = async () => {
       const data = await getAllSingleSubtopic("surveyor"); // Fetch the areas
       if (data) {
-        setSurveyorOptions(data); // Set the area options to the fetched data
+        setSurveyorOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchSurveyors();
@@ -187,7 +187,7 @@ console.log(res);
     const fetchOwners = async () => {
       const data = await getAllSingleSubtopic('owner')
       if (data) {
-        setOwnerOptions(data)
+        setOwnerOptions(data.filter((item:any)=>item.status==="ACTIVE"))
       }
     }
     
@@ -195,7 +195,7 @@ console.log(res);
     const fetchAuthorities = async () => {
       const data = await getAllSingleSubtopic("authority"); // Fetch the areas
       if (data) {
-        setAuthorityOptions(data); // Set the area options to the fetched data
+        setAuthorityOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchAuthorities();
@@ -212,7 +212,7 @@ console.log(res);
       const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
 
       if (data) {
-        setEquipmentNoOptions(data); // Set the area options to the fetched data
+        setEquipmentNoOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchEquipmentNos();
@@ -220,7 +220,7 @@ console.log(res);
     const fetchStandards = async () => {
       const data = await getAllSingleSubtopic("standard"); // Fetch the areas
       if (data) {
-        setStandardOptions(data); // Set the area options to the fetched data
+        setStandardOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchStandards();
@@ -228,7 +228,7 @@ console.log(res);
     const fetchManufacturers = async () => {
       const data = await getAllSingleSubtopic("manufacturer"); // Fetch the areas
       if (data) {
-        setManufacturerOptions(data); // Set the area options to the fetched data
+        setManufacturerOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchManufacturers();
@@ -241,7 +241,7 @@ console.log(res);
 
 console.log(data);
 
-            setLocationOptions(data); // Set the location options to the fetched data
+            setLocationOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the location options to the fetched data
           }
         }
       })

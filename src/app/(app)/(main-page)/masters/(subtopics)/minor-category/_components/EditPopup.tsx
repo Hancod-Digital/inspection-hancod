@@ -97,8 +97,8 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
           getAllSingleSubtopic('major_category'),
           getAllSingleSubtopic('standard'),
         ]); 
-        setMajorCategories(categories || []);
-        setStandardOptions(standards || []);
+        setMajorCategories(categories.filter((item:any)=>item.status==="ACTIVE") || []);
+        setStandardOptions(standards.filter((item:any)=>item.status==="ACTIVE") || []);
       } catch (error) {
         console.error('Failed to fetch select options:', error);
       }

@@ -41,7 +41,7 @@ const LiftingEquipment = () => {
             // Fetch minor category options
             const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
             if (minorCategories) {
-              setMinorCategoryOptions(minorCategories);
+              setMinorCategoryOptions(minorCategories.filter((item:any)=>item.status==="ACTIVE"));
             }
     
             // Fetch supplier options
@@ -49,30 +49,30 @@ const LiftingEquipment = () => {
             if (suppliers) {
                 console.log("suppliers",suppliers);
                 
-              setSupplierOptions(suppliers);
+              setSupplierOptions(suppliers.filter((item:any)=>item.status==="ACTIVE"));
             }
     
             // Fetch standard options
             const standards = await masterService.getAllSubtopicDetails('standard');
             if (standards) {
-              setStandardOptions(standards);
+              setStandardOptions(standards.filter((item:any)=>item.status==="ACTIVE"));
             }
     
             // Fetch annexure options
             const annexures = await masterService.getAllSubtopicDetails('annexure');
             if (annexures) {
-              setAnnexureOptions(annexures);
+              setAnnexureOptions(annexures.filter((item:any)=>item.status==="ACTIVE"));
             }
     
             // Fetch location options
             const locations = await masterService.getAllSubtopicDetails('location');
             if (locations) {
-              setLocationOptions(locations);
+              setLocationOptions(locations.filter((item:any)=>item.status==="ACTIVE"));
             }
             // Fetch owner options
             const owners = await masterService.getAllSubtopicDetails('owner');
             if (owners) {
-              setOwnerOptions(owners);
+              setOwnerOptions(owners.filter((item:any)=>item.status==="ACTIVE"));
             }
     
           

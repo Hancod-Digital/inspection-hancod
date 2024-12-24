@@ -68,7 +68,7 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
         const data = await getAllSingleSubtopic("site"); // Fetch sites
         if (data) {
         
-          setSiteOptions(data);
+          setSiteOptions(data.filter((item:any)=>item.status==="ACTIVE"));
         }
       } catch (error) {
         console.error("Error fetching sites:", error);

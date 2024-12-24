@@ -61,7 +61,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
           const fetchEquipments = async () => {
             const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
             if (data) {
-              setEquipmentOptions(data); 
+              setEquipmentOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
           fetchEquipments();
@@ -69,7 +69,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
             const data = await getAllSingleSubtopic("site"); // Fetch the areas
             if (data) {
               
-              setSiteOptions(data); 
+              setSiteOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
           fetchSites();
@@ -77,14 +77,14 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
             const data = await getAllSingleSubtopic("owner"); // Fetch the areas
         
             if (data) {
-              setOwnerOptions(data); 
+              setOwnerOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
           fetchOwners();
           const fetchStandards = async () => {
             const data = await getAllSingleSubtopic("standard"); // Fetch the areas
             if (data) {
-              setStandardOptions(data); 
+              setStandardOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
           fetchStandards();

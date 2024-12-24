@@ -49,10 +49,10 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
       const standards = await getAllSingleSubtopic('standard');
 
       if (jobOrders) setJobOrderNoOptions(jobOrders);
-      if (equipments) setEquipmentOptions(equipments);
-      if (sites) setSiteOptions(sites);
-      if (owners) setOwnerOptions(owners);
-      if (standards) setStandardOptions(standards);
+      if (equipments) setEquipmentOptions(equipments?.filter((item:any)=>item.status==="ACTIVE"));
+      if (sites) setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE"));
+      if (owners) setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE"));
+      if (standards) setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE"));
     };
     fetchData();
   }, [getAllSingleSubtopic]);
@@ -80,14 +80,14 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
     const fetchManufacturers = async () => {
       const data = await getAllSingleSubtopic("manufacturer"); // Fetch the areas
       if (data) {
-        setManufacturerOptions(data); // Set the area options to the fetched data
+        setManufacturerOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchManufacturers();
     const fetchOwners = async () => {
       const data = await getAllSingleSubtopic("owner"); // Fetch the areas
       if (data) {
-        setOwnerOptions(data); // Set the area options to the fetched data
+        setOwnerOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchOwners();
@@ -366,7 +366,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
         // Fetch minor category options
         const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
         if (minorCategories) {
-          setMinorCategoryOptions(minorCategories);
+          setMinorCategoryOptions(minorCategories?.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch supplier options
@@ -374,30 +374,30 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
         if (suppliers) {
             console.log("suppliers",suppliers);
             
-          setSupplierOptions(suppliers);
+          setSupplierOptions(suppliers?.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch standard options
         const standards = await masterService.getAllSubtopicDetails('standard');
         if (standards) {
-          setStandardOptions(standards);
+          setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch annexure options
         const annexures = await masterService.getAllSubtopicDetails('annexure');
         if (annexures) {
-          setAnnexureOptions(annexures);
+          setAnnexureOptions(annexures?.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch location options
         const locations = await masterService.getAllSubtopicDetails('location');
         if (locations) {
-          setLocationOptions(locations);
+          setLocationOptions(locations?.filter((item:any)=>item.status==="ACTIVE"));
         }
         // Fetch owner options
         const owners = await masterService.getAllSubtopicDetails('owner');
         if (owners) {
-          setOwnerOptions(owners);
+          setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE"));
         }
 
       

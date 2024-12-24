@@ -195,14 +195,14 @@ console.log(methods.formState.errors);
         ]);
   
         console.log(equipmentNos, "jpk");
-        setSiteOptions(sites || []);
-        setAuthorityOptions(authorities || []);
+        setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
+        setAuthorityOptions(authorities?.filter((item:any)=>item.status==="ACTIVE") || []);
         setJobOrderNoOptions(jobOrders || []);
-        setEquipmentNoOptions(equipmentNos || []);
-        setStandardOptions(standards || []);
-        setManufacturerOptions(manufacturers || []);
-        setSurveyorOptions(surveyors || []);
-        setOwnerOptions(owners || []);
+        setEquipmentNoOptions(equipmentNos?.filter((item:any)=>item.status==="ACTIVE") || []);
+        setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE") || []);
+        setManufacturerOptions(manufacturers?.filter((item:any)=>item.status==="ACTIVE") || []);
+        setSurveyorOptions(surveyors?.filter((item:any)=>item.status==="ACTIVE") || []);
+        setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE") || []);
       } catch (error) {
         console.error("Error fetching select options:", error);
         toastWithTimeout(ToastVariant.Error, "Failed to load form options.");

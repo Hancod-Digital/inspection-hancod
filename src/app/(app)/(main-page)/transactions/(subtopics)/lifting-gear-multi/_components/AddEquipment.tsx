@@ -194,7 +194,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     const fetchSurveyors = async () => {
       const data = await getAllSingleSubtopic("surveyor"); // Fetch the areas
       if (data) {
-        setSurveyorOptions(data); // Set the area options to the fetched data
+        setSurveyorOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchSurveyors();
@@ -202,14 +202,14 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     const fetchOwners = async () => {
       const data = await getAllSingleSubtopic('owner')
       if (data) {
-        setOwnerOptions(data)
+        setOwnerOptions(data?.filter((item:any)=>item.status==="ACTIVE"))
       }
     }
     fetchOwners()
     const fetchAuthorities = async () => {
       const data = await getAllSingleSubtopic("authority"); // Fetch the areas
       if (data) {
-        setAuthorityOptions(data); // Set the area options to the fetched data
+        setAuthorityOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchAuthorities();
@@ -226,7 +226,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
       const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
   
       if (data) {
-        setEquipmentNoOptions(data); // Set the area options to the fetched data
+        setEquipmentNoOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchEquipmentNos();
@@ -234,7 +234,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     const fetchStandards = async () => {
       const data = await getAllSingleSubtopic("standard"); // Fetch the areas
       if (data) {
-        setStandardOptions(data); // Set the area options to the fetched data
+        setStandardOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchStandards();
@@ -242,7 +242,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     const fetchManufacturers = async () => {
       const data = await getAllSingleSubtopic("manufacturer"); // Fetch the areas
       if (data) {
-        setManufacturerOptions(data); // Set the area options to the fetched data
+        setManufacturerOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchManufacturers();

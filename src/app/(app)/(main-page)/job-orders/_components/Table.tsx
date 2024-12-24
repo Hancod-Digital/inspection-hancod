@@ -39,14 +39,14 @@ export default function JobTable({isState,setIsState}:{isState:boolean,setIsStat
     const fetchLocations = async () => {
       const data: any = await getAllSingleSubtopic("location"); // Fetch the areas
       if (data) {
-        setLocationOptions(data); // Set the area options to the fetched data
+        setLocationOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchLocations();
     const fetchEquipment = async () => {
       const data: any = await getAllSingleSubtopic("equipment"); // Fetch the areas
       if (data) {
-        setEquipmentOptions(data); // Set the area options to the fetched data
+        setEquipmentOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchEquipment();

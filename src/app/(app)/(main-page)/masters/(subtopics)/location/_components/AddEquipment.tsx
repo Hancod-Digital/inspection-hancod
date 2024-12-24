@@ -69,7 +69,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
         const data = await getAllSingleSubtopic("site"); // Fetch sites
         if (data) {
         
-          setSiteOptions(data);
+          setSiteOptions(data.filter((item:any)=>item.status==="ACTIVE"));
         }
       } catch (error) {
         console.error("Error fetching sites:", error);
@@ -90,7 +90,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
         const data = await getAllSingleSubtopic('area');
   
         if (data && Array.isArray(data)) {
-          const filteredAreas = data.filter((area: any) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
+          const filteredAreas = data.filter((area: any) => area.status==="ACTIVE").filter((area: any) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
 
            
           setAreaOptions(filteredAreas);

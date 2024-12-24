@@ -204,14 +204,14 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
       ]); 
-      setSiteOptions(sites || []);
-      setAuthorityOptions(authorities || []);
+      setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
+      setAuthorityOptions(authorities?.filter((item:any)=>item.status==="ACTIVE") || []);
       setJobOrderNoOptions(jobOrders || []);
-      setEquipmentNoOptions(equipments || []);
-      setStandardOptions(standards || []);
-      setManufacturerOptions(manufacturers || []);
-      setSurveyorOptions(surveyors || []);
-      setOwnerOptions(owners || []);
+      setEquipmentNoOptions(equipments?.filter((item:any)=>item.status==="ACTIVE") || []);
+      setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE") || []);
+      setManufacturerOptions(manufacturers?.filter((item:any)=>item.status==="ACTIVE") || []);
+      setSurveyorOptions(surveyors?.filter((item:any)=>item.status==="ACTIVE") || []);
+      setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE") || []);
     };
 
     fetchOptions();

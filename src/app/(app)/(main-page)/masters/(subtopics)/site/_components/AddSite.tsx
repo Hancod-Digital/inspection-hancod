@@ -47,7 +47,7 @@ export default function EquipmentDetailsForm({ onClose, setIsArea }: EquipmentDe
       const data = await getAllSingleSubtopic("area"); // Fetch the areas
       if (data) {
  
-        setAreaOptions(data); // Set the area options to the fetched data
+        setAreaOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchAreas();

@@ -38,7 +38,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     const fetchSubtopics = async () => {
       const subtopics:any = await getAllSingleSubtopic('equipment_type');
        
-      setEquipmentTypeOptions(subtopics); // Store the fetched data in state
+      setEquipmentTypeOptions(subtopics.filter((item:any)=>item.status==="ACTIVE")); // Store the fetched data in state
     };
 
     fetchSubtopics(); // Call the function to fetch data when component mounts
