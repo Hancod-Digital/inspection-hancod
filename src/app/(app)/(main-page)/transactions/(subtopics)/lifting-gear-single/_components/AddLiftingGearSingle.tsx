@@ -324,14 +324,14 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                         </Select>
                       )}
                     />
-                    <Button
+                    {/* <Button
                     size="icon"
                     variant="outline"
                     className="absolute bg-primary text-white font-bold right-0 top-0"
                     onClick={()=>setIsLocation(true)}>
 
                     <PlusIcon className="h-4 w-4" />
-                  </Button>
+                  </Button> */}
                     {errors.location && (
                       <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                     )}</div>
@@ -464,14 +464,14 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                         </Select>
                       )}
                     />
-                    <Button
+                    {/* <Button
                     size="icon"
                     variant="outline"
                     className="absolute bg-primary text-white font-bold right-0 top-0"
                     onClick={()=>setIsEquipment(true)}>
 
                     <PlusIcon className="h-4 w-4" />
-                  </Button>
+                  </Button> */}
                     {errors.equipment_no && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
                     )}
@@ -549,14 +549,14 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                         );
                       }}
                     />
-                    <Button
+                    {/* <Button
                     size="icon"
                     variant="outline"
                     className="absolute bg-primary text-white font-bold right-0 top-0"
                     onClick={()=>setIsStandard(true)}>
 
                     <PlusIcon className="h-4 w-4" />
-                  </Button>
+                  </Button> */}
                     {errors.standard && (
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                     )}</div>
@@ -788,14 +788,14 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                         );
                       }}
                     />
-                    <Button
+                    {/* <Button
                     size="icon"
                     variant="outline"
                     className="absolute bg-primary text-white font-bold right-0 top-0"
                     onClick={()=>setIsManufacturer(true)}>
 
                     <PlusIcon className="h-4 w-4" />
-                  </Button>
+                  </Button> */}
                     {errors.manufacturer && (
                       <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                     )}</div>
