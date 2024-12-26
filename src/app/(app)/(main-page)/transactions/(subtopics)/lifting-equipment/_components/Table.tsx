@@ -21,11 +21,11 @@ import { MasterService } from '@/services/api/masters-service';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { generateRows } from '@/lib/utils';
-import Manufacturer from '../../../../masters/(subtopics)/manufacturer/_components/AddEquipment'
-import Location from '../../../../masters/(subtopics)/location/_components/AddEquipment'
-import Equipment from '../../../../masters/(subtopics)/equipment/_components/AddEquipment'
-import Standard from '../../../../masters/(subtopics)/standard/_components/AddEquipment'
-import Owner from '../../../../masters/(subtopics)/owner/_components/AddEquipment'
+// import Manufacturer from '../../../../masters/(subtopics)/manufacturer/_components/AddEquipment'
+// import Location from '../../../../masters/(subtopics)/location/_components/AddEquipment'
+// import Equipment from '../../../../masters/(subtopics)/equipment/_components/AddEquipment'
+// import Standard from '../../../../masters/(subtopics)/standard/_components/AddEquipment'
+// import Owner from '../../../../masters/(subtopics)/owner/_components/AddEquipment'
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
 
@@ -473,11 +473,11 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                     >
                       <TableCell colSpan={9}>
                         <div className="overflow-hidden">
-                          {isLocation && <Location onClose={() => setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={isChanged} />}
+                          {/* {isLocation && <Location onClose={() => setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={isChanged} />}
                           {isEquipment && <Equipment  onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} changed={changed} minorCategoryOptions={minorCategoryOptions} supplierOptions={supplierOptions} standardOptions={standardOptions} annexureOptions={annexureOptions} locationOptions={locationOptions} ownerOptions={ownerOptions} />}
                           {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                           {isOwner && <Owner onClose={()=>setIsOwner(false)} />}
-                          {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}
+                          {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />} */}
                           {!isLocation && !isEquipment && !isStandard && !isOwner && !isManufacturer && <EditPopup onClose={handleCloseEdit} id={item.id} setIsLocation={setIsLocation} setIsEquipment={setIsEquipment} setIsStandard={setIsStandard} setIsOwner={setIsOwner} setIsManufacturer={setIsManufacturer} />}
                         </div>
                       </TableCell>
