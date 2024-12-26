@@ -47,7 +47,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         // Fetch major categories
         const majorCats = await getAllSingleSubtopic('major_category');
  
-        setMajorCategories(majorCats || []);
+        setMajorCategories(majorCats?.filter((item:any)=>item.status === 'ACTIVE') || []);
 
         // Fetch standards
         const stds = await getAllSingleSubtopic('standard');
