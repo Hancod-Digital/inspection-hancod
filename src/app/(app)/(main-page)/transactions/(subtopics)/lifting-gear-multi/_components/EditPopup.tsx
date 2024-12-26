@@ -239,7 +239,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       const data = await makeApiCall(() => new MasterService().getLocationDetails(), {
         afterSuccess: (data:any)=>{
           if (data) {
-            setLocationOptions(data); // Set the location options to the fetched data
+            setLocationOptions(data?.filter((item:any)=>item.location.status==="ACTIVE")); // Set the location options to the fetched data
           }
         }
       });
