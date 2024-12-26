@@ -821,7 +821,7 @@ console.log(location, currentData.location,res,res?.map((item)=>item.site));
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="Satisfactory">Satisfactory</SelectItem>
-                            <SelectItem value="Scrape">Scrape</SelectItem>
+                            <SelectItem value="Scrap">Scrap</SelectItem>
                           </SelectContent>
                         </Select>
                       )}

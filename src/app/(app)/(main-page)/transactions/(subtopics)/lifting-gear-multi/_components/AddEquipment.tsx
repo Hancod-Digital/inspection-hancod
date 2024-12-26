@@ -748,7 +748,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="Satisfactory">Satisfactory</SelectItem>
-                            <SelectItem value="Scrape">Scrape</SelectItem>
+                            <SelectItem value="Scrap">Scrap</SelectItem>
                           </SelectContent>
                         </Select>
                       )}
