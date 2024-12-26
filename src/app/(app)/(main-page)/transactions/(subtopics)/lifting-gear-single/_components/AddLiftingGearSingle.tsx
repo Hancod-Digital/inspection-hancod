@@ -860,6 +860,15 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                   </div>
                 </div>
                 
+                
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                    <SafetyChecklist
+                      values={safetyChecklistValues}
+                      onChange={handleSafetyChecklistChange}
+                    />
+                  </div>
+                </div>
                 <div className="space-y-4 w-full">
                   <div className="grid gap-4 grid-cols-1 w-full">
                   <div className="grid grid-cols-[400px_1fr]  gap-4">
@@ -881,14 +890,6 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                       <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
                     )}
                      </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-                    <SafetyChecklist
-                      values={safetyChecklistValues}
-                      onChange={handleSafetyChecklistChange}
-                    />
                   </div>
                 </div>
                 <div className="flex justify-end gap-4">

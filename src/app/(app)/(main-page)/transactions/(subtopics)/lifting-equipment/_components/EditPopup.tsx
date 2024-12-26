@@ -985,10 +985,11 @@ export default function EditEquipmentDetailsForm({
                 {/* Tables Section */}
                 <div className="space-y-4">
                   {/* Properties Table */}
+                  {equipmentNoOptions.find((item) => item.id == equipment_no)?.item_type !== 'Lifting Accessories' && (
                   <div className="grid gap-4 grid-cols-1">
                     <Table data={existingData?.properties} setData={setData} item_type={item_type} />
                   </div>
-
+                  )}
                   {/* Annexures Table */}
                   <div className="grid gap-4 grid-cols-1">
                     <AnnexuresTable 
