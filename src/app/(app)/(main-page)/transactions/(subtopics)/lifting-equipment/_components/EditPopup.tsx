@@ -241,7 +241,7 @@ export default function EditEquipmentDetailsForm({
         setValue("surveyor", selectedEquipment.surveyor || "");
         setValue("result_description", selectedEquipment.result_description || "");
         setValue("owner_name", String(selectedEquipment.owner_id) || "");
-        setValue("description", String(selectedEquipment.description) || "");
+      
         setValue("equipment_description", String(selectedEquipment.description) || "");
         setValue("manufacturer", String(selectedEquipment.manufacturer) || "");
         setValue("tested_standard", existingData.tested_standard || "");
@@ -733,6 +733,7 @@ export default function EditEquipmentDetailsForm({
                               </SelectItem>
                             ))}
                           </SelectContent>
+                          
                         </Select>
                       )}
                     />

@@ -136,7 +136,7 @@ setSelectedEquipment(selectedEquipment)
         setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || ''); // Update year of manufacture
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || ''); // Update test cert/coc no
         setValue('safe_working_load', String(selectedEquipment.safe_working_load) || ''); // Update safe working load
-        setValue('description', String(selectedEquipment.description) || ''); // Update description
+       
         setValue('equipment_description', String(selectedEquipment.description) || ''); // Update equipment description
         setValue('title', String(selectedEquipment.title) || ''); // Update title
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard

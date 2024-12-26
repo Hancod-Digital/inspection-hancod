@@ -288,7 +288,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
         setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
         setValue('proof_load', String(selectedEquipment.proof_load) || '');
-        setValue('description', String(selectedEquipment.description) || '');
+        
         setValue('equipment_description', String(selectedEquipment.description) || '');
         setValue('title', String(selectedEquipment.title) || '');
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
