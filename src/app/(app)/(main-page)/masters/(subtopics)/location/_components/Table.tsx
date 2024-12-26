@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Table,
@@ -17,13 +17,27 @@ import DeleteDialogue from '@/components/ui/delete-dialog';
 import Site from '../../site/_components/AddSite';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
+import { useQueryClient } from '@tanstack/react-query';
+import { MasterService } from '@/services/api/masters-service';
 
 export default function EquipmentTable({searchValue, setIsSite, isSite, setIsArea, isArea,setIsChanged,isChanged}:{searchValue:string, setIsSite: (value: boolean) => void, isSite: boolean, setIsArea: (value: boolean) => void, isArea: boolean,setIsChanged:any,isChanged:any}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { FetchLocationDetails , deleteRecord} = useSubtopic(); // Assuming this is a hook from your context
- const {data,error} =  FetchLocationDetails()
-    // Call the hook directly at the top level of the component
-    
+    const [data, setData] = useState<any>(null);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const datas = await new MasterService().getLocationDetails();
+          console.log(datas);
+          setData(datas); // Update state with the fetched data
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+    }, [isChanged]); // Empty dependency array ensures this runs once when the component mounts
+  
       
     const handleEditClick = (slNo: number) => {
         setEditingRow(slNo === editingRow ? null : slNo); 

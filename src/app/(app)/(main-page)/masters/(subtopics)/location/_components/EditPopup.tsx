@@ -19,6 +19,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import { flushSync } from 'react-dom'; // Import flushSync for synchronous state updates
 import { locationDataRange } from '@/lib/utils';
 import { PlusIcon } from 'lucide-react';
+import { MasterService } from '@/services/api/masters-service';
 
 // Define the Zod schema for form validation (Area removed)
 const equipmentDetailsSchema = object({
@@ -38,13 +39,24 @@ interface EquipmentDetailsFormProps {
 export default function EquipmentDetailsForm({ onClose, id, setIsSite }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [siteData, setSiteData] = useState<any[]>([]); // State for site dropdown options
-  const [data, setData] = useState<any>(null); // State for existing record data
+  const [datas, setData] = useState<any>(null); // State for existing record data
 
   const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic,FetchLocationDetails } = useSubtopic();
-  const {data:datas,error} =  FetchLocationDetails()
-  console.log(id);
-  
-  console.log(datas?.find((item:any)=>item.location?.id==id));
+ 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const datas = await new MasterService().getLocationDetails();
+        console.log(datas);
+        setData(datas); // Update state with the fetched data
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []); // Empty dependency array ensures this runs once when the component mounts
+
   
   const methods = useForm<EquipmentDetailsSchemaType>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -89,10 +101,11 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
   // Handle form submission
   const onSubmitHandler: SubmitHandler<EquipmentDetailsSchemaType> = async (values) => {
     setLoading(true); 
+console.log(values);
 
     // Prepare the updated data
     const updatedData = {
-      ...data,
+      
       location: values.location,
       site: Number(values.site),
       status: values.status,

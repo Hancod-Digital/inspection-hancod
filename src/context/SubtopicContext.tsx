@@ -17,7 +17,7 @@ interface SubtopicContextType {
   findRecordById: (id: number) => any;
   getAllSingleSubtopic: (subtopic: string) => Promise<any[] | undefined>;
   UseMergedDataQuery: (subtopic: string, from: string, to: string) => { data: any, isLoading: boolean, error: any };
-  FetchLocationDetails: () => { data: any, isLoading: boolean, error: any };
+  FetchLocationDetails: any
   FetchMajorCategory:() => { data: any, isLoading: boolean, error: any };
   FetchMinorCategory:() => { data: any, isLoading: boolean, error: any };
   getMergedData: (dateRange: DateRange[], subtopic: string) => Promise<any>;
@@ -33,6 +33,7 @@ interface SubtopicContextType {
   getSingleJobOrder: (id:string) => Promise<any[] | undefined>;
   editJobOrder: (id:string,updates:object) => Promise<any[] | undefined>;
   deleteJobOrder:any
+   
   addJobOrder:any
 }
 
@@ -121,13 +122,16 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
   };
 
   // Fetch location details using React Query
-  const FetchLocationDetails = () => {
+  const FetchLocationDetails = async() => {
+    
     return useQuery({
       queryKey: ['locationDetails'],
       queryFn: () => masterService.getLocationDetails(),
       staleTime: 5 * 60 * 1000, 
     });
   };
+
+
 
   const FetchMajorCategory = () => {
     return useQuery({
@@ -302,6 +306,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
         propertiesLoading,
         propertiesError,
         getAllJobOrders,
+       
         getSingleJobOrder,
         editJobOrder,
         deleteJobOrder,

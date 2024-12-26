@@ -3,11 +3,28 @@ import { Input } from "@/components/ui/input"
 import { PlusIcon, Search } from "lucide-react"
 import { useSubtopic } from "@/context/SubtopicContext";
 import * as XLSX from 'xlsx';
+import { useState } from "react";
+import { useEffect } from "react";
+import { MasterService } from "@/services/api/masters-service";
 export default function Component({ onOpen,onSearchChange }:{onOpen: () => void,onSearchChange:any}) {
     
 
     const { FetchLocationDetails } = useSubtopic();
-    const { data, error } = FetchLocationDetails();
+    const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const datas = await new MasterService().getLocationDetails();
+        console.log(datas);
+        setData(datas); // Update state with the fetched data
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []); // Empty dependency array ensures this runs once when the component mounts
+
 
     const exportToExcel = () => {
         if (data) {
