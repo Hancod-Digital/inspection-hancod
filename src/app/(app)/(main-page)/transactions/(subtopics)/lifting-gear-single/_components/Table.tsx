@@ -311,7 +311,7 @@ document.head.removeChild(styleElement);
                                                     </button>
                                                 }
                                             />
-                                            <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>
+                                            {item?.approval_status && <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>

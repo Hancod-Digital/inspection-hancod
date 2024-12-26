@@ -317,7 +317,7 @@ const htmlElement = document.createElement('div');
                                               </button>
                                                 }
                                             />
-                                            <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>
+                                            {item?.approval_status == "true" && <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>

@@ -456,7 +456,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                                               </button>
                                                 }
                                             />
-                        <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>
+                        {item.approval_status == 'true' && <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>}
                        {equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == 'ELEVATOR CERTIFICATE' &&  <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>}
                        {equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == 'ELEVATOR CERTIFICATE' && item?.description && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
                       </DropdownMenuContent>
