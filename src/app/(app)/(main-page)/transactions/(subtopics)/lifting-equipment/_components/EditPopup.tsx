@@ -188,7 +188,7 @@ export default function EditEquipmentDetailsForm({
           getAllSingleSubtopic("surveyor"),
           getAllSingleSubtopic("owner"),
           makeApiCall(() => new MasterService().getLocationDetails(), {
-            afterSuccess: (data: any) => setLocationOptions(data),
+            afterSuccess: (data: any) => setLocationOptions(data.filter((item:any)=>item.location.status==="ACTIVE")),
           }),
         ]);
   
