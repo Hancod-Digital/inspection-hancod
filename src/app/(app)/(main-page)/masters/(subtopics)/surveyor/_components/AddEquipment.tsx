@@ -91,7 +91,7 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
     }
     // Combine form values and competencies before submitting
     
-    await addRecord({ surveyor: values.surveyor, qualification: values.qualification, code: values.code, digital_signature: digitalSignatureUrl },competencies,"surveyor");
+    await addRecord({status:values.status, surveyor: values.surveyor, qualification: values.qualification, code: values.code, digital_signature: digitalSignatureUrl },competencies,"surveyor");
     setLoading(false);
     onClose();
   };

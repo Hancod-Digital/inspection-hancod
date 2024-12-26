@@ -136,6 +136,7 @@ export default function SurveyorDetailsForm({ onClose, id }: SurveyorDetailsForm
       qualification: values.qualification,
       code: values.code,
       digital_signature: digitalSignatureUrl, // Use the updated URL
+      status:values.status
     };
 
     await updateRecord(id, updatedData, dummy);
