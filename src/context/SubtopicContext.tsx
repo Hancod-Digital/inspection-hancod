@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { MasterService } from '@/services/api/masters-service';
 import { locationDataRange,  majorCategoryDataRange, minorCategoryDataRange, siteDataRange } from '@/lib/utils';
@@ -44,6 +44,7 @@ interface SubtopicProviderProps {
 }
 
 export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, children }) => {
+  const [changed,setChanged] = useState(false);
   const masterService = new MasterService();
   const queryClient = useQueryClient();
  
@@ -86,6 +87,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
 
   const getAllSingleSubtopic = async (subtopic: string) => {
    await queryClient.invalidateQueries({ queryKey: ['subtopics', subtopic] });
+   await queryClient.refetchQueries({ queryKey: ['subtopics', subtopic] });
     let data = queryClient.getQueryData<any[]>(['subtopics', subtopic]);
 
     if (!data) {

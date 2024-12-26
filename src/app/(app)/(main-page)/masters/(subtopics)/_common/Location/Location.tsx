@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
+import { PlusIcon } from 'lucide-react';
 
 // Define TypeScript interfaces for type safety
 export interface Site {
@@ -36,11 +37,13 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
-  changed: boolean;
-  setChanged: (value: boolean) => void;
+  setIsSite: (value: boolean) => void;
+  setIsArea: (value: boolean) => void;
+  setIsChanged:any;
+  isChanged:any;
 }
 
-export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,setIsChanged,isChanged}: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [siteOptions, setSiteOptions] = useState<Site[]>([]); // State for site options
   const [areaOptions, setAreaOptions] = useState<Area[]>([]); // State for area options
@@ -69,6 +72,8 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
         if (data) {
         
           setSiteOptions(data.filter((item:any)=>item.status==="ACTIVE"));
+          console.log("site fetching dynamically");
+          
         }
       } catch (error) {
         console.error("Error fetching sites:", error);
@@ -76,7 +81,7 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
       }
     };
     fetchSites();
-  }, [getAllSingleSubtopic,changed]);
+  }, [getAllSingleSubtopic,isChanged]);
 
   useEffect(() => {
     const fetchAreas = async () => {
@@ -89,7 +94,7 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
         const data = await getAllSingleSubtopic('area');
   
         if (data && Array.isArray(data)) {
-          const filteredAreas = data.filter((area: any) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
+          const filteredAreas = data.filter((area: any) => area.status==="ACTIVE").filter((area: any) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
 
            
           setAreaOptions(filteredAreas);
@@ -106,16 +111,15 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
       }
     };
     fetchAreas();
-  }, [getAllSingleSubtopic, selectedSite,siteOptions,changed]);
+  }, [getAllSingleSubtopic, selectedSite,siteOptions,isChanged]);
   
 
-   
+  
 
   // Reset form on successful submission
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
-      
       setAreaOptions([]); // Optionally, reset areas after submission
     }
   }, [isSubmitSuccessful, reset]);
@@ -125,8 +129,6 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
     setLoading(true); 
     try {
       await addRecord(values,null,"location"); // Add new record
-      setChanged(!changed)
-      
     } catch (error) {
       console.error("Error adding record:", error);
       // Optionally, handle the error (e.g., show a notification)
@@ -169,7 +171,7 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
                   {/* Site Field with dynamic dropdown */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
-                    <div>
+                    <div className="relative">
                       <Controller
                         name="site"
                         control={control}
@@ -199,6 +201,14 @@ export default function EquipmentDetailsForm({ onClose,changed ,setChanged}: Equ
                           </Select>
                         )}
                       />
+                      <Button
+                          size="icon"
+                          variant="outline"
+                          className="absolute bg-primary text-white font-bold right-0 top-0"
+                          onClick={()=>setIsSite(true)}>
+
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
                       {errors.site && (
                         <p className="text-red-500 mt-1">{errors.site.message}</p>
                       )}

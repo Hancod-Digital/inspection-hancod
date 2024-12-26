@@ -133,7 +133,7 @@ const Equipment = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table searchValue={searchValue} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation}/>
+                        <Table searchValue={searchValue} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation}  setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} setChanged={setChanged} changed={changed}/>
                     </motion.div>
                 ) : (
                     <motion.div

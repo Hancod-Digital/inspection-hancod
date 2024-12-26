@@ -84,6 +84,7 @@ const LiftingEquipment = () => {
         console.log("refetchiongg");
         
       }, [changed]);
+      const [isChanged,setIsChanged] = useState(false);
     return (
         <motion.div 
             className='w-full bg-[#fafbfb] h-full relative'
@@ -139,7 +140,7 @@ const LiftingEquipment = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
-                    >{isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
+                    >{isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={isChanged}/>}
                         {isEquipment && <Equipment changed={changed} onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} minorCategoryOptions={minorCategoryOptions} supplierOptions={supplierOptions} standardOptions={standardOptions} annexureOptions={annexureOptions} locationOptions={locationOptions} ownerOptions={ownerOptions} />}
                         {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                         {isOwner && <Owner onClose={()=>setIsOwner(false)} />}

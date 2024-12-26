@@ -22,6 +22,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { MasterService } from '@/services/api/masters-service';
 
 // Validation schema using Zod
 const equipmentDetailsSchema = object({
@@ -62,9 +63,11 @@ interface EquipmentDetailsFormProps {
   setIsManufacturer: (value: boolean) => void;
   setIsStandard: (value: boolean) => void;
   setIsLocation: (value: boolean) => void;
+  setChanged: (value: boolean) => void;
+  changed: boolean;
 }
 
-export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isStandard, isLocation, setIsManufacturer, setIsStandard, setIsLocation }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isStandard, isLocation, setIsManufacturer, setIsStandard, setIsLocation,setChanged,changed }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState<any>(false);
   const { addRecord, updateRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
 
@@ -138,43 +141,44 @@ useEffect(()=>{
   // Fetch options for select fields
   useEffect(() => {
     const fetchOptions = async () => {
+      const masterService = new MasterService();
       try {
         // Fetch minor category options
-        const minorCategories = await getAllSingleSubtopic('minor_category');
+        const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
         if (minorCategories) {
           setMinorCategoryOptions(minorCategories.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch supplier options
-        const suppliers = await getAllSingleSubtopic('manufacturer');
+        const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
         if (suppliers) {
           setSupplierOptions(suppliers.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch standard options
-        const standards = await getAllSingleSubtopic('standard');
+        const standards = await masterService.getAllSubtopicDetails('standard');
         if (standards) {
           setStandardOptions(standards.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch annexure options
-        const annexures = await getAllSingleSubtopic('annexure');
+        const annexures = await masterService.getAllSubtopicDetails('annexure');
         if (annexures) {
           setAnnexureOptions(annexures.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch location options
-        const locations = await getAllSingleSubtopic('location');
+        const locations = await masterService.getAllSubtopicDetails('location');
         if (locations) {
           setLocationOptions(locations.filter((item:any)=>item.status==="ACTIVE"));
         }
 
         // Fetch owner options
-        const owners = await getAllSingleSubtopic('owner');
+        const owners = await masterService.getAllSubtopicDetails('owner');
         if (owners) {
           setOwnerOptions(owners.filter((item:any)=>item.status==="ACTIVE"));
         }
-
+        
         // Fetch equipment type options
          
 
@@ -189,7 +193,7 @@ useEffect(()=>{
       }
     };
     fetchOptions();
-  }, [getAllSingleSubtopic]);
+  }, [getAllSingleSubtopic,changed]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -215,6 +219,7 @@ useEffect(()=>{
       } else {
         await addRecord(payload);
       }
+      setChanged(!changed);
     } catch (error) {
       console.error('Error submitting form:', error);
       // Optionally, handle the error (e.g., show a notification)
