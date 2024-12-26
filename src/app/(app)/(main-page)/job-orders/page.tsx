@@ -14,7 +14,7 @@ const JobOrders = () => {
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
-
+    const [search,setSearch]=useState<string>("")
     return (
         <motion.div 
             className='w-full bg-[#fafbfb]'
@@ -39,7 +39,7 @@ const JobOrders = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Header onOpen={handleOpenAdd} />
+                        <Header search={search} setSearch={setSearch} onOpen={handleOpenAdd} />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -53,7 +53,7 @@ const JobOrders = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table isState={isState} setIsState={setIsState} />
+                        <Table isState={isState} setIsState={setIsState} search={search} setSearch={setSearch} />
                     </motion.div>
                 ) : (
                     <motion.div

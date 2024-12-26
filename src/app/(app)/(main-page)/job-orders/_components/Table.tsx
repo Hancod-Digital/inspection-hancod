@@ -8,10 +8,12 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import EditIcon from '@/components/icons/EditIcon';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import DeleteIcon from '@/components/icons/DeleteIcon';
+import usePagination from '@/hooks/usePagination';
+import { PaginationDemo } from '@/components/pagination-demo';
 
 
 
-export default function JobTable({isState,setIsState}:{isState:boolean,setIsState:any}) {
+export default function JobTable({isState,setIsState,search,setSearch}:{isState:boolean,setIsState:any,search:string,setSearch:any}) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const { getAllJobOrders, getAllSingleSubtopic, deleteJobOrder } = useSubtopic()
   const handleEditClick = (slNo: number) => {
@@ -54,7 +56,7 @@ export default function JobTable({isState,setIsState}:{isState:boolean,setIsStat
   const handleCloseEdit = () => {
     setEditingRow(null);
   };
-
+const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage,currentData}=usePagination(jobOrders.filter((item:any)=>item.job_no.includes(search)))
   return (
     <div className="px-8 py-3 bg-white w-[98%] mx-auto">
       <Table className="w-full">
@@ -71,7 +73,7 @@ export default function JobTable({isState,setIsState}:{isState:boolean,setIsStat
           </TableRow>
         </TableHeader>
         <TableBody>
-          {jobOrders?.map((item: any, idx: number) => (
+          {currentData?.map((item: any, idx: number) => (
             <React.Fragment key={idx}>
               <TableRow className="flex">
                 <TableCell className="py-4 flex-[1]">{idx + 1}</TableCell>
@@ -115,6 +117,9 @@ export default function JobTable({isState,setIsState}:{isState:boolean,setIsStat
           ))}
         </TableBody>
       </Table>
+      <div className='absolute bottom-0 right-0 '>
+        <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+      </div>
     </div>
   );
 }
