@@ -93,6 +93,15 @@ export default function EditEquipmentDetailsForm({
   setIsManufacturer,
 }: EditEquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const [safetyChecklistValues, setSafetyChecklistValues] = useState({
+    firstExamination: 'no',
+    sixMonthInterval: 'no',
+    twelveMonthInterval: 'no',
+    correctInstallation: 'no',
+    examinationScheme: 'no',
+    exceptionalCircumstances: 'no',
+    safeToUse: 'no'
+  });
   const { getAllSingleSubtopic, updateRecord, findRecordById } = useSubtopic();
   const [testExamChecked, setTestExamChecked] = useState(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
@@ -114,7 +123,34 @@ export default function EditEquipmentDetailsForm({
   // Fetch existing data
   const existingData = findRecordById(id);
    console.log(ownerOptions.find((item)=>item.id==existingData.owner_id),ownerOptions);
-   
+
+
+   useEffect(() => {
+    const fetchEquipmentData = async () => {
+      const data = await findRecordById(id);
+     
+      
+      if (data) {
+         
+        setSafetyChecklistValues({
+          firstExamination: data.first_examination ? 'yes' : 'no',
+          sixMonthInterval: data.six_month_interval ? 'yes' : 'no',
+          twelveMonthInterval: data.twelve_month_interval ? 'yes' : 'no',
+          correctInstallation: data.correct_installation ? 'yes' : 'no',
+          examinationScheme: data.examination_scheme ? 'yes' : 'no',
+          exceptionalCircumstances: data.exceptional_circumstances ? 'yes' : 'no',
+          safeToUse: data.safe_to_use ? 'yes' : 'no',
+        });
+
+        // Handle "Not Applicable" checkboxes
+        setTestExamChecked(!data.next_test_exam || data.next_test_exam === "Not Applicable");
+        setThoroughExamChecked(!data.next_thorough_exam || data.next_thorough_exam === "Not Applicable");
+      }
+    };
+
+    fetchEquipmentData();
+  }, [id, findRecordById]);
+      
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: existingData ? {
@@ -163,7 +199,12 @@ export default function EditEquipmentDetailsForm({
     setValue,
     formState: { isSubmitSuccessful, errors },
   } = methods;
-
+  const handleSafetyChecklistChange = (name: string, value: string) => {
+    setSafetyChecklistValues(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
   // Watch equipment_no to set related fields
   const equipment_no = watch('equipment_no');
   const job_order_no = watch('job_order_no');
@@ -174,7 +215,7 @@ export default function EditEquipmentDetailsForm({
       toastWithTimeout(ToastVariant.Success, "Equipment details updated successfully.");
     }
   }, [isSubmitSuccessful, reset, onClose]);
-
+  
   // Fetch all select options on component mount
   const [item_type,setItem_type]=useState<any>("");
   useEffect(() => {
@@ -289,9 +330,18 @@ export default function EditEquipmentDetailsForm({
     try {
       const formData = {
         ...values,
-        approval_status: values.approval_status === "Approved" ? true : false,
+        first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
+        six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
+        twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
+        correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
+        examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
+        exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
+        safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+        
         next_test_exam: testExamChecked ? "Not Applicable" : values.next_test_exam,
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam,
+        approval_status: values.approval_status === "Approved" ? true : false,
+        
         properties: data,
         annexures: annexureList,
       };
@@ -945,6 +995,14 @@ export default function EditEquipmentDetailsForm({
                       propertyList={annexureList} 
                       setPropertyList={setAnnexureList} 
                       id={equipment_no} 
+                    />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid gap-4 grid-cols-1">
+                    <SafetyChecklist
+                      values={safetyChecklistValues}
+                      onChange={handleSafetyChecklistChange}
                     />
                   </div>
                 </div>
