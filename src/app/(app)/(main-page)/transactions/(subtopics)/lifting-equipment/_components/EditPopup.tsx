@@ -217,38 +217,25 @@ export default function EditEquipmentDetailsForm({
       setItem_type(selectedEquipment?.property_table_type);
   
       if (selectedEquipment) {
-        setValue("location", String(existingData.location) || "");
-        setValue("inspection_date", existingData.inspection_date || "");
-        setValue("site", String(existingData.site) || "");
-        setValue("year_of_manufacture", String(existingData.year_of_manufacture) || "");
-        setValue("authority", String(existingData.authority) || "");
-        setValue("registration_no", String(existingData.registration_no) || "");
-        setValue("standard", String(existingData.standard) || "");
-        setValue("type_of_exam", existingData.type_of_exam || "");
-        setValue("defect_description", existingData.defect_description || "");
-        setValue("test_particulars", existingData.test_particulars || "");
-        setValue("description_of_test", existingData.description_of_test || "");
-        setValue("job_order_no", String(existingData.job_order_no) || "");
-        setValue("equipment_no", String(selectedEquipment.id) || "");
-        setValue("title", String(selectedEquipment.title) || "");
-        setValue("test_cert_coc_no", String(selectedEquipment.test_certificate_no) || "");
-        setValue("safe_working_load", String(selectedEquipment.safe_working_load) || "");
-        setValue("last_test_exam", String(selectedEquipment.last_test_date) || "");
-        setValue("next_test_exam", String(selectedEquipment.next_test_date) || "");
-        setValue("last_thorough_exam", String(selectedEquipment.last_thorough_date) || "");
-        setValue("next_thorough_exam", String(selectedEquipment.next_thorough_date) || "");
-        setValue("result", selectedEquipment.result == "SCRAP" ? "SCRAP" : "SATISFACTORY" || "");
-        setValue("surveyor", selectedEquipment.surveyor || "");
-        setValue("result_description", selectedEquipment.result_description || "");
-        setValue("owner_name", String(selectedEquipment.owner_id) || "");
-      
-        setValue("equipment_description", String(selectedEquipment.description) || "");
-        setValue("manufacturer", String(selectedEquipment.manufacturer) || "");
-        setValue("tested_standard", existingData.tested_standard || "");
-        setValue("approval_status", selectedEquipment.approval_status == "true" ? "Approved" : "Rejected" || "");
-        setValue("serial_no", String(selectedEquipment.serial_no) || "");
-        setValue("model_no", String(selectedEquipment.model_no) || "");
-        setValue("owner_id", String(selectedEquipment.owner_id) || "");
+        setValue('standard', selectedEquipment.standard || ''); // Update standard
+        setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
+        setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || ''); // Update year of manufacture
+        setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || ''); // Update test cert/coc no
+        setValue('safe_working_load', String(selectedEquipment.safe_working_load) || ''); // Update safe working load
+       
+        setValue('equipment_description', String(selectedEquipment.description) || ''); // Update equipment description
+        setValue('title', String(selectedEquipment.title) || ''); // Update title
+    
+     
+        setValue('owner_name', String(selectedEquipment.owner_id) || ''); // Update owner
+        setValue('registration_no', String(selectedEquipment.registration_no) || ''); // Update registration no
+        setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
+        setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
+        setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || ''); // Update last thorough exam
+        setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || ''); // Update next thorough exam
+        setValue('serial_no', String(selectedEquipment.serial_no) || ''); // Update serial no
+        setValue('model_no', String(selectedEquipment.model_no) || ''); // Update model_no
+        setValue('owner_id', String(selectedEquipment.owner_id) || ''); // Update owner id
       }
     }
      

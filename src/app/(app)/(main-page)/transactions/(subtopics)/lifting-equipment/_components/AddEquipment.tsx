@@ -139,8 +139,8 @@ setSelectedEquipment(selectedEquipment)
        
         setValue('equipment_description', String(selectedEquipment.description) || ''); // Update equipment description
         setValue('title', String(selectedEquipment.title) || ''); // Update title
-        setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
-        setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
+    
+     
         setValue('owner_name', String(selectedEquipment.owner_id) || ''); // Update owner
         setValue('registration_no', String(selectedEquipment.registration_no) || ''); // Update registration no
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
