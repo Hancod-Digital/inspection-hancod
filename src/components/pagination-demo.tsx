@@ -67,7 +67,7 @@ export function PaginationDemo({
       <PaginationContent>
         {/* Previous Button */}
         <PaginationItem>
-          <PaginationPrevious
+          <PaginationPrevious  className='cursor-pointer'
             onClick={onPreviousPage}
             isActive={currentPage == 1}
           />
@@ -79,7 +79,7 @@ export function PaginationDemo({
             {page === '...' ? (
               <PaginationEllipsis />
             ) : (
-              <PaginationLink
+              <PaginationLink  className='cursor-pointer'
                  onClick={() => onPageChange(Number(page))}
                 isActive={page === currentPage}
               >
@@ -91,7 +91,7 @@ export function PaginationDemo({
 
         {/* Next Button */}
         <PaginationItem>
-          <PaginationNext
+          <PaginationNext className='cursor-pointer'
             onClick={onNextPage}
             
             isActive={currentPage == totalPages}
