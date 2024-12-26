@@ -119,12 +119,12 @@ export default function EditEquipmentDetailsForm({
     defaultValues: existingData ? {
       inspection_date: existingData.inspection_date || '',
       site: String(existingData.site) || '',
-      authority: existingData.authority || '',
-      standard: existingData.standard || '',
+      authority: String(existingData.authority) || '',
+      standard: String(existingData.standard) || '',
       type_of_exam: existingData.type_of_exam || '',
       description_of_test: existingData.description_of_test || '',
-      job_order_no: existingData.job_order_no || '',
-      equipment_no: existingData.equipment_no || '',
+      job_order_no: String(existingData.job_order_no) || '',
+      equipment_no: String(existingData.equipment_no) || '',
       title: existingData.title || '',
       test_cert_coc_no: existingData.test_cert_coc_no || '',
       safe_working_load: existingData.safe_working_load || '',
@@ -134,14 +134,14 @@ export default function EditEquipmentDetailsForm({
       next_thorough_exam: existingData.next_thorough_exam || '',
       result: existingData.result || '',
       year_of_manufacture: existingData.year_of_manufacture || '',
-      surveyor: existingData.surveyor || '',
+      surveyor: String(existingData.surveyor) || '',
       result_description: existingData.result_description || '',
       owner_name: existingData.owner_name || '',
       defect_description: existingData.defect_description || '',
       test_particulars: existingData.test_particulars || '',
       description: existingData.description || '',
       equipment_description: existingData.equipment_description || '',
-      manufacturer: existingData.manufacturer || '',
+      manufacturer: String(existingData.manufacturer) || '',
       registration_no: existingData.registration_no || '',
       tested_standard: existingData.tested_standard || '',
       approval_status: existingData.approval_status || '',
@@ -199,7 +199,7 @@ export default function EditEquipmentDetailsForm({
         setEquipmentNoOptions(equipmentNos?.filter((item:any)=>item.status==="ACTIVE") || []);
         setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE") || []);
         setManufacturerOptions(manufacturers?.filter((item:any)=>item.status==="ACTIVE") || []);
-        setSurveyorOptions(surveyors?.filter((item:any)=>item.status==="ACTIVE") || []);
+        setSurveyorOptions(surveyors || []);
         setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE") || []);
       } catch (error) {
         console.error("Error fetching select options:", error);
@@ -217,7 +217,9 @@ export default function EditEquipmentDetailsForm({
       setItem_type(selectedEquipment?.property_table_type);
   
       if (selectedEquipment) {
-        setValue('standard', selectedEquipment.standard || ''); // Update standard
+        console.log(selectedEquipment.model_no);
+        
+        setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
         setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || ''); // Update year of manufacture
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || ''); // Update test cert/coc no
@@ -241,8 +243,7 @@ export default function EditEquipmentDetailsForm({
      
   }, [
     equipment_no,
-    equipmentNoOptions,
-    setValue,
+     
   ]); // Add all dependencies here
   
 
@@ -257,10 +258,12 @@ export default function EditEquipmentDetailsForm({
   },[job_order_no])
   // Handle checkboxes to disable date inputs
   useEffect(() => {
-    const selectedEquipment = equipmentNoOptions.find(item => item.id === equipment_no);
+    const selectedEquipment = equipmentNoOptions.find(item => item.id == equipment_no);
     if (selectedEquipment) {
-      setTestExamChecked(selectedEquipment.next_test_date == null);
-      setThoroughExamChecked(selectedEquipment.next_thorough_date == null);
+      console.log(selectedEquipment.next_test_date == null ? true :false);
+      
+      setTestExamChecked(selectedEquipment.next_test_date == null ? true :false);
+      setThoroughExamChecked(selectedEquipment.next_thorough_date == null ? true :false);
     }
   }, [equipment_no, equipmentNoOptions]);
 

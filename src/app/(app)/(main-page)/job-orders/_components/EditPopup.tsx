@@ -230,30 +230,13 @@ export default function SurveyForm({ onClose, id,setIsState,isState }: SurveyFor
                     )}
                   </div>
 
-                  {/* Equipment Details as a dropdown */}
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="equipment_details">Equipment Details</Label>
-                    <Controller
-                      name="equipment_details"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="equipment_details">
-                            <SelectValue placeholder="Select equipment" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {equipmentOptions.map((eq) => (
-                              <SelectItem key={eq.id} value={String(eq.id)}>
-                                {eq.equipment_no || eq.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
+                    <Input id="equipment_details" {...methods.register('equipment_details')} />
                     {errors.equipment_details && (
                       <p className="text-red-500">{errors.equipment_details.message}</p>
                     )}
+
                   </div>
 
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">

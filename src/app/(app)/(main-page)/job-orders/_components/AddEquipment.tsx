@@ -78,7 +78,7 @@ export default function SurveyForm({ onClose,setIsState,isState }: SurveyFormPro
       surveyor: Number(values.surveyorName),
       site_contact_person: values.siteContactPerson || '',
       location: Number(values.location),
-      equipment_details: values.equipmentDetails ? Number(values.equipmentDetails) : null,
+      equipment_details: values.equipmentDetails ,
       job_order_status: values.jobOrderStatus,
     
     };
