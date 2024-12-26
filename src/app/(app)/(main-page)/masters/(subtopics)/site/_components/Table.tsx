@@ -19,7 +19,7 @@ import Area from '../../area/_components/AddEquipment';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
 
-export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchValue:string, setIsArea: (value: boolean) => void, isArea: boolean}) {
+export default function EquipmentTable({searchValue, setIsArea, isArea,setIsChanged,isChanged}:{searchValue:string, setIsArea: (value: boolean) => void, isArea: boolean,setIsChanged:any,isChanged:any}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { isLoading, error, getMergedData, deleteRecord } = useSubtopic();
     const [subtopics, setSubtopics] = useState<any[]>([]); // Define the type as needed
@@ -108,7 +108,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea}:{searchV
                                         >
                                             <TableCell colSpan={5}>
                                                 <div className="overflow-hidden">
-                                                    {isArea && (<Area onClose={()=>setIsArea(false)}/>)}
+                                                    {isArea && (<Area onClose={()=>setIsArea(false)} setIsChanged={setIsChanged} isChanged={isChanged}/>)}
                                                     {!isArea && (<EditPopup setIsArea={setIsArea} onClose={handleCloseEdit} id={item.id} />)}
                                                 </div>
                                             </TableCell>

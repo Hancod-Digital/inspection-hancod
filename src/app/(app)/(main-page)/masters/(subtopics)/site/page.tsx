@@ -21,6 +21,7 @@ const Site = () => {
     const handleOpenArea = () => {
         setIsArea(true)
     }
+    const [isChanged, setIsChanged] = useState<boolean>(false);
     return (
         <motion.div 
             className='w-full bg-[#fafbfb] h-full'
@@ -62,7 +63,7 @@ const Site = () => {
                         className=''
                         transition={{ duration: 0.5 }}
                     >
-                        <Table searchValue={searchValue} setIsArea={setIsArea} isArea={isArea}/>
+                        <Table searchValue={searchValue} setIsArea={setIsArea} isArea={isArea} setIsChanged={setIsChanged} isChanged={isChanged}/>
                     </motion.div>
                 ) : (
                     <motion.div
@@ -72,8 +73,8 @@ const Site = () => {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        {isArea&& (<Area onClose={handleCloseArea} />)}
-                        {!isArea && (<AddForm setIsArea={setIsArea} onClose={handleCloseAdd} />)}
+                        {isArea&& (<Area onClose={handleCloseArea} setIsChanged={setIsChanged} isChanged={isChanged}/>)}
+                        {!isArea && (<AddForm setIsArea={setIsArea} onClose={handleCloseAdd} setIsChanged={setIsChanged} isChanged={isChanged}/>)}
                     </motion.div>
                 )}
             </AnimatePresence>
