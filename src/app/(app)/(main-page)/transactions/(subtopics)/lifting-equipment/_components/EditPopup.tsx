@@ -727,7 +727,7 @@ export default function EditEquipmentDetailsForm({
                             <SelectValue placeholder="Select surveyor" />
                           </SelectTrigger>
                           <SelectContent>
-                            {surveyorOptions.map((surveyor) => (
+                            {surveyorOptions.map((surveyor:any) => (
                               <SelectItem key={surveyor.id} value={String(surveyor.id)}>
                                 {surveyor.surveyor}
                               </SelectItem>

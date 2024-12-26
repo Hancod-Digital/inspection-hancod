@@ -182,7 +182,7 @@ export default function SurveyForm({ onClose, id,setIsState,isState }: SurveyFor
                             <SelectValue placeholder="Select surveyor" />
                           </SelectTrigger>
                           <SelectContent>
-                            {surveyorOptions.map((surveyor) => (
+                            {surveyorOptions.map((surveyor:any) => (
                               <SelectItem key={surveyor.id} value={String(surveyor.id)}>
                                 {surveyor.surveyor}
                               </SelectItem>
