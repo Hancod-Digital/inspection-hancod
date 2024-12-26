@@ -131,7 +131,7 @@ export default function EquipmentDetailsForm({ onClose ,setIsLocation,setIsEquip
 setSelectedEquipment(selectedEquipment)
       if (selectedEquipment) {
 
-        setValue('standard', selectedEquipment.standard || ''); // Update standard
+        setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
         setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || ''); // Update year of manufacture
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || ''); // Update test cert/coc no
