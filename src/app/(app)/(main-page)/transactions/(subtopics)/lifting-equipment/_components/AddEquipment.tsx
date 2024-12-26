@@ -149,7 +149,7 @@ setSelectedEquipment(selectedEquipment)
         setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || ''); // Update next thorough exam
         setValue('serial_no', String(selectedEquipment.serial_no) || ''); // Update serial no
         setValue('model_no', String(selectedEquipment.model_no) || ''); // Update model_no
-        setValue('owner_id', String(selectedEquipment.owner_id) || ''); // Update owner id
+        setValue('owner_id', String(ownerOptions.find((item:any)=>item.id==selectedEquipment.owner_id).code) || ''); // Update owner id
         // Add additional fields here if necessary
       }
     }
