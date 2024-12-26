@@ -76,6 +76,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const currentData = id ? findRecordById(id) : null;
  console.log(currentData);
  
+ 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -207,8 +208,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   // Fetch select options on mount
   useEffect(() => {
     const fetchOptions = async () => {
-      const [sites, authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
-        getAllSingleSubtopic("site"),
+      const [sites,authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
+         getAllSingleSubtopic("site"),
         getAllSingleSubtopic("authority"),
         getAllSingleSubtopic("job_orders"),
         getAllSingleSubtopic("equipment"),
@@ -216,9 +217,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         getAllSingleSubtopic("manufacturer"),
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
-      ]); 
+      ]);  
 
-      setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
+      // setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
       setAuthorityOptions(authorities?.filter((item:any)=>item.status==="ACTIVE") || []);
       setJobOrderNoOptions(jobOrders|| []);
       setEquipmentNoOptions(equipments?.filter((item:any)=>item.status==="ACTIVE") || []);
@@ -264,10 +265,12 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
   useEffect(() => {
     const fetchSites = async () => {
-      const res = locationOptions.filter((item: any) => item.location.id == location);
+      const res =  locationOptions.filter((item: any) => item.location.id == location ? location : currentData?.location);
+ 
+console.log(location, currentData.location,res,res?.map((item)=>item.site));
 
       if (res.length > 0) {
-        setSiteOptions([res[0].site]); // Set the site options based on selected location
+        setSiteOptions(res?.map((item)=>item.site)); // Set the area options to the fetched data
       } else {
         setSiteOptions([]); // Clear site options if no location is selected
       }
@@ -312,7 +315,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(()=>{
     if(job_order_no){
       const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-      console.log(job_order,"LLLLLLLL");
+    
        if(job_order){
         setValue('surveyor', job_order.surveyor)
        }
@@ -502,7 +505,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                           <SelectContent>
                             {siteOptions?.map((site: any) => (
                               <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.site} 
+                                {site?.name} 
                               </SelectItem>
                             ))}
                           </SelectContent>

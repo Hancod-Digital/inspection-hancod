@@ -175,8 +175,9 @@ setSelectedEquipment(selectedEquipment)
       const res = locationOptions.filter((item: any) => item.location.id == location);
   
       if (res.length > 0) {
+console.log(res);
 
-        setSiteOptions([res[0].site]); // Set the area options to the fetched data
+        setSiteOptions(res?.map((item:any)=>item.site)); // Set the area options to the fetched data
       }
     };
     fetchSites();

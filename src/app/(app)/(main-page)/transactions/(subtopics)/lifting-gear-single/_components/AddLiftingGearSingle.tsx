@@ -116,7 +116,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
       
       if (res.length > 0) {
        
-        setSiteOptions([res[0].site]); // Set the area options to the fetched data
+        setSiteOptions(res?.map((item:any)=>item.site)); // Set the area options to the fetched data
       }
     };
     fetchSites();

@@ -113,6 +113,7 @@ export default function EditEquipmentDetailsForm({
 
   // Fetch existing data
   const existingData = findRecordById(id);
+   console.log(existingData);
    
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -178,8 +179,8 @@ export default function EditEquipmentDetailsForm({
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const [sites, authorities, jobOrders, equipmentNos, standards, manufacturers, surveyors, owners] = await Promise.all([
-          getAllSingleSubtopic("site"),
+        const [ authorities, jobOrders, equipmentNos, standards, manufacturers, surveyors, owners] = await Promise.all([
+          // getAllSingleSubtopic("site"),
           getAllSingleSubtopic("authority"),
           getAllSingleSubtopic("job_orders"),
           getAllSingleSubtopic("equipment"),
@@ -193,7 +194,7 @@ export default function EditEquipmentDetailsForm({
         ]);
   
        
-        setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
+        // setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
         setAuthorityOptions(authorities?.filter((item:any)=>item.status==="ACTIVE") || []);
         setJobOrderNoOptions(jobOrders || []);
         setEquipmentNoOptions(equipmentNos?.filter((item:any)=>item.status==="ACTIVE") || []);
@@ -273,7 +274,8 @@ export default function EditEquipmentDetailsForm({
       const res = locationOptions.filter((item: any) => String(item.location.id) === watch('location'));
 
       if (res.length > 0) {
-        setSiteOptions([res[0].site]);
+        
+        setSiteOptions(res.map((item)=>item?.site));
       }
     };
     fetchSites();
@@ -470,7 +472,7 @@ export default function EditEquipmentDetailsForm({
                           <SelectContent>
                             {siteOptions.map((site) => (
                               <SelectItem key={site.id} value={String(site.id)}>
-                                {site.name}
+                                {site.site}
                               </SelectItem>
                             ))}
                           </SelectContent>
