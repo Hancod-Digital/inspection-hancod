@@ -88,7 +88,6 @@ const Equipment = () => {
           }
         };
         fetchOptions();
-        console.log("refetchiongg");
         
       }, [changed]);
       
