@@ -49,6 +49,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [ownerOptions,setOwnerOptions] = useState<any>([])
     const [standardOptions,setStandardOptions] = useState<any>([])
     const [equipmentOptions,setEquipmentOptions] = useState<any>([])
+    const [locationOptions,setLocationOptions] = useState<any>([])
     useEffect(()=>{
         const fetchJobOrderNos = async () => {
             const data = await getAllSingleSubtopic("job_orders"); // Fetch the areas
@@ -88,6 +89,13 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
             }
           };
           fetchStandards();
+          const fetchLocations = async () => {
+            const data = await getAllSingleSubtopic("location"); // Fetch the areas
+            if (data) {
+              setLocationOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
+            }
+          };
+          fetchLocations();
     },[data])
     const [state, setState] = useState<any[]>([]);
     const fetchEquipments = (id: string) => {
@@ -141,7 +149,7 @@ htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any)
 
 htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard);
 
-htmlString = htmlString.replace(/\{\{five\}\}/g, siteOptions.find((site: any) => site.id == item.site)?.site);
+htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location);
 htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date);
 
