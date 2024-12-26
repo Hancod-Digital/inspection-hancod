@@ -172,6 +172,9 @@ export default function SurveyForm({ onClose,setIsState,isState }: SurveyFormPro
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="siteContactPerson">Site Contact Person</Label>
                     <Input id="siteContactPerson" {...methods.register('siteContactPerson')} />
+                    {errors.siteContactPerson && (
+                      <p className="text-red-500">{errors.siteContactPerson.message}</p>
+                    )}
                   </div>
 
                   {/* Location */}
@@ -203,24 +206,11 @@ export default function SurveyForm({ onClose,setIsState,isState }: SurveyFormPro
                   {/* Equipment Details */}
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="equipmentDetails">Equipment Details</Label>
-                    <Controller
-                      name="equipmentDetails"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="equipmentDetails">
-                            <SelectValue placeholder="Select equipment" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {equipmentOptions.map((eq) => (
-                              <SelectItem key={eq.id} value={String(eq.id)}>
-                                {eq.equipment_no || eq.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
+                    <Input id="equipmentDetails" {...methods.register('equipmentDetails')} />
+                    {errors.equipmentDetails && (
+                      <p className="text-red-500">{errors.equipmentDetails.message}</p>
+                    )}
+
                   </div>
 
                   {/* Job Order Status */}
