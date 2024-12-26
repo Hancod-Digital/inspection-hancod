@@ -116,12 +116,13 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
     // Adjust these replacements to match your actual placeholders and data
     htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no || '');
     htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
-    htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_name)?.owner || '');
+    htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_name)?.code || '');
     htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard || '');
     htmlString = htmlString.replace(/\{\{five\}\}/g, siteOptions.find((site: any) => site.id == item.site)?.site || '');
     htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date || '');
 
     htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location :  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer );
+    htmlString = htmlString.replace(/\{\{six12\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : item?.year_of_manufacture.split('-')[0] );
     htmlString = htmlString.replace(/\{\{six2\}\}/g, equipment?.registration_no || '');
     htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer :data[0]?.serial_no || '');
     htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
