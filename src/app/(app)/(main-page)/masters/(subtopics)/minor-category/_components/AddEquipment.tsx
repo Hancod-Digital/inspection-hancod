@@ -51,8 +51,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
         // Fetch standards
         const stds = await getAllSingleSubtopic('standard');
-     
-        setStandards(stds || []);
+      
+        setStandards(stds?.filter((item:any)=>item.status === 'ACTIVE') || []);
       } catch (error) {
         console.error('Error fetching subtopics:', error);
       }
