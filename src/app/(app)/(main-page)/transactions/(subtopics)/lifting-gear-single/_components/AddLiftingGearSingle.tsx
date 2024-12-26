@@ -156,14 +156,14 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
       const data = await getAllSingleSubtopic('owner')
       if (data) {
         
-        setOwnerOptions(data)
+        setOwnerOptions(data?.filter((item:any)=>item.status==="ACTIVE"))
       }
     }
     fetchOwners()
     const fetchAuthorities = async () => {
       const data = await getAllSingleSubtopic("authority"); // Fetch the areas
       if (data) {
-        setAuthorityOptions(data); // Set the area options to the fetched data
+        setAuthorityOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchAuthorities();
@@ -179,7 +179,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
     const fetchEquipmentNos = async () => {
       const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
     if (data) {
-        setEquipmentNoOptions(data); // Set the area options to the fetched data
+        setEquipmentNoOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchEquipmentNos();
@@ -187,7 +187,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
     const fetchStandards = async () => {
       const data = await getAllSingleSubtopic("standard"); // Fetch the areas
       if (data) {
-        setStandardOptions(data); // Set the area options to the fetched data
+        setStandardOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchStandards();
@@ -195,7 +195,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
     const fetchManufacturers = async () => {
       const data = await getAllSingleSubtopic("manufacturer"); // Fetch the areas
       if (data) {
-        setManufacturerOptions(data); // Set the area options to the fetched data
+        setManufacturerOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchManufacturers();
@@ -206,7 +206,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
           if (data) {
         
           
-            setLocationOptions(data); // Set the location options to the fetched data
+            setLocationOptions(data?.filter((item:any)=>item.location.status==="ACTIVE")); // Set the location options to the fetched data
           }
         }
       })
@@ -214,7 +214,16 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
     };
     fetchLocations();
   }, [getAllSingleSubtopic]); // Runs once on component mount
-
+  const job_order_no = watch('job_order_no');
+  useEffect(()=>{
+    if(job_order_no){
+      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
+      console.log(job_order,"LLLLLLLL");
+       if(job_order){
+        setValue('surveyor', job_order.surveyor)
+       }
+    }
+  },[job_order_no])
   useEffect(() => {
     if (isSubmitSuccessful) {
       // reset();

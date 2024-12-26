@@ -115,8 +115,13 @@ export default function EquipmentDetailsForm({ onClose ,setIsLocation,setIsEquip
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null)
   const job_order_no = watch('job_order_no');
   useEffect(()=>{
-    console.log(job_order_no,"LLLLLLLL");
-    
+    if(job_order_no){
+      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
+      console.log(job_order,"LLLLLLLL");
+       if(job_order){
+        setValue('surveyor', job_order.surveyor)
+       }
+    }
   },[job_order_no])
   useEffect(() => {
     if (equipment_no) {
@@ -182,7 +187,7 @@ setSelectedEquipment(selectedEquipment)
     const fetchSurveyors = async () => {
       const data = await getAllSingleSubtopic("surveyor"); // Fetch the areas
       if (data) {
-        setSurveyorOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
+        setSurveyorOptions(data); // Set the area options to the fetched data
       }
     };
     fetchSurveyors();

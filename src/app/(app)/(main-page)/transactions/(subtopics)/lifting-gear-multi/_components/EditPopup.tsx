@@ -307,7 +307,16 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       setThoroughExamChecked(!selectedEquipment.next_thorough_date);
     }
   }, [equipment_no, equipmentNoOptions]);
-
+  const job_order_no = watch('job_order_no');
+  useEffect(()=>{
+    if(job_order_no){
+      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
+      console.log(job_order,"LLLLLLLL");
+       if(job_order){
+        setValue('surveyor', job_order.surveyor)
+       }
+    }
+  },[job_order_no])
   useEffect(() => {
     if (isSubmitSuccessful) {
       // Optionally reset the form or perform other actions

@@ -252,7 +252,16 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
       }
     }
   }, [equipment_no, equipmentNoOptions, setValue]);
-
+  const job_order_no = watch('job_order_no');
+  useEffect(()=>{
+    if(job_order_no){
+      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
+      console.log(job_order,"LLLLLLLL");
+       if(job_order){
+        setValue('surveyor', job_order.surveyor)
+       }
+    }
+  },[job_order_no])
   // Handle "Not Applicable" checkboxes based on equipment data
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);

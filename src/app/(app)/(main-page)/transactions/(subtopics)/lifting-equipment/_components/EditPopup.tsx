@@ -251,12 +251,7 @@ export default function EditEquipmentDetailsForm({
         setValue("owner_id", String(selectedEquipment.owner_id) || "");
       }
     }
-    if(job_order_no){
-      const selectedJobOrder = jobOrderNoOptions.find((item) => item.id == job_order_no);
-       console.log(selectedJobOrder,"LLLLLLLL");
-       
-      // setValue("job_order_no", String(existingData.location) || "");
-    }
+     
   }, [
     equipment_no,
     equipmentNoOptions,
@@ -264,6 +259,15 @@ export default function EditEquipmentDetailsForm({
   ]); // Add all dependencies here
   
 
+  useEffect(()=>{
+    if(job_order_no){
+      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
+      console.log(job_order,"LLLLLLLL");
+       if(job_order){
+        setValue('surveyor', job_order.surveyor)
+       }
+    }
+  },[job_order_no])
   // Handle checkboxes to disable date inputs
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find(item => item.id === equipment_no);

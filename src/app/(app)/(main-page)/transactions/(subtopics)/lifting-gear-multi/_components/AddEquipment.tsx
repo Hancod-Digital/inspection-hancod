@@ -162,6 +162,16 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
       }
     }
   }, [equipment_no, equipmentNoOptions, setValue]);
+  const job_order_no = watch('job_order_no');
+  useEffect(()=>{
+    if(job_order_no){
+      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
+       
+       if(job_order){
+        setValue('surveyor', job_order.surveyor)
+       }
+    }
+  },[job_order_no])
   useEffect(() => {
     if (equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date == null) {
       setTestExamChecked(true)
@@ -194,7 +204,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     const fetchSurveyors = async () => {
       const data = await getAllSingleSubtopic("surveyor"); // Fetch the areas
       if (data) {
-        setSurveyorOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
+        setSurveyorOptions(data); // Set the area options to the fetched data
       }
     };
     fetchSurveyors();
