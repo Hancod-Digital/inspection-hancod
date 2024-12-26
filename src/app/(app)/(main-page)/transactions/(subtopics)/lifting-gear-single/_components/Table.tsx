@@ -268,9 +268,9 @@ document.head.removeChild(styleElement);
                 <TableHeader>
                     <TableRow className='flex justify-start'>
                         <TableHead className="py-4 flex-[1]">Sl. No.</TableHead>
-                        <TableHead className="py-4 flex-[1]">Equipment ID</TableHead>
+                      
                         <TableHead className="py-4 flex-[2]">Title</TableHead>
-                         
+                        <TableHead className="py-4 flex-[1]">Equipment ID</TableHead>
                         <TableHead className="py-4 flex-[1]">Inspection Date</TableHead>
                         <TableHead className="py-4 flex-[1]">Next Test Exam</TableHead>
                         <TableHead className="py-4 flex-[1]">Result</TableHead>
@@ -283,8 +283,9 @@ document.head.removeChild(styleElement);
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
                                 <TableCell className="py-4 flex-[1]">{idx+1}</TableCell>
-                                <TableCell className="py-4 flex-[1]">{equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
                                 <TableCell className="py-4 flex-[2]">{item?.title}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
+                              
                                 
                                 <TableCell className="py-4 flex-[1]">{item?.last_thorough_exam}</TableCell>
                                 
