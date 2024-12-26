@@ -622,7 +622,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       id="title"  
                       {...register('title')} 
                       value={watch('title')} 
-                      readOnly // Make it read-only since it's auto-populated
+                       // Make it read-only since it's auto-populated
                     />
                     {errors.title && (
                       <p className="text-red-500 text-[12px] ">{errors.title.message}</p>
@@ -637,7 +637,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       id="equipment_description"  
                       {...register('equipment_description')} 
                       value={watch('equipment_description')} 
-                      readOnly // Make it read-only since it's auto-populated
+                       // Make it read-only since it's auto-populated
                     />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
@@ -652,7 +652,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       id="test_cert_coc_no"  
                       {...register('test_cert_coc_no')} 
                       value={watch('test_cert_coc_no')} 
-                      readOnly // Make it read-only since it's auto-populated
+                       // Make it read-only since it's auto-populated
                     />
                     {errors.test_cert_coc_no && (
                       <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
@@ -665,7 +665,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       id="safe_working_load"  
                       {...register('safe_working_load')} 
                       value={watch('safe_working_load')} 
-                      readOnly // Make it read-only since it's auto-populated
+                       // Make it read-only since it's auto-populated
                     />
                     {errors.safe_working_load && (
                       <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
@@ -678,7 +678,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       id="proof_load"  
                       {...register('proof_load')} 
                       value={watch('proof_load')} 
-                      readOnly // Make it read-only since it's auto-populated
+                       // Make it read-only since it's auto-populated
                     />
                     {errors.proof_load && (
                       <p className="text-red-500 text-[12px] ">{errors.proof_load.message}</p>
@@ -723,7 +723,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       type="date"
                       {...register('last_test_exam')}
                       value={watch('last_test_exam')}
-                      readOnly // Make it read-only since it's auto-populated
+                       // Make it read-only since it's auto-populated
                     />
                     {errors.last_test_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
@@ -737,7 +737,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       type="date"
                       {...register('last_thorough_exam')}
                       value={watch('last_thorough_exam')}
-                      readOnly // Make it read-only since it's auto-populated
+                       // Make it read-only since it's auto-populated
                     />
                     {errors.last_thorough_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>

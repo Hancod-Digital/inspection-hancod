@@ -526,7 +526,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                     <Input 
                       id="title"  
                       {...register('title')} 
-                      readOnly
+                      
                     />
                     {errors.title && (
                       <p className="text-red-500 text-[12px] ">{errors.title.message}</p>
@@ -539,7 +539,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                     <Input 
                       id="equipment_description"  
                       {...register('equipment_description')} 
-                      readOnly
+                      
                     />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
@@ -552,7 +552,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                     <Input 
                       id="test_cert_coc_no"  
                       {...register('test_cert_coc_no')} 
-                      readOnly
+                      
                     />
                     {errors.test_cert_coc_no && (
                       <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
@@ -563,7 +563,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                     <Input 
                       id="safe_working_load"  
                       {...register('safe_working_load')} 
-                      readOnly
+                      
                     />
                     {errors.safe_working_load && (
                       <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
@@ -574,7 +574,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                     <Input 
                       id="proof_load"  
                       {...register('proof_load')} 
-                      readOnly
+                      
                     />
                     {errors.proof_load && (
                       <p className="text-red-500 text-[12px] ">{errors.proof_load.message}</p>
@@ -620,7 +620,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                       id="last_test_exam"
                       type="date"
                       {...register('last_test_exam')}
-                      readOnly
+                      
                     />
                     {errors.last_test_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
@@ -633,7 +633,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                       id="last_thorough_exam"
                       type="date"
                       {...register('last_thorough_exam')}
-                      readOnly
+                     
                     />
                     {errors.last_thorough_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
