@@ -123,7 +123,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [equipmentNoOptions, setEquipmentNoOptions] = useState<any[]>([]);
   const [standardOptions, setStandardOptions] = useState<any[]>([]);
   const [manufacturerOptions, setManufacturerOptions] = useState<any[]>([]);
-  const [surveyorOptions, setSurveyorOptions] = useState<any[]>([]);
+  const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
   const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
   const [locationOptions, setLocationOptions] = useState<any[]>([]);
 
