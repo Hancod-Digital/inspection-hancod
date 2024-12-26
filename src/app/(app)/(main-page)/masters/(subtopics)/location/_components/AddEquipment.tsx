@@ -124,7 +124,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
     
     setLoading(true); 
     try {
-      await addRecord(values,null,"equipment"); // Add new record
+      await addRecord(values,null,"location"); // Add new record
     } catch (error) {
       console.error("Error adding record:", error);
       // Optionally, handle the error (e.g., show a notification)
