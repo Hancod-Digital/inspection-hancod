@@ -41,13 +41,17 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
   const [data, setData] = useState<any>(null); // State for existing record data
 
   const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic,FetchLocationDetails } = useSubtopic();
-
+  const {data:datas,error} =  FetchLocationDetails()
+  console.log(id);
+  
+  console.log(datas?.find((item:any)=>item.location?.id==id));
+  
   const methods = useForm<EquipmentDetailsSchemaType>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      location: '',
-      site: '',
-      status: '',
+      location: datas?.find((item:any)=>item.location?.id==id)?.location?.name || '',
+      site: String(datas?.find((item:any)=>item.location?.id==id)?.site?.id) || '',
+      status: datas?.find((item:any)=>item.location?.id==id)?.location?.status || '',
     },
   });
 
@@ -57,28 +61,8 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
     control,
     formState: { isSubmitSuccessful, errors },
   } = methods;
-
-  // Fetch existing record data when the component mounts
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const {data,error} =  FetchLocationDetails()
-        let recordData:any; 
-        flushSync(() => {
-          setData(recordData);
-          reset({
-            location: recordData?.location || '',
-            site: String(recordData?.site?.id) || '',
-            status: recordData?.status || '',
-          });
-        });
-      } catch (error) {
-        console.error('Error fetching record:', error);
-      }
-    };
-
-    fetchData();
-  }, [id, findRecordByIdWithReference, reset]);
+ 
+ 
 
   // Fetch site dropdown options when the component mounts
   useEffect(() => {
@@ -134,7 +118,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
     >
       <Card className="w-full border-0 p-0 hover:bg-white">
         <CardHeader>
-          <CardTitle className="text-md">Equipment Details</CardTitle>
+          <CardTitle className="text-md">Location Details</CardTitle>
         </CardHeader>
         <CardContent>
           <FormProvider {...methods}>
@@ -170,7 +154,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
                               <SelectValue placeholder="Select site" />
                             </SelectTrigger>
                             <SelectContent>
-                              {siteData.map((site) => (
+                              {siteData.map((site:any) => (
                                 <SelectItem key={site.id} value={String(site.id)}>
                                   {site.site}
                                 </SelectItem>
