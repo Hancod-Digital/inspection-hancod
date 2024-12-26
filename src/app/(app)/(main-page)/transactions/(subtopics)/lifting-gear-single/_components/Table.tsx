@@ -282,7 +282,7 @@ document.head.removeChild(styleElement);
                     {currentData?.map((item:any,idx:number) => (
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
-                                <TableCell className="py-4 flex-[1]">{idx}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{idx+1}</TableCell>
                                 <TableCell className="py-4 flex-[1]">{equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
                                 <TableCell className="py-4 flex-[2]">{item?.title}</TableCell>
                                 
