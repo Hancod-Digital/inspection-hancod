@@ -42,10 +42,10 @@ const equipmentDetailsSchema = object({
   safe_working_load: string().nonempty('Safe working load is required'),
   last_test_date: string().nonempty('Last test date is required'),
   proof_load: string().nonempty('Proof load is required'),
-  next_test_date: string().nonempty('Next test date is required').optional(),
+  next_test_date: string().optional(),
   test_insp_frequency: string().nonempty('Test inspection frequency in months is required'),
   last_thorough_date: string().nonempty('Last thorough date is required'),
-  next_thorough_date: string().nonempty('Next thorough date is required').optional(),
+  next_thorough_date: string().optional(),
   description: string().nonempty('Description is required'),
   item_type: string().nonempty('Item type is required'),
   property_table_type: string().optional(), // Conditionally required

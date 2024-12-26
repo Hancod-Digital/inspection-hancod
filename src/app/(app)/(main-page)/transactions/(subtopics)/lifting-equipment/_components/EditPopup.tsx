@@ -164,7 +164,7 @@ export default function EditEquipmentDetailsForm({
 
   // Watch equipment_no to set related fields
   const equipment_no = watch('equipment_no');
-
+  const job_order_no = watch('job_order_no');
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -250,6 +250,12 @@ export default function EditEquipmentDetailsForm({
         setValue("model_no", String(selectedEquipment.model_no) || "");
         setValue("owner_id", String(selectedEquipment.owner_id) || "");
       }
+    }
+    if(job_order_no){
+      const selectedJobOrder = jobOrderNoOptions.find((item) => item.id == job_order_no);
+       console.log(selectedJobOrder,"LLLLLLLL");
+       
+      // setValue("job_order_no", String(existingData.location) || "");
     }
   }, [
     equipment_no,

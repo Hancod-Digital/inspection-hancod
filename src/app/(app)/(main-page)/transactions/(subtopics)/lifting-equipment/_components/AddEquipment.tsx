@@ -113,6 +113,11 @@ export default function EquipmentDetailsForm({ onClose ,setIsLocation,setIsEquip
     )
   }
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null)
+  const job_order_no = watch('job_order_no');
+  useEffect(()=>{
+    console.log(job_order_no,"LLLLLLLL");
+    
+  },[job_order_no])
   useEffect(() => {
     if (equipment_no) {
       // Find the associated data for the current equipment_no

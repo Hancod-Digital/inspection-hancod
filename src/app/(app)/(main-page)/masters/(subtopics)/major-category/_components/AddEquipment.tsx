@@ -42,7 +42,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     };
 
     fetchSubtopics(); // Call the function to fetch data when component mounts
-  }, [equipmentTypeOptions, getAllSingleSubtopic]);
+  }, [ getAllSingleSubtopic]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
