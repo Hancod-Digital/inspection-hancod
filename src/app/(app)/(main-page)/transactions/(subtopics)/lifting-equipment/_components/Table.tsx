@@ -398,6 +398,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
     console.log("refetchiongg");
     
   }, [changed]);
+  const [isChanged,setIsChanged] = useState(false);
    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
   return (
     <div className="px-8 py-3 bg-white w-[98%] mx-auto  ">
@@ -472,7 +473,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                     >
                       <TableCell colSpan={9}>
                         <div className="overflow-hidden">
-                          {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
+                          {isLocation && <Location onClose={() => setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={isChanged} />}
                           {isEquipment && <Equipment  onClose={() => setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} changed={changed} minorCategoryOptions={minorCategoryOptions} supplierOptions={supplierOptions} standardOptions={standardOptions} annexureOptions={annexureOptions} locationOptions={locationOptions} ownerOptions={ownerOptions} />}
                           {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
                           {isOwner && <Owner onClose={()=>setIsOwner(false)} />}
