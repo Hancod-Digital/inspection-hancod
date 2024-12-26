@@ -756,19 +756,19 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       <div className="w-full ">
                         <Label  className='mt-3' htmlFor="description">Description</Label>
                         <div>
-                          <Controller
-                            name="description"
-                            control={control}
-                            render={({ field }) => (
-                              <ReactQuill theme="snow" className="mt-3" {...field} />
-                            )}
-                          />
-                          {errors.description && (
-                            <p className="text-red-500 mt-1 text-[13px] ">
-                              {errors.description.message}
-                            </p>
+                        <Controller
+                          name="description"
+                          control={control}
+                          render={({ field }) => (
+                            <Input id="description" type="text" maxLength={120} {...field} />
                           )}
-                        </div>
+                        />
+                        {errors.description && (
+                          <p className="text-red-500 mt-1 text-[13px] ">
+                            {errors.description.message}
+                          </p>
+                        )}
+                      </div>
                       </div>
                     </div>
                   </div>
