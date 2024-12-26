@@ -325,10 +325,10 @@ document.head.removeChild(styleElement);
                                         transition={{ duration: 0.2 }}
                                     > 
                                         <TableCell colSpan={5}>
-                                            {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
+                                            {/* {isLocation && <Location onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} />}
                                             {isEquipment && <Equipment  changed={changed} onClose={()=>setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} minorCategoryOptions={minorCategoryOptions} supplierOptions={supplierOptions} standardOptions={standardOptions} annexureOptions={annexureOptions} locationOptions={locationOptions} ownerOptions={ownerOptions} />}
                                             {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
-                                            {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />}
+                                            {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />} */}
 
                                         {!isLocation && !isEquipment && !isStandard && !isManufacturer && <EditPopup onClose={handleCloseEdit} id={item?.id} setIsLocation={setIsLocation} setIsEquipment={setIsEquipment} setIsStandard={setIsStandard} setIsManufacturer={setIsManufacturer} />}
                                         </TableCell>
