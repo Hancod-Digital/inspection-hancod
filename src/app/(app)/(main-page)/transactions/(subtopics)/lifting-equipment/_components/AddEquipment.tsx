@@ -241,8 +241,9 @@ setSelectedEquipment(selectedEquipment)
         afterSuccess: (data: any) => {
 
           if (data) {
+ console.log(data);
  
-            setLocationOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the location options to the fetched data
+            setLocationOptions(data.filter((item:any)=>item.location.status==="ACTIVE")); // Set the location options to the fetched data
           }
         }
       })

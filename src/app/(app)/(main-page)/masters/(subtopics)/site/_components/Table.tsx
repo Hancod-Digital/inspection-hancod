@@ -109,7 +109,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea,setIsChan
                                             <TableCell colSpan={5}>
                                                 <div className="overflow-hidden">
                                                     {isArea && (<Area onClose={()=>setIsArea(false)} setIsChanged={setIsChanged} isChanged={isChanged}/>)}
-                                                    {!isArea && (<EditPopup setIsArea={setIsArea} onClose={handleCloseEdit} id={item.id} />)}
+                                                    {!isArea && (<EditPopup setIsArea={setIsArea} onClose={handleCloseEdit} id={item.id} setIsChanged={setIsChanged} isChanged={isChanged}/>)}
                                                 </div>
                                             </TableCell>
                                         </motion.tr>

@@ -14,7 +14,7 @@ const Area = () => {
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
-
+    const [isChanged, setIsChanged] = useState<boolean>(false);
     return (
         <motion.div 
             className='w-full bg-[#fafbfb] h-full relative'
@@ -64,7 +64,7 @@ const Area = () => {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <AddForm onClose={handleCloseAdd} />
+                        <AddForm onClose={handleCloseAdd} setIsChanged={setIsChanged} isChanged={isChanged}/>
                     </motion.div>
                 )}
             </AnimatePresence>

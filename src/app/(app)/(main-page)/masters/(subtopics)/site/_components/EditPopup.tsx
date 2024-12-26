@@ -32,9 +32,11 @@ interface EquipmentDetailsFormProps {
   onClose: () => void;
   id: number;
   setIsArea: (value: boolean) => void;
+  setIsChanged:any;
+  isChanged:any;
 }
 
-export default function EquipmentDetailsForm({ onClose, id, setIsArea }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id, setIsArea,setIsChanged,isChanged }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [areaData, setAreaData] = useState<any[]>([]);
   const [data, setData] = useState<any>(null);
@@ -81,7 +83,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsArea }: Equipme
       setAreaData(areas || []);
     };
     fetchAreaData();
-  }, [getAllSingleSubtopic]);
+  }, [getAllSingleSubtopic,isChanged]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {

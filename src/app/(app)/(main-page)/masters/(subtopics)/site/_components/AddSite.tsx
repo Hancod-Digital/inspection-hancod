@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSubtopic } from '@/context/SubtopicContext';
 import { PlusIcon } from 'lucide-react';
+import { MasterService } from '@/services/api/masters-service';
 
 const equipmentDetailsSchema = z.object({
   site: z.string().nonempty('Site is required'),
@@ -45,15 +46,18 @@ export default function EquipmentDetailsForm({ onClose, setIsArea,setIsChanged,i
 
   // Fetch areas and set them to state
   useEffect(() => {
+    const masterservice = new MasterService();
     const fetchAreas = async () => {
-      const data = await getAllSingleSubtopic("area"); // Fetch the areas
+      const data = await masterservice.getAllSubtopicDetails("area");
       if (data) {
  
         setAreaOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
+        console.log("area fetching dynamically");
+        
       }
     };
     fetchAreas();
-  }, [getAllSingleSubtopic]); // Runs once on component mount
+  }, [getAllSingleSubtopic,isChanged]); // Runs once on component mount
 
   useEffect(() => {
     if (isSubmitSuccessful) {
