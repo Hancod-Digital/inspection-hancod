@@ -113,7 +113,7 @@ export default function EditEquipmentDetailsForm({
 
   // Fetch existing data
   const existingData = findRecordById(id);
-   console.log(existingData);
+   console.log(ownerOptions.find((item)=>item.id==existingData.owner_id),ownerOptions);
    
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -127,6 +127,7 @@ export default function EditEquipmentDetailsForm({
       job_order_no: String(existingData.job_order_no) || '',
       equipment_no: String(existingData.equipment_no) || '',
       title: existingData.title || '',
+      model_no:existingData?.model_no|| '',
       test_cert_coc_no: existingData.test_cert_coc_no || '',
       safe_working_load: existingData.safe_working_load || '',
       last_test_exam: existingData.last_test_exam || '',
@@ -149,7 +150,7 @@ export default function EditEquipmentDetailsForm({
       location: String(existingData.location) || '',
       serial_no: existingData.serial_no || '',
       
-      owner_id: existingData.owner_id || '',
+      owner_id: String(existingData.owner_id) || '',
     } : {},
   });
  
@@ -201,7 +202,9 @@ export default function EditEquipmentDetailsForm({
         setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE") || []);
         setManufacturerOptions(manufacturers?.filter((item:any)=>item.status==="ACTIVE") || []);
         setSurveyorOptions(surveyors || []);
-        setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE") || []);
+     
+        
+        setOwnerOptions(owners?.filter((item:any)=>item.status=="ACTIVE") || []);
       } catch (error) {
         console.error("Error fetching select options:", error);
         toastWithTimeout(ToastVariant.Error, "Failed to load form options.");
@@ -218,7 +221,7 @@ export default function EditEquipmentDetailsForm({
       setItem_type(selectedEquipment?.property_table_type);
   
       if (selectedEquipment) {
-        console.log(selectedEquipment.model_no);
+        console.log(selectedEquipment.owner_id);
         
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
@@ -472,7 +475,7 @@ export default function EditEquipmentDetailsForm({
                           <SelectContent>
                             {siteOptions.map((site) => (
                               <SelectItem key={site.id} value={String(site.id)}>
-                                {site.site}
+                                {site.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -561,10 +564,10 @@ export default function EditEquipmentDetailsForm({
                   </div>
  {/* Owner ID */}
  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_id" className="mt-3">Owner No/ID</Label>
-                    <Input id="owner_id" {...register('owner_id')} />
-                    {errors.owner_id && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_id.message}</p>
+                    <Label htmlFor="owner_name" className="mt-3">Owner No/ID</Label>
+                    <Input id="owner_name" {...register('owner_name')} />
+                    {errors.owner_name && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
                     )}
                   </div>
                   {/* Model */}
@@ -675,14 +678,14 @@ export default function EditEquipmentDetailsForm({
 
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_name" className="mt-3">Owner Name</Label>
+                    <Label htmlFor="owner_id" className="mt-3">Owner Name</Label>
                     <div className='relative'>
                     <Controller
-                      name="owner_name"
+                      name="owner_id"
                       control={control}
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="owner_name">
+                          <SelectTrigger id="owner_id">
                             <SelectValue placeholder="Select owner" />
                           </SelectTrigger>
                           <SelectContent>
