@@ -160,7 +160,7 @@ htmlString = htmlString.replace(/\{\{eight\}\}/g, serialNo
   .map((serial: any) => `${serial[0]["serial_no"]}<br />`)
   .join(""));
 
-htmlString = htmlString.replace(/\{\{nine\}\}/g, `${item?.multiequipments ? (item?.multiequipments?.length < 10 ? "0" + item?.multiequipments?.length : item?.multiequipments?.length) : "01"}`);
+htmlString = htmlString.replace(/\{\{nine\}\}/g, `${equipments ? (equipments.length < 10 ? "0" + equipments.length : equipments.length) : "01"}`);
 
 htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);
 

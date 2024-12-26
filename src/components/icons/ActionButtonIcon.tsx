@@ -6,7 +6,7 @@ interface IconProps {
 }
 
 const ActionButtonIcon: React.FC<IconProps> = ({ className, onClick }) => (
-  <div className='p-4'>
+  <div className='p-4 cursor-pointer'>
   <svg
 
     width="15"
