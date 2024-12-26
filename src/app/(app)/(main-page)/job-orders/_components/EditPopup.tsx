@@ -102,6 +102,7 @@ export default function SurveyForm({ onClose, id,setIsState,isState }: SurveyFor
     toastWithTimeout(ToastVariant.Default, 'Job order updated successfully');
     setLoading(false);
     setIsState(!isState)
+    onClose()
   };
 
   // If defaultValues are not yet loaded, return a loading state
