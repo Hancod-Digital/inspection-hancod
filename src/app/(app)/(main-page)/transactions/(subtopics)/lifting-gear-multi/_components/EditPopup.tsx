@@ -74,6 +74,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
   const currentData = id ? findRecordById(id) : null;
+ console.log(currentData);
  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -103,7 +104,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       equipment_description: currentData?.equipment_description || '',
       manufacturer: String(currentData?.manufacturer) || '',
       tested_standard: currentData?.tested_standard || '',
-      approval_status: currentData?.approval_status ? 'Approved' : 'Not Approved',
+      approval_status: currentData?.approval_status == 'true' ? 'Approved' : 'Rejected',
     },
   });
 
@@ -180,7 +181,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           equipment_description: data.equipment_description || '',
           manufacturer: String(data.manufacturer) || '',
           tested_standard: data.tested_standard || '',
-          approval_status: data.approval_status ? 'Approved' : 'Not Approved',
+          approval_status: data.approval_status == 'true' ? 'Approved' : 'Rejected',
         });
 
         // Set safety checklist values
