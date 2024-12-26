@@ -20,9 +20,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
+  setIsChanged:any;
+  isChanged:any;
 }
 
-export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose,setIsChanged,isChanged }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const { addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
@@ -40,8 +42,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
     setLoading(true); 
     await addRecord(values,null,"area")
+    setIsChanged(!isChanged)
     setLoading(false);
     onClose()
+    
   };
 
   return (

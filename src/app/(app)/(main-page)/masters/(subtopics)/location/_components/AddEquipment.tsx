@@ -39,9 +39,11 @@ interface EquipmentDetailsFormProps {
   onClose: () => void;
   setIsSite: (value: boolean) => void;
   setIsArea: (value: boolean) => void;
+  setIsChanged:any;
+  isChanged:any;
 }
 
-export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,setIsChanged,isChanged}: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [siteOptions, setSiteOptions] = useState<Site[]>([]); // State for site options
   const [areaOptions, setAreaOptions] = useState<Area[]>([]); // State for area options
@@ -77,7 +79,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
       }
     };
     fetchSites();
-  }, [getAllSingleSubtopic]);
+  }, [getAllSingleSubtopic,isChanged]);
 
   useEffect(() => {
     const fetchAreas = async () => {
@@ -107,7 +109,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea}: E
       }
     };
     fetchAreas();
-  }, [getAllSingleSubtopic, selectedSite,siteOptions]);
+  }, [getAllSingleSubtopic, selectedSite,siteOptions,isChanged]);
   
 
   

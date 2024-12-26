@@ -15,6 +15,7 @@ const Location = () => {
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
+    const [ischanged,setIsChanged] = useState()
    const [isArea,setIsArea] = useState<boolean>(false)
     const [isSite,setIsSite] = useState<boolean>(false)
     return (
@@ -58,7 +59,7 @@ const Location = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table searchValue={searchValue} setIsSite={setIsSite} isSite={isSite} setIsArea={setIsArea} isArea={isArea}/>
+                        <Table  searchValue={searchValue} setIsSite={setIsSite} isSite={isSite} setIsArea={setIsArea} isArea={isArea} setIsChanged={setIsChanged} isChanged={ischanged}/>
                     </motion.div>
                 ) : (
                     <motion.div
@@ -67,9 +68,9 @@ const Location = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
-                    > {isArea && (<Area onClose={()=>setIsArea(false)}/>)}
-                    {isSite && (<Site onClose={()=>setIsSite(false)} setIsArea={setIsArea}/>)}
-                        {!isArea && !isSite && (<AddForm onClose={handleCloseAdd} setIsSite={setIsSite} setIsArea={setIsArea}/>)}
+                    > {isArea && (<Area onClose={()=>setIsArea(false)} setIsChanged={setIsChanged} isChanged={ischanged}/>)}
+                    {isSite && (<Site onClose={()=>setIsSite(false)} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={ischanged} />)}
+                        {!isArea && !isSite && (<AddForm onClose={handleCloseAdd} setIsSite={setIsSite} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={ischanged}/>)}
                     </motion.div>
                 )}
             </AnimatePresence>

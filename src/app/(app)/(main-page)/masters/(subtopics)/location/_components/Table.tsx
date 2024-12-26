@@ -18,7 +18,7 @@ import Site from '../../site/_components/AddSite';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
 
-export default function EquipmentTable({searchValue, setIsSite, isSite, setIsArea, isArea}:{searchValue:string, setIsSite: (value: boolean) => void, isSite: boolean, setIsArea: (value: boolean) => void, isArea: boolean}) {
+export default function EquipmentTable({searchValue, setIsSite, isSite, setIsArea, isArea,setIsChanged,isChanged}:{searchValue:string, setIsSite: (value: boolean) => void, isSite: boolean, setIsArea: (value: boolean) => void, isArea: boolean,setIsChanged:any,isChanged:any}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { FetchLocationDetails , deleteRecord} = useSubtopic(); // Assuming this is a hook from your context
  const {data,error} =  FetchLocationDetails()
@@ -82,7 +82,7 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                                     >
                                         <TableCell colSpan={6}>
                                             <div className="overflow-hidden">
-                                                {isSite && (<Site onClose={()=>setIsSite(false)} setIsArea={setIsArea}/>)}
+                                                {isSite && (<Site onClose={() => setIsSite(false)} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={isChanged} />)}
                                                 {!isSite && (<EditPopup onClose={handleCloseEdit} id={item.id!} setIsSite={setIsSite}/>)}
                                             </div>
                                         </TableCell>

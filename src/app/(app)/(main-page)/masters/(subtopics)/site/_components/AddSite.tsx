@@ -23,9 +23,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 interface EquipmentDetailsFormProps {
   onClose: () => void;
   setIsArea: (value: boolean) => void;
+  setIsChanged:any;
+  isChanged:any;
 }
 
-export default function EquipmentDetailsForm({ onClose, setIsArea }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, setIsArea,setIsChanged,isChanged }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [areaOptions, setAreaOptions] = useState<any[]>([]); // State to hold the area options
   const { addRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
@@ -62,6 +64,7 @@ export default function EquipmentDetailsForm({ onClose, setIsArea }: EquipmentDe
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true); 
     await addRecord(values,null,"site");  // Assuming you're adding a new record
+    setIsChanged(!isChanged)
     setLoading(false);
     onClose();
   };
