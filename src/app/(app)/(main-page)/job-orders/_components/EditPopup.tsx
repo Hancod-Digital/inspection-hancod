@@ -96,7 +96,7 @@ export default function SurveyForm({ onClose, id,setIsState,isState }: SurveyFor
       ...values,
       surveyor: Number(values.surveyor),
       location: Number(values.location),
-      equipment_details: Number(values.equipment_details),
+      equipment_details:values.equipment_details
     };
     const data = await editJobOrder(id,updates);
     toastWithTimeout(ToastVariant.Default, 'Job order updated successfully');

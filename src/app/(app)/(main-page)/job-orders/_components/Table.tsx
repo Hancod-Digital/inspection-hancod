@@ -82,7 +82,7 @@ const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage,c
                 <TableCell className="py-4 flex-[2]">{item.contact_number}</TableCell>
                 <TableCell className="py-4 flex-[2]">{surveyorOptions.find((surveyor: any) => surveyor.id === item.surveyor)?.surveyor}</TableCell>
                 <TableCell className="py-4 flex-[2]">{locationOptions.find((location: any) => location.id === item.location)?.location}</TableCell>
-                <TableCell className="py-4 flex-[2]">{equipmentOptions.find((equipment: any) => equipment.id === item.equipment_details)?.title}</TableCell>
+                <TableCell className="py-4 flex-[2]">{item?.equipment_details}</TableCell>
                 <TableCell className="py-4 flex-[2]">
                   <div className="flex gap-4">
                     <button onClick={() => handleEditClick(idx)}>
