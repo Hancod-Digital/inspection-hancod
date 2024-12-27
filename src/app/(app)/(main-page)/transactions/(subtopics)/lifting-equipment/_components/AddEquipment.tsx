@@ -141,7 +141,7 @@ setSelectedEquipment(selectedEquipment)
         setValue('title', String(selectedEquipment.title) || ''); // Update title
     
      
-        setValue('owner_name',String(ownerOptions.find((item:any)=>item.id==selectedEquipment.owner_id).code)  || ''); // Update owner
+        setValue('owner_name',   String(selectedEquipment.owner_id)|| ''); // Update owner
         setValue('registration_no', String(selectedEquipment.registration_no) || ''); // Update registration no
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
         setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
@@ -149,7 +149,7 @@ setSelectedEquipment(selectedEquipment)
         setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || ''); // Update next thorough exam
         setValue('serial_no', String(selectedEquipment.serial_no) || ''); // Update serial no
         setValue('model_no', String(selectedEquipment.model_no) || ''); // Update model_no
-        setValue('owner_id', String(selectedEquipment.owner_id) || ''); // Update owner id
+        setValue('owner_id',String(ownerOptions.find((item:any)=>item.id==selectedEquipment.owner_id).code) || ''); // Update owner id
         // Add additional fields here if necessary
       }
     }
@@ -290,6 +290,7 @@ console.log(res);
     try {
       const formData = {
         ...values,
+        
         first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
         six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
         twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
