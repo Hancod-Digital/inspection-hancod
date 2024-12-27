@@ -11,7 +11,7 @@ export const siteDataRange = [{from:'area',to:'area'}]
 
 export const locationDataRange = [{from:'site',to:'site'}]
 export const minorCategoryDataRange = [{from:'major_category',to:'major_category'},{from:'standard',to:'standard'}]
-export function generateRows(rows:any) {
+export function generateRows(rows: any[]) {
   // Base top values for the first row
   const baseTopStatus = 4.129;
   const baseTopDescription = 8.012;
@@ -24,9 +24,7 @@ export function generateRows(rows:any) {
   let rowsHtml = '';
   let rowsCss = '';
 
-  rows.forEach((rowData:any, index:any) => {
-    
-    
+  rows.forEach((rowData: any, index: number) => {
     const rowNumber = index === 0 ? '' : (index + 1).toString();
 
     // Calculate top offsets for this row
@@ -36,14 +34,23 @@ export function generateRows(rows:any) {
     const slNoTop = (baseTopSlNo + offset).toFixed(3);
     const remarkTop = (baseTopRemark + offset).toFixed(3);
 
-    const { condition, property
-      , slNo, remarks,remark } = rowData; 
+    // Destructure with default empty strings
+    const { 
+      condition = '', 
+      property = '', 
+      slNo = '', 
+      remarks = '', 
+      remark = '' 
+    } = rowData;
+
+    // Determine the serial number to display
+    const displaySlNo = slNo || (index + 1).toString();
 
     // Append HTML for this row (no inline styles, rely on classes)
     rowsHtml += `
       <span class="table-header header${rowNumber}-status">${condition}</span>
       <span class="table-header header${rowNumber}-description">${property}</span>
-      <span class="table-header header${rowNumber}-sl-no">${index+1}</span>
+      <span class="table-header header${rowNumber}-sl-no">${displaySlNo}</span>
       <span class="table-header header${rowNumber}-remark">${remarks}</span>
     `;
 
@@ -58,7 +65,6 @@ export function generateRows(rows:any) {
 
   return { rowsHtml, rowsCss };
 }
-
 
 
 

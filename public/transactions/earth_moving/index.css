@@ -804,8 +804,7 @@ button {
   align-items: center;
   justify-content: flex-start;
   position: relative;
-  width: calc(420.21484375 * var(--rpx));
-  height: calc(82 * var(--rpx));
+  
   margin: calc(15.140625 * var(--rpx)) 0 0 calc(20.4921875 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -1191,8 +1190,8 @@ p {
   justify-content: flex-start;
   position: absolute;
   width: calc(305 * var(--rpx));
-  height: calc(50 * var(--rpx));
-  top: calc(23 * var(--rpx));
+  
+  top: calc(13 * var(--rpx));
   left: 0;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -1838,7 +1837,7 @@ p {
     align-items: center;
     justify-content: left;
     position: absolute;
-    gap: 122px;
+    gap: 177px;
     width: calc(1047.9833984375* var(--rpx));
     height: calc(49.2890625* var(--rpx));
     top: calc(191.34765625* var(--rpx));
