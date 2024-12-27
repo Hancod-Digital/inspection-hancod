@@ -208,7 +208,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
       setEquipmentNoOptions(equipments?.filter((item:any)=>item.status==="ACTIVE") || []);
       setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE") || []);
       setManufacturerOptions(manufacturers?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setSurveyorOptions(surveyors?.filter((item:any)=>item.status==="ACTIVE"));
+      setSurveyorOptions(surveyors);
       setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE") || []);
     };
 

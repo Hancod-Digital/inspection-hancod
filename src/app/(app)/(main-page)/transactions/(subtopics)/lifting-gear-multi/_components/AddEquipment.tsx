@@ -206,7 +206,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     const fetchSurveyors = async () => {
       const data = await getAllSingleSubtopic("surveyor"); // Fetch the areas
       if (data) {
-        setSurveyorOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
+        setSurveyorOptions(data); // Set the area options to the fetched data
       }
     };
     fetchSurveyors();
