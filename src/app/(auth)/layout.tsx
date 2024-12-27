@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         return (
             <div className="flex h-screen overflow-hidden">
             {/* Left Section */}
-            <div className="flex w-1/2 flex-col justify-center p-8 md:p-16 lg:p-32">
+            <div className="flex w-1/2 flex-col justify-center p-8 md:p-16 lg:p-20">
               <div className="mb-8 flex items-center">
                 <img src="/images/logo.svg" alt="Logo" className="h-12 w-auto" />
               </div>
