@@ -141,7 +141,7 @@ setSelectedEquipment(selectedEquipment)
         setValue('title', String(selectedEquipment.title) || ''); // Update title
     
      
-        setValue('owner_name',   String(selectedEquipment.owner_id)|| ''); // Update owner
+        setValue('owner_name',String(ownerOptions.find((item:any)=>item.id==selectedEquipment.owner_id).code)  || ''); // Update owner
         setValue('registration_no', String(selectedEquipment.registration_no) || ''); // Update registration no
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
         setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
@@ -149,7 +149,7 @@ setSelectedEquipment(selectedEquipment)
         setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || ''); // Update next thorough exam
         setValue('serial_no', String(selectedEquipment.serial_no) || ''); // Update serial no
         setValue('model_no', String(selectedEquipment.model_no) || ''); // Update model_no
-        setValue('owner_id',String(ownerOptions.find((item:any)=>item.id==selectedEquipment.owner_id).code) || ''); // Update owner id
+        setValue('owner_id', String(selectedEquipment.owner_id) || ''); // Update owner id
         // Add additional fields here if necessary
       }
     }
@@ -559,10 +559,10 @@ console.log(res);
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_id" className="mt-3">Owner No/ID</Label>
-                    <Input id="owner_id" {...register('owner_id')} />
-                    {errors.owner_id && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_id.message}</p>
+                    <Label htmlFor="owner_name" className="mt-3">Owner No/ID</Label>
+                    <Input id="owner_name" {...register('owner_name')} />
+                    {errors.owner_name && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -694,7 +694,7 @@ console.log(res);
                     </Label>
                     <div className="relative">
                     <Controller
-                      name="owner_name"
+                      name="owner_id"
                       control={control}
                       render={({ field }) => {
                         // Extract the current owner value based on equipment_no
