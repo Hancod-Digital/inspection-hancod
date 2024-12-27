@@ -118,7 +118,7 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
     htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
     htmlString = htmlString.replace(/\{\{three\}\}/g, item?.owner_name || '');
     htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard || '');
-    htmlString = htmlString.replace(/\{\{five\}\}/g, siteOptions.find((site: any) => site.id == item.site)?.site || '');
+    htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location||"");
     htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date || '');
 
     htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location :  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer );
@@ -131,6 +131,7 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
     htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
     htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
 
+console.log(item?.properties);
 
     const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
     .filter((v: any) => v != null)
