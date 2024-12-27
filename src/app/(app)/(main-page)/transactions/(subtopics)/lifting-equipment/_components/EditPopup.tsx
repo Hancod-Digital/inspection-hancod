@@ -117,12 +117,13 @@ export default function EditEquipmentDetailsForm({
   const [locationOptions, setLocationOptions] = useState<any[]>([]);
   
   const [propertyList, setPropertyList] = useState<any[]>([]);
-  const [data, setData] = useState<{ [key: string]: string }[]>([]); // For Property Table
+  const existingData = findRecordById(id);
+   console.log(existingData);
+  const [data, setData] = useState<{ [key: string]: string }[]>(existingData.properties); // For Property Table
   const [annexureList, setAnnexureList] = useState<any[]>([]); // For Annexures Table
 
   // Fetch existing data
-  const existingData = findRecordById(id);
-   console.log(ownerOptions.find((item)=>item.id==existingData.owner_id),ownerOptions);
+  
  
    useEffect(() => {
     const fetchEquipmentData = async () => {
@@ -346,6 +347,7 @@ export default function EditEquipmentDetailsForm({
         properties: data,
         annexures: annexureList,
       };
+console.log(values);
 
       await updateRecord(id, {...formData,properties:data,annexures:propertyList});
     } catch (error) {
