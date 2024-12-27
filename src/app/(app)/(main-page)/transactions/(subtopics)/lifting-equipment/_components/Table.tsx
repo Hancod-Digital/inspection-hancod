@@ -295,7 +295,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
       
       equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
       htmlString = htmlString.replace(/\{\{PASSENGER_ELEVATOR\}\}/g, item?.title?.toUpperCase() || '');
-      htmlString = htmlString.replace(/\{\{one\}\}/g, item?.description || '');
+      htmlString = htmlString.replace(/\{\{one\}\}/g, item?.description_of_test || '');
       htmlString = htmlString.replace(/\{\{two\}\}/g, item?.inspection_date || '');
       htmlString = htmlString.replace(/\{\{three\}\}/g, item?.certificate_no || '');
       htmlString = htmlString.replace(/\{\{four\}\}/g, 
@@ -464,7 +464,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                                             />
                         {item.approval_status == 'true' && <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>}
                        { item.approval_status == 'true' && <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>}
-                       {item.approval_status == 'true' &&item?.description && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
+                       {item.approval_status == 'true' &&item?.description_of_test && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

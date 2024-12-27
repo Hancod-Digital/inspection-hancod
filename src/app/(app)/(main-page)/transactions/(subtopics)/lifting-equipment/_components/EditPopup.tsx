@@ -123,8 +123,7 @@ export default function EditEquipmentDetailsForm({
   // Fetch existing data
   const existingData = findRecordById(id);
    console.log(ownerOptions.find((item)=>item.id==existingData.owner_id),ownerOptions);
-
-
+ 
    useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
@@ -149,8 +148,8 @@ export default function EditEquipmentDetailsForm({
     };
 
     fetchEquipmentData();
-  }, [id, findRecordById]);
-      console.log(existingData,"existingData");
+  }, [id, findRecordById]); 
+     
       
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -259,6 +258,7 @@ export default function EditEquipmentDetailsForm({
     if (equipment_no && equipmentNoOptions.length > 0) {
     
       const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
+     console.log(selectedEquipment,"selectedEquipment");
      
       setItem_type(selectedEquipment?.property_table_type);
   
@@ -986,9 +986,9 @@ export default function EditEquipmentDetailsForm({
                 {/* Tables Section */}
                 <div className="space-y-4">
                   {/* Properties Table */}
-                  {equipmentNoOptions.find((item) => item.id == equipment_no)?.item_type !== 'Lifting Accessories' && (
+                  {equipmentNoOptions.find((item) => item.id == equipment_no)?.item_type !== 'Lifting Accessories' && equipmentNoOptions.find((item) => item.id == existingData?.equipment_no)?.property_table_type != "EARTH MOVING EQUIPMENTS" && (
                   <div className="grid gap-4 grid-cols-1">
-                    <Table data={existingData?.properties} setData={setData} item_type={item_type} />
+                    <Table data={existingData?.properties} setData={setData} item_type={equipmentNoOptions.find((item) => item.id == existingData?.equipment_no)?.property_table_type} />
                   </div>
                   )}
                   {/* Annexures Table */}

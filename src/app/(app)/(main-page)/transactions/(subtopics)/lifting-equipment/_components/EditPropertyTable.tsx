@@ -17,10 +17,14 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
   // Set initial columns based on item_type
   useEffect(() => {
     if (item_type === "CRANE CERTIFICATE") {
+      console.log("CRANE CERTIFICATE");
+      
       setColumns(["CONDITION", "BOOM LENGTH", "RADIUS", "TEST LOAD", "SWL"]);
     } else if (item_type === "MEWP AND FORKLIFT" || item_type === "ELEVATOR CERTIFICATE") {
+      console.log("MEWP AND FORKLIFT");
       setColumns(["TEST LOAD", "SWL"]);
     } else {
+      console.log("ELSE",item_type);
       setColumns([]);
     }
   }, [item_type]);
@@ -66,61 +70,60 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
   };
 
   return (
-    <>
-      {data?.length > 0 && (
-        <div className="w-full mx-auto py-5">
+    <div className="w-full mx-auto py-5">
+      
           <div className="flex justify-between items-center mb-4">
-            <span className="font-bold">Properties</span>
-            <div className="flex space-x-2">
-              <Button type="button" variant="secondary" onClick={handleAddRow}>
-                Add Row
-              </Button>
-            </div>
-          </div>
-          <Table className="border border-gray-200">
-            <TableHeader>
-              <TableRow className="border-b">
-                {columns.map((column, index) => (
-                  <TableHead key={index} className="p-2 text-left border-r">
-                    {column}
-                  </TableHead>
+        <span className="font-bold">Properties</span>
+        <div className="flex space-x-2">
+          
+          <Button type="button" variant="secondary" onClick={handleAddRow}>
+            Add Row
+          </Button>
+        </div>
+      </div>
+       
+      <Table className="border border-gray-200">
+        <TableHeader>
+          <TableRow className="border-b">
+            {columns.map((column, index) => (
+              <TableHead key={index} className="p-2 text-left border-r">
+                {column}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data?.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={columns.length || 1} className="p-2 text-center text-gray-500">
+                No data to display
+              </TableCell>
+            </TableRow>
+          ) : (
+            data?.map((row: any, rowIndex: number) => (
+              <TableRow key={rowIndex}>
+                {columns.map((column) => (
+                  <TableCell key={column} className="p-2 border-r">
+                    <input
+                      type="text"
+                      value={row[column] || ''}
+                      className="w-full border rounded px-2 py-2"
+                      onChange={(e) => {
+                        const updatedData = [...data];
+                        updatedData[rowIndex][column] = e.target.value;
+                        setData(updatedData);
+                      }}
+                    />
+                  </TableCell>
                 ))}
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data?.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={columns.length || 1} className="p-2 text-center text-gray-500">
-                    No data to display
-                  </TableCell>
-                </TableRow>
-              ) : (
-                data?.map((row: any, rowIndex: number) => (
-                  <TableRow key={rowIndex}>
-                    {columns.map((column) => (
-                      <TableCell key={column} className="p-2 border-r">
-                        <input
-                          type="text"
-                          value={row[column] || ''}
-                          className="w-full border rounded px-2 py-2"
-                          onChange={(e) => {
-                            const updatedData = [...data];
-                            updatedData[rowIndex][column] = e.target.value;
-                            setData(updatedData);
-                          }}
-                        />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+            ))
+          )}
+        </TableBody>
+      </Table>
 
-          {/* Column Modal */}
-          <ColumnModal open={open} onOpenChange={setOpen} onSave={handleSaveColumn} />
-        </div>
-      )}
-    </>
+      {/* Column Modal */}
+      <ColumnModal open={open} onOpenChange={setOpen} onSave={handleSaveColumn} />
+    </div>
   );
 }
