@@ -859,7 +859,7 @@ console.log(res);
                     equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.property_table_type === 'ELEVATOR CERTIFICATE' && (
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="lift_location" className="mt-3">Lift Location</Label>
-                    <Input id="lift_location" type="date" {...register('lift_location')} />
+                    <Input id="lift_location" type="text" {...register('lift_location')} />
                     {errors.lift_location && (
                       <p className="text-red-500 text-[12px] ">{errors.lift_location.message}</p>
                     )}

@@ -287,7 +287,7 @@ document.head.removeChild(styleElement);
                                 <TableCell className="py-4 flex-[1]">{equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
                               
                                 
-                                <TableCell className="py-4 flex-[1]">{item?.last_thorough_exam}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item?.inspection_date}</TableCell>
                                 
                                 <TableCell className="py-4 flex-[1]">{item?.next_thorough_exam}</TableCell>
                                 <TableCell className="py-4 flex-[1]  ">{item?.result}</TableCell>
