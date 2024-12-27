@@ -242,7 +242,7 @@ export default function EditEquipmentDetailsForm({
         setEquipmentNoOptions(equipmentNos?.filter((item:any)=>item.status==="ACTIVE") || []);
         setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE") || []);
         setManufacturerOptions(manufacturers?.filter((item:any)=>item.status==="ACTIVE") || []);
-        setSurveyorOptions(surveyors || []);
+        setSurveyorOptions(surveyors?.filter((item:any)=>item.status==="ACTIVE") || []);
      
         
         setOwnerOptions(owners?.filter((item:any)=>item.status=="ACTIVE") || []);
