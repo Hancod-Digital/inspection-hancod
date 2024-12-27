@@ -27,7 +27,7 @@ const propertySchema = object({
 const equipmentDetailsSchema = object({
   annexure: string().nonempty('Annexure is required'),
   status: string().nonempty('Status is required'),
-  properties: array(propertySchema).min(1, 'At least one property is required'),
+    // properties: array(propertySchema).min(1, 'At least one property is required').optional(),
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema> & { id?: number };
@@ -39,7 +39,7 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const { addRecord, addProperty, updateRecord, findRecordById } = useSubtopic();
+  const { addRecord, addProperty, updateRecord, findRecordById,updateProperty } = useSubtopic();
 
   // Fetch existing data if in edit mode
   const existingData = id ? findRecordById(id) : null;
@@ -55,12 +55,13 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     }
     getProperty()
   },[existingData])
+  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       annexure: existingData?.annexure || '',
       status: existingData?.status || '',
-      
+       
     },
   });
 
@@ -81,39 +82,49 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     }
   }, [isSubmitSuccessful, reset]);
 
-  useEffect(() => {
-    register('properties');
-    setValue('properties', properties);
-  }, [register, setValue, properties]);
+  // useEffect(() => {
+  //   register('properties');
+  //   setValue('properties', properties);
+  // }, [register, setValue, properties]);
 
   const handlePropertiesChange = (newProperties: any) => {
     setProperties(newProperties);
     setValue('properties', newProperties, { shouldValidate: true });
   };
+  console.log(errors);
+  
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
       if (id) {
         // Edit mode
-        await updateRecord(id, {
+        const response:any =  await updateRecord(id, {
           annexure: values.annexure,
           status: values.status,
-          properties: values.properties,
+          
         });
-      } else {
-        // Add mode
-        const response:any = await addRecord({
-          annexure: values.annexure,
-          status: values.status,
-        },null,"annexure");
-        if (response && response[0]?.id) {
-          await addProperty(values.properties.map(property => ({
-            ...property,
-            annexure_id: response[0].id,
-          })));
-        }
-      }
+     console.log(properties);
+     
+        await Promise.all(
+          properties.map(async (property: any) => {
+            if (property.id) {
+              // Corrected the syntax for updateProperty
+              await updateProperty({id:property.id, updates:{
+                ...property,
+                annexure_id: id,
+              }});
+            }else{
+               
+              await addProperty({
+                ...property,
+                annexure_id: id,
+              });
+            }
+          })
+        );
+         
+      }  
       setLoading(false);
       onClose();
     } catch (error) {

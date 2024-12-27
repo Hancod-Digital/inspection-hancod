@@ -347,7 +347,7 @@ export default function EditEquipmentDetailsForm({
         annexures: annexureList,
       };
 
-      await updateRecord(id, formData);
+      await updateRecord(id, {...formData,properties:data,annexures:propertyList});
     } catch (error) {
       console.error('Error updating record:', error);
       toastWithTimeout(ToastVariant.Error, "Failed to update equipment details.");
