@@ -462,8 +462,8 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
                                                 }
                                             />
                         {item.approval_status == 'true' && <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>}
-                       {  <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>}
-                       {item?.description && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
+                       { item.approval_status == 'true' && <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>}
+                       {item.approval_status == 'true' &&item?.description && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
