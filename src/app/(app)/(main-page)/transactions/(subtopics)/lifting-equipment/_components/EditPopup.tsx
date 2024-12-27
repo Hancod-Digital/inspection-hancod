@@ -157,6 +157,7 @@ export default function EditEquipmentDetailsForm({
     defaultValues: existingData ? {
       inspection_date: existingData.inspection_date || '',
       site: String(existingData.site) || '',
+      lift_location: existingData.lift_location || '',
       authority: String(existingData.authority) || '',
       standard: String(existingData.standard) || '',
       type_of_exam: existingData.type_of_exam || '',
