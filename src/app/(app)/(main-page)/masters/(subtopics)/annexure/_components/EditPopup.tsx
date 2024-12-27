@@ -89,7 +89,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
 
   const handlePropertiesChange = (newProperties: any) => {
     setProperties(newProperties);
-    setValue('properties', newProperties, { shouldValidate: true });
+    // setValue('properties', newProperties, { shouldValidate: true });
   };
   console.log(errors);
   
