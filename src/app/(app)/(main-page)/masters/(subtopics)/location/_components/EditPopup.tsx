@@ -48,7 +48,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
     const fetchData = async () => {
       try {
         const datas = await new MasterService().getLocationDetails();
-        console.log(datas);
+      
         setData(datas); // Update state with the fetched data
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -101,7 +101,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
   // Handle form submission
   const onSubmitHandler: SubmitHandler<EquipmentDetailsSchemaType> = async (values) => {
     setLoading(true); 
-console.log(values);
+ 
 
     // Prepare the updated data
     const updatedData = {

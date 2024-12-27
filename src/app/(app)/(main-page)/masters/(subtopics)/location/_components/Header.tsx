@@ -16,7 +16,7 @@ export default function Component({ onOpen,onSearchChange }:{onOpen: () => void,
     const fetchData = async () => {
       try {
         const datas = await new MasterService().getLocationDetails();
-        console.log(datas);
+      
         setData(datas); // Update state with the fetched data
       } catch (error) {
         console.error('Error fetching data:', error);

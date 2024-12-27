@@ -74,8 +74,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
   const currentData = id ? findRecordById(id) : null;
- console.log(currentData);
- 
+  
  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -169,10 +168,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           safe_working_load: data.safe_working_load || '',
           proof_load: data.proof_load || '',
           standard: String(data.standard) || '',
-          last_test_exam: data.last_test_exam || '',
-          next_test_exam: data.next_test_exam || '',
-          last_thorough_exam: data.last_thorough_exam || '',
-          next_thorough_exam: data.next_thorough_exam || '',
+          // last_test_exam: data.last_test_exam || '',
+          // next_test_exam: data.next_test_exam || '',
+          // last_thorough_exam: data.last_thorough_exam || '',
+          // next_thorough_exam: data.next_thorough_exam || '',
           result: String(data.result) || '',
           surveyor: String(data.surveyor) || '',
           defect_description: data.defect_description || '',
@@ -267,8 +266,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     const fetchSites = async () => {
       const res =  locationOptions.filter((item: any) => item.location.id == location ? location : currentData?.location);
  
-console.log(location, currentData.location,res,res?.map((item)=>item.site));
-
       if (res.length > 0) {
         setSiteOptions(res?.map((item)=>item.site)); // Set the area options to the fetched data
       } else {

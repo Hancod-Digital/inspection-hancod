@@ -135,11 +135,12 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
       let htmlString = await response.text();
        
       const equipments:any = await fetchEquipments(item?.id);
-    
+  
       const serialNo = await Promise.all(equipments.map(async (item:any)=>{
-        const serialNoGroups = await fetchSerialNos(item?.equipment_no);
+         
         
-        return serialNoGroups
+         
+        return equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no).serial_no 
       }))
       
       htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no);
@@ -155,10 +156,12 @@ htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date);
 
 htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);
  
-
-htmlString = htmlString.replace(/\{\{eight\}\}/g, serialNo
-  .map((serial: any) => `${serial[0]["serial_no"]}<br />`)
-  .join(""));
+htmlString = htmlString.replace(
+  /\{\{eight\}\}/g,
+  serialNo
+    .map((serial: any) => `${serial}<br />`) // Optional chaining and nullish coalescing
+    .join("")
+);
 
 htmlString = htmlString.replace(/\{\{nine\}\}/g, `${equipments ? (equipments.length < 10 ? "0" + equipments.length : equipments.length) : "01"}`);
 

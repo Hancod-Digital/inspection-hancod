@@ -104,7 +104,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
           status: values.status,
           
         });
-     console.log(properties);
+    
      
         await Promise.all(
           properties.map(async (property: any) => {

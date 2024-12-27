@@ -130,9 +130,7 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
     
     htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
     htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
-
-console.log(item?.properties);
-
+ 
     const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
     .filter((v: any) => v != null)
     .map((condition: string) => {

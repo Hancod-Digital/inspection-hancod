@@ -50,7 +50,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
   const queryClient = useQueryClient();
  
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error ,refetch} = useQuery({
     queryKey: ['subtopics', subtopic],
     queryFn: () => masterService.getAllSubtopicDetails(subtopic),
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -59,7 +59,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
     const data = await masterService.getAllSubtopicDetails('job_orders')
     return data
   }
-
+  
   const editJobOrder = async (id:string,updates:object) => {
     const data = await masterService.updateSubtopicDetails('job_orders',Number(id),updates)
     return data
@@ -161,6 +161,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
       return await masterService.addRecordToSubtopic(subtopic, newRecord, surveyor_competency);
   },
     onSuccess: () => {
+      refetch()
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(majorCategoryDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(siteDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(locationDataRange), subtopic] });
@@ -180,7 +181,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
     mutationFn: async ({ id, updates,surveyor_competency }: { id: number; updates: object,surveyor_competency?:any }) =>
       await masterService.updateSubtopicDetails(subtopic, id, updates,surveyor_competency),
     onSuccess: () => {
-    
+      refetch()
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(majorCategoryDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(siteDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(locationDataRange), subtopic] });
@@ -199,7 +200,7 @@ export const SubtopicProvider: React.FC<SubtopicProviderProps> = ({ subtopic, ch
     mutationFn: async ({ id }: { id: number }) =>
       await masterService.deleteSubtopicDetails(subtopic, id),
     onSuccess: () => {
-    
+      refetch()
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(majorCategoryDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(siteDataRange), subtopic] });
       queryClient.invalidateQueries({ queryKey: ['mergedData', JSON.stringify(locationDataRange), subtopic] });

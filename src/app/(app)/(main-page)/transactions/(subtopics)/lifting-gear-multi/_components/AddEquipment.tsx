@@ -92,9 +92,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
   const { equipment_no,inspection_date,type_of_exam,tested_standard, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [existingData, setExistingData] = useState<any[]>([]);
-  console.log(watch('job_order_no'));
-  
-  //manufacturer
+ 
   const addEquipmentToMulti = async() => {
     if(!result){
       toastWithTimeout(ToastVariant.Default,"Result is required")

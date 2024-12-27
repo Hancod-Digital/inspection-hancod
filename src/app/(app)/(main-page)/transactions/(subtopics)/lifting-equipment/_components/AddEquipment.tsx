@@ -175,7 +175,7 @@ setSelectedEquipment(selectedEquipment)
       const res = locationOptions.filter((item: any) => item.location.id == location);
   
       if (res.length > 0) {
-console.log(res);
+ 
 
         setSiteOptions(res?.map((item:any)=>item.site)); // Set the area options to the fetched data
       }
@@ -247,7 +247,6 @@ console.log(res);
         afterSuccess: (data: any) => {
 
           if (data) {
- console.log(data);
  
             setLocationOptions(data.filter((item:any)=>item.location.status==="ACTIVE")); // Set the location options to the fetched data
           }

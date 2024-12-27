@@ -93,7 +93,7 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
     },[data])
 
    const [serialNo,setSerialNo] = useState<any>([])
-  const printCertificate = async(item: any) => {
+  const printCertificate = async(item: any) => { 
        makeApiCall(()=>new MasterService().fetchEquipmentDetails(item?.equipment_no),{
         afterSuccess:async(data:any)=>{
       
@@ -289,7 +289,7 @@ document.head.removeChild(styleElement);
                                 
                                 <TableCell className="py-4 flex-[1]">{item?.inspection_date}</TableCell>
                                 
-                                <TableCell className="py-4 flex-[1]">{item?.next_thorough_exam}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item?.next_test_exam}</TableCell>
                                 <TableCell className="py-4 flex-[1]  ">{item?.result}</TableCell>
                                 
                                 <TableCell className={`py-4 flex-[1] ${!item?.approval_status   ? 'text-orange-500' : 'text-green-500'}`}>

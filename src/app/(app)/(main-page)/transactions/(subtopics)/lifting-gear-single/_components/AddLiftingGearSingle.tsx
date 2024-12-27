@@ -218,7 +218,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
   useEffect(()=>{
     if(job_order_no){
       const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-      console.log(job_order,"LLLLLLLL");
+   
        if(job_order){
         setValue('surveyor', job_order.surveyor)
        }

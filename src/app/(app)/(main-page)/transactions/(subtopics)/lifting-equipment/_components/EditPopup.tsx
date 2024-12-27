@@ -118,7 +118,7 @@ export default function EditEquipmentDetailsForm({
   
   const [propertyList, setPropertyList] = useState<any[]>([]);
   const existingData = findRecordById(id);
-   console.log(existingData);
+  
   const [data, setData] = useState<{ [key: string]: string }[]>(existingData.properties); // For Property Table
   const [annexureList, setAnnexureList] = useState<any[]>([]); // For Annexures Table
 
@@ -260,12 +260,10 @@ export default function EditEquipmentDetailsForm({
     if (equipment_no && equipmentNoOptions.length > 0) {
     
       const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
-     console.log(selectedEquipment,"selectedEquipment");
-     
+      
       setItem_type(selectedEquipment?.property_table_type);
   
       if (selectedEquipment) {
-        console.log(selectedEquipment.owner_id);
         
         setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
         setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
@@ -298,7 +296,7 @@ export default function EditEquipmentDetailsForm({
   useEffect(()=>{
     if(job_order_no){
       const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-      console.log(job_order,"LLLLLLLL");
+     
        if(job_order){
         setValue('surveyor', job_order.surveyor)
        }
@@ -308,8 +306,7 @@ export default function EditEquipmentDetailsForm({
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find(item => item.id == equipment_no);
     if (selectedEquipment) {
-      console.log(selectedEquipment.next_test_date == null ? true :false);
-      
+     
       setTestExamChecked(selectedEquipment.next_test_date == null ? true :false);
       setThoroughExamChecked(selectedEquipment.next_thorough_date == null ? true :false);
     }
@@ -347,8 +344,7 @@ export default function EditEquipmentDetailsForm({
         
         properties: data,
         annexures: annexureList,
-      };
-console.log(values);
+      }; 
 
       await updateRecord(id, {...formData,properties:data,annexures:propertyList});
     } catch (error) {

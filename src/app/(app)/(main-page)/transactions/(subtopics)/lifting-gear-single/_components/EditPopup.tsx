@@ -71,6 +71,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
   const existingData = id ? findRecordById(id) : null;
+ 
    
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -138,36 +139,36 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-      
-      if (data) { 
-        reset({
-          inspection_date: data.inspection_date || '',
-          site: String(data.site) || '',
-          authority: String(data.authority) || '',
-          standard: String(data.standard) || '',
-          job_order_no: String(data.job_order_no) || '',
-          equipment_no: String(data.equipment_no) || '',
-          title: data.title || '',
-          test_cert_coc_no: data.test_cert_coc_no || '',
-          safe_working_load: data.safe_working_load || '',
-          last_test_exam: data.last_test_exam || '',
-          next_test_exam: data.next_test_exam || '',
-          last_thorough_exam: data.last_thorough_exam || '',
-          next_thorough_exam: data.next_thorough_exam || '',
-          result: data.result || '',
-          type_of_exam: data.type_of_exam || '',
-          surveyor: String(data.surveyor) || 'sdsd',
-          defect_description: data.defect_description || '',
-          test_particulars: data.test_particulars || '',
-          location: String(data.location) || '5',
-          owner_name: String(data.owner_name) || '',
-          proof_load: String(data.proof_load) || 'sdsdsd',
-          description: String(data.description) || '',
-          equipment_description: String(data.equipment_description) || '',
-          manufacturer: String(data.manufacturer) || '',
-          tested_standard: data.tested_standard || '',
-          approval_status: data.approval_status ? 'Approved' : 'Not Approved',
-        });
+      if(data){
+      // if (data) { 
+      //   reset({
+      //     inspection_date: data.inspection_date || '',
+      //     site: String(data.site) || '',
+      //     authority: String(data.authority) || '',
+      //     standard: String(data.standard) || '',
+      //     job_order_no: String(data.job_order_no) || '',
+      //     equipment_no: String(data.equipment_no) || '',
+      //     title: data.title || '',
+      //     test_cert_coc_no: data.test_cert_coc_no || '',
+      //     safe_working_load: data.safe_working_load || '',
+      //     last_test_exam: data.last_test_exam || '',
+      //     next_test_exam: data.next_test_exam || '',
+      //     last_thorough_exam: data.last_thorough_exam || '',
+      //     next_thorough_exam: data.next_thorough_exam || '',
+      //     result: data.result || '',
+      //     type_of_exam: data.type_of_exam || '',
+      //     surveyor: String(data.surveyor) || 'sdsd',
+      //     defect_description: data.defect_description || '',
+      //     test_particulars: data.test_particulars || '',
+      //     location: String(data.location) || '5',
+      //     owner_name: String(data.owner_name) || '',
+      //     proof_load: String(data.proof_load) || 'sdsdsd',
+      //     description: String(data.description) || '',
+      //     equipment_description: String(data.equipment_description) || '',
+      //     manufacturer: String(data.manufacturer) || '',
+      //     tested_standard: data.tested_standard || '',
+      //     approval_status: data.approval_status ? 'Approved' : 'Not Approved',
+      //   });
 
         // Set safety checklist values
         setSafetyChecklistValues({
@@ -256,7 +257,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
   useEffect(()=>{
     if(job_order_no){
       const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-      console.log(job_order,"LLLLLLLL");
+    
        if(job_order){
         setValue('surveyor', job_order.surveyor)
        }
