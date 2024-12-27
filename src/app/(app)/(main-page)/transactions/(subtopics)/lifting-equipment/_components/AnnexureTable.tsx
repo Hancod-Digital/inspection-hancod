@@ -1,3 +1,4 @@
+import Property from "@/app/(app)/(main-page)/masters/(subtopics)/property/page"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -54,6 +55,7 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
   const handleReset = () => {
     setPropertyList(propertyList.map((item:any) => ({
       ...item,
+      Property: '',
       property_group: '',
       condition: ''
     })))
@@ -81,13 +83,14 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
     <div className="w-full mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-md font-semibold">Annexures</h2>
-        <Button
+        {/* <Button
           variant="default"
+          type="button"
           className="text-destructive hover:text-destructive bg-white"
           onClick={handleReset}
         >
           Reset
-        </Button>
+        </Button> */}
       </div>
       <div className="border rounded-lg overflow-hidden">
         <Table className="border-collapse">

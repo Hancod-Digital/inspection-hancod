@@ -150,6 +150,7 @@ export default function EditEquipmentDetailsForm({
 
     fetchEquipmentData();
   }, [id, findRecordById]);
+      console.log(existingData,"existingData");
       
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -182,7 +183,7 @@ export default function EditEquipmentDetailsForm({
       manufacturer: String(existingData.manufacturer) || '',
       registration_no: existingData.registration_no || '',
       tested_standard: existingData.tested_standard || '',
-      approval_status: existingData.approval_status || '',
+      approval_status: existingData.approval_status == 'true' ? "Approved" :"Rejected" || '',
       location: String(existingData.location) || '',
       serial_no: existingData.serial_no || '',
       
