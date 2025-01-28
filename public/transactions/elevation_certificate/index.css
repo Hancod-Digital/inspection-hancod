@@ -868,14 +868,13 @@ button {
   z-index: 30;
 }
 .main-hoist {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  padding-left:12px
+  
   position: absolute;
-  width: calc(420.21484375 * var(--rpx));
+  width: 77%;
   height: calc(82 * var(--rpx));
-  top: calc(64.4296875 * var(--rpx));
-  left: calc(19.4921875 * var(--rpx));
+  top: calc(49.4296875 * var(--rpx));
+   
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -884,6 +883,7 @@ button {
   text-align: left;
   z-index: 60;
 }
+ 
 .main-hoist-details {
   display: flex;
   align-items: center;

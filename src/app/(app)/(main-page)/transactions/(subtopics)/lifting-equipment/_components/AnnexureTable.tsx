@@ -25,7 +25,7 @@ interface EquipmentDetail {
 
 export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:string,propertyList:any,setPropertyList:any}) {
   const [equipmentDetails, setEquipmentDetails] = useState<EquipmentDetail[]>([])
-
+ 
   const [annexureData, setAnnexureData] = useState<Annexure[]>([])
  
   useEffect(() => {

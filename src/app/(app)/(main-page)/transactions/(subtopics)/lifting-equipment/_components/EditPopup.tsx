@@ -46,7 +46,10 @@ const equipmentDetailsSchema = object({
   test_particulars: string().nonempty('Test Particulars is required'),
   defect_description: string().nonempty('Defect Description is required'),
   equipment_no: string().nonempty('Equipment No. is required'),
-  lift_location: string().nonempty('Lift Location is required').optional(),
+  lift_location: string()
+  .optional()
+  .nullable(),
+
   title: string().nonempty('Title is required'),
   test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
   safe_working_load: string().nonempty('Safe Working Load is required'),
@@ -206,7 +209,8 @@ export default function EditEquipmentDetailsForm({
       ...prev,
       [name]: value
     }));
-  };
+  };console.log(errors);
+  
   // Watch equipment_no to set related fields
   const equipment_no = watch('equipment_no');
   const job_order_no = watch('job_order_no');
@@ -993,7 +997,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Annexures Table */}
                   <div className="grid gap-4 grid-cols-1">
                     <AnnexuresTable 
-                      propertyList={annexureList} 
+                      propertyList={existingData?.annexures} 
                       setPropertyList={setAnnexureList} 
                       id={equipment_no} 
                     />
