@@ -710,14 +710,19 @@ button {
   z-index: 26;
 
 }
+.p{
+  display: block;
+
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  unicode-bidi: isolate;
+}
 .make-dutest-qatar-material-polyester {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   position: absolute;
   width: 520.011px;
-  height: 170.761px;
-  top: 37.539px;
+  /* height: 170.761px; */
+ 
+  top: -1.461px;
   left: 264.344px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -731,23 +736,24 @@ button {
 }
 .dq-dq-dq {
   display: flex
-;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 136.907px;
-    /* height: 106.025px; */
-    top: 10.975px;
-    left: 17.169px;
-    color: #0f1422;
-    font-family: Inter, var(--default-font-family);
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 22.4px;
-    text-align: center;
-    text-overflow: initial;
-    z-index: 42;
-    overflow: hidden;
+  ;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      /* background-color: red; */
+      width: 136.907px;
+      height: 235.025px;
+      top: 10.975px;
+      left: 17.169px;
+      color: #0f1422;
+      font-family: Inter, var(--default-font-family);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 22.4px;
+      text-align: center;
+      text-overflow: initial;
+      z-index: 42;
+      overflow: hidden;
 }
 .nil {
   display: flex;
