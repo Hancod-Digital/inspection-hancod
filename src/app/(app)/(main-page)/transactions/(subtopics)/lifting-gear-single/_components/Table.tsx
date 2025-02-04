@@ -13,7 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
 import EditPopup from './EditPopup' 
 import { useSubtopic } from '@/context/SubtopicContext';
-import { generateEquipmentCertificateHTMLBody } from '@/lib/utils';
+import { formatDateWithHyphen, generateEquipmentCertificateHTMLBody } from '@/lib/utils';
 import { MasterService } from '@/services/api/masters-service';
 import { makeApiCall } from '@/lib/apicaller';
 import DeleteIcon from '@/components/icons/DeleteIcon';
@@ -93,6 +93,33 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
     },[data])
 
    const [serialNo,setSerialNo] = useState<any>([])
+   function formatWeightString(input: string): string {
+    const regex = /(\d+)(\D*?)\s*\(([^)]+)\)/g;
+    let result = "";
+
+    input = input.replace(/\s+/g, ' '); // Normalize spaces
+
+    let matches;
+    while ((matches = regex.exec(input)) !== null) {
+        let weight = matches[1].trim();
+        let unit = matches[2].trim();
+        let description = matches[3].trim();
+        
+        // Calculate total length
+        let totalLength = weight.length + unit.length + description.length;
+
+        if (totalLength > 10) {
+            result += `<p>${weight} ${unit}</p><p>(${description})</p>`;
+        } else {
+            result += `<p>${weight} ${unit} (${description})</p>`;
+        }
+    }
+
+    return result;
+}
+
+let word = "45KG (PLATFORM )                   136(EXTENSION)";
+console.log(formatWeightString(word));
   const printCertificate = async(item: any) => { 
        makeApiCall(()=>new MasterService().fetchEquipmentDetails(item?.equipment_no),{
         afterSuccess:async(data:any)=>{
@@ -111,7 +138,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 
 htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location);
 
-htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date);
+htmlString = htmlString.replace(/\{\{six\}\}/g,  formatDateWithHyphen(item?.inspection_date));
 
 htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);
  
@@ -122,16 +149,17 @@ htmlString = htmlString.replace(/\{\{nine\}\}/g, `01`);
 htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);
 
 htmlString = htmlString.replace(/\{\{eleven\}\}/g, item?.proof_load);
+console.log(formatWeightString(item?.safe_working_load));
 
-htmlString = htmlString.replace(/\{\{twelve\}\}/g, item?.safe_working_load);
+htmlString = htmlString.replace(/\{\{twelve\}\}/g, formatWeightString(word));
 
-htmlString = htmlString.replace(/\{\{thirteen\}\}/g, item?.last_test_exam);
+htmlString = htmlString.replace(/\{\{thirteen\}\}/g,  formatDateWithHyphen(item?.last_test_exam));
 
-htmlString = htmlString.replace(/\{\{forteen\}\}/g, item?.next_test_exam);
+htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam));
 
-htmlString = htmlString.replace(/\{\{fifteen\}\}/g, item?.last_thorough_exam);
+htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam));
 
-htmlString = htmlString.replace(/\{\{sixteen\}\}/g, item?.next_thorough_exam);
+htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam));
 
          
 const cssResponse = await fetch('/equ-certificate/index.css');

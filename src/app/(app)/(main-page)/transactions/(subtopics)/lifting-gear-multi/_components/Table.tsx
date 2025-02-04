@@ -13,7 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
 import EditPopup from './EditPopup' 
 import { useSubtopic } from '@/context/SubtopicContext';
-import { generateEquipmentCertificateHTMLBody } from '@/lib/utils';
+import { formatDateWithHyphen, generateEquipmentCertificateHTMLBody } from '@/lib/utils';
 import { fetchMultiCertificate } from '@/lib/html';
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
@@ -152,7 +152,7 @@ htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard:
 
 htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location);
 htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
-htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date);
+htmlString = htmlString.replace(/\{\{six\}\}/g,  formatDateWithHyphen(item?.inspection_date));
 
 htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);
  
@@ -168,16 +168,51 @@ htmlString = htmlString.replace(/\{\{nine\}\}/g, `${equipments ? (equipments.len
 htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);
 
 htmlString = htmlString.replace(/\{\{eleven\}\}/g, item?.proof_load);
+function formatWeightString(input: string): string {
+  const regex = /(\d+(?:\.\d+)?)(\D*?)\s*\(([^)]+)\)/g;
+  let result = "";
 
-htmlString = htmlString.replace(/\{\{twelve\}\}/g, item?.safe_working_load);
+  input = input.replace(/\s+/g, ' '); // Normalize spaces
 
-htmlString = htmlString.replace(/\{\{thirteen\}\}/g, item?.last_test_exam);
+  let matches;
+  while ((matches = regex.exec(input)) !== null) {
+      const weight = matches[1].trim();
+      const unit = matches[2].trim();
+      const description = matches[3].trim();
+      
+      const totalLength = weight.length + unit.length + description.length;
 
-htmlString = htmlString.replace(/\{\{forteen\}\}/g, item?.next_test_exam);
+      if (totalLength > 10) {
+          result += `<p>${weight} ${unit}</p><p>(${description})</p>`;
+      } else {
+          result += `<p>${weight} ${unit} (${description})</p>`;
+      }
+  }
 
-htmlString = htmlString.replace(/\{\{fifteen\}\}/g, item?.last_thorough_exam);
+  if (result === "") {
+      const fallbackRegex = /^(\d+(?:\.\d+)?)(\D*)$/;
+      const fallbackMatch = input.match(fallbackRegex);
+      if (fallbackMatch) {
+          const weight = fallbackMatch[1].trim();
+          const unit = fallbackMatch[2].trim();
+          result = `<p>${weight}${unit ? ' ' + unit : ''}</p>`;
+      } else {
+          result = `<p>${input}</p>`;
+      }
+  }
 
-htmlString = htmlString.replace(/\{\{sixteen\}\}/g, item?.next_thorough_exam);
+  return result;
+}
+console.log(formatWeightString(item?.safe_working_load),item?.safe_working_load)
+htmlString = htmlString.replace(/\{\{twelve\}\}/g, formatWeightString(item?.safe_working_load));
+
+htmlString = htmlString.replace(/\{\{thirteen\}\}/g,  formatDateWithHyphen(item?.last_test_exam));
+
+htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam));
+
+htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam));
+
+htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam));
 
              
 const cssResponse = await fetch('/equ-certificate/index.css');

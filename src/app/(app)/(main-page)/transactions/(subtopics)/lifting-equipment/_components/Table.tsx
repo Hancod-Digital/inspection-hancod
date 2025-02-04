@@ -20,7 +20,7 @@ import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import DeleteIcon from '@/components/icons/DeleteIcon';
-import { generateRows } from '@/lib/utils';
+import { formatDateWithHyphen, generateRows } from '@/lib/utils';
 // import Manufacturer from '../../../../masters/(subtopics)/manufacturer/_components/AddEquipment'
 // import Location from '../../../../masters/(subtopics)/location/_components/AddEquipment'
 // import Equipment from '../../../../masters/(subtopics)/equipment/_components/AddEquipment'
@@ -119,7 +119,7 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
     htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_id)?.owner|| '');
     htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard || '');
     htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location||"");
-    htmlString = htmlString.replace(/\{\{six\}\}/g, item?.inspection_date || '');
+    htmlString = htmlString.replace(/\{\{six\}\}/g, formatDateWithHyphen(item?.inspection_date) || '');
 
     htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location :  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer );
     htmlString = htmlString.replace(/\{\{six12\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : item?.year_of_manufacture.split('-')[0] );
@@ -191,10 +191,10 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
   
 htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 
-    htmlString = htmlString.replace(/\{\{thirteen\}\}/g, item?.last_test_exam || '');
-    htmlString = htmlString.replace(/\{\{forteen\}\}/g, item?.next_test_exam || '');
-    htmlString = htmlString.replace(/\{\{fifteen\}\}/g, item?.last_thorough_exam || '');
-    htmlString = htmlString.replace(/\{\{sixteen\}\}/g, item?.next_thorough_exam || '');
+    htmlString = htmlString.replace(/\{\{thirteen\}\}/g, formatDateWithHyphen(item?.last_test_exam) || '');
+    htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam) || '');
+    htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam) || '');
+    htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam) || '');
     htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description || '');
     htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars || '');
    
@@ -296,7 +296,7 @@ htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
    htmlString = htmlString.replace(/\{\{four\}\}/g, item?.version);
   //  htmlString = htmlString.replace(/\{\{five\}\}/g, item?.revision_date);
 htmlString = htmlString.replace(/\{\{datas\}\}/g, content)
-   htmlString = htmlString.replace(/\{\{one\}\}/g, item?.inspection_date);
+   htmlString = htmlString.replace(/\{\{one\}\}/g, formatDateWithHyphen(item?.inspection_date));
    htmlString = htmlString.replace(/\{\{two\}\}/g, item?.certificate_no);
    htmlString = htmlString.replace(/\{\{three\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
     // Open a new window for printing
@@ -840,7 +840,7 @@ position: absolute;
       equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
       htmlString = htmlString.replace(/\{\{PASSENGER_ELEVATOR\}\}/g, item?.title?.toUpperCase() || '');
       htmlString = htmlString.replace(/\{\{one\}\}/g, item?.description_of_test || '');
-      htmlString = htmlString.replace(/\{\{two\}\}/g, item?.inspection_date || '');
+      htmlString = htmlString.replace(/\{\{two\}\}/g, formatDateWithHyphen(item?.inspection_date) || '');
       htmlString = htmlString.replace(/\{\{three\}\}/g, item?.certificate_no || '');
       htmlString = htmlString.replace(/\{\{four\}\}/g, 
         jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || ''

@@ -328,7 +328,8 @@ export default function EditEquipmentDetailsForm({
     };
     fetchSites();
   }, [watch('location'), locationOptions]);
-
+  const [lastTestExamChecked, setLastTestExamChecked] = useState(false);
+  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState(false);
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
@@ -344,6 +345,8 @@ export default function EditEquipmentDetailsForm({
         
         next_test_exam: testExamChecked ? "Not Applicable" : values.next_test_exam,
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam,
+        last_test_exam: lastTestExamChecked ? "Not Applicable" : values.last_test_exam,
+  last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : values.last_thorough_exam,
         approval_status: values.approval_status === "Approved" ? true : false,
         
         properties: data,
@@ -801,31 +804,69 @@ export default function EditEquipmentDetailsForm({
                     )}
                   </div>
 
-                  {/* Last Test Exam */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_test_exam" className="mt-3">Last Test Exam</Label>
-                    <Input
-                      id="last_test_exam"
-                      type="date"
-                      {...register('last_test_exam')}
-                    />
-                    {errors.last_test_exam && (
-                      <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
-                    )}
-                  </div>
+                 {/* Last Test Exam */}
+<div className="grid grid-cols-[200px_1fr] items-start gap-4">
+  <Label className="mt-3" htmlFor="last_test_exam">
+    Date of last proof load test
+  </Label>
+  <div className="flex items-center gap-4">
+    <Controller
+      name="last_test_exam"
+      control={control}
+      render={({ field }) => (
+        <Input
+          id="last_test_exam"
+          type="date"
+          disabled={lastTestExamChecked}
+          {...field}
+        />
+      )}
+    />
+    <Checkbox
+      className="w-6 h-6"
+      checked={lastTestExamChecked}
+      onCheckedChange={(checked: boolean) => setLastTestExamChecked(checked)}
+    />
+    <span className="text-[13px]">Not Applicable</span>
+  </div>
+  {errors.last_test_exam && (
+    <p className="text-red-500 text-[12px]">
+      {errors.last_test_exam.message}
+    </p>
+  )}
+</div>
 
-                  {/* Last Thorough Exam */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_thorough_exam" className="mt-3">Last Thorough Exam</Label>
-                    <Input
-                      id="last_thorough_exam"
-                      type="date"
-                      {...register('last_thorough_exam')}
-                    />
-                    {errors.last_thorough_exam && (
-                      <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
-                    )}
-                  </div>
+{/* Last Thorough Exam */}
+<div className="grid grid-cols-[200px_1fr] items-start gap-4">
+  <Label className="mt-3" htmlFor="last_thorough_exam">
+    Date of last examination
+  </Label>
+  <div className="flex items-center gap-4">
+    <Controller
+      name="last_thorough_exam"
+      control={control}
+      render={({ field }) => (
+        <Input
+          id="last_thorough_exam"
+          type="date"
+          disabled={lastThoroughExamChecked}
+          {...field}
+        />
+      )}
+    />
+    <Checkbox
+      className="w-6 h-6"
+      checked={lastThoroughExamChecked}
+      onCheckedChange={(checked: boolean) => setLastThoroughExamChecked(checked)}
+    />
+    <span className="text-[13px]">Not Applicable</span>
+  </div>
+  {errors.last_thorough_exam && (
+    <p className="text-red-500 text-[12px]">
+      {errors.last_thorough_exam.message}
+    </p>
+  )}
+</div>
                   
 
                   {/* Next Test Exam */}
@@ -833,7 +874,7 @@ export default function EditEquipmentDetailsForm({
                 </div>
                 <div className="grid gap-4 grid-cols-1 w-[64%]">
                   <div className="grid grid-cols-[200px_1fr]   items-start gap-4">
-                    <Label className='mt-3' htmlFor="next_test_date">Next Test Exam</Label>
+                    <Label className='mt-3' htmlFor="next_test_date">Date of next proof load test </Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name="next_test_exam"
@@ -856,7 +897,7 @@ export default function EditEquipmentDetailsForm({
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
-                    <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
+                    <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination </Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name={"next_thorough_exam"}

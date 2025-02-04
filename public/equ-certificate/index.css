@@ -710,9 +710,10 @@ button {
   z-index: 26;
 
 }
-.p{
+p{
   display: block;
-
+  margin-block-start: 0px;
+  margin-block-end: 0px;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   unicode-bidi: isolate;
@@ -721,9 +722,8 @@ button {
   position: absolute;
   width: 520.011px;
   /* height: 170.761px; */
- 
-  top: -1.461px;
-  left: 264.344px;
+  top: 18.539px;
+  left: 260.344px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: 16px;
@@ -791,22 +791,23 @@ button {
   z-index: 73;
 }
 .straight-lift {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  width: 136.907px;
-  height: 24.179px;
-  top: 377.441px;
-  left: 935.242px;
-  color: #0f1422;
-  font-family: Inter, var(--default-font-family);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 22.4px;
-  text-align: center;
-  white-space: nowrap;
-  z-index: 71;
+     /* display: flex
+; */
+align-items: center;
+justify-content: center;
+position: absolute;
+width: 136.907px;
+height: 24.179px;
+top: 344.441px;
+left: 935.242px;
+color: #0f1422;
+font-family: Inter, var(--default-font-family);
+font-size: 16px;
+font-weight: 600;
+line-height: 22.4px;
+text-align: center;
+white-space: nowrap;
+z-index: 71;
 }
 .rectangle-17 {
   position: absolute;
