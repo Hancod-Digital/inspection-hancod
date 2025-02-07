@@ -1,57 +1,60 @@
-'use client';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, boolean } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
+import { useForm, SubmitHandler, FormProvider, Controller } from "react-hook-form";
+import { object, string, TypeOf, boolean } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { CalendarIcon, PlusIcon } from 'lucide-react';
-import dynamic from 'next/dynamic';
-import { useSubtopic } from '@/context/SubtopicContext';
+} from "@/components/ui/select";
+import { PlusIcon } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useSubtopic } from "@/context/SubtopicContext";
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css';
-import { MasterService } from '@/services/api/masters-service';
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+import { MasterService } from "@/services/api/masters-service";
 
 // Validation schema using Zod
 const equipmentDetailsSchema = object({
-  minor_category: string().nonempty('Minor Category is required'),
-  equipment_no: string().nonempty('Equipment No is required'), 
-  owner_id: string().nonempty('Owner ID is required'),
-  registration_no: string().nonempty('Registration No is required'),
-  model_no: string().nonempty('Model No is required'),
-  manufacturer: string().nonempty('Supplier is required'),
-  test_certificate_no: string().nonempty('Test Certificate No is required'),
-  location: string().nonempty('Location is required'),
-  title: string().nonempty('Title is required'),
-  standard: string().nonempty('Standard is required'),
-  serial_no: string().nonempty('Serial No is required'),
-  annexure: string().nonempty('Annexure is required'),
-  year_of_manufacture: string().nonempty('Year of manufacture is required'),
+  minor_category: string().nonempty("Minor Category is required"),
+  equipment_no: string().nonempty("Equipment No is required"),
+  owner_id: string().nonempty("Owner ID is required"),
+  registration_no: string().nonempty("Registration No is required"),
+  model_no: string().nonempty("Model No is required"),
+  manufacturer: string().nonempty("Supplier is required"),
+  test_certificate_no: string().nonempty("Test Certificate No is required"),
+  location: string().nonempty("Location is required"),
+  title: string().nonempty("Title is required"),
+  standard: string().nonempty("Standard is required"),
+  serial_no: string().nonempty("Serial No is required"),
+  annexure: string().nonempty("Annexure is required"),
+  year_of_manufacture: string().nonempty("Year of manufacture is required"),
   status: boolean().optional(),
-  safe_working_load: string().nonempty('Safe working load is required'),
-  last_test_date: string().nonempty('Last test date is required'),
-  proof_load: string().nonempty('Proof load is required'),
+  safe_working_load: string().nonempty("Safe working load is required"),
+  proof_load: string().nonempty("Proof load is required"),
+
+  // All four date fields
+  last_test_date: string().nonempty("Last test date is required"),
   next_test_date: string().optional(),
-  test_insp_frequency: string().nonempty('Test inspection frequency in months is required'),
-  last_thorough_date: string().nonempty('Last thorough date is required'),
+  last_thorough_date: string().nonempty("Last thorough date is required"),
   next_thorough_date: string().optional(),
-  description: string().nonempty('Description is required'),
-  item_type: string().nonempty('Item type is required'),
+
+  test_insp_frequency: string().nonempty("Test inspection frequency in months is required"),
+  description: string().nonempty("Description is required"),
+  item_type: string().nonempty("Item type is required"),
   property_table_type: string().optional(), // Conditionally required
 });
- 
+
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
@@ -67,13 +70,27 @@ interface EquipmentDetailsFormProps {
   changed: boolean;
 }
 
-export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isStandard, isLocation, setIsManufacturer, setIsStandard, setIsLocation,setChanged,changed }: EquipmentDetailsFormProps) {
-  const [loading, setLoading] = useState<any>(false);
-  const { addRecord, updateRecord, findRecordById, getAllSingleSubtopic } = useSubtopic();
+export default function EquipmentDetailsForm({
+  onClose,
+  id,
+  isManufacturer,
+  isStandard,
+  isLocation,
+  setIsManufacturer,
+  setIsStandard,
+  setIsLocation,
+  setChanged,
+  changed,
+}: EquipmentDetailsFormProps) {
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // State variables for checkboxes
-  const [testExamChecked, setTestExamChecked] = useState<any>(false);
-  const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
+  // Add new states for all 4 "Not Applicable" checkboxes:
+  const [lastTestExamChecked, setLastTestExamChecked] = useState<boolean>(false);
+  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState<boolean>(false);
+  const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
+
+  const { addRecord, updateRecord, findRecordById } = useSubtopic();
 
   // State variables for select options
   const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
@@ -82,24 +99,11 @@ export default function EquipmentDetailsForm({ onClose, id, isManufacturer, isSt
   const [annexureOptions, setAnnexureOptions] = useState<any[]>([]);
   const [locationOptions, setLocationOptions] = useState<any[]>([]);
   const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
-  const [equipmentTypeOptions, setEquipmentTypeOptions] = useState<any[]>([]);
-  const [itemTypeOptions, setItemTypeOptions] = useState<any[]>([]); // If needed
 
-  // Get existing data if editing
+  // If we're editing, fetch existing data
   const data = id ? findRecordById(id) : null;
- 
-useEffect(()=>{
-  if(data?.next_test_date){
-    setValue('next_test_date', data?.next_test_date);
-  }else{
-    setTestExamChecked(true);
-  }
-  if(data?.next_thorough_date){
-    setValue('next_thorough_date', data?.next_thorough_date);
-  }else{
-    setThoroughExamChecked(true);
-  }
-},[data]);
+
+  // Hook Form
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: data
@@ -107,23 +111,23 @@ useEffect(()=>{
           ...data,
           manufacturer: String(data.manufacturer),
           minor_category: String(data.minor_category),
-        
           location: String(data.location),
           standard: String(data.standard),
           annexure: String(data.annexure),
           owner_id: String(data.owner_id),
           test_insp_frequency: String(data.test_insp_frequency),
-          last_test_date: String(data.last_test_date) ,
+          last_test_date: String(data.last_test_date),
           last_thorough_date: String(data.last_thorough_date),
-          next_test_date: data.next_test_date ? String(data.next_test_date) : '',
-          next_thorough_date: data.next_thorough_date ? String(data.next_thorough_date) : '',
-          
-          status: data.status === 'ACTIVE',
+          next_test_date: data.next_test_date ? String(data.next_test_date) : "",
+          next_thorough_date: data.next_thorough_date ? String(data.next_thorough_date) : "",
+          status: data.status === "ACTIVE",
           item_type: String(data.item_type),
-          property_table_type: String(data.property_table_type) || '',
+          property_table_type: data.property_table_type
+            ? String(data.property_table_type)
+            : "",
         }
       : {},
-    mode: 'onSubmit',
+    mode: "onSubmit",
   });
 
   const {
@@ -135,107 +139,136 @@ useEffect(()=>{
     formState: { isSubmitSuccessful, errors },
   } = methods;
 
-  // Watchers for conditional fields
-  const selectedItemType = watch('item_type');
+  const selectedItemType = watch("item_type");
+
+  // When the component loads or data changes, set "Not Applicable" checkboxes
+  useEffect(() => {
+    if (!data) return;
+
+    // Last Test Date
+    if (data.last_test_date) {
+      setValue("last_test_date", data.last_test_date);
+    } else {
+      setLastTestExamChecked(true);
+    }
+
+    // Next Test Date
+    if (data.next_test_date) {
+      setValue("next_test_date", data.next_test_date);
+    } else {
+      setTestExamChecked(true);
+    }
+
+    // Last Thorough Date
+    if (data.last_thorough_date) {
+      setValue("last_thorough_date", data.last_thorough_date);
+    } else {
+      setLastThoroughExamChecked(true);
+    }
+
+    // Next Thorough Date
+    if (data.next_thorough_date) {
+      setValue("next_thorough_date", data.next_thorough_date);
+    } else {
+      setThoroughExamChecked(true);
+    }
+  }, [data, setValue]);
 
   // Fetch options for select fields
   useEffect(() => {
-    const fetchOptions = async () => {
+    (async () => {
       const masterService = new MasterService();
       try {
         // Fetch minor category options
-        const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
+        const minorCategories = await masterService.getAllSubtopicDetails("minor_category");
         if (minorCategories) {
-          setMinorCategoryOptions(minorCategories.filter((item:any)=>item.status==="ACTIVE"));
+          setMinorCategoryOptions(minorCategories.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch supplier options
-        const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
+        const suppliers = await masterService.getAllSubtopicDetails("manufacturer");
         if (suppliers) {
-          setSupplierOptions(suppliers.filter((item:any)=>item.status==="ACTIVE"));
+          setSupplierOptions(suppliers.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch standard options
-        const standards = await masterService.getAllSubtopicDetails('standard');
+        const standards = await masterService.getAllSubtopicDetails("standard");
         if (standards) {
-          setStandardOptions(standards.filter((item:any)=>item.status==="ACTIVE"));
+          setStandardOptions(standards.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch annexure options
-        const annexures = await masterService.getAllSubtopicDetails('annexure');
+        const annexures = await masterService.getAllSubtopicDetails("annexure");
         if (annexures) {
-          setAnnexureOptions(annexures.filter((item:any)=>item.status==="ACTIVE"));
+          setAnnexureOptions(annexures.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch location options
-        const locations = await masterService.getAllSubtopicDetails('location');
+        const locations = await masterService.getAllSubtopicDetails("location");
         if (locations) {
-          setLocationOptions(locations.filter((item:any)=>item.status==="ACTIVE"));
+          setLocationOptions(locations.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch owner options
-        const owners = await masterService.getAllSubtopicDetails('owner');
+        const owners = await masterService.getAllSubtopicDetails("owner");
         if (owners) {
-          setOwnerOptions(owners.filter((item:any)=>item.status==="ACTIVE"));
+          setOwnerOptions(owners.filter((item: any) => item.status === "ACTIVE"));
         }
-        
-        // Fetch equipment type options
-         
-
-        // Fetch item type options if needed
-        // const itemTypes = await getAllSingleSubtopic('item_type');
-        // if (itemTypes) {
-        //   setItemTypeOptions(itemTypes);
-        // }
       } catch (error) {
-        console.error('Error fetching options:', error);
-        // Optionally, handle the error (e.g., show a notification)
+        console.error("Error fetching options:", error);
+        // Optionally, handle the error
       }
-    };
-    fetchOptions();
-  }, [getAllSingleSubtopic,changed]);
+    })();
+  }, [changed]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
-      onClose(); // Close the form after successful submission
+      onClose();
     }
   }, [isSubmitSuccessful, reset, onClose]);
 
+  // On Submit
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
+      // Convert to "Not Applicable" if the user checked the corresponding box
       const payload = {
         ...values,
-        status: values.status ? 'ACTIVE' : 'INACTIVE',
-        next_test_date: testExamChecked ? null : values.next_test_date,
-        next_thorough_date: thoroughExamChecked ? null : values.next_thorough_date,
+        status: values.status ? "ACTIVE" : "INACTIVE",
+        last_test_date: lastTestExamChecked ? "Not Applicable" : values.last_test_date,
+        next_test_date: testExamChecked ? "Not Applicable" : values.next_test_date,
+        last_thorough_date: lastThoroughExamChecked
+          ? "Not Applicable"
+          : values.last_thorough_date,
+        next_thorough_date: thoroughExamChecked ? "Not Applicable" : values.next_thorough_date,
         property_table_type:
-          selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,
+          selectedItemType === "Lifting Equipment" ? values.property_table_type : null,
       };
 
       if (id) {
+        // Edit mode
         await updateRecord(id, payload);
       } else {
+        // Add mode
         await addRecord(payload);
       }
       setChanged(!changed);
     } catch (error) {
-      console.error('Error submitting form:', error);
-      // Optionally, handle the error (e.g., show a notification)
+      console.error("Error submitting form:", error);
     } finally {
       setLoading(false);
       onClose();
     }
   };
 
-  // Handle conditional requirement for property_table_type
+  // Conditionally require property_table_type
   useEffect(() => {
-    if (selectedItemType === 'Lifting Equipment') {
-      methods.register('property_table_type', { required: 'Property table type is required' });
+    if (selectedItemType === "Lifting Equipment") {
+      methods.register("property_table_type", { required: "Property table type is required" });
     } else {
-      methods.unregister('property_table_type');
-      setValue('property_table_type', '');
+      methods.unregister("property_table_type");
+      setValue("property_table_type", "");
     }
   }, [selectedItemType, methods, setValue]);
 
@@ -258,10 +291,11 @@ useEffect(()=>{
               >
                 <CardHeader>
                   <CardTitle className="text-md">
-                    {id ? 'Edit Equipment Details' : 'Add Equipment Details'}
+                    {id ? "Edit Equipment Details" : "Add Equipment Details"}
                   </CardTitle>
                 </CardHeader>
 
+                {/* Equipment Details */}
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-2">
                     {/* Minor Category */}
@@ -341,8 +375,6 @@ useEffect(()=>{
                       </div>
                     </div>
 
-                     
-
                     {/* Registration No./Plate No. */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                       <Label htmlFor="registration_no">Registration No./Plate No.</Label>
@@ -403,7 +435,7 @@ useEffect(()=>{
                           size="icon"
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsManufacturer(true)}
+                          onClick={() => setIsManufacturer(true)}
                         >
                           <PlusIcon className="h-4 w-4" />
                         </Button>
@@ -458,8 +490,8 @@ useEffect(()=>{
                           size="icon"
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsLocation(true)}>
-
+                          onClick={() => setIsLocation(true)}
+                        >
                           <PlusIcon className="h-4 w-4" />
                         </Button>
                         {errors.location && (
@@ -513,8 +545,8 @@ useEffect(()=>{
                           size="icon"
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={()=>setIsStandard(true)}>
-
+                          onClick={() => setIsStandard(true)}
+                        >
                           <PlusIcon className="h-4 w-4" />
                         </Button>
                         {errors.standard && (
@@ -620,7 +652,8 @@ useEffect(()=>{
                 <CardHeader>
                   <CardTitle className="text-md w-full">Certificate Details</CardTitle>
                 </CardHeader>
-                <div className="space-y-4 ">
+
+                <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-2">
                     {/* Safe Working Load */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
@@ -674,18 +707,30 @@ useEffect(()=>{
                         )}
                       </div>
                     </div>
-
-                    {/* Last Test Date */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="last_test_date">Last Test Date</Label>
-                      <div>
+                    </div>
+                    <div className="grid gap-4 grid-cols-1">
+                    {/* Last Test Date + Not Applicable */}
+                    <div className="grid grid-cols-[200px_1fr]  w-[64.2%]  items-start gap-4">
+                      <Label htmlFor="last_test_date">Date of last proof load test</Label>
+                      <div className="flex items-center gap-4">
                         <Controller
                           name="last_test_date"
                           control={control}
                           render={({ field }) => (
-                            <Input id="last_test_date" type="date" {...field} />
+                            <Input
+                              id="last_test_date"
+                              type="date"
+                              disabled={lastTestExamChecked}
+                              {...field}
+                            />
                           )}
                         />
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={lastTestExamChecked}
+                          onCheckedChange={(checked) => setLastTestExamChecked(!!checked)}
+                        />
+                        <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.last_test_date && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.last_test_date.message}
@@ -693,18 +738,30 @@ useEffect(()=>{
                         )}
                       </div>
                     </div>
-
-                    {/* Last Thorough Examination Date */}
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="last_thorough_date">Last Thorough Examination Date</Label>
-                      <div>
+                    </div>
+                    <div className="grid gap-4 grid-cols-1">
+                    {/* Last Thorough Examination Date + Not Applicable */}
+                    <div className="grid grid-cols-[200px_1fr]  w-[64.2%]  items-start gap-4">
+                      <Label htmlFor="last_thorough_date">Date of last examination</Label>
+                      <div className="flex items-center gap-4">
                         <Controller
                           name="last_thorough_date"
                           control={control}
                           render={({ field }) => (
-                            <Input id="last_thorough_date" type="date" {...field} />
+                            <Input
+                              id="last_thorough_date"
+                              type="date"
+                              disabled={lastThoroughExamChecked}
+                              {...field}
+                            />
                           )}
                         />
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={lastThoroughExamChecked}
+                          onCheckedChange={(checked) => setLastThoroughExamChecked(!!checked)}
+                        />
+                        <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.last_thorough_date && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.last_thorough_date.message}
@@ -714,10 +771,10 @@ useEffect(()=>{
                     </div>
                   </div>
 
-                  {/* Next Test Date */}
+                  {/* Next Test Date + Not Applicable */}
                   <div className="grid gap-4 grid-cols-1">
                     <div className="grid grid-cols-[200px_1fr] w-[64.2%] items-start gap-4">
-                      <Label htmlFor="next_test_date">Next Test Date</Label>
+                      <Label htmlFor="next_test_date">Date of next proof load test</Label>
                       <div className="flex items-center gap-4">
                         <Controller
                           name="next_test_date"
@@ -725,8 +782,8 @@ useEffect(()=>{
                           render={({ field }) => (
                             <Input
                               id="next_test_date"
-                              disabled={testExamChecked}
                               type="date"
+                              disabled={testExamChecked}
                               {...field}
                             />
                           )}
@@ -734,7 +791,7 @@ useEffect(()=>{
                         <Checkbox
                           className="w-6 h-6"
                           checked={testExamChecked}
-                          onCheckedChange={(checked) => setTestExamChecked(checked)}
+                          onCheckedChange={(checked) => setTestExamChecked(!!checked)}
                         />
                         <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.next_test_date && (
@@ -746,10 +803,10 @@ useEffect(()=>{
                     </div>
                   </div>
 
-                  {/* Next Thorough Examination Date */}
+                  {/* Next Thorough Examination Date + Not Applicable */}
                   <div className="grid gap-4 grid-cols-1">
                     <div className="grid grid-cols-[200px_1fr] w-[64.2%] items-start gap-4">
-                      <Label htmlFor="next_thorough_date">Next Thorough Examination Date</Label>
+                      <Label htmlFor="next_thorough_date">Date of next examination</Label>
                       <div className="flex items-center gap-4 w-full">
                         <Controller
                           name="next_thorough_date"
@@ -757,8 +814,8 @@ useEffect(()=>{
                           render={({ field }) => (
                             <Input
                               id="next_thorough_date"
-                              disabled={thoroughExamChecked}
                               type="date"
+                              disabled={thoroughExamChecked}
                               {...field}
                             />
                           )}
@@ -766,7 +823,7 @@ useEffect(()=>{
                         <Checkbox
                           className="w-6 h-6"
                           checked={thoroughExamChecked}
-                          onCheckedChange={(checked) => setThoroughExamChecked(checked)}
+                          onCheckedChange={(checked) => setThoroughExamChecked(!!checked)}
                         />
                         <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.next_thorough_date && (
@@ -793,9 +850,8 @@ useEffect(()=>{
                                 <SelectValue placeholder="Select Item Type" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value={'Lifting Equipment'}>Lifting Equipment</SelectItem>
-                                <SelectItem value={'Lifting Accessories'}>Lifting Accessories</SelectItem>
-                                {/* Add more options as needed */}
+                                <SelectItem value="Lifting Equipment">Lifting Equipment</SelectItem>
+                                <SelectItem value="Lifting Accessories">Lifting Accessories</SelectItem>
                               </SelectContent>
                             </Select>
                           )}
@@ -810,14 +866,16 @@ useEffect(()=>{
 
                     {/* Property Table Type */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label htmlFor="property_table_type">Property Table Type{selectedItemType === 'Elevator Certificate' && '*'}</Label>
+                      <Label htmlFor="property_table_type">
+                        Property Table Type
+                      </Label>
                       <div>
                         <Controller
                           name="property_table_type"
                           control={control}
                           render={({ field }) => (
                             <Select
-                              disabled={selectedItemType !== 'Lifting Equipment'}
+                              disabled={selectedItemType !== "Lifting Equipment"}
                               onValueChange={field.onChange}
                               value={field.value}
                             >
@@ -825,21 +883,12 @@ useEffect(()=>{
                                 <SelectValue placeholder="Select Property Table Type" />
                               </SelectTrigger>
                               <SelectContent>
-                              <SelectItem   value={'CRANE CERTIFICATE'}>
-                                    CRANE CERTIFICATE
-                                  </SelectItem>
-                                
-                                  <SelectItem   value={'ELEVATOR CERTIFICATE'}>
-                                   ELEVATOR CERTIFICATE
-                                  </SelectItem>
-
-                                  <SelectItem   value={'MEWP AND FORKLIFT'}>
-                                    MEWP AND FORKLIFT Certificate
-                                  </SelectItem>
-                                  <SelectItem   value={'EARTH MOVING EQUIPMENTS'}>
-                                    EARTH MOVING EQUIPMENTS
-                                  </SelectItem>
-                                  
+                                <SelectItem value="CRANE CERTIFICATE">CRANE CERTIFICATE</SelectItem>
+                                <SelectItem value="ELEVATOR CERTIFICATE">ELEVATOR CERTIFICATE</SelectItem>
+                                <SelectItem value="MEWP AND FORKLIFT">MEWP AND FORKLIFT</SelectItem>
+                                <SelectItem value="EARTH MOVING EQUIPMENTS">
+                                  EARTH MOVING EQUIPMENTS
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           )}
@@ -860,11 +909,10 @@ useEffect(()=>{
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <div className="space-y-4 ">
+                  <div className="space-y-4">
                     <div className="grid gap-4 grid-cols-1">
-                      <div className="w-full ">
+                      <div className="w-full">
                         <Label htmlFor="description">Description</Label>
-                        <div>
                         <Controller
                           name="description"
                           control={control}
@@ -877,7 +925,6 @@ useEffect(()=>{
                             {errors.description.message}
                           </p>
                         )}
-                      </div>
                       </div>
                     </div>
                   </div>
@@ -894,7 +941,7 @@ useEffect(()=>{
                     type="button"
                     className="px-10"
                     onClick={onClose}
-                    variant={'outline'}
+                    variant="outline"
                   >
                     Cancel
                   </Button>
@@ -903,7 +950,7 @@ useEffect(()=>{
                     type="submit"
                     disabled={loading}
                   >
-                    {loading ? 'Saving...' : 'Save'}
+                    {loading ? "Saving..." : "Save"}
                   </Button>
                 </motion.div>
               </form>

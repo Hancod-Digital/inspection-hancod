@@ -1,32 +1,28 @@
-'use client';
-import { motion, AnimatePresence } from 'framer-motion';
+"use client";
 
-import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, boolean } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { motion, AnimatePresence } from "framer-motion";
+import { useForm, SubmitHandler, FormProvider, Controller } from "react-hook-form";
+import { object, string, TypeOf, boolean } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { CalendarIcon, PlusIcon } from 'lucide-react';
+} from "@/components/ui/select";
+import { PlusIcon } from "lucide-react";
 
-import dynamic from 'next/dynamic';
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css';
-import { useSubtopic } from '@/context/SubtopicContext';
-
-
-
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
+import { useSubtopic } from "@/context/SubtopicContext";
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
@@ -45,95 +41,151 @@ interface EquipmentDetailsFormProps {
   ownerOptions: any[];
 }
 
-export default function EquipmentDetailsForm({ minorCategoryOptions, supplierOptions, standardOptions, annexureOptions, locationOptions, ownerOptions, onClose,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation,changed }: EquipmentDetailsFormProps) {
-  const [loading, setLoading] = useState<any>(false);
-  const { addRecord, getAllSingleSubtopic } = useSubtopic();
+/**
+ * Add "Not Applicable" checkboxes for Last Test Date & Last Thorough Exam
+ * in addition to Next Test Date & Next Thorough Exam.
+ */
 
-  const [testExamChecked, setTestExamChecked] = useState<any>(false);
-  const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
-  // State variables for select options
-
-
-  const [selectedItemType, setSelectedItemType] = useState<string>('');
-
-// Validation schema using Zod
+// Create your Zod schema
 const equipmentDetailsSchema = object({
-  minor_category: string().nonempty('Minor Category is required'),
-  equipment_no: string().nonempty('Equipment No is required'),
-  
-  owner_id: string().nonempty('Owner ID  is required'),
-  registration_no: string().nonempty('Registration No is required'),
-  model_no: string().nonempty('Model No is required'),
-  manufacturer: string().nonempty('Supplier is required'),
-  test_certificate_no: string().nonempty('Test Certificate No is required'),
-  location: string().nonempty('Location is required'),
-  title: string().nonempty('Title is required'),
-  standard: string().nonempty('Standard is required'),
-  thorough_insp_frequency_months: string().nonempty('Thorough inspection frequency in months is required'),
-  serial_no: string().nonempty('Serial No is required'),
-  annexure: string().nonempty('Annexure is required'),
-  year_of_manufacture: string().nonempty('Year of manufacture is required'),
+  minor_category: string().nonempty("Minor Category is required"),
+  equipment_no: string().nonempty("Equipment No is required"),
+
+  owner_id: string().nonempty("Owner ID  is required"),
+  registration_no: string().nonempty("Registration No is required"),
+  model_no: string().nonempty("Model No is required"),
+  manufacturer: string().nonempty("Supplier is required"),
+  test_certificate_no: string().nonempty("Test Certificate No is required"),
+  location: string().nonempty("Location is required"),
+  title: string().nonempty("Title is required"),
+  standard: string().nonempty("Standard is required"),
+  thorough_insp_frequency_months: string().nonempty(
+    "Thorough inspection frequency in months is required"
+  ),
+  serial_no: string().nonempty("Serial No is required"),
+  annexure: string().nonempty("Annexure is required"),
+  year_of_manufacture: string().nonempty("Year of manufacture is required"),
   status: boolean().optional(),
-  safe_working_load: string().nonempty('Safe working load is required'),
-  last_test_date: string().nonempty('Last test date is required'),
-  proof_load: string().nonempty('Proof load is required'),
-  next_test_date: testExamChecked ? string().optional() : string().nonempty('Next test date is required'),
-  test_insp_frequency: string().nonempty('Test inspection frequency in months is required'),
-  last_thorough_date: string().nonempty('Last thorough date is required'),
-  next_thorough_date: thoroughExamChecked ? string().optional() : string().nonempty('Next thorough date is required'),
-  description: string().nonempty('Description is required'),
-  property_table_type: selectedItemType === 'Lifting Equipment' ? string().nonempty('Property table type is required') : string().optional(),
-  item_type: string().nonempty('Item type is required'),
+  safe_working_load: string().nonempty("Safe working load is required"),
+  proof_load: string().nonempty("Proof load is required"),
+
+  // The four date fields (any of which can be replaced by "Not Applicable"):
+  last_test_date: string().nonempty("Last test date is required"),
+  next_test_date: string().nonempty("Next test date is required"),
+  last_thorough_date: string().nonempty("Last thorough date is required"),
+  next_thorough_date: string().nonempty("Next thorough date is required"),
+
+  test_insp_frequency: string().nonempty("Test inspection frequency in months is required"),
+  description: string().nonempty("Description is required"),
+
+  // For item_type and property_table_type
+  item_type: string().nonempty("Item type is required"),
+  property_table_type: string().optional(),
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
+export default function EquipmentDetailsForm({
+  minorCategoryOptions,
+  supplierOptions,
+  standardOptions,
+  annexureOptions,
+  locationOptions,
+  ownerOptions,
+  onClose,
+  isManufacturer,
+  isStandard,
+  isLocation,
+  setIsManufacturer,
+  setIsStandard,
+  setIsLocation,
+  changed,
+}: EquipmentDetailsFormProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // States to track "Not Applicable" checkboxes
+  const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
+  const [lastTestExamChecked, setLastTestExamChecked] = useState<boolean>(false);
+  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState<boolean>(false);
+
+  const [selectedItemType, setSelectedItemType] = useState<string>("");
+  const { addRecord } = useSubtopic();
+
+  // Hook Form
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
-    mode: 'onSubmit',
+    mode: "onSubmit",
   });
-
-
 
   const {
     reset,
     handleSubmit,
     control,
     formState: { isSubmitSuccessful, errors },
-  } = methods; 
+    watch,
+  } = methods;
+
+  // Watch for changes to item_type
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (name === "item_type") {
+        setSelectedItemType(value.item_type!);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  // Reset form after successful submission
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
   }, [isSubmitSuccessful, reset]);
 
+  // Submit handler
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
-    setLoading(true); 
-    await addRecord({
-      ...values,
-      status: values.status === true ? "ACTIVE" : "INACTIVE",
-      next_test_date: testExamChecked ? null : values.next_test_date,
-      next_thorough_date: thoroughExamChecked ? null : values.next_thorough_date,
-      property_table_type: selectedItemType === 'Lifting Equipment' ? values.property_table_type : null,
+    setLoading(true);
+    try {
+      /**
+       * Convert date fields to "Not Applicable" if the user has checked that box.
+       * If not checked, we use the user-provided date.
+       */
+      await addRecord(
+        {
+          ...values,
+          status: values.status === true ? "ACTIVE" : "INACTIVE",
 
-    },null,"equipment");
-  
-        setLoading(false);
-    onClose();
+          // For "Last Test Date" and "Next Test Date"
+          last_test_date: lastTestExamChecked ? "Not Applicable" : values.last_test_date,
+          next_test_date: testExamChecked ? "Not Applicable" : values.next_test_date,
+
+          // For "Last Thorough Date" and "Next Thorough Date"
+          last_thorough_date: lastThoroughExamChecked
+            ? "Not Applicable"
+            : values.last_thorough_date,
+          next_thorough_date: thoroughExamChecked
+            ? "Not Applicable"
+            : values.next_thorough_date,
+
+          // For property_table_type
+          property_table_type:
+            selectedItemType === "Lifting Equipment" ? values.property_table_type : null,
+        },
+        null,
+        "equipment"
+      );
+    } catch (error) {
+      console.error("Failed to add record:", error);
+    } finally {
+      setLoading(false);
+      onClose();
+    }
   };
 
-  useEffect(() => {
-    const subscription = methods.watch((value, { name }) => {
-      if (name === 'item_type') {
-       
-        setSelectedItemType(value.item_type!);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [methods]);
   return (
     <AnimatePresence>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 20, y: 0 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 20, y: 0 }}
@@ -152,11 +204,14 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                   <CardTitle className="text-md">Equipment Details</CardTitle>
                 </CardHeader>
 
+                {/* Equipment Details */}
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-2">
-                    {/* Minor Category and Equipment No */}
+                    {/* Minor Category */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="minor_category">Minor Category:*</Label>
+                      <Label className="mt-3" htmlFor="minor_category">
+                        Minor Category:*
+                      </Label>
                       <div>
                         <Controller
                           name="minor_category"
@@ -186,7 +241,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Equipment No */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="equipment_no">Equipment No</Label>
+                      <Label className="mt-3" htmlFor="equipment_no">
+                        Equipment No
+                      </Label>
                       <div>
                         <Controller
                           name="equipment_no"
@@ -203,9 +260,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Owner ID/Tag No */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3'  htmlFor="owner_id">Owner ID/Tag No</Label>
+                      <Label className="mt-3" htmlFor="owner_id">
+                        Owner ID/Tag No
+                      </Label>
                       <div>
-                      <Controller
+                        <Controller
                           name="owner_id"
                           control={control}
                           render={({ field }) => (
@@ -231,9 +290,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       </div>
                     </div>
 
-                     {/* Title */}
+                    {/* Title */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="title">Title</Label>
+                      <Label className="mt-3" htmlFor="title">
+                        Title
+                      </Label>
                       <div>
                         <Controller
                           name="title"
@@ -248,11 +309,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       </div>
                     </div>
 
-                   
-
                     {/* Model No */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="model_no">Model No</Label>
+                      <Label className="mt-3" htmlFor="model_no">
+                        Model No
+                      </Label>
                       <div>
                         <Controller
                           name="model_no"
@@ -269,7 +330,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Supplier/Manufacturer */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="manufacturer">Supplier/Manufacturer</Label>
+                      <Label className="mt-3" htmlFor="manufacturer">
+                        Supplier/Manufacturer
+                      </Label>
                       <div className="relative">
                         <Controller
                           name="manufacturer"
@@ -291,7 +354,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         />
                         <Button
                           size="icon"
-                          onClick={()=>setIsManufacturer(true)}
+                          onClick={() => setIsManufacturer(true)}
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
                         >
@@ -307,7 +370,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Test Certificate No./COC No. */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="test_certificate_no">Test Certificate No./COC No.</Label>
+                      <Label className="mt-3" htmlFor="test_certificate_no">
+                        Test Certificate No./COC No.
+                      </Label>
                       <div>
                         <Controller
                           name="test_certificate_no"
@@ -324,13 +389,15 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Location */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="location">Location:*</Label>
+                      <Label className="mt-3" htmlFor="location">
+                        Location:*
+                      </Label>
                       <div className="relative">
                         <Controller
                           name="location"
                           control={control}
                           render={({ field }) => (
-                            <Select onValueChange={field.onChange} value={field.value}  key={JSON.stringify(locationOptions)}>  
+                            <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger id="location">
                                 <SelectValue placeholder="Select Location" />
                               </SelectTrigger>
@@ -346,7 +413,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         />
                         <Button
                           size="icon"
-                          onClick={()=>setIsLocation(true)}
+                          onClick={() => setIsLocation(true)}
                           variant="outline"
                           className="absolute bg-primary text-white font-bold right-0 top-0"
                         >
@@ -360,9 +427,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       </div>
                     </div>
 
-                     {/* Registration No./Plate No. */}
-                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="registration_no">Registration No./Plate No.</Label>
+                    {/* Registration No./Plate No. */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label className="mt-3" htmlFor="registration_no">
+                        Registration No./Plate No.
+                      </Label>
                       <div>
                         <Controller
                           name="registration_no"
@@ -379,8 +448,10 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Standard */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="standard">Standard</Label>
-                      <div className='relative'>
+                      <Label className="mt-3" htmlFor="standard">
+                        Standard
+                      </Label>
+                      <div className="relative">
                         <Controller
                           name="standard"
                           control={control}
@@ -402,16 +473,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         <Button
                           size="icon"
                           variant="outline"
-                          onClick={()=>setIsStandard(true)}
+                          onClick={() => setIsStandard(true)}
                           className="absolute bg-primary text-white font-bold right-0 top-0"
                         >
                           <PlusIcon className="h-4 w-4" />
                         </Button>
-                        {errors.manufacturer && (
-                          <p className="text-red-500 mt-1 text-[13px] ">
-                            {errors.manufacturer.message}
-                          </p>
-                        )}
                         {errors.standard && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.standard.message}
@@ -422,7 +488,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Serial No. */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="serial_no">Serial No.</Label>
+                      <Label className="mt-3" htmlFor="serial_no">
+                        Serial No.
+                      </Label>
                       <div>
                         <Controller
                           name="serial_no"
@@ -439,7 +507,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Annexure */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="annexure">Annexure</Label>
+                      <Label className="mt-3" htmlFor="annexure">
+                        Annexure
+                      </Label>
                       <div>
                         <Controller
                           name="annexure"
@@ -469,7 +539,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Year of Manufacture */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="year_of_manufacture">Year of Manufacture</Label>
+                      <Label className="mt-3" htmlFor="year_of_manufacture">
+                        Year of Manufacture
+                      </Label>
                       <div>
                         <Controller
                           name="year_of_manufacture"
@@ -488,7 +560,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
                     {/* Active */}
                     <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                      <Label  className='mt-3' htmlFor="status">Active</Label>
+                      <Label className="mt-3" htmlFor="status">
+                        Active
+                      </Label>
                       <div>
                         <Controller
                           name="status"
@@ -511,14 +585,17 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                   </div>
                 </div>
 
+                {/* Certificate Details */}
                 <CardHeader>
                   <CardTitle className="text-md w-full">Certificate Details</CardTitle>
                 </CardHeader>
-                <div className="space-y-4 ">
+                <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-2">
                     {/* Safe Working Load */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="safe_working_load">Safe Working Load</Label>
+                      <Label className="mt-3" htmlFor="safe_working_load">
+                        Safe Working Load
+                      </Label>
                       <div>
                         <Controller
                           name="safe_working_load"
@@ -532,18 +609,17 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         )}
                       </div>
                     </div>
-                     {/* Test Insp. Frequency (Months) */}
-                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="test_insp_frequency">
+
+                    {/* Test Insp. Frequency (Months) */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label className="mt-3" htmlFor="test_insp_frequency">
                         Test Insp. Frequency
                       </Label>
                       <div>
                         <Controller
                           name="test_insp_frequency"
                           control={control}
-                          render={({ field }) => (
-                            <Input id="test_insp_frequency" {...field} />
-                          )}
+                          render={({ field }) => <Input id="test_insp_frequency" {...field} />}
                         />
                         {errors.test_insp_frequency && (
                           <p className="text-red-500 mt-1 text-[13px] ">
@@ -553,12 +629,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       </div>
                     </div>
 
-                    {/* Last Test Date */}
-                    
-
                     {/* Proof Load */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="proof_load">Proof Load</Label>
+                      <Label className="mt-3" htmlFor="proof_load">
+                        Proof Load
+                      </Label>
                       <div>
                         <Controller
                           name="proof_load"
@@ -573,14 +648,18 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       </div>
                     </div>
 
-                     {/* Thorough Insp. Frequency:(Months) */}
-                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="thorough_insp_frequency_months">Thorough Insp. Frequency:(Months)</Label>
+                    {/* Thorough Insp. Frequency (Months) */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label className="mt-3" htmlFor="thorough_insp_frequency_months">
+                        Thorough Insp. Frequency:(Months)
+                      </Label>
                       <div>
                         <Controller
                           name="thorough_insp_frequency_months"
                           control={control}
-                          render={({ field }) => <Input id="thorough_insp_frequency_months" {...field} />}
+                          render={({ field }) => (
+                            <Input id="thorough_insp_frequency_months" {...field} />
+                          )}
                         />
                         {errors.thorough_insp_frequency_months && (
                           <p className="text-red-500 mt-1 text-[13px] ">
@@ -589,17 +668,32 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         )}
                       </div>
                     </div>
-
-                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="last_test_date">Last Test Date</Label>
-                      <div>
+                    </div>
+                    <div className="grid gap-4 grid-cols-1">
+                    {/* Last Test Date + Not Applicable */}
+                    <div className="grid grid-cols-[200px_1fr] w-[64.2%]  items-start gap-4">
+                      <Label className="mt-3" htmlFor="last_test_date">
+                      Date of last proof load test
+                      </Label>
+                      <div className="flex items-center gap-4">
                         <Controller
                           name="last_test_date"
                           control={control}
                           render={({ field }) => (
-                            <Input id="last_test_date" type="date" {...field} />
+                            <Input
+                              id="last_test_date"
+                              type="date"
+                              disabled={lastTestExamChecked}
+                              {...field}
+                            />
                           )}
                         />
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={lastTestExamChecked}
+                          onCheckedChange={(checked) => setLastTestExamChecked(!!checked)}
+                        />
+                        <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.last_test_date && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.last_test_date.message}
@@ -607,17 +701,32 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         )}
                       </div>
                     </div>
-{/* Last Thorough Exam */}
-<div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="last_thorough_date">Last Thorough Exam</Label>
-                      <div>
+</div>
+<div className="grid gap-4 grid-cols-1">
+                    {/* Last Thorough Exam + Not Applicable */}
+                    <div className="grid grid-cols-[200px_1fr] w-[64.2%]  items-start gap-4">
+                      <Label className="mt-3" htmlFor="last_thorough_date">
+                      Date of last examination
+                      </Label>
+                      <div className="flex items-center gap-4">
                         <Controller
                           name="last_thorough_date"
                           control={control}
                           render={({ field }) => (
-                            <Input id="last_thorough_date" type="date" {...field} />
+                            <Input
+                              id="last_thorough_date"
+                              type="date"
+                              disabled={lastThoroughExamChecked}
+                              {...field}
+                            />
                           )}
                         />
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={lastThoroughExamChecked}
+                          onCheckedChange={(checked) => setLastThoroughExamChecked(!!checked)}
+                        />
+                        <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.last_thorough_date && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.last_thorough_date.message}
@@ -625,20 +734,33 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         )}
                       </div>
                     </div>
-                    </div>
-                    {/* Next Test Date */}
-                    <div className="grid gap-4 grid-cols-1">
-                    <div className="grid grid-cols-[200px_1fr] w-[64.2%]  items-start gap-4">
-                      <Label  className='mt-3' htmlFor="next_test_date">Next Test Date</Label>
+                  </div>
+
+                  {/* Next Test Date + Not Applicable */}
+                  <div className="grid gap-4 grid-cols-1">
+                    <div className="grid grid-cols-[200px_1fr] w-[64.2%] items-start gap-4">
+                      <Label className="mt-3" htmlFor="next_test_date">
+                      Date of next proof load test
+                      </Label>
                       <div className="flex items-center gap-4">
                         <Controller
                           name="next_test_date"
                           control={control}
                           render={({ field }) => (
-                            <Input id="next_test_date" disabled={testExamChecked} type="date" {...field} />
+                            <Input
+                              id="next_test_date"
+                              type="date"
+                              disabled={testExamChecked}
+                              {...field}
+                            />
                           )}
                         />
-                        <Checkbox className='w-6 h-6' checked={testExamChecked} onCheckedChange={(checked) => setTestExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={testExamChecked}
+                          onCheckedChange={(checked) => setTestExamChecked(!!checked)}
+                        />
+                        <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.next_test_date && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.next_test_date.message}
@@ -646,25 +768,33 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         )}
                       </div>
                     </div>
+                  </div>
 
-                     
-</div>
-                   
-
-                    
-                                     
-                    <div className="grid gap-4 grid-cols-1">
-                    {/* Next Thorough Exam */}
-                    <div className="grid grid-cols-[200px_1fr] w-[64.2%]  items-start gap-4">                      <Label  className='mt-3' htmlFor="next_thorough_date">Next Thorough Exam</Label>
-                      <div className="flex items-center gap-4 w-full ">
+                  {/* Next Thorough Exam + Not Applicable */}
+                  <div className="grid gap-4 grid-cols-1">
+                    <div className="grid grid-cols-[200px_1fr] w-[64.2%] items-start gap-4">
+                      <Label className="mt-3" htmlFor="next_thorough_date">
+                        Date of next examination
+                      </Label>
+                      <div className="flex items-center gap-4">
                         <Controller
                           name="next_thorough_date"
                           control={control}
                           render={({ field }) => (
-                            <Input id="next_thorough_date" disabled={thoroughExamChecked} type="date" {...field} />
+                            <Input
+                              id="next_thorough_date"
+                              type="date"
+                              disabled={thoroughExamChecked}
+                              {...field}
+                            />
                           )}
                         />
-                        <Checkbox className='w-6 h-6' checked={thoroughExamChecked} onCheckedChange={(checked) => setThoroughExamChecked(checked)} /> <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                        <Checkbox
+                          className="w-6 h-6"
+                          checked={thoroughExamChecked}
+                          onCheckedChange={(checked) => setThoroughExamChecked(!!checked)}
+                        />
+                        <span className="text-[13px] w-[33%]">Not Applicable</span>
                         {errors.next_thorough_date && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.next_thorough_date.message}
@@ -673,9 +803,14 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       </div>
                     </div>
                   </div>
+
+                  {/* Item Type + Property Table Type */}
                   <div className="grid gap-4 grid-cols-2">
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="item_type">Item Type</Label>
+                    {/* Item Type */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label className="mt-3" htmlFor="item_type">
+                        Item Type
+                      </Label>
                       <div>
                         <Controller
                           name="item_type"
@@ -686,12 +821,10 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                                 <SelectValue placeholder="Select Equipment Type" />
                               </SelectTrigger>
                               <SelectContent>
-                              <SelectItem   value={'Lifting Equipment'}>
-                                   Lifting Equipment
-                                  </SelectItem>
-                                  <SelectItem   value={'Lifting Accessories'}>
-                                   Lifting Accessories
-                                  </SelectItem>
+                                <SelectItem value={"Lifting Equipment"}>Lifting Equipment</SelectItem>
+                                <SelectItem value={"Lifting Accessories"}>
+                                  Lifting Accessories
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           )}
@@ -703,59 +836,60 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         )}
                       </div>
                     </div>
-                <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                      <Label  className='mt-3' htmlFor="property_table_type">Property Table Type*</Label>
+
+                    {/* Property Table Type (only required if item_type === 'Lifting Equipment') */}
+                    <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                      <Label className="mt-3" htmlFor="property_table_type">
+                        Property Table Type*
+                      </Label>
                       <div>
                         <Controller
                           name="property_table_type"
                           control={control}
-                          
                           render={({ field }) => (
-                            <Select disabled={selectedItemType !== 'Lifting Equipment'} onValueChange={field.onChange} value={field.value}>
+                            <Select
+                              disabled={selectedItemType !== "Lifting Equipment"}
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
                               <SelectTrigger id="property_table_type">
                                 <SelectValue placeholder="Select Property Table Type" />
                               </SelectTrigger>
                               <SelectContent>
-                              <SelectItem   value={'CRANE CERTIFICATE'}>
-                                    CRANE CERTIFICATE
-                                  </SelectItem>
-                                
-                                  <SelectItem   value={'ELEVATOR CERTIFICATE'}>
-                                   ELEVATOR CERTIFICATE
-                                  </SelectItem>
-
-                                  <SelectItem   value={'MEWP AND FORKLIFT'}>
-                                    MEWP AND FORKLIFT Certificate
-                                  </SelectItem>
-                                  <SelectItem   value={'EARTH MOVING EQUIPMENTS'}>
-                                    EARTH MOVING EQUIPMENTS
-                                  </SelectItem>
-                                  
+                                <SelectItem value={"CRANE CERTIFICATE"}>CRANE CERTIFICATE</SelectItem>
+                                <SelectItem value={"ELEVATOR CERTIFICATE"}>ELEVATOR CERTIFICATE</SelectItem>
+                                <SelectItem value={"MEWP AND FORKLIFT"}>
+                                  MEWP AND FORKLIFT
+                                </SelectItem>
+                                <SelectItem value={"EARTH MOVING EQUIPMENTS"}>
+                                  EARTH MOVING EQUIPMENTS
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           )}
                         />
-                        {errors.property_table_type && (
+                        {errors.property_table_type && selectedItemType === "Lifting Equipment" && (
                           <p className="text-red-500 mt-1 text-[13px] ">
                             {errors.property_table_type.message}
                           </p>
                         )}
                       </div>
                     </div>
-                   
                   </div>
                 </div>
 
+                {/* Description */}
                 <motion.div
                   initial={{ opacity: 20, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <div className="space-y-4 ">
+                  <div className="space-y-4">
                     <div className="grid gap-4 grid-cols-1">
-                      <div className="w-full ">
-                        <Label  className='mt-3' htmlFor="description">Description</Label>
-                        <div>
+                      <div className="w-full">
+                        <Label className="mt-3" htmlFor="description">
+                          Description
+                        </Label>
                         <Controller
                           name="description"
                           control={control}
@@ -769,26 +903,26 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                           </p>
                         )}
                       </div>
-                      </div>
                     </div>
                   </div>
                 </motion.div>
+
+                {/* Form buttons */}
                 <motion.div
                   className="flex justify-end gap-4"
                   initial={{ opacity: 20, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <Button
-                    type="reset"
-                    className="px-10"
-                    onClick={onClose}
-                    variant={'outline'}
-                  >
+                  <Button type="reset" className="px-10" onClick={onClose} variant={"outline"}>
                     Cancel
                   </Button>
-                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
-                    {loading ? 'Saving...' : 'Save'}
+                  <Button
+                    className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border "
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? "Saving..." : "Save"}
                   </Button>
                 </motion.div>
               </form>
@@ -799,3 +933,4 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
     </AnimatePresence>
   );
 }
+ 
