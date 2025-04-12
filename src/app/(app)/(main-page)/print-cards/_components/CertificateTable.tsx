@@ -40,7 +40,218 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             width: 100%;
             height:  100%;
         `;
-    
+        console.log(`<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Certificate of Completion</title>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" />
+                <style>
+                    :root {
+                        --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                            Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+                            "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
+                            "Source Han Sans CN", sans-serif;
+                    }
+                            @page {   
+    size: 695px 930px;
+    margin: 0mm;
+}
+                  
+                    .certificate-container {
+                        background-color: #fff;
+                        display: flex;
+                        max-width: 595px;
+                        max-height: 860px;
+                        flex-direction: column;
+                        overflow: hidden;
+                        align-items: center;
+                        padding: 218px 35px 89px;
+                        margin: 40px auto 0 auto;
+                    }
+                    .logo {
+                        aspect-ratio: 0.94;
+                        object-fit: contain;
+                        object-position: center;
+                        width: 94px;
+                        border-radius: 15px;
+                    }
+                    .certificate-intro {
+                        color: #212121;
+                        margin: 16px 0 0;
+                        font: 400 16px/1.1 Javanese Text, var(--default-font-family);
+                    }
+                    .recipient-name {
+                        color: #000;
+                        margin: 9px 0 0;
+                        font: 400 32.4px/1.1 Javanese Text, var(--default-font-family);
+                    }
+                    .certificate-details {
+                        color: #1a1a1e;
+                        width: 100%;
+                        margin: 26px 0 0;
+                        font: 400 14px/32px Javanese Text, var(--default-font-family);
+                        position: relative;
+                    }
+                    .underline {
+                        color: #c9c9c9;
+                    }
+                    .signatures-section {
+                        width: 100%;
+                        margin-top: 92px;
+                    }
+                    .value {
+                        position: absolute;
+                        text-align: center;
+                        width: 100%;
+                        font-weight: bold;
+                        color: #000;
+                        transform: translateY(-20px);
+                        text-align: left;
+                        margin-left: 40px;
+                    }
+                    .signatures-container {
+                        gap: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    .signature-column {
+                        display: flex;
+                        flex-direction: column;
+                        width: 45%;
+                    }
+                    .trainer-section {
+                        display: flex;
+                        width: 100%;
+                        flex-direction: column;
+                        font: 400 14px Javanese Text, sans-serif;
+                    }
+                    .signature-line {
+                        aspect-ratio: 200;
+                        object-fit: cover;
+                        max-width: 100%;
+                    }
+                    .signature-title {
+                        color: #1f1f1f;
+                        font-size: 14px;
+                        text-align: center;
+                        margin: 9px 0 0;
+                    }
+                    .certificate-meta {
+                        display: flex;
+                        margin-top: 36px;
+                        gap: 37px;
+                        font-size: 12px;
+                        color: #1a1a1e;
+                        line-height: 0px;
+                    }
+                    .meta-labels {
+                        align-self: start;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: start;
+                        flex: 1;
+                    }
+                    .meta-values {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: start;
+                        flex: 1;
+                    }
+                    .authorized-section {
+                        display: flex;
+                        flex-grow: 1;
+                        flex-direction: column;
+                        color: #1f1f1f;
+                        font: 400 14px Javanese Text, sans-serif;
+                    }
+                    .auth-signature-wrapper {
+                        display: flex;
+                        margin-top: 9px;
+                        flex-direction: column;
+                        align-items: start;
+                        padding: 0 28px;
+                    }
+                   .stamp {
+            aspect-ratio: 1.01;
+            object-fit: contain;
+            width: 117px;
+          margin-top: 28px;
+          }
+                    
+                        *{
+                    margin: 0px,
+                    padding: 0px
+                    }
+                </style>
+            </head>
+            <body>
+                <section class="certificate-container">
+                    <img src="${item?.avatar}" alt="Certificate Logo" class="logo" />
+                    <h1 class="certificate-intro">This is to certify that</h1>
+                    <h2 class="recipient-name">${item?.name?.toUpperCase()}</h2>
+                    <p class="certificate-details" style="font-size: 14px;">
+                        Qatar ID/ Employer ID No.
+                        <span class="value qatar-id" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.id_no}</span>
+                        <span class="underline">____________________________________________________________________</span>
+                        <br />
+                        Company / Employer
+                        <span class="value company" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.company?.toUpperCase()}</span>
+                        <span class="underline">__________________________________________________________________________</span>
+                        <br />
+                        has successfully completed a Training/assessment as
+                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training?.toUpperCase()}</span>
+                        <span class="underline">____________________________________________</span>
+                        <br />
+                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training1?.toUpperCase()}</span>
+                        <span class="underline">_______________________________________________________</span>.
+                    </p>
+                    <article class="signatures-section">
+                        <div class="signatures-container">
+                            <div class="signature-column">
+                                <section class="trainer-section">
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ad78b217e334dfbd7976459e664d9d9995052b34db611f60c68bd8a693d3a39?placeholderIfAbsent=true&apiKey=ec30a833d743462ba89f4aaebb78651e" alt="Trainer Signature" class="signature-line" />
+                                    <p class="signature-title">Trainer/Assessor</p>
+                                    <div class="certificate-meta">
+                                        <div class="meta-labels">
+                                            <p>Certificate Number:</p>
+                                            <p>Course Duration:</p>
+                                            <p>Issued Date :</p>
+                                            <p>Expiry Date :</p>
+                                        </div>
+                                        <div class="meta-values">
+                                            <p>${item?.certificate_no}</p>
+                                            <p>${(item?.course_duration || 2) > 1 ? `${item?.course_duration || 2} DAYS` : `${item?.course_duration || 2} DAY`}</p>
+                                            <p>${formatDateWithHyphen(item?.issued_on)}</p>
+                                            <p>${formatDateWithHyphen(item?.valid_untill)}</p>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="signature-column">
+                                <section class="authorized-section">
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/4d89aae86126e38e4b57de5efb2cdbc307737da9691d772b85c8f21184c2b195?placeholderIfAbsent=true&apiKey=ec30a833d743462ba89f4aaebb78651e" alt="Authorized Signature Line" class="signature-line" />
+                                    <div class="auth-signature-wrapper">
+                                        <p class="signature-title" style="margin-top: 4px; margin-left: 43px">Authorized Signature</p>
+                                        <img src="${item?.qr_url}" alt="Official Stamp" class="stamp" />
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+                <script>
+                    // Print and close the window after content is loaded
+                    window.onload = function() {
+                        window.print();
+                        window.onafterprint = function() {
+                            window.close();
+                        };
+                    };
+                </script>
+            </body>
+            </html>`)
         iframe.srcdoc = `
            <!DOCTYPE html>
             <html lang="en">
