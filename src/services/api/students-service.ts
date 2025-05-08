@@ -46,6 +46,7 @@ export class StudentService extends Supabase {
             const { data, error } = await this.supabase
             .from('students_credentials')
             .select('*')
+            .order('created_at', { ascending: false })
             if (error) {
                 return false;
             }
@@ -54,7 +55,8 @@ export class StudentService extends Supabase {
             const { data, error } = await this.supabase
             .from('students_credentials')
             .select('*')
-            .not('qr_url', 'is', null); // Replace 'card' with your field name
+            .not('qr_url', 'is', null)
+            .order('created_at', { ascending: false }); // Replace 'card' with your field name
             if (error) {
                 return false;
             }
@@ -63,7 +65,8 @@ export class StudentService extends Supabase {
             const { data, error } = await this.supabase
             .from('students_credentials')
             .select('*')
-            .not('card_url', 'is', null); // Replace 'card' with your field name
+            .not('card_url', 'is', null)
+            .order('created_at', { ascending: false }); // Replace 'card' with your field name
             if (error) {
                 return false;
             }
