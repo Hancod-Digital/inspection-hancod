@@ -201,7 +201,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
         >Qatar ID/ ID No.<br />Company name<br /><br />Course Details<br /><br />Model/
         Level</span
       >
-      <div class="layer-3"></div>
+      <div class="layer-3"></div> 
       <div class="vector-4"></div>
       <div class="vector-5"></div>
       <span class="safe-building-maintenance"
