@@ -19,7 +19,7 @@ import { StudentService } from '@/services/api/students-service';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import ActionButtonIcon from '@/components/icons/ActionButtonIcon';
-import {   cssStringUpdated, dataURLtoBlob, fetchHtml, formatDateWithHyphen, loadImages, splitDesignation } from '@/lib/utils';
+import {   cssStringUpdated, dataURLtoBlob, fetchHtml, formatDateWithHyphen, loadImages, splitCompany, splitDesignation } from '@/lib/utils';
 import { toPng } from 'html-to-image';
 import { UserService } from '@/services/api/user-service';
 import TableSpinner from '@/components/animated/TableSpinner';
@@ -155,7 +155,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
  
   const handleEditClick = (item: any) => {
     const {training, training1} = splitDesignation(item?.designation)
-   
+    const {company1, company2} = splitCompany(item?.company)
     const {training:model_level, training1:model_level1} = splitDesignation(item?.model_level)
     const iframe: any = document.createElement('iframe');
     iframe.style.visibility = 'hidden';
@@ -195,8 +195,8 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector"></div>
       <div class="rectangle-2"></div>
       <span class="qube-inspection"
-        >: ${item?.id_no}<br />: ${item?.company}<br />
-        Industries<br /><br /><br /></span
+        >: ${item?.id_no}<br />: ${company1}<br />
+        ${company2}<br /><br /><br /></span
       ><span class="qatar-id-company-name"
         >Qatar ID/ ID No.<br />Company name<br /><br />Course Details<br /><br />Model/
         Level</span

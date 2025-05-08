@@ -8098,7 +8098,49 @@ button {
   `
 }
 
-
+export const splitCompany = (company: string) => {
+  if (!company) return { company1: '', company2: '' };
+  
+  // Split the company name into words
+  const words = company.split(' ');
+  let company1 = '';
+  let company2 = '';
+  
+  // If the company name is short enough, keep it all in company1
+  if (company.length <= 30) {
+    return { company1: company, company2: '' };
+  }
+  
+  // Find the best split point to avoid breaking phrases
+  let bestSplitIndex = -1;
+  let minDifference = Infinity;
+  
+  // Try different split points to find the most balanced one
+  for (let i = 1; i < words.length; i++) {
+    const firstPart = words.slice(0, i).join(' ');
+    const secondPart = words.slice(i).join(' ');
+    
+    if (firstPart.length <= 30 && secondPart.length <= 30) {
+      const difference = Math.abs(firstPart.length - secondPart.length);
+      if (difference < minDifference) {
+        minDifference = difference;
+        bestSplitIndex = i;
+      }
+    }
+  }
+  
+  // If we found a good split point, use it
+  if (bestSplitIndex > 0) {
+    company1 = words.slice(0, bestSplitIndex).join(' ');
+    company2 = words.slice(bestSplitIndex).join(' ');
+  } else {
+    // Otherwise, split at character level as a fallback
+    company1 = company.substring(0, 30);
+    company2 = company.substring(30);
+  }
+  
+  return { company1, company2 };
+}
 
 export const splitDesignation = (designation: string) => {
   const words = designation.split(' ');
