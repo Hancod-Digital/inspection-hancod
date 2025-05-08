@@ -25,47 +25,7 @@ import { PlusIcon } from 'lucide-react';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-/**
- * Zod Schema
- */
-const equipmentDetailsSchema = object({
-  inspection_date: string().nonempty('Inspection Date is required'),
-  site: string().nonempty('Site is required'),
-  authority: string().nonempty('Authority is required'),
-  standard: string().nonempty('Standard is required'),
-  type_of_exam: string().nonempty('Type of Exam is required'),
-  description_of_test: string().nonempty('Description of Test is required').optional(),
-  job_order_no: string().nonempty('Job Order No. is required'),
-  equipment_no: string().nonempty('Equipment No. is required'),
-  title: string().nonempty('Title is required'),
-  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
-  safe_working_load: string().nonempty('Safe Working Load is required'),
-  last_test_exam: string().nonempty('Last Test Exam is required'),
-  next_test_exam: string().optional(),
-  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-  next_thorough_exam: string().optional(),
 
-  result: string().nonempty('Result is required'),
-  surveyor: string().nonempty('Surveyor is required'),
-  result_description: string().nonempty('Test Particulars is required'),
-  owner_name: string().nonempty('Owner Name is required'),
-  description: string().nonempty('Description Date is required').optional(),
-  equipment_description: string().nonempty('Equipment Description is required'),
-  manufacturer: string().nonempty('Manufacturer is required'),
-  tested_standard: string().nonempty('Tested Standard is required'),
-  approval_status: string().nonempty('Approval Status is required'),
-  location: string().nonempty('Location is required'),
-  serial_no: string().nonempty('Serial No. is required'),
-  registration_no: string().nonempty('Registration No. is required'),
-  lift_location: string().nonempty('Lift Location is required').optional(),
-  model_no: string().nonempty('Model_no is required'),
-  year_of_manufacture: string().nonempty('Year of Manufacture is required'),
-  owner_id: string().nonempty('Owner ID is required'),
-  defect_description: string().nonempty('Defect Description is required'),
-  test_particulars: string().nonempty('Test Particulars is required'),
-});
-
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
@@ -89,7 +49,50 @@ export default function EquipmentDetailsForm({
   // "Not Applicable" checkboxes for next test/thorough
   const [testExamChecked, setTestExamChecked] = useState(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
+/**
+ * Zod Schema
+ */
+const equipmentDetailsSchema = object({
+  inspection_date: string().nonempty('Inspection Date is required'),
+  site: string().nonempty('Site is required'),
+  authority: string().nonempty('Authority is required'),
+  standard: string().nonempty('Standard is required'),
+  type_of_exam: string().nonempty('Type of Exam is required'),
+  description_of_test: string().nonempty('Description of Test is required').optional(),
+  job_order_no: string().nonempty('Job Order No. is required'),
+  equipment_no: string().nonempty('Equipment No. is required'),
+  title: string().nonempty('Title is required'),
+  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
+  safe_working_load: string().nonempty('Safe Working Load is required'),
+  last_test_exam: string().nonempty('Last Test Exam is required'),
+  next_test_exam: string().optional(),
+  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+  next_thorough_exam: string().optional(),
+  last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
+last_thorough_exam_certificate_no:  string().nonempty('Last Thorough Exam Certificate No. is required'),
+next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
+  result: string().nonempty('Result is required'),
+  surveyor: string().nonempty('Surveyor is required'),
+  result_description: string().nonempty('Test Particulars is required'),
+  owner_name: string().nonempty('Owner Name is required'),
+  description: string().nonempty('Description Date is required').optional(),
+  equipment_description: string().nonempty('Equipment Description is required'),
+  manufacturer: string().nonempty('Manufacturer is required'),
+  tested_standard: string().nonempty('Tested Standard is required'),
+  approval_status: string().nonempty('Approval Status is required'),
+  location: string().nonempty('Location is required'),
+  serial_no: string().nonempty('Serial No. is required'),
+  registration_no: string().nonempty('Registration No. is required'),
+  lift_location: string().nonempty('Lift Location is required').optional(),
+  model_no: string().nonempty('Model_no is required'),
+  year_of_manufacture: string().nonempty('Year of Manufacture is required'),
+  owner_id: string().nonempty('Owner ID is required'),
+  defect_description: string().nonempty('Defect Description is required'),
+ // test_particulars: string().nonempty('Test Particulars is required'),
+});
 
+type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
   // New: "Not Applicable" checkboxes for last test/thorough
   const [lastTestExamChecked, setLastTestExamChecked] = useState(false);
   const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState(false);
@@ -164,9 +167,14 @@ export default function EquipmentDetailsForm({
       setValue('title', String(selected.title) || '');
       setValue('registration_no', String(selected.registration_no) || '');
       setValue('last_test_exam', String(selected.last_test_date) || '');
+      console.log("----------------------------------------------",selected?.last_test_exam_certificate_no)
+      setValue('last_test_exam_certificate_no', selected?.last_test_exam_certificate_no? String(selected?.last_test_exam_certificate_no) : '');
       setValue('next_test_exam', String(selected.next_test_date) || '');
+      setValue('next_test_exam_certificate_no', selected?.next_test_exam_certificate_no? String(selected?.next_test_exam_certificate_no) : '');
       setValue('last_thorough_exam', String(selected.last_thorough_date) || '');
+      setValue('last_thorough_exam_certificate_no', selected?.last_thorough_exam_certificate_no? String(selected?.last_thorough_exam_certificate_no) : '');
       setValue('next_thorough_exam', String(selected.next_thorough_date) || '');
+      setValue('next_thorough_exam_certificate_no', selected?.next_thorough_exam_certificate_no? String(selected?.next_thorough_exam_certificate_no) : '');
       setValue('serial_no', String(selected.serial_no) || '');
       setValue('model_no', String(selected.model_no) || '');
       setValue('owner_id', String(selected.owner_id) || '');
@@ -911,15 +919,18 @@ export default function EquipmentDetailsForm({
                             type="date"
                             disabled={lastTestExamChecked}
                             defaultValue={
-                              equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                                ?.last_test_date
-                                ? new Date(
-                                    equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                                      ?.last_test_date
-                                  )
-                                    .toISOString()
-                                    .split('T')[0]
-                                : ''
+                              equipmentNoOptions?.find((item: any) => item.id == equipment_no)?.last_test_date === 'NOT APPLICABLE' 
+                                ? '' 
+                                : (() => {
+                                    const dateString = equipmentNoOptions?.find((item: any) => item.id == equipment_no)
+                                      ?.last_test_date?.toString().trim() || '';
+                                    try {
+                                      const date = new Date(dateString);
+                                      return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
+                                    } catch {
+                                      return '';
+                                    }
+                                  })()
                             }
                             {...field}
                           />
@@ -936,6 +947,16 @@ export default function EquipmentDetailsForm({
                       )}
                     </div>
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+  <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
+    Last Test Certificate No.
+  </Label>
+  <Input
+  disabled={lastTestExamChecked}
+    id="last_test_exam_certificate_no"
+    {...register('last_test_exam_certificate_no')}
+  />
+</div>
 
                   {/* Date of last thorough exam + Not Applicable */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -954,12 +975,11 @@ export default function EquipmentDetailsForm({
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                 ?.last_thorough_date
-                                ? new Date(
-                                    equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                                      ?.last_thorough_date
-                                  )
-                                    .toISOString()
-                                    .split('T')[0]
+                                ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date === 'NOT APPLICABLE' 
+                                  ? '' 
+                                  : new Date(
+                                      equipmentNoOptions.find((item: any) => item.id == equipment_no)?.last_thorough_date
+                                    )?.toISOString()?.split('T')[0]
                                 : ''
                             }
                             {...field}
@@ -977,6 +997,16 @@ export default function EquipmentDetailsForm({
                       )}
                     </div>
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+  <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
+    Last Thorough Certificate No.
+  </Label>
+  <Input
+  disabled={lastThoroughExamChecked}
+    id="last_thorough_exam_certificate_no"
+    {...register('last_thorough_exam_certificate_no')}
+  />
+</div>
                   </div>
                 
 
@@ -998,14 +1028,16 @@ export default function EquipmentDetailsForm({
                             disabled={testExamChecked}
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                                ?.next_test_date
+                                ?.next_test_date &&
+                              equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
+                                ?.next_test_date !== 'NOT APPLICABLE'
                                 ? new Date(
                                     equipmentNoOptions?.find(
                                       (item: any) => item?.id == equipment_no
                                     )?.next_test_date
                                   )
-                                    .toISOString()
-                                    .split('T')[0]
+                                    ?.toISOString()
+                                    ?.split('T')[0]
                                 : ''
                             }
                             {...field}
@@ -1025,6 +1057,17 @@ export default function EquipmentDetailsForm({
                       )}
                     </div>
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4 ">
+  <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
+    Next Test Certificate No.
+  </Label>
+  <Input
+    id="next_test_exam_certificate_no"
+    disabled={testExamChecked}
+    className='w-[68%]'
+    {...register('next_test_exam_certificate_no')}
+  />
+</div>
 
                   {/* Next thorough exam + Not Applicable */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
@@ -1042,14 +1085,16 @@ export default function EquipmentDetailsForm({
                             disabled={thoroughExamChecked}
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                                ?.next_thorough_date
+                                ?.next_thorough_date &&
+                              equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
+                                ?.next_thorough_date !== 'Not Applicable'
                                 ? new Date(
                                     equipmentNoOptions?.find(
                                       (item: any) => item?.id == equipment_no
                                     )?.next_thorough_date
                                   )
-                                    .toISOString()
-                                    .split('T')[0]
+                                    ?.toISOString()
+                                    ?.split('T')[0]
                                 : ''
                             }
                             {...field}
@@ -1069,6 +1114,17 @@ export default function EquipmentDetailsForm({
                       )}
                     </div>
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
+    Next Thorough Certificate No.
+  </Label>
+  <Input
+    id="next_thorough_exam_certificate_no"
+    disabled={thoroughExamChecked}
+    className='w-[68%]'
+    {...register('next_thorough_exam_certificate_no')}
+  />
+</div>
 
                   {/* Lift Location conditionally shown */}
                   {equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
@@ -1203,7 +1259,7 @@ export default function EquipmentDetailsForm({
                 </div>
 
                 {/* Test Particulars */}
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                     <div className="grid grid-cols-[400px_1fr] gap-4">
                       <Label htmlFor="test_particulars" className="mt-3 leading-5">
@@ -1215,7 +1271,7 @@ export default function EquipmentDetailsForm({
                       )}
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Approval Status */}
                 <div className="grid gap-4 grid-cols-2">

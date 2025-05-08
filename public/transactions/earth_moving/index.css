@@ -27,7 +27,7 @@ button {
   width: calc(1133 * var(--rpx));
   height: calc(1603.3372802734375 * var(--rpx));
   margin: 0 auto;
-  background: #f4fdff;
+   
   overflow: hidden;
 }
 .flex-row-a {
@@ -422,13 +422,15 @@ button {
 }
 .whatsapp-image-e {
   position: absolute;
-  width: calc(1096.6282958984375 * var(--rpx));
-  height: calc(1056.05078125 * var(--rpx));
+  width: calc(796.6282958984375 * var(--rpx));
+  height: calc(756.05078125 * var(--rpx));
   top: calc(52.833984375 * var(--rpx));
-  left: 0;
-  background: url(./earth_moving/assets/images/53f2214b-2f2f-49d7-8897-3067475930c7.png)
+  left: 43%;
+  transform: translateX(-50%);
+  background: url(../../assets/watermark.svg)
     no-repeat center;
   background-size: cover;
+  z-index: 1000000;
 }
 .rectangle-f {
   position: absolute;
@@ -800,8 +802,8 @@ button {
   z-index: 90;
 }
 .main-hoist-max-rated {
-  padding-left:12px
-  
+  padding-left:12px;
+  padding-top: 12px;
   position: absolute;
   width: 77%;
   height: calc(82 * var(--rpx));
@@ -959,6 +961,42 @@ button {
   border-left: calc(1 * var(--rpx)) solid #000000;
   z-index: 19;
 }
+.mar-certificate-no{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(195.7734375 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(19.369 * var(--rpx));
+  left: calc(269.552734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(13 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.4 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 50;
+}
+.mar-css{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(195.7734375 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369 * var(--rpx));
+  left: calc(269.552734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(16 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.4 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 50;
+}
 .mar {
   display: flex;
   align-items: center;
@@ -966,25 +1004,43 @@ button {
   position: absolute;
   width: calc(195.7734375 * var(--rpx));
   height: calc(23.778215408325195 * var(--rpx));
-  top: calc(11.5859375 * var(--rpx));
+  top: calc(3.369 * var(--rpx));
   left: calc(269.552734375 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: calc(16 * var(--rpx));
+  font-size: calc(13 * var(--rpx));
   font-weight: 600;
-  line-height: calc(22.399999618530273 * var(--rpx));
+  line-height: calc(22.4 * var(--rpx));
   text-align: center;
   white-space: nowrap;
-  z-index: 48;
+  z-index: 50;
 }
-.not-available {
+.not-available-certificate-no{
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   width: calc(193.5029296875 * var(--rpx));
   height: calc(23.778215408325195 * var(--rpx));
-  top: calc(11.5859375 * var(--rpx));
+  top: calc(19.369 * var(--rpx));
+  left: calc(26.31640625 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(13 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 49;
+}
+.not-available-css{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(193.5029296875 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369 * var(--rpx));
   left: calc(26.31640625 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -993,7 +1049,61 @@ button {
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;
   white-space: nowrap;
-  z-index: 47;
+  z-index: 49;
+}
+.not-available {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(193.5029296875 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(3.369 * var(--rpx));
+  left: calc(26.31640625 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(13 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 49;
+}
+.aug-certificate-no {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(19.369140625 * var(--rpx));
+  left: calc(546.927734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 57;
+}
+.aug-css {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369140625 * var(--rpx));
+  left: calc(546.927734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 57;
 }
 .aug {
   display: flex;
@@ -1002,16 +1112,54 @@ button {
   position: absolute;
   width: calc(228.212890625 * var(--rpx));
   height: calc(23.778215408325195 * var(--rpx));
-  top: calc(13.369140625 * var(--rpx));
-  left: calc(803.927734375 * var(--rpx));
+  top: calc(3.369140625 * var(--rpx));
+  left: calc(546.927734375 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: calc(16 * var(--rpx));
+  font-size: 13px;
   font-weight: 600;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;
   white-space: nowrap;
-  z-index: 55;
+  z-index: 57;
+}
+ 
+
+.aug-23-certificate-no {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(19.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
+.aug-23-css {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
 }
 .aug-23 {
   display: flex;
@@ -1020,16 +1168,16 @@ button {
   position: absolute;
   width: calc(228.212890625 * var(--rpx));
   height: calc(23.778215408325195 * var(--rpx));
-  top: calc(13.369140625 * var(--rpx));
-  left: calc(536.2099609375 * var(--rpx));
+  top: calc(3.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: calc(16 * var(--rpx));
+  font-size: 13px;
   font-weight: 600;
-  line-height: calc(22.399999618530273 * var(--rpx));
+  line-height: 22.4px;
   text-align: center;
   white-space: nowrap;
-  z-index: 56;
+  z-index: 69;
 }
 .rectangle-24 {
   position: absolute;
@@ -1672,7 +1820,7 @@ p {
   position: absolute;
   width: calc(606 * var(--rpx));
   height: calc(38 * var(--rpx));
-  top: calc(968.759766 * var(--rpx));
+  top: calc(928.759766 * var(--rpx));
   left: calc(36.7001953125 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -1686,7 +1834,7 @@ p {
   position: absolute;
   width: calc(1047 * var(--rpx));
   height: calc(40 * var(--rpx));
-  top: calc(965.759765625 * var(--rpx));
+  top: calc(926.759765625 * var(--rpx));
   left: calc(16.7001953125 * var(--rpx));
   border-top: calc(1 * var(--rpx)) solid #000000;
   border-right: calc(1 * var(--rpx)) solid #000000;

@@ -206,15 +206,35 @@ function formatWeightString(input: string): string {
 console.log(formatWeightString(item?.safe_working_load),item?.safe_working_load)
 htmlString = htmlString.replace(/\{\{twelve\}\}/g, formatWeightString(item?.safe_working_load));
 
-htmlString = htmlString.replace(/\{\{thirteen\}\}/g,  formatDateWithHyphen(item?.last_test_exam));
 
-htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam));
+if(item?.last_test_exam_certificate_no){
+  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${formatDateWithHyphen(item?.last_test_exam)|| "Not Available"}</span><span class="not-available-certificate-no">${item.last_test_exam_certificate_no|| "Not Available"}</span>`);
+  
+}else{
+  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available-css">${formatDateWithHyphen(item?.last_test_exam)||"Not Available"}</span>`);
+}
 
-htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam));
+if(item?.next_test_exam_certificate_no){
+  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="date-28-mar-2025">${formatDateWithHyphen(item?.next_test_exam)|| "Not Available"}</span><span class="date-28-mar-2025-certificate-no">${item.next_test_exam_certificate_no|| "Not Available"}</span>`);
+  
+}else{
+  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="date-28-mar-2025-css">${formatDateWithHyphen(item?.next_test_exam)||"Not Available"}</span>`);
+}
 
-htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam));
+if(item?.last_thorough_exam_certificate_no){
+  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-applicable-1a">${formatDateWithHyphen(item?.last_thorough_exam)|| "Not Available"}</span><span class="not-applicable-1a-certificate-no">${item.last_thorough_exam_certificate_no|| "Not Available"}</span>`);
+  
+}else{
+  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-applicable-1a-css">${formatDateWithHyphen(item?.last_thorough_exam)||"Not Available"}</span>`);
+}
 
-             
+if(item?.next_thorough_exam_certificate_no){
+  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="not-applicable">${formatDateWithHyphen(item?.next_thorough_exam)|| "Not Available"}</span><span class="not-applicable-certificate-no">${item.next_thorough_exam_certificate_no|| "Not Available"}</span>`);
+  
+}else{
+  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="not-applicable-css">${formatDateWithHyphen(item?.next_thorough_exam)||"Not Available"}</span>`);
+}
+
 const cssResponse = await fetch('/equ-certificate/index.css');
   let cssText = await cssResponse.text();
  

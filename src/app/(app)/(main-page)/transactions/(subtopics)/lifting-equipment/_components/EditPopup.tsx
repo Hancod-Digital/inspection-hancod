@@ -34,47 +34,6 @@ import { PlusIcon } from 'lucide-react';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-const equipmentDetailsSchema = object({
-  inspection_date: string().nonempty('Inspection Date is required'),
-  site: string().nonempty('Site is required'),
-  year_of_manufacture: string().nonempty('Year of Manufacture is required'),
-  authority: string().nonempty('Authority is required'),
-  standard: string().nonempty('Standard is required'),
-  type_of_exam: string().nonempty('Type of Exam is required'),
-  description_of_test: string().optional(),
-  job_order_no: string().nonempty('Job Order No. is required'),
-  test_particulars: string().nonempty('Test Particulars is required'),
-  defect_description: string().nonempty('Defect Description is required'),
-  equipment_no: string().nonempty('Equipment No. is required'),
-  lift_location: string()
-  .optional()
-  .nullable(),
-
-  title: string().nonempty('Title is required'),
-  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
-  safe_working_load: string().nonempty('Safe Working Load is required'),
-  last_test_exam: string().nonempty('Last Test Exam is required'),
-  next_test_exam: string().optional(),
-  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-  next_thorough_exam: string().optional(),
-  model_no: string().nonempty('Model No. is required'),
-  registration_no: string().nonempty('Registration No. is required'),
-  result: string().nonempty('Result is required'),
-  surveyor: string().nonempty('Surveyor is required'), 
-  result_description: string().optional(),
-  owner_name: string().nonempty('Owner Name is required'),
-  description: string().nonempty('Description is required').optional(),
-  equipment_description: string().nonempty('Equipment Description is required'),
-  manufacturer: string().nonempty('Manufacturer is required'),
-  tested_standard: string().nonempty('Tested Standard is required'),
-  approval_status: string().nonempty('Approval Status is required'),
-  location: string().nonempty('Location is required'),
-  serial_no: string().nonempty('Serial No. is required'),
- 
-  owner_id: string().nonempty('Owner ID is required')
-});
-
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EditEquipmentDetailsFormProps {
   onClose: () => void;
@@ -106,6 +65,7 @@ export default function EditEquipmentDetailsForm({
     safeToUse: 'no'
   });
   const { getAllSingleSubtopic, updateRecord, findRecordById } = useSubtopic();
+
   const [testExamChecked, setTestExamChecked] = useState(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
   
@@ -127,6 +87,49 @@ export default function EditEquipmentDetailsForm({
 
   // Fetch existing data
   
+const equipmentDetailsSchema = object({
+  inspection_date: string().nonempty('Inspection Date is required'),
+  site: string().nonempty('Site is required'),
+  year_of_manufacture: string().nonempty('Year of Manufacture is required'),
+  authority: string().nonempty('Authority is required'),
+  standard: string().nonempty('Standard is required'),
+  type_of_exam: string().nonempty('Type of Exam is required'),
+  description_of_test: string().optional(),
+  job_order_no: string().nonempty('Job Order No. is required'),
+ // test_particulars: string().nonempty('Test Particulars is required'),
+  defect_description: string().nonempty('Defect Description is required'),
+  equipment_no: string().nonempty('Equipment No. is required'),
+  lift_location: string()
+  .optional()
+  .nullable(),
+  last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+  next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
+  last_thorough_exam_certificate_no:  string().nonempty('Last Thorough Exam Certificate No. is required'),
+  next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
+  title: string().nonempty('Title is required'),
+  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
+  safe_working_load: string().nonempty('Safe Working Load is required'),
+  last_test_exam: string().nonempty('Last Test Exam is required'),
+  next_test_exam: string().optional(),
+  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+  next_thorough_exam: string().optional(),
+  model_no: string().nonempty('Model No. is required'),
+  registration_no: string().nonempty('Registration No. is required'),
+  result: string().nonempty('Result is required'),
+  surveyor: string().nonempty('Surveyor is required'), 
+  result_description: string().optional(),
+  owner_name: string().nonempty('Owner Name is required'),
+  description: string().nonempty('Description is required').optional(),
+  equipment_description: string().nonempty('Equipment Description is required'),
+  manufacturer: string().nonempty('Manufacturer is required'),
+  tested_standard: string().nonempty('Tested Standard is required'),
+  approval_status: string().nonempty('Approval Status is required'),
+  location: string().nonempty('Location is required'),
+  serial_no: string().nonempty('Serial No. is required'),
+  owner_id: string().nonempty('Owner ID is required')
+});
+
+type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
  
    useEffect(() => {
     const fetchEquipmentData = async () => {
@@ -163,6 +166,10 @@ export default function EditEquipmentDetailsForm({
       lift_location: existingData.lift_location || '',
       authority: String(existingData.authority) || '',
       standard: String(existingData.standard) || '',
+      last_test_exam_certificate_no: existingData.last_test_exam_certificate_no || '',
+      next_test_exam_certificate_no: existingData.next_test_exam_certificate_no || '',
+      last_thorough_exam_certificate_no: existingData.last_thorough_exam_certificate_no || '',
+      next_thorough_exam_certificate_no: existingData.next_thorough_exam_certificate_no || '',
       type_of_exam: existingData.type_of_exam || '',
       description_of_test: existingData.description_of_test || '',
       job_order_no: String(existingData.job_order_no) || '',
@@ -181,7 +188,7 @@ export default function EditEquipmentDetailsForm({
       result_description: existingData.result_description || '',
       owner_name: existingData.owner_name || '',
       defect_description: existingData.defect_description || '',
-      test_particulars: existingData.test_particulars || '',
+    //  test_particulars: existingData.test_particulars || '',
       description: existingData.description || '',
       equipment_description: existingData.equipment_description || '',
       manufacturer: String(existingData.manufacturer) || '',
@@ -277,7 +284,10 @@ export default function EditEquipmentDetailsForm({
        
         setValue('equipment_description', String(selectedEquipment.description) || ''); // Update equipment description
         setValue('title', String(selectedEquipment.title) || ''); // Update title
-    
+        setValue('last_test_exam_certificate_no', String(selectedEquipment.last_test_exam_certificate_no) || ''); // Update last test exam certificate no
+        setValue('next_test_exam_certificate_no', String(selectedEquipment.next_test_exam_certificate_no) || ''); // Update next test exam certificate no
+        setValue('last_thorough_exam_certificate_no', String(selectedEquipment.last_thorough_exam_certificate_no) || ''); // Update last thorough exam certificate no
+        setValue('next_thorough_exam_certificate_no', String(selectedEquipment.next_thorough_exam_certificate_no) || ''); // Update next thorough exam certificate no
      
         setValue('owner_name',  String(ownerOptions.find((item:any)=>item.id==selectedEquipment.owner_id).code) || ''); // Update owner
         setValue('registration_no', String(selectedEquipment.registration_no) || ''); // Update registration no
@@ -835,6 +845,16 @@ export default function EditEquipmentDetailsForm({
     </p>
   )}
 </div>
+<div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+  <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
+    Last Test Certificate No.
+  </Label>
+  <Input
+  disabled={lastTestExamChecked}
+    id="last_test_exam_certificate_no"
+    {...register('last_test_exam_certificate_no')}
+  />
+</div>
 
 {/* Last Thorough Exam */}
 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
@@ -867,6 +887,16 @@ export default function EditEquipmentDetailsForm({
     </p>
   )}
 </div>
+<div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+  <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
+    Last Thorough Certificate No.
+  </Label>
+  <Input
+  disabled={lastThoroughExamChecked}
+    id="last_thorough_exam_certificate_no"
+    {...register('last_thorough_exam_certificate_no')}
+  />
+</div>
                   
 
                   {/* Next Test Exam */}
@@ -896,6 +926,17 @@ export default function EditEquipmentDetailsForm({
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-[200px_1fr] gap-4 ">
+  <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
+    Next Test Certificate No.
+  </Label>
+  <Input
+    id="next_test_exam_certificate_no"
+    disabled={testExamChecked}
+    className='w-[68%]'
+    {...register('next_test_exam_certificate_no')}
+  />
+</div>
                   <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination </Label>
                     <div className="flex items-center gap-4">
@@ -918,6 +959,17 @@ export default function EditEquipmentDetailsForm({
                       )}
                     </div>
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
+    Next Thorough Certificate No.
+  </Label>
+  <Input
+    id="next_thorough_exam_certificate_no"
+    disabled={thoroughExamChecked}
+    className='w-[68%]'
+    {...register('next_thorough_exam_certificate_no')}
+  />
+</div>
                    {
                    
                     equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.property_table_type == 'ELEVATOR CERTIFICATE' && (
@@ -1064,7 +1116,7 @@ export default function EditEquipmentDetailsForm({
 </div>
                   </div>
                 </div>
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                   <div className="grid grid-cols-[400px_1fr]  gap-4">
                     <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
@@ -1074,7 +1126,7 @@ export default function EditEquipmentDetailsForm({
                     )}
                      </div>
                   </div>
-                </div>
+                </div> */}
                 
                 {/* Approval Status */}
                 <div className="grid grid-cols-[200px_1fr] gap-4">

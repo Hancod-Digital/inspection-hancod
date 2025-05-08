@@ -191,10 +191,44 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
   
 htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 
-    htmlString = htmlString.replace(/\{\{thirteen\}\}/g, formatDateWithHyphen(item?.last_test_exam) || '');
-    htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam) || '');
-    htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam) || '');
-    htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam) || '');
+    // htmlString = htmlString.replace(/\{\{thirteen\}\}/g, formatDateWithHyphen(item?.last_test_exam) || '');
+    // htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam) || '');
+    // htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam) || '');
+    // htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam) || '');
+
+    
+if(item?.last_test_exam_certificate_no){
+  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${formatDateWithHyphen(item?.last_test_exam)|| "Not Available"}</span><span class="not-available-certificate-no">${item.last_test_exam_certificate_no|| "Not Available"}</span>`);
+  console.log("last_test_exam_certificate_no","POSITIVE")
+}else{
+  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available-css">${formatDateWithHyphen(item?.last_test_exam)||"Not Available"}</span>`);
+  console.log("last_test_exam_certificate_no","NEGATIVE")
+}
+
+if(item?.next_test_exam_certificate_no){
+  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="mar">${formatDateWithHyphen(item?.next_test_exam)|| "Not Available"}</span><span class="mar-certificate-no">${item.next_test_exam_certificate_no|| "Not Available"}</span>`);
+  console.log("next_test_exam_certificate_no","POSITIVE")
+}else{
+  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="mar-css">${formatDateWithHyphen(item?.next_test_exam)||"Not Available"}</span>`);
+  console.log("next_test_exam_certificate_no","NEGATIVE")
+}
+
+if(item?.last_thorough_exam_certificate_no){
+  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="aug-30">${formatDateWithHyphen(item?.last_thorough_exam)|| "Not Available"}</span><span class="aug-30-certificate-no">${item.last_thorough_exam_certificate_no|| "Not Available"}</span>`);
+  console.log("last_thorough_exam_certificate_no","POSITIVE")
+}else{
+  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="aug-30-css">${formatDateWithHyphen(item?.last_thorough_exam)||"Not Available"}</span>`);
+  console.log("last_thorough_exam_certificate_no","NEGATIVE")
+}
+
+if(item?.next_thorough_exam_certificate_no){
+  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="aug">${formatDateWithHyphen(item?.next_thorough_exam)|| "Not Available"}</span><span class="aug-certificate-no">${item.next_thorough_exam_certificate_no|| "Not Available"}</span>`);
+  console.log("next_thorough_exam_certificate_no","POSITIVE")
+}else{
+  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="aug-css">${formatDateWithHyphen(item?.next_thorough_exam)||"Not Available"}</span>`);
+  console.log("next_thorough_exam_certificate_no","NEGATIVE")
+}
+
     htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description || '');
     htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars || '');
    

@@ -26,8 +26,7 @@ button {
   position: relative;
   width: calc(1133 * var(--rpx));
   height: calc(1603.3372802734375 * var(--rpx));
-  margin: 0 auto;
-  background: #f4fdff;
+  margin: 0 auto; 
   overflow: hidden;
 }
 .flex-row-b {
@@ -422,12 +421,12 @@ button {
 }
 .whatsapp-image-c {
   position: absolute;
-  width: calc(1096.6282958984375 * var(--rpx));
-  height: calc(1056.05078125 * var(--rpx));
-  top: calc(52.833984375 * var(--rpx));
-  left: 0;
-  background: url(./mewp_and_forklift/assets/images/40fc1d64-bd62-4355-96e4-1c257522aad8.png)
-    no-repeat center;
+  width: calc(796.6282958984375 * var(--rpx));
+  height: calc(756.05078125 * var(--rpx));
+  top: calc(102.833984375 * var(--rpx));
+  left: 40%;
+  transform: translateX(-45%);
+  background: url(../../assets/watermark.svg) no-repeat center;
   background-size: cover;
 }
 .rectangle-d {
@@ -1788,7 +1787,7 @@ p {
   width: calc(606 * var(--rpx));
   
   height: calc(38 * var(--rpx));
-  top: calc(977.759765625 * var(--rpx));
+  top: calc(927.759765625 * var(--rpx));
   left: calc(36.700439453125 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -1802,7 +1801,7 @@ p {
   position: absolute;
   width: calc(1047 * var(--rpx));
   height: calc(40 * var(--rpx));
-  top: calc(973.759765625 * var(--rpx));
+  top: calc(927.759765625 * var(--rpx));
   left: calc(16.700439453125 * var(--rpx));
   border-top: calc(1 * var(--rpx)) solid #000000;
   border-right: calc(1 * var(--rpx)) solid #000000;

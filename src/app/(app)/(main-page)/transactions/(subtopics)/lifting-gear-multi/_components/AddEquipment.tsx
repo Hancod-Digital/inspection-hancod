@@ -20,38 +20,6 @@ import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import { PlusIcon } from 'lucide-react';
-const equipmentDetailsSchema = object({
-  inspection_date: string().nonempty('Inspection Date is required'),
-  site: string().nonempty('Site is required'),
-  authority: string().nonempty('Authority is required'),  
-  standard: string().nonempty('Standard is required'),
-  type_of_exam: string().nonempty('Type of Exam is required'),
-  job_order_no: string().nonempty('Job Order No. is required'),
-  equipment_no: string().nonempty('Equipment No. is required'),
-  title: string().nonempty('Title is required'),
-  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
-  safe_working_load: string().nonempty('Safe Working Load is required'),
-  last_test_exam: string().nonempty('Last Test Exam is required'),
-  next_test_exam: string().optional(),
-  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-  next_thorough_exam: string().optional(),
-  result: string().nonempty('Result is required'),
-
-  surveyor: string().nonempty('Surveyor is required'),
-  defect_description: string().nonempty('Defect Description is required'),
-  test_particulars: string().nonempty('Test Particulars is required'),
-
-  owner_name: string().nonempty('Owner Name is required'),
-  proof_load: string().nonempty('Proof Load is required'),
-  description: string().nonempty('Description Date is required'),
-  equipment_description: string().nonempty('Equipment Description is required'),
-  manufacturer: string().nonempty('Manufacturer is required'),
-  tested_standard: string().nonempty('Tested Standard is required'),
-  approval_status: string().nonempty('Approval Status is required'),
-  location: string().nonempty('Location is required'),
-});
- 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface AddEquipmentProps {
   onClose: () => void;
@@ -64,6 +32,44 @@ interface AddEquipmentProps {
 export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setIsStandard,setIsManufacturer }: AddEquipmentProps) {
   const [loading, setLoading] = useState(false);
   const { getAllSingleSubtopic, addRecord } = useSubtopic();
+  const [testExamChecked, setTestExamChecked] = useState<any>(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
+  const equipmentDetailsSchema = object({
+    inspection_date: string().nonempty('Inspection Date is required'),
+    site: string().nonempty('Site is required'),
+    authority: string().nonempty('Authority is required'),  
+    standard: string().nonempty('Standard is required'),
+    type_of_exam: string().nonempty('Type of Exam is required'),
+    job_order_no: string().nonempty('Job Order No. is required'),
+    equipment_no: string().nonempty('Equipment No. is required'),
+    title: string().nonempty('Title is required'),
+    test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
+    safe_working_load: string().nonempty('Safe Working Load is required'),
+    last_test_exam: string().nonempty('Last Test Exam is required'),
+    next_test_exam: string().optional(),
+    last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+    next_thorough_exam: string().optional(),
+    result: string().nonempty('Result is required'),
+    last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+    next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
+    last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
+    next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
+    surveyor: string().nonempty('Surveyor is required'),
+    defect_description: string().nonempty('Defect Description is required'),
+   // test_particulars: string().nonempty('Test Particulars is required') ,
+  
+    owner_name: string().nonempty('Owner Name is required'),
+    proof_load: string().nonempty('Proof Load is required'),
+    description: string().nonempty('Description Date is required'),
+    equipment_description: string().nonempty('Equipment Description is required'),
+    manufacturer: string().nonempty('Manufacturer is required'),
+    tested_standard: string().nonempty('Tested Standard is required'),
+    approval_status: string().nonempty('Approval Status is required'),
+    location: string().nonempty('Location is required'),
+  });
+   
+  type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+  
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
@@ -75,8 +81,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
       }
     })
    }
-  const [testExamChecked, setTestExamChecked] = useState<any>(false);
-  const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
+
   const { reset, handleSubmit, control, register, formState: { isSubmitSuccessful, errors } } = methods;
   const [siteOptions, setSiteOptions] = useState<any>([]);
   const [authorityOptions, setAuthorityOptions] = useState<any>([]);
@@ -303,6 +308,10 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     try {
       const formData = {
         ...values,
+        last_test_exam_certificate_no: values.last_test_exam_certificate_no || "",
+        last_thorough_exam_certificate_no: values.last_thorough_exam_certificate_no || "",
+        next_test_exam_certificate_no: values.next_test_exam_certificate_no || "",
+        next_thorough_exam_certificate_no: values.next_thorough_exam_certificate_no || "",
         first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
         six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
         twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
@@ -653,6 +662,15 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
                     )}
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
+    Last Test Certificate No.
+  </Label>
+  <Input
+    id="last_test_exam_certificate_no"
+    {...register('last_test_exam_certificate_no')}
+  />
+</div>
 
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -673,6 +691,16 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
                     )}
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
+    Last Thorough Certificate No.
+  </Label>
+  <Input
+    id="last_thorough_exam_certificate_no"
+    {...register('last_thorough_exam_certificate_no')}
+  />
+</div>
+
 
                 </div>
                 
@@ -699,8 +727,30 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       )}
                     </div>
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4 ">
+  <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
+    Next Test Certificate No.
+  </Label>
+  <Input
+    id="next_test_exam_certificate_no"
+    disabled={testExamChecked}
+    className='w-[68%]'
+    {...register('next_test_exam_certificate_no')}
+  />
+</div>
+                 
+                  </div>
 
-                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="nextThoroughExam" className="mt-3">Next Thorough Exam</Label>
+                    <Input id="nextThoroughExam" type="date" {...register('nextThoroughExam')} />
+                    {errors.nextThoroughExam && (
+                      <p className="text-red-500 text-[12px] ">{errors.nextThoroughExam.message}</p>
+                    )}
+                  </div> */}
+                </div>
+                <div className="grid gap-4 grid-cols-1  w-[64%]">
+                <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
                     <div className="flex items-center gap-4">
                       <Controller
@@ -721,17 +771,22 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                         </p>
                       )}
                     </div>
-                  </div>
-
-                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="nextThoroughExam" className="mt-3">Next Thorough Exam</Label>
-                    <Input id="nextThoroughExam" type="date" {...register('nextThoroughExam')} />
-                    {errors.nextThoroughExam && (
-                      <p className="text-red-500 text-[12px] ">{errors.nextThoroughExam.message}</p>
-                    )}
-                  </div> */}
+                 
                 </div>
-
+                <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
+    Next Thorough Certificate No.
+  </Label>
+  <Input
+    id="next_thorough_exam_certificate_no"
+    disabled={thoroughExamChecked}
+    className='w-[68%]'
+    {...register('next_thorough_exam_certificate_no')}
+  />
+</div>
+                
+</div>
+<div className="grid gap-4 grid-cols-1 ">
                 {/* Result Section */}
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -950,7 +1005,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
 </div>
                   </div>
                 </div>
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                   <div className="grid grid-cols-[400px_1fr]  gap-4">
                     <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
@@ -960,7 +1015,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                     )}
                      </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

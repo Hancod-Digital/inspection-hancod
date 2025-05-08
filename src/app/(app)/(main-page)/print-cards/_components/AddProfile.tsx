@@ -5,8 +5,8 @@ import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
 import { object, string, TypeOf, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import ReactCrop, { type Crop } from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css';
+// import ReactCrop, { type Crop } from 'react-image-crop';
+// import 'react-image-crop/dist/ReactCrop.css';
 import {
   Dialog,
   DialogContent,
@@ -86,14 +86,14 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
 
   // Update image handling
   // Cropping state
-  const [crop, setCrop] = useState<any>({
-    unit: '%',
-    width: 50,
-    aspect: 1.12,
-  });
-  const [src, setSrc] = useState<string | null>(null);
-  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
-  const imageRef = useRef<HTMLImageElement | null>(null);
+  // const [crop, setCrop] = useState<any>({
+  //   unit: '%',
+  //   width: 50,
+  //   aspect: 1.12,
+  // });
+  // const [src, setSrc] = useState<string | null>(null);
+  // const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  // const imageRef = useRef<HTMLImageElement | null>(null);
 
   // Using React Query to fetch user active status with object syntax (v5+)
   const { data: userDetails, isLoading, isError } = useQuery({
@@ -165,7 +165,15 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
       );
     });
   }, [croppedFile]);
-
+  const [companies, setCompanies] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      const companies = await new StudentService().getAllCompanies();
+      console.log(companies);
+      setCompanies(companies);
+    };
+    fetchCompanies();
+  }, []);
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
     setLoading(true);
     try {
@@ -214,77 +222,12 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
     }
   };
 
-  // Handle image selection for cropping
+  // Handle image selection
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSrc(reader.result as string);
-        setIsCropModalOpen(true);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const onImageLoadedCrop = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    imageRef.current = e.currentTarget;
-  };
-
-
-  const makeClientCrop = async (crop: Crop) => {
-    if (imageRef.current && crop.width && crop.height) {
-      const cropped = await getCroppedImg(imageRef.current, crop);
-      if (cropped) {
-        setCroppedFile(cropped);
-      }
-    }
-  };
-
-  const getCroppedImg = (image: HTMLImageElement, crop: Crop): Promise<File | null> => {
-    const canvas = document.createElement('canvas');
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    const pixelRatio = window.devicePixelRatio;
-    canvas.width = crop.width! * scaleX * pixelRatio;
-    canvas.height = crop.height! * scaleY * pixelRatio;
-    const ctx = canvas.getContext('2d');
-
-    if (ctx) {
-      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-      ctx.imageSmoothingQuality = 'high';
-
-      ctx.drawImage(
-        image,
-        crop.x! * scaleX,
-        crop.y! * scaleY,
-        crop.width! * scaleX,
-        crop.height! * scaleY,
-        0,
-        0,
-        crop.width! * scaleX,
-        crop.height! * scaleY
-      );
-    }
-
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          console.error('Canvas is empty');
-          resolve(null);
-          return;
-        }
-        const croppedFile = new File([blob], 'cropped_image.jpeg', { type: 'image/jpeg' });
-        resolve(croppedFile);
-      }, 'image/jpeg');
-    });
-  };
-
-  const handleCropSave = () => {
-    if (croppedFile) {
-      const objectUrl = URL.createObjectURL(croppedFile);
-      setPreviewUrl(objectUrl);
-      setIsCropModalOpen(false);
+      setCroppedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
@@ -301,7 +244,7 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
   
   useEffect(() => {
     if (croppedFile) {
-      // When image is cropped, update the form value
+      // When image is selected, update the form value
       setValue('image', 'image-selected', { 
         shouldValidate: true,
         shouldDirty: true 
@@ -468,7 +411,17 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
                     Company
                   </Label>
                   <div>
-                    <Input id="company" {...register('company')} />
+                    <Input 
+                      id="company" 
+                      {...register('company')} 
+                      list="companyList"
+                      autoComplete="off"
+                    />
+                    <datalist id="companyList">
+                      {companies.map((companyItem) => (
+                        <option key={companyItem.company} value={companyItem.company} />
+                      ))}
+                    </datalist>
                     {errors.company && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.company.message}</p>
                     )}
@@ -600,42 +553,6 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
           </FormProvider>
         </CardContent>
       </Card>
-
-      {/* Crop Modal */}
-      <Dialog open={isCropModalOpen} onOpenChange={setIsCropModalOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Crop Image</DialogTitle>
-            <DialogDescription>
-              Adjust the cropping area as needed and apply the crop.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-4 max-h-[400px] overflow-auto">
-            {src && (
-              <ReactCrop
-                crop={crop}
-                onChange={(c) => setCrop(c)}
-                onComplete={(c) => makeClientCrop(c)}
-                aspect={1}
-              >
-                <img src={src} onLoad={onImageLoadedCrop} alt="Crop" />
-              </ReactCrop>
-            )}
-          </div>
-          <div className="mt-4 flex justify-end gap-4">
-            <Button variant="outline" onClick={() => setIsCropModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleCropSave}
-              className='hover:bg-secondary hover:text-primary hover:border-primary border'
-              disabled={!croppedFile}
-            >
-              Apply Crop
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </motion.div>
   );
 }

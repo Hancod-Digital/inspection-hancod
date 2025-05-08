@@ -26,7 +26,7 @@ button {
   width: 1133px;
   height: 1603.337px;
   margin: 0 auto;
-  background: #f4fdff;
+  
   overflow: hidden;
 }
 .flex-row-b {
@@ -427,11 +427,12 @@ button {
 }
 .whatsapp-image-d {
   position: absolute;
-  width: 1096.628px;
-  height: 1056.051px;
-  top: 52.834px;
-  left: 0;
-  background: url(/assets/images/f727874c-710f-4576-b374-339582a53fd4.png)
+  width: 700.628px;
+  height: 700.051px;
+  top: 152.834px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: url(../assets/watermark.svg)
     no-repeat center;
   background-size: cover;
 }
@@ -915,23 +916,84 @@ z-index: 71;
   border-left: 1px solid #000000;
   z-index: 28;
 }
+.date-28-mar-2025-certificate-no{
+  
+  display: flex
+  ;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 195.773px;
+      height: 23.778px;
+      top: 19.586px;
+      left: 269.553px;
+      color: #0f1422;
+      font-family: Inter, var(--default-font-family);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 22.4px;
+      text-align: center;
+      white-space: nowrap;
+      z-index: 61;
+}
 .date-28-mar-2025 {
+  
+  display: flex
+  ;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 195.773px;
+      height: 23.778px;
+      top: 3.586px;
+      left: 269.553px;
+      color: #0f1422;
+      font-family: Inter, var(--default-font-family);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 22.4px;
+      text-align: center;
+      white-space: nowrap;
+      z-index: 61;
+}
+
+.date-28-mar-2025-css {
+  
+  display: flex
+  ;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 195.773px;
+      height: 23.778px;
+      top: 12.586px;
+      left: 269.553px;
+      color: #0f1422;
+      font-family: Inter, var(--default-font-family);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 22.4px;
+      text-align: center;
+      white-space: nowrap;
+      z-index: 61;
+}
+.not-available-certificate-no{
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
-  width: 195.773px;
+  width: 193.503px;
   height: 23.778px;
-  top: 11.586px;
-  left: 269.553px;
+  top: 19.586px;
+  left: 26.316px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 22.4px;
   text-align: center;
   white-space: nowrap;
-  z-index: 61;
+  z-index: 60;
 }
 .not-available {
   display: flex;
@@ -940,7 +1002,25 @@ z-index: 71;
   position: absolute;
   width: 193.503px;
   height: 23.778px;
-  top: 11.586px;
+  top: 3.586px;
+  left: 26.316px;
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 60;
+}
+.not-available-css{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 193.503px;
+  height: 23.778px;
+  top: 12.586px;
   left: 26.316px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -951,6 +1031,24 @@ z-index: 71;
   white-space: nowrap;
   z-index: 60;
 }
+.not-applicable-certificate-no{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 228.213px;
+  height: 23.778px;
+  top: 19.586px;
+  left: 26.316px;
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 68;
+}
 .not-applicable {
   display: flex;
   align-items: center;
@@ -958,11 +1056,48 @@ z-index: 71;
   position: absolute;
   width: 228.213px;
   height: 23.778px;
-  top: 13.369px;
+  top: 3.369px;
+  left: 803.928px;
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 68;
+}
+
+.not-applicable-css {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 228.213px;
+  height: 23.778px;
+  top: 12.369px;
   left: 803.928px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 68;
+}
+.not-applicable-certificate-no{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 228.213px;
+  height: 23.778px;
+  top: 19.369px;
+  left: 803.928px;
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
   font-weight: 600;
   line-height: 22.4px;
   text-align: center;
@@ -976,7 +1111,25 @@ z-index: 71;
   position: absolute;
   width: 228.213px;
   height: 23.778px;
-  top: 13.369px;
+  top: 3.369px;
+  left: 536.21px;
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
+.not-applicable-1a-css {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 228.213px;
+  height: 23.778px;
+  top: 12.369px;
   left: 536.21px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -987,6 +1140,26 @@ z-index: 71;
   white-space: nowrap;
   z-index: 69;
 }
+
+.not-applicable-1a-certificate-no{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 228.213px;
+  height: 23.778px;
+  top: 19.369px;
+  left: 536.21px;
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
+
 .rectangle-1b {
   position: absolute;
   width: 1048px;
@@ -1616,7 +1789,7 @@ z-index: 71;
   position: absolute;
   width: 606px;
   height: 38px;
-  top: 915.854px;
+  top: 868.854px;
   left: 36.7px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -1630,7 +1803,7 @@ z-index: 71;
   position: absolute;
   width: 1047px;
   height: 40px;
-  top: 917.854px;
+  top: 867.854px;
   left: 16.7px;
   border-top: 1px solid #000000;
   border-right: 1px solid #000000;

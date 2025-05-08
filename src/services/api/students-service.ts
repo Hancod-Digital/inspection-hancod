@@ -29,6 +29,16 @@ export class StudentService extends Supabase {
         }
         return data;
     }
+    async getAllCompanies(){
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase
+        .from('unique_companies')
+        .select('*');
+        if (error) {
+            throw new Error(error.message);
+        }
+        return data;
+    }
      
     async getStudents(is_card:boolean, is_qrl?:boolean) {
         await this.ensureAuthenticated();

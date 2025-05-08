@@ -24,7 +24,24 @@ import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import { PlusIcon } from 'lucide-react';
 
-// Define schema for validation
+
+interface EquipmentDetailsEditFormProps {
+  onClose: () => void;
+  id: number; // ID of the equipment record to edit
+  setIsLocation: (value: boolean) => void;
+  setIsEquipment: (value: boolean) => void;
+  setIsStandard: (value: boolean) => void;
+  setIsManufacturer: (value: boolean) => void;
+}
+
+export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,setIsEquipment,setIsStandard,setIsManufacturer}: EquipmentDetailsEditFormProps) {
+  const [loading, setLoading] = useState(false);
+  const { getAllSingleSubtopic, findRecordById, updateRecord } = useSubtopic();
+  const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
+  const existingData = id ? findRecordById(id) : null;
+ 
+   // Define schema for validation
 const equipmentDetailsSchema = object({
   inspection_date: string().nonempty('Inspection Date is required'),
   site: string().nonempty('Site is required'),
@@ -43,7 +60,12 @@ const equipmentDetailsSchema = object({
   type_of_exam: string().nonempty('Type of Exam is required'),
   surveyor: string().nonempty('Surveyor is required'),
   defect_description: string().nonempty('Defect Description is required'),
-  test_particulars: string().nonempty('Test Particulars is required'),
+ // test_particulars: string().nonempty('Test Particulars is required'),
+ last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+  next_test_exam_certificate_no: string().optional(),
+  last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
+  next_thorough_exam_certificate_no: string().optional(),
+
   location: string().nonempty('Location is required'),
   owner_name: string().nonempty('Owner Name is required'),
   proof_load: string().nonempty('Proof Load is required'),
@@ -56,23 +78,6 @@ const equipmentDetailsSchema = object({
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
-interface EquipmentDetailsEditFormProps {
-  onClose: () => void;
-  id: number; // ID of the equipment record to edit
-  setIsLocation: (value: boolean) => void;
-  setIsEquipment: (value: boolean) => void;
-  setIsStandard: (value: boolean) => void;
-  setIsManufacturer: (value: boolean) => void;
-}
-
-export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,setIsEquipment,setIsStandard,setIsManufacturer}: EquipmentDetailsEditFormProps) {
-  const [loading, setLoading] = useState(false);
-  const { getAllSingleSubtopic, findRecordById, updateRecord } = useSubtopic();
-  const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
-  const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
-  const existingData = id ? findRecordById(id) : null;
- 
-   
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -93,7 +98,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
       type_of_exam: existingData?.type_of_exam || '',
       surveyor: String(existingData?.surveyor) || '',
       defect_description: existingData?.defect_description || '',
-      test_particulars: existingData?.test_particulars || '',
+    //  test_particulars: existingData?.test_particulars || '',
       location: String(existingData?.location) || '5',
       owner_name: existingData?.owner_name || '',
       proof_load: String(existingData?.proof_load) || '',
@@ -290,6 +295,10 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
     try {
       const formData = {
         ...values,
+        last_test_exam_certificate_no: values.last_test_exam_certificate_no,
+  next_test_exam_certificate_no: testExamChecked ? "" : values.next_test_exam_certificate_no,
+  last_thorough_exam_certificate_no: values.last_thorough_exam_certificate_no,
+  next_thorough_exam_certificate_no: thoroughExamChecked ? "" : values.next_thorough_exam_certificate_no,
         first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
         six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
         twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
@@ -627,6 +636,15 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
                     )}
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
+    Last Test Certificate No.
+  </Label>
+  <Input
+    id="last_test_exam_certificate_no"
+    {...register('last_test_exam_certificate_no')}
+  />
+</div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam" className="mt-3">Last Thorough Exam</Label>
@@ -640,6 +658,16 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
                     )}
                   </div>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
+    Last Thorough Certificate No.
+  </Label>
+  <Input
+  
+    id="last_thorough_exam_certificate_no"
+    {...register('last_thorough_exam_certificate_no')}
+  />
+</div>
                 </div>
                 <div className="grid gap-4 grid-cols-1 w-full">
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
@@ -650,7 +678,9 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                         control={control}
                         render={({ field }) => (
                           <Input 
+                          
                             id="next_test_exam"  
+                              className='w-[37%]'
                             type="date" 
                             {...field} 
                             disabled={testExamChecked} 
@@ -669,8 +699,21 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                       )}
                     </div>
                   </div>
-
                   <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
+    Next Test Certificate No.
+  </Label>
+  <Input
+  className='w-[37%]'
+    id="next_test_exam_certificate_no"
+    disabled={testExamChecked}
+    {...register('next_test_exam_certificate_no')}
+  />
+</div>
+                  
+                
+                <div className="grid gap-4 grid-cols-1 w-full">
+                <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
                     <div className="flex items-center gap-4">
                       <Controller
@@ -681,6 +724,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                             id={"next_thorough_exam"}  
                             type="date" 
                             {...field} 
+                              className='w-[37%]'
                             disabled={thoroughExamChecked} 
                             value={thoroughExamChecked ? "" : field.value || ""}
                           />
@@ -689,6 +733,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                       <Checkbox 
                         className={'w-6 h-6'} 
                         checked={thoroughExamChecked} 
+                        
                         onCheckedChange={(checked:any) => setThoroughExamChecked(checked!)} 
                       /> 
                       <span className="text-[13px] w-[33%] ">Not Applicable</span>
@@ -697,6 +742,18 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                       )}
                     </div>
                   </div>
+                </div>
+                <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
+    Next Thorough Certificate No.
+  </Label>
+  <Input
+    className='w-[37%]'
+    id="next_thorough_exam_certificate_no"
+    disabled={thoroughExamChecked}
+    {...register('next_thorough_exam_certificate_no')}
+  />
+</div>
                 </div>
 
                 {/* Result Section */}
@@ -881,7 +938,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
 </div>
                   </div>
                 </div>
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                   <div className="grid grid-cols-[400px_1fr]  gap-4">
                     <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
@@ -891,7 +948,7 @@ export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,se
                     )}
                      </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="flex justify-end gap-4">
                   <Button 
                     type="reset" 

@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import ReactCrop, { type Crop } from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css';
+// import ReactCrop, { type Crop } from 'react-image-crop';
+// import 'react-image-crop/dist/ReactCrop.css';
 import {
   Dialog,
   DialogContent,
@@ -76,15 +76,16 @@ export default function EditUserForm({
   const [croppedFile, setCroppedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(userData.avatar || null);
 
-  // Cropping state
-  const [crop, setCrop] = useState<any>({
-    unit: '%',
-    width: 50,
-    aspect: 1.12,
-  });
-  const [src, setSrc] = useState<string | null>(null);
-  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
-  const imageRef = useRef<HTMLImageElement | null>(null);
+  // Cropping state - commented out
+  // const [crop, setCrop] = useState<any>({
+  //   unit: '%',
+  //   width: 50,
+  //   aspect: 1.12,
+  // });
+  // const [src, setSrc] = useState<string | null>(null);
+  // const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  // const imageRef = useRef<HTMLImageElement | null>(null);
+  
 // Using React Query to fetch user active status with object syntax (v5+)
 const { data: userDetails, isLoading, isError } = useQuery({
   queryKey: ['userDetails'],
@@ -230,89 +231,98 @@ const value = {
       onClose();
     }
   };
-
-  // Handle image selection for cropping
+  const [companies, setCompanies] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      const companies = await new StudentService().getAllCompanies();
+      console.log(companies);
+      setCompanies(companies);
+    };
+    fetchCompanies();
+  }, []);
+  // Handle image selection for cropping - commented out
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSrc(reader.result as string);
-        setIsCropModalOpen(true);
-      };
-      reader.readAsDataURL(file);
+      //const reader = new FileReader();
+      setPreviewUrl(URL.createObjectURL(file));
+      // reader.onloadend = () => {
+      //   // setSrc(reader.result as string);
+      //   // setIsCropModalOpen(true);
+      // };
+      // reader.readAsDataURL(file);
     }
   };
 
-  const onImageLoadedCrop = (img: HTMLImageElement) => {
-    imageRef.current = img;
-  };
+  // const onImageLoadedCrop = (img: HTMLImageElement) => {
+  //   imageRef.current = img;
+  // };
 
-  const makeClientCrop = async (crop: Crop) => {
-    if (imageRef.current && crop.width && crop.height) {
-      const cropped = await getCroppedImg(imageRef.current, crop);
-      if (cropped) {
-        setCroppedFile(cropped);
-      }
-    }
-  };
+  // const makeClientCrop = async (crop: Crop) => {
+  //   if (imageRef.current && crop.width && crop.height) {
+  //     const cropped = await getCroppedImg(imageRef.current, crop);
+  //     if (cropped) {
+  //       setCroppedFile(cropped);
+  //     }
+  //   }
+  // };
 
-  const getCroppedImg = (image: HTMLImageElement, crop: Crop): Promise<File | null> => {
-    const canvas = document.createElement('canvas');
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    const pixelRatio = window.devicePixelRatio;
+  // const getCroppedImg = (image: HTMLImageElement, crop: Crop): Promise<File | null> => {
+  //   const canvas = document.createElement('canvas');
+  //   const scaleX = image.naturalWidth / image.width;
+  //   const scaleY = image.naturalHeight / image.height;
+  //   const pixelRatio = window.devicePixelRatio;
   
-    // Use the actual crop dimensions
-    const croppedWidth = crop.width! * scaleX * pixelRatio;
-    const croppedHeight = crop.height! * scaleY * pixelRatio;
+  //   // Use the actual crop dimensions
+  //   const croppedWidth = crop.width! * scaleX * pixelRatio;
+  //   const croppedHeight = crop.height! * scaleY * pixelRatio;
   
-    canvas.width = croppedWidth;
-    canvas.height = croppedHeight;
+  //   canvas.width = croppedWidth;
+  //   canvas.height = croppedHeight;
   
-    const ctx = canvas.getContext('2d');
+  //   const ctx = canvas.getContext('2d');
   
-    if (ctx) {
-      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-      ctx.imageSmoothingQuality = 'high';
+  //   if (ctx) {
+  //     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+  //     ctx.imageSmoothingQuality = 'high';
   
-      ctx.drawImage(
-        image,
-        crop.x! * scaleX,
-        crop.y! * scaleY,
-        crop.width! * scaleX,
-        crop.height! * scaleY,
-        0,
-        0,
-        croppedWidth,
-        croppedHeight
-      );
-    }
+  //     ctx.drawImage(
+  //       image,
+  //       crop.x! * scaleX,
+  //       crop.y! * scaleY,
+  //       crop.width! * scaleX,
+  //       crop.height! * scaleY,
+  //       0,
+  //       0,
+  //       croppedWidth,
+  //       croppedHeight
+  //     );
+  //   }
   
-    return new Promise((resolve) => {
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) {
-            console.error('Canvas is empty');
-            resolve(null);
-            return;
-          }
-          const croppedFile = new File([blob], 'cropped_image.jpeg', { type: 'image/jpeg' });
-          resolve(croppedFile);
-        },
-        'image/jpeg',
-        1
-      );
-    });
-  };
+  //   return new Promise((resolve) => {
+  //     canvas.toBlob(
+  //       (blob) => {
+  //         if (!blob) {
+  //           console.error('Canvas is empty');
+  //           resolve(null);
+  //           return;
+  //         }
+  //         const croppedFile = new File([blob], 'cropped_image.jpeg', { type: 'image/jpeg' });
+  //         resolve(croppedFile);
+  //       },
+  //       'image/jpeg',
+  //       1
+  //     );
+  //   });
+  // };
   
-  const handleCropSave = () => {
-    if (croppedFile) {
-      const objectUrl = URL.createObjectURL(croppedFile);
-      setPreviewUrl(objectUrl);
-      setIsCropModalOpen(false);
-    }
-  };
+  // const handleCropSave = () => {
+  //   if (croppedFile) {
+  //     const objectUrl = URL.createObjectURL(croppedFile);
+  //     setPreviewUrl(objectUrl);
+  //     setIsCropModalOpen(false);
+  //   }
+  // };
 
   // Cleanup the object URL when component unmounts or when previewUrl changes
   useEffect(() => {
@@ -350,7 +360,7 @@ const value = {
                   id="upload"
                   type="file"
                   accept="image/*"
-                  onChange={handleImageSelect}
+                  // onChange={handleImageSelect}
                   className="hidden"
                 />
                 <Avatar className="mb-2 w-[200px] h-[200px]">
@@ -482,7 +492,17 @@ const value = {
                     Company
                   </Label>
                   <div>
-                    <Input id="company" {...register('company')} />
+                    <Input 
+                      id="company" 
+                      {...register('company')} 
+                      list="companyList"
+                      autoComplete="off"
+                    />
+                    <datalist id="companyList">
+                      {companies.map((companyItem) => (
+                        <option key={companyItem.company} value={companyItem.company} />
+                      ))}
+                    </datalist>
                     {errors.company && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.company.message}</p>
                     )}
@@ -635,8 +655,8 @@ const value = {
         </CardContent>
       </Card>
 
-      {/* Crop Modal */}
-      <Dialog open={isCropModalOpen} onOpenChange={setIsCropModalOpen}>
+      {/* Crop Modal - commented out */}
+      {/* <Dialog open={isCropModalOpen} onOpenChange={setIsCropModalOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Crop Image</DialogTitle>
@@ -672,7 +692,7 @@ const value = {
             </Button>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </motion.div>
   );
 }

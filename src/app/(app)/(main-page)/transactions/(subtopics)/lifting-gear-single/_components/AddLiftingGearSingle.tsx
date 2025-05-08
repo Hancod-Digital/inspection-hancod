@@ -19,36 +19,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import { MasterService } from '@/services/api/masters-service';
 import { makeApiCall } from '@/lib/apicaller';
 import { PlusIcon } from 'lucide-react';
-const equipmentDetailsSchema = object({
-  inspection_date: string().nonempty('Inspection Date is required'),
-  site: string().nonempty('Site is required'),
-  authority: string().nonempty('Authority is required'),
-  standard: string().nonempty('Standard is required'),
-  job_order_no: string().nonempty('Job Order No. is required'),
-  equipment_no: string().nonempty('Equipment No. is required'),
-  title: string().nonempty('Title is required'),
-  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
-  safe_working_load: string().nonempty('Safe Working Load is required'),
-  last_test_exam: string().nonempty('Last Test Exam is required'),
-  next_test_exam: string().optional(),
-  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-  next_thorough_exam: string().optional(),
-  result: string().nonempty('Result is required'),
-  type_of_exam: string().nonempty('Type of Exam is required'),
-  surveyor: string().nonempty('Surveyor is required'),
-  defect_description: string().nonempty('Defect Description is required'),
-  test_particulars: string().nonempty('Test Particulars is required'),
-  location: string().nonempty('Location is required'),
-  owner_name: string().nonempty('Owner Name is required'),
-  proof_load: string().nonempty('Proof Load is required'),
-  description: string().nonempty('Description Date is required'),
-  equipment_description: string().nonempty('Equipment Description is required'),
-  manufacturer: string().nonempty('Manufacturer is required'),
-  tested_standard: string().nonempty('Tested Standard is required'),
-  approval_status: string().nonempty('Approval Status is required'),
-});
- 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
@@ -60,12 +31,49 @@ interface EquipmentDetailsFormProps {
 
 export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipment,setIsStandard,setIsManufacturer }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
+  const [testExamChecked, setTestExamChecked] = useState<any>(false);
+  const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
+  const equipmentDetailsSchema = object({
+    inspection_date: string().nonempty('Inspection Date is required'),
+    site: string().nonempty('Site is required'),
+    authority: string().nonempty('Authority is required'),
+    standard: string().nonempty('Standard is required'),
+    job_order_no: string().nonempty('Job Order No. is required'),
+    equipment_no: string().nonempty('Equipment No. is required'),
+    title: string().nonempty('Title is required'),
+    test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
+    safe_working_load: string().nonempty('Safe Working Load is required'),
+    last_test_exam:  string().nonempty('Last Test Exam is required'),
+    next_test_exam: testExamChecked ? string().optional() : string().nonempty('Next Test Exam is required'),
+    last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+    next_thorough_exam: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam is required'),
+    result: string().nonempty('Result is required'),
+    type_of_exam: string().nonempty('Type of Exam is required'),
+    surveyor: string().nonempty('Surveyor is required'),
+    defect_description: string().nonempty('Defect Description is required'),
+    //test_particulars: string().nonempty('Test Particulars is required'),
+    location: string().nonempty('Location is required'),
+    owner_name: string().nonempty('Owner Name is required'),
+    proof_load: string().nonempty('Proof Load is required'),
+    description: string().nonempty('Description Date is required'),
+    equipment_description: string().nonempty('Equipment Description is required'),
+    manufacturer: string().nonempty('Manufacturer is required'),
+    tested_standard: string().nonempty('Tested Standard is required'),
+    approval_status: string().nonempty('Approval Status is required'),
+    last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+    next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
+    last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
+    next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
+  });
+   
+  type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+
+
   const { getAllSingleSubtopic, addRecord } = useSubtopic();
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
-  const [testExamChecked, setTestExamChecked] = useState<any>(false);
-  const [thoroughExamChecked, setThoroughExamChecked] = useState<any>(false);
+  
   const { reset, handleSubmit, control, register, formState: { isSubmitSuccessful, errors } } = methods;
   const [siteOptions, setSiteOptions] = useState<any>([]);
   const [authorityOptions, setAuthorityOptions] = useState<any>([]);
@@ -80,6 +88,8 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
   const { watch, setValue, formState } = methods
   const { equipment_no, standard,owner_name } = watch() 
   
+
+
   useEffect(() => {
     if (equipment_no) {
       // Find the associated data for the current equipment_no
@@ -590,6 +600,19 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                     )}
                   </div>
 
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
+                      Last Test Certificate No.
+                    </Label>
+                    <Input
+                      id="last_test_exam_certificate_no"
+                      type="text"
+                      {...register('last_test_exam_certificate_no')}
+                    />
+                    {errors.last_test_exam_certificate_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.last_test_exam_certificate_no.message}</p>
+                    )}
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam" className="mt-3">
@@ -607,6 +630,20 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                     />
                     {errors.last_thorough_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
+                      Last Thorough Certificate No.
+                    </Label>
+                    <Input
+                      id="last_thorough_exam_certificate_no"
+                      type="text"
+                      {...register('last_thorough_exam_certificate_no')}
+                    />
+                    {errors.last_thorough_exam_certificate_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam_certificate_no.message}</p>
                     )}
                   </div>
 
@@ -635,6 +672,21 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
+                      Next Test Certificate No.
+                    </Label>
+                    <Input
+                      id="next_test_exam_certificate_no"
+                      type="text"
+                      disabled={testExamChecked}
+                      {...register('next_test_exam_certificate_no')}
+                    />
+                    {errors.next_test_exam_certificate_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.next_test_exam_certificate_no.message}</p>
+                    )}
+                  </div>
+
                   <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
                     <div className="flex items-center gap-4">
@@ -658,13 +710,23 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                     </div>
                   </div>
 
-                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="nextThoroughExam" className="mt-3">Next Thorough Exam</Label>
-                    <Input id="nextThoroughExam" type="date" {...register('nextThoroughExam')} />
-                    {errors.nextThoroughExam && (
-                      <p className="text-red-500 text-[12px] ">{errors.nextThoroughExam.message}</p>
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
+                      Next Thorough Certificate No.
+                    </Label>
+                    <Input
+                      id="next_thorough_exam_certificate_no"
+                      type="text"
+                      disabled={thoroughExamChecked}
+                      {...register('next_thorough_exam_certificate_no')}
+                    />
+                    {errors.next_thorough_exam_certificate_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.next_thorough_exam_certificate_no.message}</p>
                     )}
-                  </div> */}
+                  </div>
+                    {errors.next_thorough_exam_certificate_no && (
+                      <p className="text-red-500 text-[12px] ">{errors.next_thorough_exam_certificate_no.message}</p>
+                    )} 
                 </div>
 
                 {/* Result Section */}
@@ -881,7 +943,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
 </div>
                   </div>
                 </div>
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                   <div className="grid grid-cols-[400px_1fr]  gap-4">
                     <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
@@ -891,7 +953,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                     )}
                      </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel

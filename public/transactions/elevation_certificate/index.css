@@ -67,8 +67,7 @@ button {
   position: relative;
   width: calc(1133 * var(--rpx));
   height: calc(1603.3372802734375 * var(--rpx));
-  margin: 0 auto;
-  background: #f4fdff;
+  margin: 0 auto; 
   overflow: hidden;
 }
 .flex-row-e {
@@ -476,11 +475,12 @@ button {
 }
 .whatsapp-image-d {
   position: absolute;
-  width: calc(1096.6282958984375 * var(--rpx));
-  height: calc(1056.05078125 * var(--rpx));
+  width: calc(796.6282958984375 * var(--rpx));
+  height: calc(756.05078125 * var(--rpx));
   top: calc(52.833984375 * var(--rpx));
-  left: 0;
-  background: url(./elevation_certificate/assets/images/6c6eb9c4-4d30-40df-a3cb-f4bc7dbeead1.png)
+  left: 43%;
+  transform: translateX(-50%);
+  background: url(../../assets/watermark.svg)
     no-repeat center;
   background-size: cover;
 }
@@ -1722,7 +1722,7 @@ button {
   width:86.1%;
   /* width: calc(606 * var(--rpx)); */
   height: calc(38 * var(--rpx));
-  top: calc(968.759765625 * var(--rpx));
+  top: calc(929.759765625 * var(--rpx));
   left: calc(17.700439453125 * var(--rpx));
   color: #0f1422;
   /* border-bottom: calc(1 * var(--rpx)) solid #000000; */
@@ -1738,7 +1738,7 @@ button {
   position: absolute;
   width: calc(1047 * var(--rpx));
   height: calc(40 * var(--rpx));
-  top: calc(965.759765625 * var(--rpx));
+  top: calc(927.759765625 * var(--rpx));
   left: calc(16.700439453125 * var(--rpx));
   border-top: calc(1 * var(--rpx)) solid #000000;
   border-right: calc(1 * var(--rpx)) solid #000000;

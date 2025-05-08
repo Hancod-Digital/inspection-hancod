@@ -47,43 +47,6 @@ interface EquipmentDetailsFormProps {
  */
 
 // Create your Zod schema
-const equipmentDetailsSchema = object({
-  minor_category: string().nonempty("Minor Category is required"),
-  equipment_no: string().nonempty("Equipment No is required"),
-
-  owner_id: string().nonempty("Owner ID  is required"),
-  registration_no: string().nonempty("Registration No is required"),
-  model_no: string().nonempty("Model No is required"),
-  manufacturer: string().nonempty("Supplier is required"),
-  test_certificate_no: string().nonempty("Test Certificate No is required"),
-  location: string().nonempty("Location is required"),
-  title: string().nonempty("Title is required"),
-  standard: string().nonempty("Standard is required"),
-  thorough_insp_frequency_months: string().nonempty(
-    "Thorough inspection frequency in months is required"
-  ),
-  serial_no: string().nonempty("Serial No is required"),
-  annexure: string().nonempty("Annexure is required"),
-  year_of_manufacture: string().nonempty("Year of manufacture is required"),
-  status: boolean().optional(),
-  safe_working_load: string().nonempty("Safe working load is required"),
-  proof_load: string().nonempty("Proof load is required"),
-
-  // The four date fields (any of which can be replaced by "Not Applicable"):
-  last_test_date: string().nonempty("Last test date is required"),
-  next_test_date: string().nonempty("Next test date is required"),
-  last_thorough_date: string().nonempty("Last thorough date is required"),
-  next_thorough_date: string().nonempty("Next thorough date is required"),
-
-  test_insp_frequency: string().nonempty("Test inspection frequency in months is required"),
-  description: string().nonempty("Description is required"),
-
-  // For item_type and property_table_type
-  item_type: string().nonempty("Item type is required"),
-  property_table_type: string().optional(),
-});
-
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 export default function EquipmentDetailsForm({
   minorCategoryOptions,
@@ -111,7 +74,44 @@ export default function EquipmentDetailsForm({
 
   const [selectedItemType, setSelectedItemType] = useState<string>("");
   const { addRecord } = useSubtopic();
-
+  const equipmentDetailsSchema = object({
+    minor_category: string().nonempty("Minor Category is required"),
+    equipment_no: string().nonempty("Equipment No is required"),
+  
+    owner_id: string().nonempty("Owner ID  is required"),
+    registration_no: string().nonempty("Registration No is required"),
+    model_no: string().nonempty("Model No is required"),
+    manufacturer: string().nonempty("Supplier is required"),
+    test_certificate_no: string().nonempty("Test Certificate No is required"),
+    location: string().nonempty("Location is required"),
+    title: string().nonempty("Title is required"),
+    standard: string().nonempty("Standard is required"),
+    thorough_insp_frequency_months: string().nonempty(
+      "Thorough inspection frequency in months is required"
+    ),
+    serial_no: string().nonempty("Serial No is required"),
+    annexure: string().nonempty("Annexure is required"),
+    year_of_manufacture: string().nonempty("Year of manufacture is required"),
+    status: boolean().optional(),
+    safe_working_load: string().nonempty("Safe working load is required"),
+    proof_load: string().nonempty("Proof load is required"),
+  
+    // The four date fields (any of which can be replaced by "Not Applicable"):
+    last_test_date:  !lastTestExamChecked ? string().nonempty("Last test date is required") : string().optional(),
+    next_test_date: !testExamChecked ? string().nonempty("Next test date is required") : string().optional(),
+    last_thorough_date: !lastThoroughExamChecked ? string().nonempty("Last thorough date is required") : string().optional(),
+    next_thorough_date: !thoroughExamChecked ? string().nonempty("Next thorough date is required") : string().optional(),
+  
+    test_insp_frequency: string().nonempty("Test inspection frequency in months is required"),
+    description: string().nonempty("Description is required"),
+  
+    // For item_type and property_table_type
+    item_type: string().nonempty("Item type is required"),
+    property_table_type: string().optional(),
+  });
+  
+  type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+  
   // Hook Form
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
