@@ -29,9 +29,9 @@ import { formatDateWithHyphen, generateRows } from '@/lib/utils';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
 
-export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsEquipment,setIsStandard,setIsOwner,setIsManufacturer,isLocation,isEquipment,isStandard,isOwner,isManufacturer,searchValue}:any) {
+export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, setIsEquipment, setIsStandard, setIsOwner, setIsManufacturer, isLocation, isEquipment, isStandard, isOwner, isManufacturer, searchValue }: any) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
-  const { data, isLoading, error, getAllSingleSubtopic,deleteRecord } = useSubtopic();
+  const { data, isLoading, error, getAllSingleSubtopic, deleteRecord } = useSubtopic();
 
   const [jobOrderNoOptions, setJobOrderNoOptions] = useState<any>([]);
   const [siteOptions, setSiteOptions] = useState<any>([]);
@@ -49,10 +49,10 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
       const standards = await getAllSingleSubtopic('standard');
 
       if (jobOrders) setJobOrderNoOptions(jobOrders);
-      if (equipments) setEquipmentOptions(equipments?.filter((item:any)=>item.status==="ACTIVE"));
-      if (sites) setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE"));
-      if (owners) setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE"));
-      if (standards) setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE"));
+      if (equipments) setEquipmentOptions(equipments?.filter((item: any) => item.status === "ACTIVE"));
+      if (sites) setSiteOptions(sites?.filter((item: any) => item.status === "ACTIVE"));
+      if (owners) setOwnerOptions(owners?.filter((item: any) => item.status === "ACTIVE"));
+      if (standards) setStandardOptions(standards?.filter((item: any) => item.status === "ACTIVE"));
     };
     fetchData();
   }, [getAllSingleSubtopic]);
@@ -75,179 +75,181 @@ export default function EquipmentTable({setIsSite,setIsArea,setIsLocation,setIsE
     }
   };
   const [manufacturerOptions, setManufacturerOptions] = useState<any>([]);
-   
+
   useEffect(() => {
     const fetchManufacturers = async () => {
       const data = await getAllSingleSubtopic("manufacturer"); // Fetch the areas
       if (data) {
-        setManufacturerOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
+        setManufacturerOptions(data?.filter((item: any) => item.status === "ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchManufacturers();
     const fetchOwners = async () => {
       const data = await getAllSingleSubtopic("owner"); // Fetch the areas
       if (data) {
-        setOwnerOptions(data?.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
+        setOwnerOptions(data?.filter((item: any) => item.status === "ACTIVE")); // Set the area options to the fetched data
       }
     };
     fetchOwners();
   }, [getAllSingleSubtopic]);
-   
+
   const printCertificate = async (item: any) => {
     // Fetch additional item details (like serial_no) if needed
-    let equipment:any = []
+    let equipment: any = []
     await makeApiCall(
       () => new MasterService().fetchEquipmentDetails(item?.equipment_no),
       {
         afterSuccess: async (data: any) => {
-        
+
           equipment = data[0]
           setSerialNo(data[0]?.serial_no);
-      
-    // Fetch the HTML template
-    const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html"}`);
-    let htmlString = await response.text();
 
-    // Fetch the CSS template 
-    const cssResponse = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT"  ? "/transactions/mewp_and_forklift/index.css" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.css" : "/transactions/earth_moving/index.css"}`);
-    let cssText = await cssResponse.text();
+          // Fetch the HTML template
+          console.log("----------------------------------------------")
+          console.log(equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT" ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html")
+          const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT" ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html"}`);
+          let htmlString = await response.text();
 
-    // Replace placeholders in HTML:
-    // Adjust these replacements to match your actual placeholders and data
-    htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no || '');
-    htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
-    htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_id)?.owner|| '');
-    htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard || '');
-    htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location||"");
-    htmlString = htmlString.replace(/\{\{six\}\}/g, formatDateWithHyphen(item?.inspection_date) || '');
+          // Fetch the CSS template 
+          const cssResponse = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.css" : equipment.property_table_type == "MEWP AND FORKLIFT" ? "/transactions/mewp_and_forklift/index.css" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.css" : "/transactions/earth_moving/index.css"}`);
+          let cssText = await cssResponse.text();
 
-    htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location :  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer );
-    htmlString = htmlString.replace(/\{\{six12\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : item?.year_of_manufacture.split('-')[0] );
-    htmlString = htmlString.replace(/\{\{six2\}\}/g, equipment?.registration_no || '');
-    htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer :data[0]?.serial_no || '');
-    htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
-    htmlString = htmlString.replace(/\{\{six5\}\}/g, item?.owner_name  || '');
-    
-    htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
-    htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
- 
-    const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
-    .filter((v: any) => v != null)
-    .map((condition: string) => {
-      // If length exceeds 10 characters, break it into two lines
-      if (condition.length > 6) {
-        return `<li>${condition.substring(0, 6)}<br>${condition.substring(6)}</li>`;
-      } else {
-        return `<li>${condition}</li>`;
-      }
-    });
-  
-  // Repeat similar logic for boomLengths, radii, testLoads, and swls
-  const boomLengths = (item?.properties?.map((p: any) => p["BOOM LENGTH"]) || [])
-    .filter((v: any) => v != null)
-    .map((boomLength: string) => {
-      if (boomLength.length > 6) {
-        return `<li>${boomLength.substring(0, 6)}<br>${boomLength.substring(6)}</li>`;
-      } else {
-        return `<li>${boomLength}</li>`;
-      }
-    });
-  
-  const radii = (item?.properties?.map((p: any) => p.RADIUS) || [])
-    .filter((v: any) => v != null)
-    .map((radius: string) => {
-      if (radius.length > 6) {
-        return `<li>${radius.substring(0,6)}<br>${radius.substring(6)}</li>`;
-      } else {
-        return `<li>${radius}</li>`;
-      }
-    });
-  
-  const testLoads = (item?.properties?.map((p: any) => p["TEST LOAD"]) || [])
-    .filter((v: any) => v != null)
-    .map((testLoad: string) => {
-      if (testLoad.length > 6) {
-        return `<li>${testLoad.substring(0, 6)}<br>${testLoad.substring(6)}</li>`;
-      } else {
-        return `<li>${testLoad}</li>`;
-      }
-    });
-  
-  const swls = (item?.properties?.map((p: any) => p.SWL) || [])
-    .filter((v: any) => v != null)
-    .map((swl: string) => {
-      if (swl.length > 6) {
-        return `<li>${swl.substring(0, 6)}<br>${swl.substring(6)}</li>`;
-      } else {
-        return `<li>${swl}</li>`;
-      }
-    });
- 
-  htmlString = htmlString.replace(/\{\{nine\}\}/g, conditions.length ? `<ul>${conditions.join('')}</ul>` : '');
-  htmlString = htmlString.replace(/\{\{ten\}\}/g, boomLengths.length ? `<ul>${boomLengths.join('')}</ul>` : '');
-  htmlString = htmlString.replace(/\{\{eleven\}\}/g, radii.length ? `<ul>${radii.join('')}</ul>` : '');
-  htmlString = htmlString.replace(/\{\{twelve\}\}/g, testLoads.length ? `<ul>${testLoads.join('')}</ul>` : '');
-  htmlString = htmlString.replace(/\{\{twelve1\}\}/g, swls.length ? `<ul>${swls.join('')}</ul>` : '');
-  
-htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
+          // Replace placeholders in HTML:
+          // Adjust these replacements to match your actual placeholders and data
+          htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no || '');
+          htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
+          htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_id)?.owner || '');
+          htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard || '');
+          htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location || "");
+          htmlString = htmlString.replace(/\{\{six\}\}/g, formatDateWithHyphen(item?.inspection_date) || '');
 
-    // htmlString = htmlString.replace(/\{\{thirteen\}\}/g, formatDateWithHyphen(item?.last_test_exam) || '');
-    // htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam) || '');
-    // htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam) || '');
-    // htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam) || '');
+          htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer);
+          htmlString = htmlString.replace(/\{\{six12\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : item?.year_of_manufacture.split('-')[0]);
+          htmlString = htmlString.replace(/\{\{six2\}\}/g, equipment?.registration_no || '');
+          htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer : data[0]?.serial_no || '');
+          htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
+          htmlString = htmlString.replace(/\{\{six5\}\}/g, item?.owner_name || '');
 
-    
-if(item?.last_test_exam_certificate_no){
-  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${formatDateWithHyphen(item?.last_test_exam)|| "Not Available"}</span><span class="not-available-certificate-no">${item.last_test_exam_certificate_no|| "Not Available"}</span>`);
-  console.log("last_test_exam_certificate_no","POSITIVE")
-}else{
-  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available-css">${formatDateWithHyphen(item?.last_test_exam)||"Not Available"}</span>`);
-  console.log("last_test_exam_certificate_no","NEGATIVE")
-}
+          htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
+          htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
 
-if(item?.next_test_exam_certificate_no){
-  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="mar">${formatDateWithHyphen(item?.next_test_exam)|| "Not Available"}</span><span class="mar-certificate-no">${item.next_test_exam_certificate_no|| "Not Available"}</span>`);
-  console.log("next_test_exam_certificate_no","POSITIVE")
-}else{
-  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="mar-css">${formatDateWithHyphen(item?.next_test_exam)||"Not Available"}</span>`);
-  console.log("next_test_exam_certificate_no","NEGATIVE")
-}
+          const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
+            .filter((v: any) => v != null)
+            .map((condition: string) => {
+              // If length exceeds 10 characters, break it into two lines
+              if (condition.length > 6) {
+                return `<li>${condition.substring(0, 6)}<br>${condition.substring(6)}</li>`;
+              } else {
+                return `<li>${condition}</li>`;
+              }
+            });
 
-if(item?.last_thorough_exam_certificate_no){
-  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="aug-30">${formatDateWithHyphen(item?.last_thorough_exam)|| "Not Available"}</span><span class="aug-30-certificate-no">${item.last_thorough_exam_certificate_no|| "Not Available"}</span>`);
-  console.log("last_thorough_exam_certificate_no","POSITIVE")
-}else{
-  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="aug-30-css">${formatDateWithHyphen(item?.last_thorough_exam)||"Not Available"}</span>`);
-  console.log("last_thorough_exam_certificate_no","NEGATIVE")
-}
+          // Repeat similar logic for boomLengths, radii, testLoads, and swls
+          const boomLengths = (item?.properties?.map((p: any) => p["BOOM LENGTH"]) || [])
+            .filter((v: any) => v != null)
+            .map((boomLength: string) => {
+              if (boomLength.length > 6) {
+                return `<li>${boomLength.substring(0, 6)}<br>${boomLength.substring(6)}</li>`;
+              } else {
+                return `<li>${boomLength}</li>`;
+              }
+            });
 
-if(item?.next_thorough_exam_certificate_no){
-  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="aug">${formatDateWithHyphen(item?.next_thorough_exam)|| "Not Available"}</span><span class="aug-certificate-no">${item.next_thorough_exam_certificate_no|| "Not Available"}</span>`);
-  console.log("next_thorough_exam_certificate_no","POSITIVE")
-}else{
-  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="aug-css">${formatDateWithHyphen(item?.next_thorough_exam)||"Not Available"}</span>`);
-  console.log("next_thorough_exam_certificate_no","NEGATIVE")
-}
+          const radii = (item?.properties?.map((p: any) => p.RADIUS) || [])
+            .filter((v: any) => v != null)
+            .map((radius: string) => {
+              if (radius.length > 6) {
+                return `<li>${radius.substring(0, 6)}<br>${radius.substring(6)}</li>`;
+              } else {
+                return `<li>${radius}</li>`;
+              }
+            });
 
-    htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description || '');
-    htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars || '');
-   
-        // Replace placeholders in CSS:
-    cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination ? "36%" : "43.79%");
-    cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval ? "89%" : "96%");
-    cssText = cssText.replace(/\{\{nineteen\}\}/g, item?.twelve_month_interval ? "89.17%;" : "96.47%;");
-    cssText = cssText.replace(/\{\{twenty\}\}/g, item?.correct_installation ? "36%" : "43.79%;");
-    cssText = cssText.replace(/\{\{twentyone\}\}/g, item?.examination_scheme ? "89.17%;" : "96.47%;");
-    cssText = cssText.replace(/\{\{twentytwo\}\}/g, item?.exceptional_circumstances ? "89.47%;" : "96.47%;");
-    cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use ? "89.28%" : "96%");
+          const testLoads = (item?.properties?.map((p: any) => p["TEST LOAD"]) || [])
+            .filter((v: any) => v != null)
+            .map((testLoad: string) => {
+              if (testLoad.length > 6) {
+                return `<li>${testLoad.substring(0, 6)}<br>${testLoad.substring(6)}</li>`;
+              } else {
+                return `<li>${testLoad}</li>`;
+              }
+            });
 
-    // Open a new window for printing
-    const printWindow = window.open('', '', 'width=1033,height=1823');
-    if (!printWindow) return;
+          const swls = (item?.properties?.map((p: any) => p.SWL) || [])
+            .filter((v: any) => v != null)
+            .map((swl: string) => {
+              if (swl.length > 6) {
+                return `<li>${swl.substring(0, 6)}<br>${swl.substring(6)}</li>`;
+              } else {
+                return `<li>${swl}</li>`;
+              }
+            });
 
-    // Write the combined HTML/CSS into the new window
-    printWindow.document.open();
-    printWindow.document.write(`
+          htmlString = htmlString.replace(/\{\{nine\}\}/g, conditions.length ? `<ul>${conditions.join('')}</ul>` : '');
+          htmlString = htmlString.replace(/\{\{ten\}\}/g, boomLengths.length ? `<ul>${boomLengths.join('')}</ul>` : '');
+          htmlString = htmlString.replace(/\{\{eleven\}\}/g, radii.length ? `<ul>${radii.join('')}</ul>` : '');
+          htmlString = htmlString.replace(/\{\{twelve\}\}/g, testLoads.length ? `<ul>${testLoads.join('')}</ul>` : '');
+          htmlString = htmlString.replace(/\{\{twelve1\}\}/g, swls.length ? `<ul>${swls.join('')}</ul>` : '');
+
+          htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
+
+          // htmlString = htmlString.replace(/\{\{thirteen\}\}/g, formatDateWithHyphen(item?.last_test_exam) || '');
+          // htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam) || '');
+          // htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam) || '');
+          // htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam) || '');
+
+
+          if (item?.last_test_exam_certificate_no) {
+            htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${formatDateWithHyphen(item?.last_test_exam) || "Not Available"}</span><span class="not-available-certificate-no">${item.last_test_exam_certificate_no || "Not Available"}</span>`);
+            //console.log("last_test_exam_certificate_no", "POSITIVE")
+          } else {
+            htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available-css">${formatDateWithHyphen(item?.last_test_exam) || "Not Available"}</span>`);
+           // console.log("last_test_exam_certificate_no", "NEGATIVE")
+          }
+
+          if (item?.next_test_exam_certificate_no) {
+            htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="mar">${formatDateWithHyphen(item?.next_test_exam) || "Not Available"}</span><span class="mar-certificate-no">${item.next_test_exam_certificate_no || "Not Available"}</span>`);
+           // console.log("next_test_exam_certificate_no", "POSITIVE")
+          } else {
+            htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="mar-css">${formatDateWithHyphen(item?.next_test_exam) || "Not Available"}</span>`);
+           // console.log("next_test_exam_certificate_no", "NEGATIVE")
+          }
+
+          if (item?.last_thorough_exam_certificate_no) {
+            htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="aug-30">${formatDateWithHyphen(item?.last_thorough_exam) || "Not Available"}</span><span class="aug-30-certificate-no">${item.last_thorough_exam_certificate_no || "Not Available"}</span>`);
+           // console.log("last_thorough_exam_certificate_no", "POSITIVE")
+          } else {
+            htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="aug-30-css">${formatDateWithHyphen(item?.last_thorough_exam) || "Not Available"}</span>`);
+           // console.log("last_thorough_exam_certificate_no", "NEGATIVE")
+          }
+
+          if (item?.next_thorough_exam_certificate_no) {
+            htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="aug">${formatDateWithHyphen(item?.next_thorough_exam) || "Not Available"}</span><span class="aug-certificate-no">${item.next_thorough_exam_certificate_no || "Not Available"}</span>`);
+            console.log("next_thorough_exam_certificate_no", "POSITIVE")
+          } else {
+            htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="aug-css">${formatDateWithHyphen(item?.next_thorough_exam) || "Not Available"}</span>`);
+            console.log("next_thorough_exam_certificate_no", "NEGATIVE")
+          }
+
+          htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description || '');
+          htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars || '');
+
+          // Replace placeholders in CSS:
+          cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination ? "36%" : "43.79%");
+          cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval ? "89%" : "96%");
+          cssText = cssText.replace(/\{\{nineteen\}\}/g, item?.twelve_month_interval ? "89.17%;" : "96.47%;");
+          cssText = cssText.replace(/\{\{twenty\}\}/g, item?.correct_installation ? "36%" : "43.79%;");
+          cssText = cssText.replace(/\{\{twentyone\}\}/g, item?.examination_scheme ? "89.17%;" : "96.47%;");
+          cssText = cssText.replace(/\{\{twentytwo\}\}/g, item?.exceptional_circumstances ? "89.47%;" : "96.47%;");
+          cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use ? "89.28%" : "96%");
+
+          // Open a new window for printing
+          const printWindow = window.open('', '', 'width=1033,height=1823');
+          if (!printWindow) return;
+
+          // Write the combined HTML/CSS into the new window
+          printWindow.document.open();
+          printWindow.document.write(`
       <html>
         <head>
           <meta charset="UTF-8" />
@@ -262,36 +264,36 @@ if(item?.next_thorough_exam_certificate_no){
         </body>
       </html>
     `);
-    printWindow.document.close();
-    printWindow.focus();
-    // printWindow.print();
-    // printWindow.close();
+          printWindow.document.close();
+          printWindow.focus();
+          // printWindow.print();
+          // printWindow.close();
         },
       }
     );
-    
-    
+
+
   };
 
   const printAnnexure = async (item: any) => {
-    let content:string =""
-    
-    item?.annexures?.forEach((item:{property:string,property_group:string,remarks:string}) => {
-      let height=0;
+    let content: string = ""
+
+    item?.annexures?.forEach((item: { property: string, property_group: string, remarks: string }) => {
+      let height = 0;
       console.log(item.property_group.length);
-      if(item.property.length >item.property_group.length ){
+      if (item.property.length > item.property_group.length) {
         height = item.property.length
-      }else{
-        height =  item.property_group.length
+      } else {
+        height = item.property_group.length
       }
 
-      if(height < item?.remarks.length){
+      if (height < item?.remarks.length) {
         height = item?.remarks.length
       }
-      console.log(height,item?.property?.length,item?.property_group?.length,item?.remarks?.length)
-      console.log(height - item?.property?.length,height - item?.property_group?.length,height - item?.remarks?.length);
-      
-       
+      console.log(height, item?.property?.length, item?.property_group?.length, item?.remarks?.length)
+      console.log(height - item?.property?.length, height - item?.property_group?.length, height - item?.remarks?.length);
+
+
       content += `
         <div style="display: flex;  width:100%; border-bottom: 1px solid black;"> 
           <section style="width: 32.5%;  
@@ -319,20 +321,20 @@ if(item?.next_thorough_exam_certificate_no){
         </div>
       `;
     });
-   const data = generateRows(item?.annexures)
-   
-   const response = await fetch("/finalbackside/index.html");
-   let htmlString = await response.text();
-   equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
-   htmlString = htmlString.replace(/\{\{PASSENGER_ELEVATOR\}\}/g, item?.title?.toUpperCase() || '');
-   htmlString = htmlString.replace(/\{\{html\}\}/g, data.rowsHtml);
-  //  htmlString = htmlString.replace(/\{\{css\}\}/g, data.rowsCss);
-   htmlString = htmlString.replace(/\{\{four\}\}/g, item?.version);
-  //  htmlString = htmlString.replace(/\{\{five\}\}/g, item?.revision_date);
-htmlString = htmlString.replace(/\{\{datas\}\}/g, content)
-   htmlString = htmlString.replace(/\{\{one\}\}/g, formatDateWithHyphen(item?.inspection_date));
-   htmlString = htmlString.replace(/\{\{two\}\}/g, item?.certificate_no);
-   htmlString = htmlString.replace(/\{\{three\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
+    const data = generateRows(item?.annexures)
+
+    const response = await fetch("/finalbackside/index.html");
+    let htmlString = await response.text();
+    equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
+    htmlString = htmlString.replace(/\{\{PASSENGER_ELEVATOR\}\}/g, item?.title?.toUpperCase() || '');
+    htmlString = htmlString.replace(/\{\{html\}\}/g, data.rowsHtml);
+    //  htmlString = htmlString.replace(/\{\{css\}\}/g, data.rowsCss);
+    htmlString = htmlString.replace(/\{\{four\}\}/g, item?.version);
+    //  htmlString = htmlString.replace(/\{\{five\}\}/g, item?.revision_date);
+    htmlString = htmlString.replace(/\{\{datas\}\}/g, content)
+    htmlString = htmlString.replace(/\{\{one\}\}/g, formatDateWithHyphen(item?.inspection_date));
+    htmlString = htmlString.replace(/\{\{two\}\}/g, item?.certificate_no);
+    htmlString = htmlString.replace(/\{\{three\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
     // Open a new window for printing
     const printWindow = window.open('', '', 'width=1033,height=1823');
     if (!printWindow) return;
@@ -858,7 +860,7 @@ position: absolute;
     `);
     printWindow.document.close();
     printWindow.focus();
-    
+
   };
   const printBackside = async (item: any) => {
     try {
@@ -869,18 +871,18 @@ position: absolute;
         return;
       }
       let htmlString = await htmlResponse.text();
-  
-      
-      equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
+
+
+      equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
       htmlString = htmlString.replace(/\{\{PASSENGER_ELEVATOR\}\}/g, item?.title?.toUpperCase() || '');
       htmlString = htmlString.replace(/\{\{one\}\}/g, item?.description_of_test || '');
       htmlString = htmlString.replace(/\{\{two\}\}/g, formatDateWithHyphen(item?.inspection_date) || '');
       htmlString = htmlString.replace(/\{\{three\}\}/g, item?.certificate_no || '');
-      htmlString = htmlString.replace(/\{\{four\}\}/g, 
+      htmlString = htmlString.replace(/\{\{four\}\}/g,
         jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || ''
       );
       htmlString = htmlString.replace(/\{\{five\}\}/g, item?.version || '');
-  
+
       // Fetch CSS
       const cssResponse = await fetch('/backside2/index.css');
       if (!cssResponse.ok) {
@@ -888,14 +890,14 @@ position: absolute;
         return;
       }
       const cssText = await cssResponse.text();
-  
+
       // Open a new window for printing
       const printWindow = window.open('', '', 'width=1033,height=1823');
       if (!printWindow) {
         console.error("Failed to open print window");
         return;
       }
-  
+
       printWindow.document.open();
       // Write HTML and CSS into the print window directly
       printWindow.document.write(`
@@ -912,26 +914,26 @@ position: absolute;
         </html>
       `);
       printWindow.document.close();
-  
+
       // Focus on the print window
       printWindow.focus();
-  
+
       // If you want to auto-trigger print:
       // printWindow.print();
       // printWindow.close();
-      
-    
+
+
     } catch (error) {
       console.error("An error occurred while printing the backside:", error);
     }
   };
-  const [changed,setChanged] = useState(false)
+  const [changed, setChanged] = useState(false)
   const [minorCategoryOptions, setMinorCategoryOptions] = useState<any[]>([]);
   const [supplierOptions, setSupplierOptions] = useState<any[]>([]);
-  
+
   const [annexureOptions, setAnnexureOptions] = useState<any[]>([]);
   const [locationOptions, setLocationOptions] = useState<any[]>([]);
- 
+
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -939,40 +941,40 @@ position: absolute;
         // Fetch minor category options
         const minorCategories = await masterService.getAllSubtopicDetails('minor_category');
         if (minorCategories) {
-          setMinorCategoryOptions(minorCategories?.filter((item:any)=>item.status==="ACTIVE"));
+          setMinorCategoryOptions(minorCategories?.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch supplier options
         const suppliers = await masterService.getAllSubtopicDetails('manufacturer');
         if (suppliers) {
-            
-          setSupplierOptions(suppliers?.filter((item:any)=>item.status==="ACTIVE"));
+
+          setSupplierOptions(suppliers?.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch standard options
         const standards = await masterService.getAllSubtopicDetails('standard');
         if (standards) {
-          setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE"));
+          setStandardOptions(standards?.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch annexure options
         const annexures = await masterService.getAllSubtopicDetails('annexure');
         if (annexures) {
-          setAnnexureOptions(annexures?.filter((item:any)=>item.status==="ACTIVE"));
+          setAnnexureOptions(annexures?.filter((item: any) => item.status === "ACTIVE"));
         }
 
         // Fetch location options
         const locations = await masterService.getAllSubtopicDetails('location');
         if (locations) {
-          setLocationOptions(locations?.filter((item:any)=>item.status==="ACTIVE"));
+          setLocationOptions(locations?.filter((item: any) => item.status === "ACTIVE"));
         }
         // Fetch owner options
         const owners = await masterService.getAllSubtopicDetails('owner');
         if (owners) {
-          setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE"));
+          setOwnerOptions(owners?.filter((item: any) => item.status === "ACTIVE"));
         }
 
-      
+
       } catch (error) {
         console.error('Error fetching options:', error);
         // Optionally, handle the error (e.g., show a notification)
@@ -980,18 +982,18 @@ position: absolute;
     };
     fetchOptions();
     console.log("refetchiongg");
-    
+
   }, [changed]);
-  const [isChanged,setIsChanged] = useState(false);
-   const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data?.filter((item:any)=>item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
+  const [isChanged, setIsChanged] = useState(false);
+  const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage, setCurrentPage } = usePagination(data?.filter((item: any) => item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase())));
   return (
     <div className="px-8 py-3 bg-white w-[98%] mx-auto  ">
       <Table className="w-full">
         <TableHeader>
           <TableRow>
             <TableHead className="py-4">Sl. No.</TableHead>
-            
-            <TableHead className="py-4">Title</TableHead> 
+
+            <TableHead className="py-4">Title</TableHead>
             <TableHead className="py-4">Equipment ID</TableHead>
             <TableHead className="py-4">Inspection Date</TableHead>
             <TableHead className="py-4">Next Thorough Date</TableHead>
@@ -1007,19 +1009,18 @@ position: absolute;
               <React.Fragment key={item.id}>
                 <TableRow>
                   <TableCell className="py-4">{idx + 1}</TableCell>
-                  <TableCell className="py-4">{item?.title}</TableCell> 
-                  <TableCell className="py-4">{equipmentOptions?.find((equipment:any)=>equipment.id == item.equipment_no)?.equipment_no}</TableCell>
-                  
+                  <TableCell className="py-4">{item?.title}</TableCell>
+                  <TableCell className="py-4">{equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
+
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
                   <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
-                  <TableCell className="py-4">{item?.result }</TableCell>
+                  <TableCell className="py-4">{item?.result}</TableCell>
                   <TableCell
-                    className={`py-4 ${
-                      item.approval_status == 'true'
+                    className={`py-4 ${item.approval_status == 'true'
                         ? 'text-green-500'
                         : 'text-red-500'
-                    }`}
+                      }`}
                   >
                     {item.approval_status == 'true' ? 'Approved' : 'Rejected'}
                   </TableCell>
@@ -1033,16 +1034,16 @@ position: absolute;
                       <DropdownMenuContent>
                         <DropdownMenuItem onClick={() => handleEditClick(item.id)}>Edit</DropdownMenuItem>
                         <DeleteDialogue
-                                                onConfirm={async () => await deleteRecord(item.id)}
-                                                triggerButton={
-                                                  <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                                                  Delete
-                                              </button>
-                                                }
-                                            />
+                          onConfirm={async () => await deleteRecord(item.id)}
+                          triggerButton={
+                            <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                              Delete
+                            </button>
+                          }
+                        />
                         {item.approval_status == 'true' && <DropdownMenuItem onClick={() => printCertificate(item)}>Print</DropdownMenuItem>}
-                       { item.approval_status == 'true' && <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>}
-                       {item.approval_status == 'true' &&item?.description_of_test && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
+                        {item.approval_status == 'true' && <DropdownMenuItem onClick={() => printAnnexure(item)}>Print Annexure</DropdownMenuItem>}
+                        {item.approval_status == 'true' && item?.description_of_test && <DropdownMenuItem onClick={() => printBackside(item)}>Print Details</DropdownMenuItem>}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

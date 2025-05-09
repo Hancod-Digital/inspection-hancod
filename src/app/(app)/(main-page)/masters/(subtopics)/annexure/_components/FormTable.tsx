@@ -81,7 +81,7 @@ export default function Component({ onFunction, properties, setProperties }: Com
           {properties.map((item: Property, index: number) => (
             <TableRow key={item.id ?? index} className="border-b">
               <TableCell className="border-r p-2 h-12">
-                {editingIndex === index ? (
+                {/* {editingIndex === index ? ( */}
                   <div>
                     <input
                       type="text"
@@ -97,12 +97,10 @@ export default function Component({ onFunction, properties, setProperties }: Com
                       </p>
                     )}
                   </div>
-                ) : (
-                  item.property
-                )}
+                
               </TableCell>
               <TableCell className="border-r p-2 h-12">
-                {editingIndex === index ? (
+                {/* {editingIndex === index ? ( */}
                   <div>
                     <input
                       type="text"
@@ -118,12 +116,10 @@ export default function Component({ onFunction, properties, setProperties }: Com
                       </p>
                     )}
                   </div>
-                ) : (
-                  item.property_group
-                )}
+                 
               </TableCell>
               <TableCell className="border-r p-2 h-12">
-                {editingIndex === index ? (
+                {/* {editingIndex === index ? ( */}
                   <div>
                     <input
                       type="text"
@@ -139,9 +135,7 @@ export default function Component({ onFunction, properties, setProperties }: Com
                       </p>
                     )}
                   </div>
-                ) : (
-                  item.condition
-                )}
+              
               </TableCell>
               <TableCell className="p-2 h-12 text-center">
                 <button

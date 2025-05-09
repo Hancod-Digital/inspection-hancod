@@ -68,6 +68,8 @@ export default function EditEquipmentDetailsForm({
 
   const [testExamChecked, setTestExamChecked] = useState(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
+  const [lastTestExamChecked, setLastTestExamChecked] = useState(false);
+  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState(false);
   
   const [siteOptions, setSiteOptions] = useState<any[]>([]);
   const [authorityOptions, setAuthorityOptions] = useState<any[]>([]);
@@ -102,9 +104,9 @@ const equipmentDetailsSchema = object({
   lift_location: string()
   .optional()
   .nullable(),
-  last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+  last_test_exam_certificate_no: lastTestExamChecked ? string().optional() : string().nonempty('Last Test Exam Certificate No. is required'),
   next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
-  last_thorough_exam_certificate_no:  string().nonempty('Last Thorough Exam Certificate No. is required'),
+  last_thorough_exam_certificate_no: lastThoroughExamChecked ? string().optional() : string().nonempty('Last Thorough Exam Certificate No. is required'),
   next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
   title: string().nonempty('Title is required'),
   test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
@@ -320,9 +322,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find(item => item.id == equipment_no);
     if (selectedEquipment) {
-     
-      setTestExamChecked(selectedEquipment.next_test_date == null ? true :false);
-      setThoroughExamChecked(selectedEquipment.next_thorough_date == null ? true :false);
+      console.log(selectedEquipment.last_test_date,selectedEquipment.last_thorough_date,selectedEquipment.next_test_date,selectedEquipment.next_thorough_date);
+       setLastTestExamChecked(selectedEquipment.last_test_date == null || selectedEquipment.last_test_date == "" || selectedEquipment.last_test_date == "Not Applicable" ? true :false);
+       setLastThoroughExamChecked(selectedEquipment.last_thorough_date == null || selectedEquipment.last_thorough_date == "" || selectedEquipment.last_thorough_date == "Not Applicable" ? true :false);
+      setTestExamChecked(selectedEquipment.next_test_date == null || selectedEquipment.next_test_date == "" || selectedEquipment.next_test_date == "Not Applicable" ? true :false);
+      setThoroughExamChecked(selectedEquipment.next_thorough_date == null || selectedEquipment.next_thorough_date == "" || selectedEquipment.next_thorough_date == "Not Applicable" ? true :false);
     }
   }, [equipment_no, equipmentNoOptions]);
 
@@ -338,8 +342,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
     };
     fetchSites();
   }, [watch('location'), locationOptions]);
-  const [lastTestExamChecked, setLastTestExamChecked] = useState(false);
-  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState(false);
+  
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
@@ -912,7 +915,10 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         render={({ field }) => (
                           <Input id="next_test_date" defaultValue={
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
-                              ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date).toISOString().split('T')[0]
+                              ? 
+                              //new Date(
+                                equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
+                              // ).toISOString().split('T')[0]
                               : ''
                           } disabled={testExamChecked} type="date" {...field} />
                         )}
@@ -931,7 +937,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
     Next Test Certificate No.
   </Label>
   <Input
-    id="next_test_exam_certificate_no"
+    id="next_test_exam_certificate_no"  
     disabled={testExamChecked}
     className='w-[68%]'
     {...register('next_test_exam_certificate_no')}
@@ -946,7 +952,10 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         render={({ field }) => (
                           <Input id={"next_thorough_exam"} defaultValue={
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
-                              ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date).toISOString().split('T')[0]
+                              ?
+                               //new Date(
+                                equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
+                            // ).toISOString().split('T')[0]
                               : ''
                           } disabled={thoroughExamChecked} type="date" {...field} />
                         )}

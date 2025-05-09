@@ -36,7 +36,8 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
   const [loading, setLoading] = useState(false);
   const [equipmentData, setEquipmentData] = useState<any[]>([]); // Fetch and store equipment types
   const [data, setData] = useState<any>(null);
-  const { updateRecord, findRecordByIdWithReference,getAllSingleSubtopic, getMergedData } = useSubtopic();
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // Add loading state
+  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic, getMergedData } = useSubtopic();
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -53,42 +54,42 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     control,
     formState: { isSubmitSuccessful, errors },
   } = methods;
-
+ 
+  // Merge data fetching into a single effect
   useEffect(() => {
-    // Fetch existing data when the component mounts
-    const fetchData = async () => {
-      const recordData = await findRecordByIdWithReference(id, majorCategoryDataRange);
-    
-      flushSync(()=>{
-        setData(recordData);
-        reset({
-          major_category: recordData?.major_category || '',
-          equipment_type: String(recordData?.equipment_type?.id) || '',
-          status: recordData?.status || '',
+    const fetchAllData = async () => {
+      try {
+        // Fetch equipment types first
+        const equipmentTypes = await getAllSingleSubtopic('equipment_type');
+        setEquipmentData(equipmentTypes || []);
+
+        // Then fetch record data
+        const recordData = await findRecordByIdWithReference(id, majorCategoryDataRange);
+        
+        // Update state and form values together
+        flushSync(() => {
+          setData(recordData);
+          reset({
+            major_category: recordData?.major_category || '',
+            equipment_type: String(recordData?.equipment_type?.id || ''),
+            status: recordData?.status || '',
+          });
+          setIsDataLoaded(true); // Mark data as ready
         });
-      })
-      
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
 
-    fetchData();
-  }, [id, findRecordByIdWithReference, reset]);
+    fetchAllData();
+  }, [id, reset, getAllSingleSubtopic, findRecordByIdWithReference]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      reset();
+      //reset();
       onClose();
     }
   }, [isSubmitSuccessful, reset, onClose]);
-
-  // Fetch equipment types from the subtopic context when the component mounts
-  useEffect(() => {
-    const fetchEquipmentTypes = async () => {
-      const subtopics = await getAllSingleSubtopic('equipment_type');
-      setEquipmentData(subtopics || []);
-    };
-
-    fetchEquipmentTypes();
-  }, [getAllSingleSubtopic, getMergedData]);
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
@@ -98,6 +99,11 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     setLoading(false);
     onClose(); // Close the form after saving
   };
+
+  // Conditional rendering while loading
+  if (!isDataLoaded) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <motion.div

@@ -49,50 +49,50 @@ export default function EquipmentDetailsForm({
   // "Not Applicable" checkboxes for next test/thorough
   const [testExamChecked, setTestExamChecked] = useState(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
-/**
- * Zod Schema
- */
-const equipmentDetailsSchema = object({
-  inspection_date: string().nonempty('Inspection Date is required'),
-  site: string().nonempty('Site is required'),
-  authority: string().nonempty('Authority is required'),
-  standard: string().nonempty('Standard is required'),
-  type_of_exam: string().nonempty('Type of Exam is required'),
-  description_of_test: string().nonempty('Description of Test is required').optional(),
-  job_order_no: string().nonempty('Job Order No. is required'),
-  equipment_no: string().nonempty('Equipment No. is required'),
-  title: string().nonempty('Title is required'),
-  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
-  safe_working_load: string().nonempty('Safe Working Load is required'),
-  last_test_exam: string().nonempty('Last Test Exam is required'),
-  next_test_exam: string().optional(),
-  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-  next_thorough_exam: string().optional(),
-  last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
-next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
-last_thorough_exam_certificate_no:  string().nonempty('Last Thorough Exam Certificate No. is required'),
-next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
-  result: string().nonempty('Result is required'),
-  surveyor: string().nonempty('Surveyor is required'),
-  result_description: string().nonempty('Test Particulars is required'),
-  owner_name: string().nonempty('Owner Name is required'),
-  description: string().nonempty('Description Date is required').optional(),
-  equipment_description: string().nonempty('Equipment Description is required'),
-  manufacturer: string().nonempty('Manufacturer is required'),
-  tested_standard: string().nonempty('Tested Standard is required'),
-  approval_status: string().nonempty('Approval Status is required'),
-  location: string().nonempty('Location is required'),
-  serial_no: string().nonempty('Serial No. is required'),
-  registration_no: string().nonempty('Registration No. is required'),
-  lift_location: string().nonempty('Lift Location is required').optional(),
-  model_no: string().nonempty('Model_no is required'),
-  year_of_manufacture: string().nonempty('Year of Manufacture is required'),
-  owner_id: string().nonempty('Owner ID is required'),
-  defect_description: string().nonempty('Defect Description is required'),
- // test_particulars: string().nonempty('Test Particulars is required'),
-});
+  /**
+   * Zod Schema
+   */
+  const equipmentDetailsSchema = object({
+    inspection_date: string().nonempty('Inspection Date is required'),
+    site: string().nonempty('Site is required'),
+    authority: string().nonempty('Authority is required'),
+    standard: string().nonempty('Standard is required'),
+    type_of_exam: string().nonempty('Type of Exam is required'),
+    description_of_test: string().nonempty('Description of Test is required').optional(),
+    job_order_no: string().nonempty('Job Order No. is required'),
+    equipment_no: string().nonempty('Equipment No. is required'),
+    title: string().nonempty('Title is required'),
+    test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
+    safe_working_load: string().nonempty('Safe Working Load is required'),
+    last_test_exam: string().nonempty('Last Test Exam is required'),
+    next_test_exam: string().optional(),
+    last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+    next_thorough_exam: string().optional(),
+    last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+    next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
+    last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
+    next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
+    result: string().nonempty('Result is required'),
+    surveyor: string().nonempty('Surveyor is required'),
+    result_description: string().nonempty('Test Particulars is required'),
+    owner_name: string().nonempty('Owner Name is required'),
+    description: string().nonempty('Description Date is required').optional(),
+    equipment_description: string().nonempty('Equipment Description is required'),
+    manufacturer: string().nonempty('Manufacturer is required'),
+    tested_standard: string().nonempty('Tested Standard is required'),
+    approval_status: string().nonempty('Approval Status is required'),
+    location: string().nonempty('Location is required'),
+    serial_no: string().nonempty('Serial No. is required'),
+    registration_no: string().nonempty('Registration No. is required'),
+    lift_location: string().nonempty('Lift Location is required').optional(),
+    model_no: string().nonempty('Model_no is required'),
+    year_of_manufacture: string().nonempty('Year of Manufacture is required'),
+    owner_id: string().nonempty('Owner ID is required'),
+    defect_description: string().nonempty('Defect Description is required'),
+    // test_particulars: string().nonempty('Test Particulars is required'),
+  });
 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+  type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
   // New: "Not Applicable" checkboxes for last test/thorough
   const [lastTestExamChecked, setLastTestExamChecked] = useState(false);
   const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState(false);
@@ -167,14 +167,14 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
       setValue('title', String(selected.title) || '');
       setValue('registration_no', String(selected.registration_no) || '');
       setValue('last_test_exam', String(selected.last_test_date) || '');
-      console.log("----------------------------------------------",selected?.last_test_exam_certificate_no)
-      setValue('last_test_exam_certificate_no', selected?.last_test_exam_certificate_no? String(selected?.last_test_exam_certificate_no) : '');
+      console.log("----------------------------------------------", selected?.last_test_exam_certificate_no)
+      setValue('last_test_exam_certificate_no', selected?.last_test_exam_certificate_no ? String(selected?.last_test_exam_certificate_no) : '');
       setValue('next_test_exam', String(selected.next_test_date) || '');
-      setValue('next_test_exam_certificate_no', selected?.next_test_exam_certificate_no? String(selected?.next_test_exam_certificate_no) : '');
+      setValue('next_test_exam_certificate_no', selected?.next_test_exam_certificate_no ? String(selected?.next_test_exam_certificate_no) : '');
       setValue('last_thorough_exam', String(selected.last_thorough_date) || '');
-      setValue('last_thorough_exam_certificate_no', selected?.last_thorough_exam_certificate_no? String(selected?.last_thorough_exam_certificate_no) : '');
+      setValue('last_thorough_exam_certificate_no', selected?.last_thorough_exam_certificate_no ? String(selected?.last_thorough_exam_certificate_no) : '');
       setValue('next_thorough_exam', String(selected.next_thorough_date) || '');
-      setValue('next_thorough_exam_certificate_no', selected?.next_thorough_exam_certificate_no? String(selected?.next_thorough_exam_certificate_no) : '');
+      setValue('next_thorough_exam_certificate_no', selected?.next_thorough_exam_certificate_no ? String(selected?.next_thorough_exam_certificate_no) : '');
       setValue('serial_no', String(selected.serial_no) || '');
       setValue('model_no', String(selected.model_no) || '');
       setValue('owner_id', String(selected.owner_id) || '');
@@ -903,7 +903,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       </p>
                     )}
                   </div></div>
-  <div className="grid gap-4 grid-cols-1 w-[64%]  ">
+                <div className="grid gap-4 grid-cols-1 w-[64%]  ">
                   {/* Date of last proof load test + Not Applicable */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">
@@ -919,18 +919,18 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                             type="date"
                             disabled={lastTestExamChecked}
                             defaultValue={
-                              equipmentNoOptions?.find((item: any) => item.id == equipment_no)?.last_test_date === 'NOT APPLICABLE' 
-                                ? '' 
+                              equipmentNoOptions?.find((item: any) => item.id == equipment_no)?.last_test_date === 'NOT APPLICABLE'
+                                ? ''
                                 : (() => {
-                                    const dateString = equipmentNoOptions?.find((item: any) => item.id == equipment_no)
-                                      ?.last_test_date?.toString().trim() || '';
-                                    try {
-                                      const date = new Date(dateString);
-                                      return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
-                                    } catch {
-                                      return '';
-                                    }
-                                  })()
+                                  const dateString = equipmentNoOptions?.find((item: any) => item.id == equipment_no)
+                                    ?.last_test_date?.toString().trim() || '';
+                                  try {
+                                    const date = new Date(dateString);
+                                    return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
+                                  } catch {
+                                    return '';
+                                  }
+                                })()
                             }
                             {...field}
                           />
@@ -939,7 +939,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       <Checkbox
                         className="w-6 h-6"
                         checked={lastTestExamChecked}
-                        onCheckedChange={(checked:any) => setLastTestExamChecked(checked)}
+                        onCheckedChange={(checked: any) => setLastTestExamChecked(checked)}
                       />
                       <span className="text-[13px] w-[33%]">Not Applicable</span>
                       {errors.last_test_exam && (
@@ -948,15 +948,15 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
-  <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-    Last Test Certificate No.
-  </Label>
-  <Input
-  disabled={lastTestExamChecked}
-    id="last_test_exam_certificate_no"
-    {...register('last_test_exam_certificate_no')}
-  />
-</div>
+                    <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
+                      Last Test Certificate No.
+                    </Label>
+                    <Input
+                      disabled={lastTestExamChecked}
+                      id="last_test_exam_certificate_no"
+                      {...register('last_test_exam_certificate_no')}
+                    />
+                  </div>
 
                   {/* Date of last thorough exam + Not Applicable */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -975,11 +975,11 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                 ?.last_thorough_date
-                                ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date === 'NOT APPLICABLE' 
-                                  ? '' 
-                                  : new Date(
-                                      equipmentNoOptions.find((item: any) => item.id == equipment_no)?.last_thorough_date
-                                    )?.toISOString()?.split('T')[0]
+                                ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date === 'NOT APPLICABLE'
+                                  ? ''
+                                  : // : new Date(
+                                  equipmentNoOptions.find((item: any) => item.id == equipment_no)?.last_thorough_date
+                                // )?.toISOString()?.split('T')[0]
                                 : ''
                             }
                             {...field}
@@ -989,7 +989,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       <Checkbox
                         className="w-6 h-6"
                         checked={lastThoroughExamChecked}
-                        onCheckedChange={(checked:any) => setLastThoroughExamChecked(checked)}
+                        onCheckedChange={(checked: any) => setLastThoroughExamChecked(checked)}
                       />
                       <span className="text-[13px] w-[33%]">Not Applicable</span>
                       {errors.last_thorough_exam && (
@@ -998,17 +998,17 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
-  <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-    Last Thorough Certificate No.
-  </Label>
-  <Input
-  disabled={lastThoroughExamChecked}
-    id="last_thorough_exam_certificate_no"
-    {...register('last_thorough_exam_certificate_no')}
-  />
-</div>
+                    <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
+                      Last Thorough Certificate No.
+                    </Label>
+                    <Input
+                      disabled={lastThoroughExamChecked}
+                      id="last_thorough_exam_certificate_no"
+                      {...register('last_thorough_exam_certificate_no')}
+                    />
                   </div>
-                
+                </div>
+
 
                 {/* Next exam row */}
                 <div className="grid gap-4 grid-cols-1 w-[64%]  ">
@@ -1029,15 +1029,16 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                 ?.next_test_date &&
-                              equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                                ?.next_test_date !== 'NOT APPLICABLE'
-                                ? new Date(
-                                    equipmentNoOptions?.find(
-                                      (item: any) => item?.id == equipment_no
-                                    )?.next_test_date
-                                  )
-                                    ?.toISOString()
-                                    ?.split('T')[0]
+                                equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
+                                  ?.next_test_date !== 'NOT APPLICABLE'
+                                ?
+                                //new Date(
+                                equipmentNoOptions?.find(
+                                  (item: any) => item?.id == equipment_no
+                                )?.next_test_date
+                                //  )
+                                // ?.toISOString()
+                                // ?.split('T')[0]
                                 : ''
                             }
                             {...field}
@@ -1047,7 +1048,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       <Checkbox
                         className="w-6 h-6"
                         checked={testExamChecked}
-                        onCheckedChange={(checked:any) => setTestExamChecked(checked)}
+                        onCheckedChange={(checked: any) => setTestExamChecked(checked)}
                       />
                       <span className="text-[13px] w-[33%]">Not Applicable</span>
                       {errors.next_test_exam && (
@@ -1058,16 +1059,16 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4 ">
-  <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
-    Next Test Certificate No.
-  </Label>
-  <Input
-    id="next_test_exam_certificate_no"
-    disabled={testExamChecked}
-    className='w-[68%]'
-    {...register('next_test_exam_certificate_no')}
-  />
-</div>
+                    <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
+                      Next Test Certificate No.
+                    </Label>
+                    <Input
+                      id="next_test_exam_certificate_no"
+                      disabled={testExamChecked}
+                      className='w-[68%]'
+                      {...register('next_test_exam_certificate_no')}
+                    />
+                  </div>
 
                   {/* Next thorough exam + Not Applicable */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
@@ -1086,15 +1087,16 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                 ?.next_thorough_date &&
-                              equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                                ?.next_thorough_date !== 'Not Applicable'
-                                ? new Date(
-                                    equipmentNoOptions?.find(
-                                      (item: any) => item?.id == equipment_no
-                                    )?.next_thorough_date
-                                  )
-                                    ?.toISOString()
-                                    ?.split('T')[0]
+                                equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
+                                  ?.next_thorough_date !== 'Not Applicable'
+                                ?
+                                // new Date(
+                                equipmentNoOptions?.find(
+                                  (item: any) => item?.id == equipment_no
+                                )?.next_thorough_date
+                                // )
+                                //   ?.toISOString()
+                                //   ?.split('T')[0]
                                 : ''
                             }
                             {...field}
@@ -1104,7 +1106,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       <Checkbox
                         className="w-6 h-6"
                         checked={thoroughExamChecked}
-                        onCheckedChange={(checked:any) => setThoroughExamChecked(checked)}
+                        onCheckedChange={(checked: any) => setThoroughExamChecked(checked)}
                       />
                       <span className="text-[13px] w-[33%]">Not Applicable</span>
                       {errors.next_thorough_exam && (
@@ -1115,30 +1117,30 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
-    Next Thorough Certificate No.
-  </Label>
-  <Input
-    id="next_thorough_exam_certificate_no"
-    disabled={thoroughExamChecked}
-    className='w-[68%]'
-    {...register('next_thorough_exam_certificate_no')}
-  />
-</div>
+                    <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
+                      Next Thorough Certificate No.
+                    </Label>
+                    <Input
+                      id="next_thorough_exam_certificate_no"
+                      disabled={thoroughExamChecked}
+                      className='w-[68%]'
+                      {...register('next_thorough_exam_certificate_no')}
+                    />
+                  </div>
 
                   {/* Lift Location conditionally shown */}
                   {equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                     ?.property_table_type === 'ELEVATOR CERTIFICATE' && (
-                    <div className="grid grid-cols-[200px_1fr] gap-4">
-                      <Label htmlFor="lift_location" className="mt-3">
-                        Lift Location
-                      </Label>
-                      <Input id="lift_location" type="text" {...register('lift_location')} />
-                      {errors.lift_location && (
-                        <p className="text-red-500 text-[12px] ">{errors.lift_location.message}</p>
-                      )}
-                    </div>
-                  )}
+                      <div className="grid grid-cols-[200px_1fr] gap-4">
+                        <Label htmlFor="lift_location" className="mt-3">
+                          Lift Location
+                        </Label>
+                        <Input id="lift_location" type="text" {...register('lift_location')} />
+                        {errors.lift_location && (
+                          <p className="text-red-500 text-[12px] ">{errors.lift_location.message}</p>
+                        )}
+                      </div>
+                    )}
                 </div>
 
                 {/* Additional Information (Description) */}

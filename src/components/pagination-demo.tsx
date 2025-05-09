@@ -67,6 +67,7 @@ export function PaginationDemo({
       <PaginationContent>
         {/* Previous Button */}
         <PaginationItem>
+          {}
           <PaginationPrevious  className='cursor-pointer'
             onClick={onPreviousPage}
             isActive={currentPage == 1}
@@ -74,7 +75,7 @@ export function PaginationDemo({
         </PaginationItem>
 
         {/* Page Numbers */}
-        {getPageNumbers().map((page, index) => (
+        { getPageNumbers().map((page, index) => (
           <PaginationItem key={index}>
             {page === '...' ? (
               <PaginationEllipsis />

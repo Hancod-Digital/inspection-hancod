@@ -48,6 +48,60 @@ button {
   background-size: cover;
   z-index: 3;
 }
+.aug-30-certificate-no {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(19.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
+.aug-30-css {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
+.aug-30 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(3.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
 .whatsapp-image-1 {
   position: absolute;
   width: calc(79.2080078125 * var(--rpx));
@@ -1986,7 +2040,7 @@ p {
     align-items: center;
     justify-content: left;
     position: absolute;
-    gap: 177px;
+     
     width: calc(1047.9833984375* var(--rpx));
     height: calc(49.2890625* var(--rpx));
     top: calc(191.34765625* var(--rpx));
@@ -1998,7 +2052,7 @@ p {
 .certificate {
   flex-shrink: 0;
   position: relative;
-  width: calc(331.4794921875 * var(--rpx));
+  width: 50%;
   height: calc(19.224609375 * var(--rpx));
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -2032,7 +2086,7 @@ p {
 .job {
   flex-shrink: 0;
   position: relative;
-  width: calc(331.4794921875 * var(--rpx));
+  width: 50%;
   height: calc(19.224609375 * var(--rpx));
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));

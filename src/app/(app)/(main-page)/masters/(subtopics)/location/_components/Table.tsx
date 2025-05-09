@@ -61,7 +61,7 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                         <TableHead className="py-4">Sl. No.</TableHead>
                         <TableHead className="py-4">Location</TableHead>
                         <TableHead className="py-4">Site</TableHead>
-                        <TableHead className="py-4">Area</TableHead>
+                         
                         <TableHead className="py-4">Status</TableHead>
                         <TableHead className="py-4">Action</TableHead>
                     </TableRow>
@@ -73,7 +73,7 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                                 <TableCell className="py-4">{idx + 1}</TableCell>
                                 <TableCell className="py-4">{item?.location?.name}</TableCell>
                                 <TableCell className="py-4">{item?.site?.name}</TableCell>
-                                <TableCell className="py-4">{item?.area?.name}</TableCell>
+                             
                                 <TableCell className="py-4">{item?.location?.status}</TableCell>
                                 <TableCell className="py-4">
                                     <div className="flex space-x-2">

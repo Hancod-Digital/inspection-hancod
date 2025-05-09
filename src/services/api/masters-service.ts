@@ -56,7 +56,8 @@ export class MasterService extends Supabase {
         // Build the query
         const { data, error } = await this.supabase
             .from(subtopic)
-            .select(`*, ${referencesSelect}`);
+            .select(`*, ${referencesSelect}`)
+            .order('created_at', {ascending:false})
      
         if (error) {
             throw new Error(error.message);

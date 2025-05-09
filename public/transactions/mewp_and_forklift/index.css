@@ -916,6 +916,224 @@ button {
   border-left: calc(1 * var(--rpx)) solid #000000;
   z-index: 18;
 }
+.mar-certificate-no{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(195.7734375 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(19.369 * var(--rpx));
+  left: calc(269.552734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(13 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.4 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 50;
+}
+.mar-css{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(195.7734375 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369 * var(--rpx));
+  left: calc(269.552734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(16 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.4 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 50;
+}
+.mar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(195.7734375 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(3.369 * var(--rpx));
+  left: calc(269.552734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(13 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.4 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 50;
+}
+.not-available-certificate-no{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(193.5029296875 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(19.369 * var(--rpx));
+  left: calc(26.31640625 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(13 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 49;
+}
+.not-available-css{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(193.5029296875 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369 * var(--rpx));
+  left: calc(26.31640625 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(16 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 49;
+}
+.not-available {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(193.5029296875 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(3.369 * var(--rpx));
+  left: calc(26.31640625 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(13 * var(--rpx));
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 49;
+}
+.aug-certificate-no {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(19.369140625 * var(--rpx));
+  left: calc(546.927734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 57;
+}
+.aug-css {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369140625 * var(--rpx));
+  left: calc(546.927734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 57;
+}
+.aug {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(3.369140625 * var(--rpx));
+  left: calc(546.927734375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: calc(22.399999618530273 * var(--rpx));
+  text-align: center;
+  white-space: nowrap;
+  z-index: 57;
+}
+ 
+
+.aug-30-certificate-no {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(19.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
+.aug-30-css {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(12.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
+.aug-30 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: calc(228.212890625 * var(--rpx));
+  height: calc(23.778215408325195 * var(--rpx));
+  top: calc(3.369140625 * var(--rpx));
+  left: calc(803.2099609375 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 69;
+}
 .date-of-next-examination {
   display: flex;
   align-items: center;
@@ -1051,24 +1269,7 @@ button {
   white-space: nowrap;
   z-index: 50;
 }
-.not-available {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  width: calc(193.5029296875 * var(--rpx));
-  height: calc(23.778215408325195 * var(--rpx));
-  top: calc(11.5859375 * var(--rpx));
-  left: calc(26.31640625 * var(--rpx));
-  color: #0f1422;
-  font-family: Inter, var(--default-font-family);
-  font-size: calc(16 * var(--rpx));
-  font-weight: 600;
-  line-height: calc(22.399999618530273 * var(--rpx));
-  text-align: center;
-  white-space: nowrap;
-  z-index: 49;
-}
+ 
 .date-14-aug-2022 {
   display: flex;
   align-items: center;
@@ -1706,7 +1907,7 @@ button {
   justify-content: flex-start;
   position: absolute;
   width: calc(420.21484375 * var(--rpx));
-  height: calc(82 * var(--rpx));
+  /* height: calc(82 * var(--rpx)); */
   top: calc(64.4296875 * var(--rpx));
   left: calc(815.4921875 * var(--rpx));
   color: #0f1422;
@@ -1733,7 +1934,7 @@ p {
   justify-content: flex-start;
   position: absolute;
   width: calc(420.21484375 * var(--rpx));
-  height: calc(82 * var(--rpx));
+  /* height: calc(82 * var(--rpx)); */
   top: calc(64.4296875 * var(--rpx));
   left: calc(939.4921875 * var(--rpx));
   color: #0f1422;
@@ -1951,7 +2152,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: left;
-  gap: 193px;
+   
   position: absolute;
   width: calc(1047.9833984375 * var(--rpx));
   height: calc(49.2890625 * var(--rpx));
@@ -1964,7 +2165,7 @@ p {
 .certificate-number {
   flex-shrink: 0;
   position: relative;
-  width: calc(331.4794921875 * var(--rpx));
+  width: 50%;
   height: calc(19.224609375 * var(--rpx));
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -1998,7 +2199,7 @@ p {
 .job-number {
   flex-shrink: 0;
   position: relative;
-  width: calc(331.4794921875 * var(--rpx));
+  width: 50%;
   height: calc(19.224609375 * var(--rpx));
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));

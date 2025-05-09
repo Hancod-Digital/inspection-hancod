@@ -77,11 +77,11 @@ const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage,c
             <React.Fragment key={idx}>
               <TableRow className="flex">
                 <TableCell className="py-4 flex-[1]">{idx + 1}</TableCell>
-                <TableCell className="py-4 flex-[1]">{item.job_no}</TableCell>
-                <TableCell className="py-4 flex-[1]">{item.client_name}</TableCell>
-                <TableCell className="py-4 flex-[2]">{item.contact_number}</TableCell>
-                <TableCell className="py-4 flex-[2]">{surveyorOptions.find((surveyor: any) => surveyor.id === item.surveyor)?.surveyor}</TableCell>
-                <TableCell className="py-4 flex-[2]">{locationOptions.find((location: any) => location.id === item.location)?.location}</TableCell>
+                <TableCell className="py-4 flex-[1]">{item?.job_no}</TableCell>
+                <TableCell className="py-4 flex-[1]">{item?.client_name}</TableCell>
+                <TableCell className="py-4 flex-[2]">{item?.contact_number}</TableCell>
+                <TableCell className="py-4 flex-[2]">{surveyorOptions.find((surveyor: any) => surveyor.id === item?.surveyor)?.surveyor}</TableCell>
+                <TableCell className="py-4 flex-[2]">{locationOptions.find((location: any) => location.id === item?.location)?.location}</TableCell>
                 <TableCell className="py-4 flex-[2]">{item?.equipment_details}</TableCell>
                 <TableCell className="py-4 flex-[2]">
                   <div className="flex gap-4">

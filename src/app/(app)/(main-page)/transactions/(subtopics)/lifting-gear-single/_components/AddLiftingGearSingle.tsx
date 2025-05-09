@@ -590,7 +590,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                       type="date"
                       defaultValue={
                         equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
-                          ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date).toISOString().split('T')[0]
+                          ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
                           : ''
                       }
                       {...register('last_test_exam')}
@@ -623,7 +623,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                       type="date"
                       defaultValue={
                         equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
-                          ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date).toISOString().split('T')[0]
+                          ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
                           : ''
                       }
                       {...register('last_thorough_exam')}
@@ -658,7 +658,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                         render={({ field }) => (
                           <Input id="next_test_date" defaultValue={
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
-                              ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date).toISOString().split('T')[0]
+                              ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
                               : ''
                           } disabled={testExamChecked} type="date" {...field} />
                         )}
@@ -696,7 +696,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
                         render={({ field }) => (
                           <Input id={"next_thorough_exam"} defaultValue={
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
-                              ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date).toISOString().split('T')[0]
+                              ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
                               : ''
                           } disabled={thoroughExamChecked} type="date" {...field} />
                         )}

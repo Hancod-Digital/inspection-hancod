@@ -63,6 +63,7 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
       newRow[col] = '';
     });
     setData((prevData: any) => [...prevData, newRow]);
+    console.log(data,"pppppppppppp");
   };
 
   return (

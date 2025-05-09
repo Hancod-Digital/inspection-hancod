@@ -62,7 +62,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               onSubmit={handleSubmit(onSubmitHandler)}
             >
               <CardHeader>
-                <CardTitle className="text-md">Equipment Details</CardTitle>
+                <CardTitle className="text-md"></CardTitle>
               </CardHeader>
 
               <div className="space-y-4">

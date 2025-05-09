@@ -19,21 +19,25 @@ import DeleteDialogue from '@/components/ui/delete-dialog';
 import Standard from '../../_common/Standard'
 import Manufacturer from '../../_common/Manufacturer'
 import Location from '../../_common/Location'
-
+import ClonePopup from './ClonePopup';
 
 import { PaginationDemo } from '@/components/pagination-demo';
 
 export default function Component({searchValue,isManufacturer,isStandard,isLocation, setIsManufacturer, setIsStandard, setIsLocation,setChanged,changed}:{searchValue:string,isManufacturer:boolean,isStandard:boolean,isLocation:boolean, setIsManufacturer: (value: boolean) => void, setIsStandard: (value: boolean) => void, setIsLocation: (value: boolean) => void,setChanged: (value: boolean) => void,changed:boolean}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
- 
+    const [cloningRow, setCloningRow] = useState<number | null>(null);
     const { isLoading, error, getAllSingleSubtopic, getMergedData, deleteRecord, data } = useSubtopic();
     const [subtopics, setSubtopics] = useState([]);
     const [selectedItem, setSelectedItem] = useState<any>(null);
 
     const handleEditClick = (slNo: number) => {
+        setCloningRow(null);
         setEditingRow(slNo === editingRow ? null : slNo);
     };
-
+    const handleCloneClick = (slNo: number) => {
+        setEditingRow(null);
+        setCloningRow(slNo === cloningRow ? null : slNo);
+    };
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
@@ -102,6 +106,9 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                                                 <DropdownMenuItem onClick={() => handleEditClick(actualIndex)}>
                                                     Edit
                                                 </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleCloneClick(actualIndex)}>
+                                                    Clone
+                                                </DropdownMenuItem>
                                                 <DeleteDialogue
                                                     onConfirm={async () => await deleteRecord(item.id)}
                                                     triggerButton={
@@ -118,6 +125,36 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                                     </TableCell>
                                 </TableRow>
                                 <AnimatePresence>
+                                    {cloningRow === actualIndex && (
+                                        <motion.tr
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <TableCell colSpan={9}>
+                                            <div className="overflow-hidden">
+                                                {isManufacturer && (<Manufacturer onClose={()=>setIsManufacturer(false)} setChanged={setChanged} changed={changed}/>)}
+                                                {isStandard && (<Standard  onClose={()=>setIsStandard(false)} setChanged={setChanged} changed={changed}/>)}
+                                                {isLocation && (<Location  onClose={()=>setIsLocation(false)}   changed={changed} setChanged={setChanged}/>)}
+                                                {!isManufacturer && !isStandard && !isLocation && (
+                                                    <ClonePopup 
+                                                        onClose={()=>setCloningRow(null)} 
+                                                        id={item.id} 
+                                                        isManufacturer={isManufacturer} 
+                                                        isStandard={isStandard} 
+                                                        isLocation={isLocation}  
+                                                        setIsManufacturer={setIsManufacturer} 
+                                                        setIsStandard={setIsStandard} 
+                                                        setIsLocation={setIsLocation}
+                                                        setChanged={setChanged}
+                                                        changed={changed}
+                                                    />
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                    </motion.tr>
+                                    )}
                                     {editingRow === actualIndex && (
                                         <motion.tr
                                             initial={{ opacity: 0, height: 0 }}
