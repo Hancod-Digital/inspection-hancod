@@ -36,10 +36,10 @@ import { getLastTwoDigitsOfCurrentYear } from '@/lib/utils';
 // Define schema for validation
 const userFormSchema = object({
   name: string().nonempty('Name is required'),
-  email: string().nonempty('Email is required').email('Invalid email address'),
-  contact_number: string().nonempty('Contact number is required'),
-  address: string().nonempty('Address is required'),
-  gender: string().nonempty('Gender is required'),
+  email: string().optional(),
+  contact_number: string().optional(),
+  address: string().optional(),
+  gender: string().optional(),
   company: string().nonempty('Company is required'),
   id_no: string().nonempty('ID Number is required'),
   card_no: string().nonempty('Card Number is required'),
@@ -187,7 +187,7 @@ const { data: userDetails, isLoading, isError } = useQuery({
     setLoading(true);
     try {
       const avatarUrl = croppedFile ? await uploadImage() : userData.avatar || '';
-const value = {
+      const value = {
         name: values.name,
         email: values.email,
         contact_number: values.contact_number,
@@ -246,11 +246,9 @@ const value = {
       const file = event.target.files[0];
       //const reader = new FileReader();
       setPreviewUrl(URL.createObjectURL(file));
-      // reader.onloadend = () => {
-      //   // setSrc(reader.result as string);
-      //   // setIsCropModalOpen(true);
-      // };
-      // reader.readAsDataURL(file);
+      
+      setCroppedFile(file);
+ 
     }
   };
 
@@ -360,7 +358,7 @@ const value = {
                   id="upload"
                   type="file"
                   accept="image/*"
-                  // onChange={handleImageSelect}
+                   onChange={handleImageSelect}
                   className="hidden"
                 />
                 <Avatar className="mb-2 w-[200px] h-[200px]">

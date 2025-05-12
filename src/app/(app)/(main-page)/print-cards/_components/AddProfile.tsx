@@ -69,18 +69,18 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   // Define schema for validation
 const userFormSchema = object({
   name: string().nonempty('Name is required'),
-  email: string().nonempty('Email is required').email('Invalid email address').transform(val => val.toLowerCase()),
-  contact_number: getPhoneValidationSchema(countryCode),
-  address: string().nonempty('Address is required'),
-  gender: string().nonempty('Gender is required'),
+  email: string().email('Invalid email address').optional().transform(val => val?.toLowerCase()),
+  contact_number: getPhoneValidationSchema(countryCode).optional(),
+  address: string().optional(),
+  gender: string().optional(),
   company: string().nonempty('Company is required'),
   id_no: string().nonempty('ID Number is required'),
   designation: string().max(49).nonempty('Designation is required'),
   model_level: string().nonempty('Model/Level is required'),
   issued_on: string().nonempty('Issued On date is required'),
   valid_untill: string().nonempty('Valid Until date is required'),
-  course_duration: string().nonempty('Course duration is required'), // Added field
-  image: string().nonempty('Profile image is required'), // Add this field
+  course_duration: string().nonempty('Course duration is required'),
+  image: string().nonempty('Profile image is required'),
 });
 type UserFormInput = TypeOf<typeof userFormSchema>;
 

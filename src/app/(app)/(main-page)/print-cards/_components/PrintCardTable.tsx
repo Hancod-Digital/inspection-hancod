@@ -158,6 +158,96 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
     const {company1, company2} = splitCompany(item?.company)
     const {training:model_level, training1:model_level1} = splitDesignation(item?.model_level)
     const iframe: any = document.createElement('iframe');
+    console.log(`
+      
+       <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" />
+    <style>
+   
+*{
+     margin:0;
+    padding:0;
+}
+     @media print {
+      @page {
+      *{
+     margin:0;
+    padding:0;
+}
+        /* Official CR-80 dimensions = 85.60 mm × 53.98 mm.
+           Rounding to 86×54 mm is fine for most drivers.          */
+        size: 86mm 54mm;
+        margin: 0;            /* kill all browser-side margins   */
+      }
+
+      /* Make the root elements fill that exact area */
+      html, body {
+        width: 86mm;
+        height: 54mm;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Keep colours and background images intact */
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+        ${cssStringUpdated(item)}
+     
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <span class="sheik-hameed-khan"><div style="text-align: center;">${item?.name?.toUpperCase()}</div></span>
+      <div class="nome">
+        <span class="qsis-tra">${item?.card_no}<br /><br /></span>
+      </div>
+      <div class="rectangle"></div>
+      <div class="layer"><div class="layer-1"></div></div>
+      <div class="whatsapp-image"></div>
+      <div class="aplicar-estilo"><div class="profile-photo"></div></div>
+      <div class="vector"></div>
+      <div class="rectangle-2"></div>
+      <span class="qube-inspection"
+        >: ${item?.id_no}<br />: ${company1}<br />
+        ${company2}<br /><br /><br /></span
+      ><span class="qatar-id-company-name"
+        >Qatar ID/ ID No.<br />Company name<br /><br />Course Details<br /><br />Model/
+        Level</span
+      >
+      <div class="layer-3"></div> 
+      <div class="vector-4"></div>
+      <div class="vector-5"></div>
+      <span class="safe-building-maintenance"
+        >: ${training?.toUpperCase()} <br />
+        ${training1?.toUpperCase()}</span
+      >
+      <div class="vector-6"><div class="group"></div></div>
+      <div class="vector-7"></div>
+      <div class="vector-8"></div>
+      <div class="layer-9"></div>
+      <div class="vector-a"></div>
+      <span class="safety-model"
+        >: ${model_level?.toUpperCase()} <br />
+        ${model_level1?.toUpperCase()}</span
+      >
+      <div class="vector-b"></div>
+      <span class="date-range">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span
+      ><span class="issued-expiry">Issued Date: <br />Expiry Date:</span
+      ><span class="scan-qr-code">Scan QR code to verify this card</span>
+      <div class="rectangle-c"><div class="rectangle-d"></div></div>
+    </div>
+  
+  </body>
+</html>
+
+      `)
     iframe.style.visibility = 'hidden';
     iframe.style.position = 'fixed';
     iframe.style.right = '0';
@@ -179,6 +269,13 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" />
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      
+       
+      
       ${cssStringUpdated(item)}
     </style>
   </head>
@@ -195,8 +292,10 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector"></div>
       <div class="rectangle-2"></div>
       <span class="qube-inspection"
-        >: ${item?.id_no}<br />: ${company1}<br />
-        ${company2}<br /><br /><br /></span
+        >: ${item?.id_no}<br />: ${item?.company.length > 28 ? 
+          `${item?.company.substring(0, 28)}<br />  ${item?.company.substring(28)}` : 
+          item?.company}<br />
+        ${item?.company}<br /><br /><br /></span
       ><span class="qatar-id-company-name"
         >Qatar ID/ ID No.<br />Company name<br /><br />Course Details<br /><br />Model/
         Level</span
