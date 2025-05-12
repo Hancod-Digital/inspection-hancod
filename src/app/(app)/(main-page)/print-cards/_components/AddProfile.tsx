@@ -166,6 +166,8 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
     });
   }, [croppedFile]);
   const [companies, setCompanies] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [modelLevels, setModelLevels] = useState<any[]>([]);
   useEffect(() => {
     const fetchCompanies = async () => {
       const companies = await new StudentService().getAllCompanies();
@@ -173,6 +175,16 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
       setCompanies(companies);
     };
     fetchCompanies();
+    const fetchCourses = async () => {
+      const courses = await new StudentService().getAllCourses();
+      setCourses(courses);
+    };
+    fetchCourses();
+    const fetchModelLevels = async () => {
+      const modelLevels = await new StudentService().getAllModelLevels();
+      setModelLevels(modelLevels);
+    };
+    fetchModelLevels();
   }, []);
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
     setLoading(true);
@@ -445,7 +457,12 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
                     Designation / Course
                   </Label>
                   <div>
-                    <Input id="designation"  {...register('designation')} />
+                    <Input id="designation"  {...register('designation')} list="courseList" />
+                    <datalist id="courseList">
+                      {courses?.map((courseItem) => (
+                        <option key={courseItem?.designation} value={courseItem?.designation} />
+                      ))}
+                    </datalist>
                     {errors.designation && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.designation.message}</p>
                     )}
@@ -458,7 +475,12 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
                     Model/Level
                   </Label>
                   <div>
-                    <Input id="model_level" {...register('model_level')} />
+                    <Input id="model_level" {...register('model_level')} list="modelLevelList" />
+                    <datalist id="modelLevelList">
+                      {modelLevels?.map((modelLevelItem) => (
+                        <option key={modelLevelItem?.model_level} value={modelLevelItem?.model_level} />
+                      ))}
+                    </datalist> 
                     {errors.model_level && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.model_level.message}</p>
                     )}

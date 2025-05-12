@@ -33,7 +33,30 @@ export class StudentService extends Supabase {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase
         .from('unique_companies')
-        .select('*');
+        .select('*')
+       
+        if (error) {
+            throw new Error(error.message);
+        }
+        return data;
+    }
+    async getAllCourses(){
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase
+        .from('unique_courses')
+        .select('*')
+       
+        if (error) {
+            throw new Error(error.message);
+        }
+        return data;
+    }
+    async getAllModelLevels(){
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase
+        .from('unique_model_levels')
+        .select('*')
+      
         if (error) {
             throw new Error(error.message);
         }

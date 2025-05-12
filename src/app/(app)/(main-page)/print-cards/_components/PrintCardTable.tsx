@@ -302,8 +302,8 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector-4"></div>
       <div class="vector-5"></div>
       <span class="safe-building-maintenance"
-        >: ${training?.toUpperCase()} <br />
-        ${training1?.toUpperCase()}</span
+        >: ${item?.designation?.substring(0, 28)} <br />
+        ${item?.designation?.substring(28)}</span
       >
       <div class="vector-6"><div class="group"></div></div>
       <div class="vector-7"></div>
@@ -311,8 +311,8 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="layer-9"></div>
       <div class="vector-a"></div>
       <span class="safety-model"
-        >: ${model_level?.toUpperCase()} <br />
-        ${model_level1?.toUpperCase()}</span
+        >: ${item?.model_level?.toUpperCase()} <br />
+        ${item?.model_level?.toUpperCase()}</span
       >
       <div class="vector-b"></div>
       <span class="date-range">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span

@@ -232,6 +232,8 @@ const { data: userDetails, isLoading, isError } = useQuery({
     }
   };
   const [companies, setCompanies] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [modelLevels, setModelLevels] = useState<any[]>([]);
   useEffect(() => {
     const fetchCompanies = async () => {
       const companies = await new StudentService().getAllCompanies();
@@ -239,6 +241,16 @@ const { data: userDetails, isLoading, isError } = useQuery({
       setCompanies(companies);
     };
     fetchCompanies();
+    const fetchCourses = async () => {
+      const courses = await new StudentService().getAllCourses();
+      setCourses(courses);
+    };
+    fetchCourses();
+    const fetchModelLevels = async () => {
+      const modelLevels = await new StudentService().getAllModelLevels();
+      setModelLevels(modelLevels);
+    };
+    fetchModelLevels();
   }, []);
   // Handle image selection for cropping - commented out
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -536,7 +548,12 @@ const { data: userDetails, isLoading, isError } = useQuery({
                     Designation
                   </Label>
                   <div>
-                    <Input id="designation" {...register('designation')} />
+                    <Input id="designation" {...register('designation')} list="designationList" />
+                    <datalist id="designationList">
+                      {courses?.map((courseItem) => (
+                        <option key={courseItem?.designation} value={courseItem?.designation} />
+                      ))}
+                    </datalist>
                     {errors.designation && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.designation.message}</p>
                     )}
@@ -549,7 +566,12 @@ const { data: userDetails, isLoading, isError } = useQuery({
                     Model/Level
                   </Label>
                   <div>
-                    <Input id="model_level" {...register('model_level')} />
+                    <Input id="model_level" {...register('model_level')} list="modelLevelList" />
+                    <datalist id="modelLevelList">
+                      {modelLevels?.map((modelLevelItem) => (
+                        <option key={modelLevelItem?.model_level} value={modelLevelItem?.model_level} />
+                      ))}
+                    </datalist>
                     {errors.model_level && (
                       <p className="text-red-500 text-[13px] mt-1">{errors.model_level.message}</p>
                     )}
