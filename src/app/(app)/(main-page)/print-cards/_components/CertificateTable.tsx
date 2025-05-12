@@ -428,10 +428,10 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                         <span class="underline">__________________________________________________________________________</span>
                         <br />
                         has successfully completed a Training/assessment as
-                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.designation?.length > 20 ? splitLongString(item?.designation)[0] : item?.designation?.toUpperCase()}</span>
+                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.designation?.length > 28 ? splitLongString(item?.designation)[0] : item?.designation?.toUpperCase()}</span>
                         <span class="underline">____________________________________________</span>
                         <br />
-                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.designation?.length > 20 ? splitLongString(item?.designation)[1] : item?.designation?.toUpperCase()}</span>
+                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.designation?.length > 28 ? splitLongString(item?.designation)[1] : ""}</span>
                         <span class="underline">_______________________________________________________</span>.
                     </p>
                     <article class="signatures-section">
