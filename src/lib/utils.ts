@@ -7978,7 +7978,7 @@ button {
   height: 27.29%;
   top: 70.48%;
   left: 48.2%;
-  background: url(./card-assets/VhyRMvhut8.png)
+  background: url(./card-assets/VhyRMvhut8.jpg)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 4;
