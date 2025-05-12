@@ -292,10 +292,8 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector"></div>
       <div class="rectangle-2"></div>
       <span class="qube-inspection"
-        >: ${item?.id_no}<br />: ${item?.company.length > 28 ? 
-          `${item?.company.substring(0, 28)}<br />  ${item?.company.substring(28)}` : 
-          item?.company}<br />
-        ${item?.company}<br /><br /><br /></span
+        >: ${item?.id_no}<br />: ${item?.company?.substring(0, 28)}<br />
+        ${item?.company?.substring(28)}<br /><br /><br /></span
       ><span class="qatar-id-company-name"
         >Qatar ID/ ID No.<br />Company name<br /><br />Course Details<br /><br />Model/
         Level</span
