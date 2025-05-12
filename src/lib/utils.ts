@@ -7790,7 +7790,7 @@ button {
   height: 89.845px;
   top: 28.285px;
   left: 85.881px;
-  background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-05-04/8Sk4XNma9a.png)
+  background: url(./card-assets/logo.jpg)
     no-repeat center;
   background-size: cover;
   z-index: 16;

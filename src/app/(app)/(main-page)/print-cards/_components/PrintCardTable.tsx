@@ -293,7 +293,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="rectangle-2"></div>
       <span class="qube-inspection"
         >: ${item?.id_no}<br />: ${item?.company?.substring(0, 28)}<br />
-        ${item?.company?.substring(28)}<br /><br /><br /></span
+         ‎‎  ${item?.company?.substring(28)}<br /><br /><br /></span
       ><span class="qatar-id-company-name"
         >Qatar ID/ ID No.<br />Company name<br /><br />Course Details<br /><br />Model/
         Level</span
@@ -303,7 +303,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector-5"></div>
       <span class="safe-building-maintenance"
         >: ${item?.designation?.substring(0, 28)} <br />
-        ${item?.designation?.substring(28)}</span
+         ‎‎  ${item?.designation?.substring(28)}</span
       >
       <div class="vector-6"><div class="group"></div></div>
       <div class="vector-7"></div>
@@ -312,7 +312,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector-a"></div>
       <span class="safety-model"
         >: ${item?.model_level?.toUpperCase()} <br />
-        ${item?.model_level?.toUpperCase()}</span
+         ‎‎  ${item?.model_level?.toUpperCase()}</span
       >
       <div class="vector-b"></div>
       <span class="date-range">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span
