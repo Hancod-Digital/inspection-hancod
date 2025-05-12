@@ -311,8 +311,8 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="layer-9"></div>
       <div class="vector-a"></div>
       <span class="safety-model"
-        >: ${item?.model_level?.toUpperCase()} <br />
-         ‎‎  ${item?.model_level?.toUpperCase()}</span
+        >: ${item?.model_level?.substring(0, 28)} <br />
+         ‎‎  ${item?.model_level?.substring(28)}</span
       >
       <div class="vector-b"></div>
       <span class="date-range">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span
