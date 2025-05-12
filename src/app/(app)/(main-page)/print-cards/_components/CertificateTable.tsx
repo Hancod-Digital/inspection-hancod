@@ -27,7 +27,21 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const [htmlContent, setHtmlContent] = useState('');
     const [isGenerating, setIsGenerating] = useState<number | null>(null);
- 
+    const splitLongString = (str: string) => {
+        if (str.length <= 28) return [str];
+        
+        const firstPart = str.substring(0, 28);
+        const lastSpaceIndex = firstPart.lastIndexOf(' ');
+        
+        if (lastSpaceIndex === -1) {
+            return [str.substring(0, 28), str.substring(28)];
+        }
+         
+        return [
+            str.substring(0, lastSpaceIndex + 1),
+            str.substring(lastSpaceIndex + 1)
+        ];
+    }
     const Printq = (item: any) => {
         const {training, training1} = splitDesignation(item?.designation)
         const {training:model_level, training1:model_level1} = splitDesignation(item?.model_level)
@@ -201,10 +215,10 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                         <span class="underline">__________________________________________________________________________</span>
                         <br />
                         has successfully completed a Training/assessment as
-                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training?.toUpperCase()}</span>
+                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.designation?.length > 20 ? splitLongString(item?.designation)[0] : item?.designation?.toUpperCase()}</span>
                         <span class="underline">____________________________________________</span>
                         <br />
-                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training1?.toUpperCase()}</span>
+                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.designation?.length > 20 ? splitLongString(item?.designation)[1] : item?.designation?.toUpperCase()}</span>
                         <span class="underline">_______________________________________________________</span>.
                     </p>
                     <article class="signatures-section">
@@ -414,10 +428,10 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                         <span class="underline">__________________________________________________________________________</span>
                         <br />
                         has successfully completed a Training/assessment as
-                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training?.toUpperCase()}</span>
+                        <span class="value training" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.designation?.length > 20 ? splitLongString(item?.designation)[0] : item?.designation?.toUpperCase()}</span>
                         <span class="underline">____________________________________________</span>
                         <br />
-                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${training1?.toUpperCase()}</span>
+                        <span class="value role" style="font-family: Lato, var(--default-font-family); font-size: 12px; margin-top: 14px;">${item?.designation?.length > 20 ? splitLongString(item?.designation)[1] : item?.designation?.toUpperCase()}</span>
                         <span class="underline">_______________________________________________________</span>.
                     </p>
                     <article class="signatures-section">
@@ -479,7 +493,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
           };
         };
       };
-    
+     
     const fetchHtml = async (profile_url: string, qr_url: string, name: string, id_no: string, company: string, designation: string, issued_on: string, valid_untill: string, course_duration: string, certificate_no:string,item:any   ) => {
         const response = await fetch('/blank_certificate/data.html'); 
         let htmlString = await response.text();
@@ -505,8 +519,8 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             }
         }
         
-        htmlString = htmlString.replace(/\{\{Training\}\}/g, training.toUpperCase());
-        htmlString = htmlString.replace(/\{\{Training1\}\}/g, training1.toUpperCase());
+        htmlString = htmlString.replace(/\{\{Training\}\}/g, designation?.length > 20 ? splitLongString(designation)[0] : designation);
+        htmlString = htmlString.replace(/\{\{Training1\}\}/g, designation?.length > 20 ? splitLongString(designation)[1] : '');
         htmlString = htmlString.replace(/\{\{CertificateNo\}\}/g, certificate_no);
         htmlString = htmlString.replace(/\{\{IssuedDate\}\}/g, issued_on);
         htmlString = htmlString.replace(/\{\{ExpiryDate\}\}/g, valid_untill);
