@@ -7790,7 +7790,7 @@ button {
   height: 89.845px;
   top: 28.285px;
   left: 85.881px;
-  background: url(./card-assets/logo.jpg)
+  background: url(./card-assets/logo.png)
     no-repeat center;
   background-size: cover;
   z-index: 16;
@@ -7978,7 +7978,7 @@ button {
   height: 27.29%;
   top: 70.48%;
   left: 48.2%;
-  background: url(./card-assets/VhyRMvhut8.jpg)
+  background: url(./card-assets/VhyRMvhut8.png)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 4;
