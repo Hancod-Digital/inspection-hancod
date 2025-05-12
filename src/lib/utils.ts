@@ -7769,7 +7769,7 @@ button {
   height: 29.18%;
   top: 0;
   left: -1.62%;
-  background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-05-04/UaeadiPUtc.png)
+  background: url(./card-assets/figma-1.png)
     no-repeat center;
   background-size: 100% 100%;
 }
@@ -7779,7 +7779,7 @@ button {
   height: 100%;
   top: 0;
   left: 0;
-  background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-05-04/qnR0WjVBwj.png)
+  background: url(./card-assets/figma-1.png)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 1;
@@ -7884,7 +7884,7 @@ button {
   height: 25.89%;
   top: 59.94%;
   left: 31.96%;
-  background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-05-04/6ENtHaYJLO.png)
+  background: url(./card-assets/6ENtHaYJLO.png)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 26;
@@ -7978,7 +7978,7 @@ button {
   height: 27.29%;
   top: 70.48%;
   left: 48.2%;
-  background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-05-04/VhyRMvhut8.png)
+  background: url(./card-assets/VhyRMvhut8.png)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 4;
