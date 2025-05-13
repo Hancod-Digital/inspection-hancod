@@ -211,22 +211,44 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
         <span class="qsis-tra">${item?.card_no}<br /><br /></span>
       </div>
       <div class="rectangle"></div>
-      <div class="layer"><div class="layer-1"></div></div>
+      <div class="layer"><div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+      <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>
+     <div class="layer-1"></div>  
+     <div class="layer-1"></div>  
+      
+      </div>
       <div class="whatsapp-image"></div>
       <div class="aplicar-estilo"><div class="profile-photo"></div></div>
       <div class="vector"></div>
       <div class="rectangle-2"></div>
-      <span class="qube-inspection"
+      <span style="font-weight: 600;" class="qube-inspection"
         >: ${item?.id_no}<br />: ${item?.company?.length > 28 ? splitLongString(item?.company)[0] : item?.company}<br />
          ‎‎  ${item?.company?.length > 28 ? splitLongString(item?.company)[1] : ''}<br /><br /><br /></span
-      ><span class="qatar-id-company-name"
+      ><span  style="font-weight: 600;"  class="qatar-id-company-name"
         >Qatar ID/ ID No.<br />Company name<br /><br />Course Details<br /><br />Model/
         Level</span
       >
-      <div class="layer-3"></div> 
+     
       <div class="vector-4"></div>
       <div class="vector-5"></div>
-      <span class="safe-building-maintenance"
+      <span  style="font-weight: 600;"  class="safe-building-maintenance"
         >: ${item?.designation?.length > 28 ? splitLongString(item?.designation)[0] : item?.designation} <br />
          ‎‎  ${item?.designation?.length > 28 ? splitLongString(item?.designation)[1] : ''}</span
       >
@@ -234,15 +256,17 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector-7"></div>
       <div class="vector-8"></div>
       <div class="layer-9"></div>
+      
+      
       <div class="vector-a"></div>
-      <span class="safety-model"
+      <span  style="font-weight: 600;"  class="safety-model"
         >: ${item?.model_level?.length > 28 ? splitLongString(item?.model_level)[0] : item?.model_level} <br />
          ‎‎  ${item?.model_level?.length > 28 ? splitLongString(item?.model_level)[1] : ''}</span
       >
       <div class="vector-b"></div>
-      <span class="date-range">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span
-      ><span class="issued-expiry">Issued Date: <br />Expiry Date:</span
-      ><span class="scan-qr-code">Scan QR code to verify this card</span>
+      <span  style="font-weight: 600;"  class="date-range">${formatDateWithHyphen(item?.issued_on)}<br />${formatDateWithHyphen(item?.valid_untill)}</span
+      ><span  style="font-weight: 600;"  class="issued-expiry">Issued Date: <br />Expiry Date:</span
+      ><span  style="font-weight: 600;"  class="scan-qr-code">Scan QR code to verify this card</span>
       <div class="rectangle-c"><div class="rectangle-d"></div></div>
     </div>
   

@@ -7975,8 +7975,8 @@ button {
 .layer-9 {
   position: absolute;
   width: 52.12%;
-  height: 27.29%;
-  top: 70.48%;
+  height: 39.29%;
+  top: 60.48%;
   left: 48.2%;
   background: url(./card-assets/VhyRMvhut8.png)
     no-repeat center;
