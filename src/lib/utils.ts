@@ -7942,9 +7942,9 @@ button {
 }
 .group {
   position: relative;
-  width: 91.133px;
-  height: 91.133px;
-  margin: 130.151px 0 0 64.398px;
+    width: 134.133px;
+    height: 134.133px;
+    margin: 103.151px 0 0 36.398px;
   background: url(${item?.qr_url})
     no-repeat center;
   background-size: cover;
@@ -7974,10 +7974,10 @@ button {
 }
 .layer-9 {
   position: absolute;
-  width: 52.12%;
+  width: 72.12%;
   height: 39.29%;
   top: 60.48%;
-  left: 48.2%;
+  left: 28.2%;
   background: url(./card-assets/VhyRMvhut8.png)
     no-repeat center;
   background-size: 100% 100%;
