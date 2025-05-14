@@ -7673,7 +7673,7 @@ export function mapDataFields(data:any, mappings:any) {
 }
 
 export const cssStringUpdated =  (item:any) => {
-  console.log("ooooooooooooooooooooo",item)
+   
   return `
 :root {
   --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -7804,7 +7804,7 @@ button {
   left: 50%;
   border: 1px solid #8d1b3d;
   transform: translate(-51.23%, -139.61%);
-  z-index: 22;
+  z-index: 6022;
   overflow: hidden;
   border-radius: 30.971px;
 }
