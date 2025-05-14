@@ -124,12 +124,17 @@ const { data: userDetails, isLoading, isError } = useQuery({
       validUntilDate.setFullYear(validUntilDate.getFullYear() + 1);
 
       // Format the date to YYYY-MM-DD
+     try{
       const formattedValidUntil = validUntilDate.toISOString().split('T')[0];
 
       setValue('valid_untill', formattedValidUntil, {
         shouldValidate: true,
         shouldDirty: true,
       });
+     }catch(error){
+      toastWithTimeout(ToastVariant.Success, 'Invalid date, please select a valid date');
+      console.log(error);
+     }
     }
   }, [watch('issued_on'), setValue]);
 

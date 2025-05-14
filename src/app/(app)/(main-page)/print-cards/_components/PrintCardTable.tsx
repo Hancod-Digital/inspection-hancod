@@ -379,7 +379,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
           {data?.map((item: any, idx: number) => (
             <React.Fragment key={idx + 1}>
               <TableRow>
-                <TableCell className="py-4">{idx}</TableCell>
+                <TableCell className="py-4">{item?.id}</TableCell>
 
                 <TableCell className="py-4">
                   {item?.name}
