@@ -19,7 +19,7 @@ import TableSpinner from '@/components/animated/TableSpinner';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { AvatarFallback } from '@/components/ui/avatar';
 import { formatDateWithHyphen, splitDesignation } from '@/lib/utils';
-import { AvatarWithTooltip } from './Table';
+import AvatarWithTooltip from './AvatarQr';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
 

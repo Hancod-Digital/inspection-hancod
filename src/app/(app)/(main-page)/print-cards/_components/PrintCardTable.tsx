@@ -24,7 +24,7 @@ import { toPng } from 'html-to-image';
 import { UserService } from '@/services/api/user-service';
 import TableSpinner from '@/components/animated/TableSpinner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { AvatarWithTooltip } from './Table';
+import AvatarWithTooltip from './AvatarQr';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
 

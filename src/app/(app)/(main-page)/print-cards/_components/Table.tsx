@@ -28,6 +28,7 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import TableSpinner from '@/components/animated/TableSpinner';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
+import AvatarWithTooltip from './AvatarQr';
 
 export default function EquipmentTable({ data, setChanged, changed }: { data: any, setChanged: any, changed: boolean }) {
     const [editingRow, setEditingRow] = useState<any>(null);
@@ -280,17 +281,4 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
 }
 
 
-export const AvatarWithTooltip = ({ item, tooltipPosition = 'top' }:any) => {
-    return (
-      <div className={`tooltip ${tooltipPosition}`}>
-         <img src={item.qr_url} alt="QR code" className="w-16 h-16" />
-        {/* <span className="tooltiptext">
-          <img
-            src={item.qr_url}
-            alt="Tooltip Image"
-            style={{ width: '150px', height: 'auto' }} // Adjust size as needed
-          />
-        </span> */}
-      </div>
-    );
-  };
+ 
