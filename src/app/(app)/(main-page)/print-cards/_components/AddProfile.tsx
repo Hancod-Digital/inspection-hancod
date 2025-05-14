@@ -52,16 +52,16 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
     const countryInfo = countryCodes.find((country:any) => country.e164_cc === code.replace('+', ''));
   
     if (!countryInfo) {
-      return z.string().nonempty("Phone number is required");
+      return z.string().optional();
     }
   
     const maxLength = countryInfo.example.length;
   
     return z.string()
-      .nonempty("Phone number is required")
+      .optional()
       .refine
       (
-        (value) => value.length == maxLength,
+        (value) => !value || value.length == maxLength,
         `Phone number should be ${maxLength} digits for ${countryInfo.name}`
       );
   };
@@ -69,7 +69,7 @@ export default function UserForm({ onClose, setChanged, changed }: UserFormProps
   // Define schema for validation
 const userFormSchema = object({
   name: string().nonempty('Name is required'),
-  email: string().email('Invalid email address').optional().transform(val => val?.toLowerCase()),
+  email: string().optional().transform(val => val?.toLowerCase()),
   contact_number: getPhoneValidationSchema(countryCode).optional(),
   address: string().optional(),
   gender: string().optional(),

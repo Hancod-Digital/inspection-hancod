@@ -25,7 +25,7 @@ export class MasterService extends Supabase {
         const { data, error } = await this.supabase
             .from(subtopic)
             .select('*')
-            .order('id', { ascending: false });
+            .order('created_at', { ascending: false });
  
         if (error) {
             throw new Error(error.message);
@@ -68,15 +68,20 @@ export class MasterService extends Supabase {
 
 
     async getLocationDetails() {
+        await this.ensureAuthenticated();
         const { data, error } = await this.supabase
             .rpc('get_location_details');  // Calling the SQL function
-
-       
 
         if (error) {
             throw new Error(error.message);
         }
-        return data;
+        
+        // Sort the data by location's created_at in descending order (latest first)
+        return data.sort((a, b) => {
+            const dateA = new Date(a.location.created_at).getTime();
+            const dateB = new Date(b.location.created_at).getTime();
+            return dateB - dateA; // Descending order
+        });
     }
     async addEquipment(result:any){
         const {data,error} = await this.supabase

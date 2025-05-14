@@ -421,7 +421,7 @@ const { data: userDetails, isLoading, isError } = useQuery({
                 {/* Contact Number and Address */}
                 <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                   <Label className="pt-3" htmlFor="contact_number">
-                    Contact Number
+                    Contact Number (Optional)
                   </Label>
                   <div className="flex">
                     <Select value={countryCode} onValueChange={setCountryCode}>

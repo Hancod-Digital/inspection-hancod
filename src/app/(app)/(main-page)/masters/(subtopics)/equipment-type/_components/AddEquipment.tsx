@@ -66,7 +66,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               </CardHeader>
 
               <div className="space-y-4">
-                <div className="grid gap-4 grid-cols-2">
+                <div className="grid gap-4 grid-cols-1 w-1/2">
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                     <Label htmlFor="equipment_type">Equipment Type</Label>
                     <div>
