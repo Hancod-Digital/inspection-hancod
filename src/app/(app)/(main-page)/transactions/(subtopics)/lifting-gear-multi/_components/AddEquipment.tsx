@@ -176,6 +176,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
        
        if(job_order){
         setValue('surveyor', job_order.surveyor)
+        setValue('location', job_order.location)
        }
     }
   },[job_order_no])

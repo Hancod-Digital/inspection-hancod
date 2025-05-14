@@ -143,15 +143,18 @@ export default function EquipmentDetailsForm({
   });
 
   // Update "surveyor" when "job_order_no" changes
+  
   useEffect(() => {
     if (job_order_no) {
       const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
+      console.log("----------------------------------------------", job_order)
       if (job_order) {
         setValue('surveyor', job_order.surveyor);
+        setValue('location', job_order.location);
       }
     }
   }, [job_order_no, jobOrderNoOptions, setValue]);
-
+ 
   // Auto-populate fields when equipment_no changes
   useEffect(() => {
     const selected = equipmentNoOptions.find((item: any) => item.id == equipment_no);
