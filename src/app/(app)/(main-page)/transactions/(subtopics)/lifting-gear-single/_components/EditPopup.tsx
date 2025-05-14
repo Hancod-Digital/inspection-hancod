@@ -72,7 +72,7 @@ const equipmentDetailsSchema = object({
   description: string().nonempty('Description is required'),
   equipment_description: string().nonempty('Equipment Description is required'),
   manufacturer: string().nonempty('Manufacturer is required'),
-  tested_standard: string().nonempty('Tested Standard is required'),
+ // tested_standard: string().nonempty('Tested Standard is required'),
   approval_status: string().nonempty('Approval Status is required'),
 });
 
@@ -105,7 +105,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
       description: String(existingData?.description) || '',
       equipment_description: String(existingData?.equipment_description) || '',
       manufacturer: String(existingData?.manufacturer) || '',
-      tested_standard: String(existingData?.tested_standard) || '',
+   //   tested_standard: String(existingData?.tested_standard) || '',
       approval_status: existingData?.approval_status ? 'Approved' : 'Not Approved',
     },
   });
@@ -827,7 +827,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                     )}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
                     <Input 
                       id="tested_standard" 
@@ -836,7 +836,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     {errors.tested_standard && (
                       <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
                     )}
-                  </div>
+                  </div> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
                     <div className='relative'>

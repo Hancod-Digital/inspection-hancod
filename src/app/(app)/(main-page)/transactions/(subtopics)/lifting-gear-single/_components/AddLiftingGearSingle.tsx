@@ -58,7 +58,7 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
     description: string().nonempty('Description Date is required'),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
-    tested_standard: string().nonempty('Tested Standard is required'),
+   // tested_standard: string().nonempty('Tested Standard is required'),
     approval_status: string().nonempty('Approval Status is required'),
     last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
     next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
@@ -818,13 +818,13 @@ export default function EquipmentDetailsForm({ onClose,setIsLocation,setIsEquipm
 
 
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
                     <Input id="tested_standard" {...register('tested_standard')} />
                     {errors.tested_standard && (
                       <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">

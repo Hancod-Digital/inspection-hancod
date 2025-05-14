@@ -79,7 +79,7 @@ export default function EquipmentDetailsForm({
     description: string().nonempty('Description Date is required').optional(),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
-    tested_standard: string().nonempty('Tested Standard is required'),
+   // tested_standard: string().nonempty('Tested Standard is required'),
     approval_status: string().nonempty('Approval Status is required'),
     location: string().nonempty('Location is required'),
     serial_no: string().nonempty('Serial No. is required'),
@@ -892,7 +892,7 @@ export default function EquipmentDetailsForm({
                   </div>
 
                   {/* Tested Standard */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="tested_standard" className="mt-3">
                       Tested Standard
                     </Label>
@@ -902,7 +902,8 @@ export default function EquipmentDetailsForm({
                         {errors.tested_standard.message}
                       </p>
                     )}
-                  </div></div>
+                  </div> */}
+                  </div>
                 <div className="grid gap-4 grid-cols-1 w-[64%]  ">
                   {/* Date of last proof load test + Not Applicable */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">

@@ -124,7 +124,7 @@ const equipmentDetailsSchema = object({
   description: string().nonempty('Description is required').optional(),
   equipment_description: string().nonempty('Equipment Description is required'),
   manufacturer: string().nonempty('Manufacturer is required'),
-  tested_standard: string().nonempty('Tested Standard is required'),
+//  tested_standard: string().nonempty('Tested Standard is required'),
   approval_status: string().nonempty('Approval Status is required'),
   location: string().nonempty('Location is required'),
   serial_no: string().nonempty('Serial No. is required'),
@@ -195,7 +195,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
       equipment_description: existingData.equipment_description || '',
       manufacturer: String(existingData.manufacturer) || '',
       registration_no: existingData.registration_no || '',
-      tested_standard: existingData.tested_standard || '',
+   //   tested_standard: existingData.tested_standard || '',
       approval_status: existingData.approval_status == 'true' ? "Approved" :"Rejected" || '',
       location: String(existingData.location) || '',
       serial_no: existingData.serial_no || '',
@@ -809,13 +809,13 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 
   {/* Tested Standard */}
-  <div className="grid grid-cols-[200px_1fr] gap-4">
+                   {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
                     <Input id="tested_standard" {...register('tested_standard')} />
                     {errors.tested_standard && (
                       <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
                     )}
-                  </div>
+                  </div> */}
 
                  {/* Last Test Exam */}
 <div className="grid grid-cols-[200px_1fr] items-start gap-4">

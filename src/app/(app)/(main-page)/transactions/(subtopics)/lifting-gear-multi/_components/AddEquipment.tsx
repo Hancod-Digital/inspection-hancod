@@ -63,7 +63,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     description: string().nonempty('Description Date is required'),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
-    tested_standard: string().nonempty('Tested Standard is required'),
+  //  tested_standard: string().nonempty('Tested Standard is required'),
     approval_status: string().nonempty('Approval Status is required'),
     location: string().nonempty('Location is required'),
   });
@@ -94,7 +94,7 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
   const [locationOptions, setLocationOptions] = useState<any>([]);
 
   const { watch, setValue, formState } = methods
-  const { equipment_no,inspection_date,type_of_exam,tested_standard, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
+  const { equipment_no,inspection_date,type_of_exam, standard,title,equipment_description,test_cert_coc_no ,safe_working_load ,proof_load,last_test_exam,last_thorough_exam,next_test_exam,next_thorough_exam,owner_name,manufacturer,approval_status,result,surveyor,location} = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [existingData, setExistingData] = useState<any[]>([]);
  
@@ -120,11 +120,13 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
     }else if(!equipment_no){
       toastWithTimeout(ToastVariant.Default,"Equipment No. is required")
       return
-    } else if(!tested_standard){
-      toastWithTimeout(ToastVariant.Default,"Tested Standard is required")
-      return
-    }
-        const datas = {equipment_no,inspection_date,type_of_exam,title,equipment_description,test_cert_coc_no,safe_working_load,proof_load,standard:standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard,last_test_exam,last_thorough_exam:last_thorough_exam == null ?"Not Applicable": last_thorough_exam,next_test_exam,next_thorough_exam:next_thorough_exam==null ? "Not Applicable":next_thorough_exam,owner_name:ownerOptions?.filter((item: any) => item?.id == owner_name)[0]?.owner,manufacturer:manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,result,surveyor,approval_status,tested_standard};
+    } 
+
+    // else if(!tested_standard){
+    //   toastWithTimeout(ToastVariant.Default,"Tested Standard is required")
+    //   return
+    // }
+        const datas = {equipment_no,inspection_date,type_of_exam,title,equipment_description,test_cert_coc_no,safe_working_load,proof_load,standard:standardOptions?.filter((item: any) => item?.id == standard)[0]?.standard,last_test_exam,last_thorough_exam:last_thorough_exam == null ?"Not Applicable": last_thorough_exam,next_test_exam,next_thorough_exam:next_thorough_exam==null ? "Not Applicable":next_thorough_exam,owner_name:ownerOptions?.filter((item: any) => item?.id == owner_name)[0]?.owner,manufacturer:manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,result,surveyor,approval_status};
     const otherfields = {result,equipment_no}
     await makeApiCall(
       ()=>new MasterService().addEquipment(datas),{
@@ -875,13 +877,13 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
 
 
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
                     <Input id="tested_standard" {...register('tested_standard')} />
                     {errors.tested_standard && (
                       <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">

@@ -75,7 +75,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     description: string().nonempty('Description is required'),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
-    tested_standard: string().nonempty('Tested Standard is required'),
+   // tested_standard: string().nonempty('Tested Standard is required'),
     approval_status: string().nonempty('Approval Status is required'),
   });
   
@@ -108,7 +108,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       description: currentData?.description || '',
       equipment_description: currentData?.equipment_description || '',
       manufacturer: String(currentData?.manufacturer) || '',
-      tested_standard: currentData?.tested_standard || '',
+  //    tested_standard: currentData?.tested_standard || '',
       approval_status: currentData?.approval_status == 'true' ? 'Approved' : 'Rejected',
     },
   });
@@ -189,7 +189,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           description: data.description || '',
           equipment_description: data.equipment_description || '',
           manufacturer: String(data.manufacturer) || '',
-          tested_standard: data.tested_standard || '',
+        //  tested_standard: data.tested_standard || '',
           approval_status: data.approval_status == 'true' ? 'Approved' : 'Rejected',
         });
 
@@ -932,7 +932,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
                     <Input 
                       id="tested_standard" 
@@ -942,7 +942,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     {errors.tested_standard && (
                       <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
