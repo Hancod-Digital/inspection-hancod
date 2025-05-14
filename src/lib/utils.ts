@@ -7779,7 +7779,7 @@ button {
   height: 100%;
   top: 0;
   left: 0;
-  background: url(./card-assets/figma-1.png)
+  background: url(./card-assets/figma.png)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 1;
@@ -7829,7 +7829,7 @@ button {
   background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-05-04/QtqkkpaFt6.png)
     no-repeat center;
   background-size: cover;
-  z-index: 2;
+  z-index: 16;
 }
 .rectangle-2 {
   position: absolute;
@@ -7840,7 +7840,7 @@ button {
   background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-05-04/Y8e0tQqFyT.png)
     no-repeat center;
   background-size: 100% 100%;
-  z-index: 3;
+  z-index: 3000;
 }
 .qube-inspection {
   display: flex;
@@ -7974,11 +7974,11 @@ button {
 }
 .layer-9 {
   position: absolute;
-  width: 72.12%;
+  width: 48.12%;
   height: 39.29%;
-  top: 60.48%;
-  left: 28.2%;
-  background: url(./card-assets/VhyRMvhut8.png)
+  top: 33.48%;
+  left: 58.2%;
+  background: url(./card-assets/VhyRMvhut8-1.png)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 4;

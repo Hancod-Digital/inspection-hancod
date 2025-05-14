@@ -212,25 +212,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="rectangle"></div>
       <div class="layer"><div class="layer-1"></div>
      <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-      <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>
-     <div class="layer-1"></div>  
-     <div class="layer-1"></div>  
+     
       
       </div>
       <div class="whatsapp-image"></div>
@@ -255,15 +237,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector-7"></div>
       <div class="vector-8"></div>
       <div class="layer-9"></div>
-      <div class="layer-9"></div>
-      <div class="layer-9"></div>
-      <div class="layer-9"></div>
-      <div class="layer-9"></div>
-      <div class="layer-9"></div>
-      <div class="layer-9"></div>
-      <div class="layer-9"></div>
-      <div class="layer-9"></div>
-      
+     
       
       <div class="vector-a"></div>
       <span  style="font-weight: 600;"  class="safety-model"
