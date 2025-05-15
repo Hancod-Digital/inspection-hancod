@@ -655,9 +655,14 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       id="last_test_exam"
                       type="date"
                       defaultValue={
-                        equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
-                          ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date).toISOString().split('T')[0]
-                          : ''
+                        (() => {
+                          const lastTestDate = equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date;
+                          return lastTestDate && lastTestDate !== "" && 
+                            lastTestDate.toUpperCase() !== "NOT AVAILABLE" && 
+                            lastTestDate.toUpperCase() !== "NOT APPLICABLE" 
+                            ? new Date(lastTestDate).toISOString().split('T')[0]
+                            : lastTestDate || '';
+                        })()
                       }
                       {...register('last_test_exam')}
                     />
@@ -684,9 +689,14 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                       id="last_thorough_exam"
                       type="date"
                       defaultValue={
-                        equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
-                          ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date).toISOString().split('T')[0]
-                          : ''
+                        (() => {
+                          const lastThoroughDate = equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date;
+                          return lastThoroughDate && lastThoroughDate !== "" && 
+                            lastThoroughDate.toUpperCase() !== "NOT AVAILABLE" && 
+                            lastThoroughDate.toUpperCase() !== "NOT APPLICABLE" 
+                            ? new Date(lastThoroughDate).toISOString().split('T')[0]
+                            : lastThoroughDate || '';
+                        })()
                       }
                       {...register('last_thorough_exam')}
                     />
@@ -716,9 +726,19 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                         control={control}
                         render={({ field }) => (
                           <Input id="next_test_date" defaultValue={
-                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
-                              ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date).toISOString().split('T')[0]
-                              : ''
+                            (() => {
+                              const nextTestDate = equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date;
+                              try {
+                                return nextTestDate && nextTestDate !== "" && 
+                                  nextTestDate.toUpperCase() !== "NOT AVAILABLE" && 
+                                  nextTestDate.toUpperCase() !== "NOT APPLICABLE" 
+                                  ? new Date(nextTestDate).toISOString().split('T')[0]
+                                  : nextTestDate || '';
+                              } catch (e) {
+                                console.error("Invalid date format:", nextTestDate);
+                                return '';
+                              }
+                            })()
                           } disabled={testExamChecked} type="date" {...field} />
                         )}
                       />
@@ -761,9 +781,15 @@ export default function AddEquipment({ onClose,setIsLocation,setIsEquipment,setI
                         control={control}
                         render={({ field }) => (
                           <Input id={"next_thorough_exam"} defaultValue={
-                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
-                              ? new Date(equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date).toISOString().split('T')[0]
-                              : ''
+                            (() => {
+                              const nextThoroughDate = equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date;
+                              console.log(nextThoroughDate,"-----++++++++++++++++++-----------");
+                              return nextThoroughDate && nextThoroughDate !== "" && 
+                                nextThoroughDate.toUpperCase() !== "NOT AVAILABLE" && 
+                                nextThoroughDate.toUpperCase() !== "NOT APPLICABLE" 
+                                ? new Date(nextThoroughDate).toISOString().split('T')[0]
+                                : nextThoroughDate || '';
+                            })()
                           } disabled={thoroughExamChecked} type="date" {...field} />
                         )}
                       />
