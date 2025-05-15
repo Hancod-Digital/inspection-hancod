@@ -77,7 +77,7 @@ export class MasterService extends Supabase {
         }
         
         // Sort the data by location's created_at in descending order (latest first)
-        return data.sort((a, b) => {
+        return data.sort((a:any, b:any) => {
             const dateA = new Date(a.location.created_at).getTime();
             const dateB = new Date(b.location.created_at).getTime();
             return dateB - dateA; // Descending order
