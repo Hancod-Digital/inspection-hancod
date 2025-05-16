@@ -7676,9 +7676,7 @@ export const cssStringUpdated =  (item:any) => {
    
   return `
 
-
-
-  :root {
+:root {
   --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
     "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
@@ -7782,7 +7780,7 @@ button {
   height: 100%;
   top: 0;
   left: 0;
-  background: url(./card-assets/figma-1.png)
+  background: url(./card-assets2/figma-1.png)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 1;
@@ -7807,7 +7805,7 @@ button {
   left: 50%;
   border: 1px solid #8d1b3d;
   transform: translate(-51.23%, -139.61%);
-  z-index: 6022;
+  z-index: 22;
   overflow: hidden;
   border-radius: 30.971px;
 }
@@ -8098,6 +8096,7 @@ button {
   z-index: 5;
 }
 
+  
   `
 }
 
