@@ -210,15 +210,15 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
         <span class="qsis-tra">${item?.card_no}<br /><br /></span>
       </div>
       <div class="rectangle"></div>
-      <div class="layer"><div class="layer-1"></div>
+ 
      <div class="layer-1"></div>
      
       
       </div>
-      <div class="whatsapp-image"></div>
+     
       <div class="aplicar-estilo"><div class="profile-photo"></div></div>
-      <div class="vector"></div>
-      <div class="rectangle-2"></div>
+    
+    
       <span style="font-weight: 600;" class="qube-inspection"
         >: ${item?.id_no}<br />: ${item?.company?.length > 28 ? splitLongString(item?.company)[0] : item?.company}<br />
          ‎‎  ${item?.company?.length > 28 ? splitLongString(item?.company)[1] : ''}<br /><br /><br /></span
@@ -236,7 +236,7 @@ export default function PrintCardTable({ data, changed, setChanged }: { data: an
       <div class="vector-6"><div class="group"></div></div>
       <div class="vector-7"></div>
       <div class="vector-8"></div>
-      <div class="layer-9"></div>
+     
      
       
       <div class="vector-a"></div>

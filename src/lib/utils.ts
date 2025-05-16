@@ -7675,7 +7675,10 @@ export function mapDataFields(data:any, mappings:any) {
 export const cssStringUpdated =  (item:any) => {
    
   return `
-:root {
+
+
+
+  :root {
   --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
     "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
@@ -7779,7 +7782,7 @@ button {
   height: 100%;
   top: 0;
   left: 0;
-  background: url(./card-assets/figma.png)
+  background: url(./card-assets/figma-1.png)
     no-repeat center;
   background-size: 100% 100%;
   z-index: 1;
