@@ -24,6 +24,85 @@ import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import { PlusIcon } from 'lucide-react';
 
+// Add Button Components
+function AddLocationButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <Button
+      size="icon"
+      variant="outline"
+      className="absolute bg-primary text-white font-bold right-0 top-0"
+      onClick={onClick}
+      type="button"
+    >
+      <PlusIcon className="h-4 w-4" />
+    </Button>
+  );
+}
+function AddSiteButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <Button
+      size="icon"
+      variant="outline"
+      className="absolute bg-primary text-white font-bold right-0 top-0"
+      onClick={onClick}
+      type="button"
+    >
+      <PlusIcon className="h-4 w-4" />
+    </Button>
+  );
+}
+function AddEquipmentButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <Button
+      size="icon"
+      variant="outline"
+      className="absolute bg-primary text-white font-bold right-0 top-0"
+      onClick={onClick}
+      type="button"
+    >
+      <PlusIcon className="h-4 w-4" />
+    </Button>
+  );
+}
+function AddStandardButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <Button
+      size="icon"
+      variant="outline"
+      className="absolute bg-primary text-white font-bold right-0 top-0"
+      onClick={onClick}
+      type="button"
+    >
+      <PlusIcon className="h-4 w-4" />
+    </Button>
+  );
+}
+function AddManufacturerButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <Button
+      size="icon"
+      variant="outline"
+      className="absolute bg-primary text-white font-bold right-0 top-0"
+      onClick={onClick}
+      type="button"
+    >
+      <PlusIcon className="h-4 w-4" />
+    </Button>
+  );
+}
+function AddOwnerButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <Button
+      size="icon"
+      variant="outline"
+      className="absolute bg-primary text-white font-bold right-0 top-0"
+      onClick={onClick}
+      type="button"
+    >
+      <PlusIcon className="h-4 w-4" />
+    </Button>
+  );
+}
 
 interface EquipmentDetailsEditFormProps {
   onClose: () => void;
@@ -34,49 +113,54 @@ interface EquipmentDetailsEditFormProps {
   setIsManufacturer: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsEditForm({ onClose, id ,setIsLocation,setIsEquipment,setIsStandard,setIsManufacturer}: EquipmentDetailsEditFormProps) {
+export default function EquipmentDetailsEditForm({
+  onClose,
+  id,
+  setIsLocation,
+  setIsEquipment,
+  setIsStandard,
+  setIsManufacturer,
+}: EquipmentDetailsEditFormProps) {
   const [loading, setLoading] = useState(false);
   const { getAllSingleSubtopic, findRecordById, updateRecord } = useSubtopic();
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
+  const [invoke, setInvoke] = useState(false);
   const existingData = id ? findRecordById(id) : null;
- 
-   // Define schema for validation
-const equipmentDetailsSchema = object({
-  inspection_date: string().nonempty('Inspection Date is required'),
-  site: string().nonempty('Site is required'),
-  authority: string().nonempty('Authority is required'),
-  standard: string().nonempty('Standard is required'),
-  job_order_no: string().nonempty('Job Order No. is required'),
-  equipment_no: string().nonempty('Equipment No. is required'),
-  title: string().nonempty('Title is required'),
-  test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
-  safe_working_load: string().nonempty('Safe Working Load is required'),
-  last_test_exam: string().nonempty('Last Test Exam is required'),
-  next_test_exam: string().optional(),
-  last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-  next_thorough_exam: string().optional(),
-  result: string().nonempty('Result is required'),
-  type_of_exam: string().nonempty('Type of Exam is required'),
-  surveyor: string().nonempty('Surveyor is required'),
-  defect_description: string().nonempty('Defect Description is required'),
- // test_particulars: string().nonempty('Test Particulars is required'),
- last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
-  next_test_exam_certificate_no: string().optional(),
-  last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
-  next_thorough_exam_certificate_no: string().optional(),
 
-  location: string().nonempty('Location is required'),
-  owner_name: string().nonempty('Owner Name is required'),
-  proof_load: string().nonempty('Proof Load is required'),
-  description: string().nonempty('Description is required'),
-  equipment_description: string().nonempty('Equipment Description is required'),
-  manufacturer: string().nonempty('Manufacturer is required'),
- // tested_standard: string().nonempty('Tested Standard is required'),
-  approval_status: string().nonempty('Approval Status is required'),
-});
+  // Define schema for validation
+  const equipmentDetailsSchema = object({
+    inspection_date: string().nonempty('Inspection Date is required'),
+    site: string().nonempty('Site is required'),
+    authority: string().nonempty('Authority is required'),
+    standard: string().nonempty('Standard is required'),
+    job_order_no: string().nonempty('Job Order No. is required'),
+    equipment_no: string().nonempty('Equipment No. is required'),
+    title: string().nonempty('Title is required'),
+    test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
+    safe_working_load: string().nonempty('Safe Working Load is required'),
+    last_test_exam: string().nonempty('Last Test Exam is required'),
+    next_test_exam: string().optional(),
+    last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+    next_thorough_exam: string().optional(),
+    result: string().nonempty('Result is required'),
+    type_of_exam: string().nonempty('Type of Exam is required'),
+    surveyor: string().nonempty('Surveyor is required'),
+    defect_description: string().nonempty('Defect Description is required'),
+    last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+    // next_test_exam_certificate_no: string().optional(), // REMOVED
+    last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
+    // next_thorough_exam_certificate_no: string().optional(), // REMOVED
+    location: string().nonempty('Location is required'),
+    owner_name: string().nonempty('Owner Name is required'),
+    proof_load: string().nonempty('Proof Load is required'),
+    description: string().nonempty('Description is required'),
+    equipment_description: string().nonempty('Equipment Description is required'),
+    manufacturer: string().nonempty('Manufacturer is required'),
+    approval_status: string().nonempty('Approval Status is required'),
+  });
 
-type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
+  type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
@@ -98,14 +182,12 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
       type_of_exam: existingData?.type_of_exam || '',
       surveyor: String(existingData?.surveyor) || '',
       defect_description: existingData?.defect_description || '',
-    //  test_particulars: existingData?.test_particulars || '',
       location: String(existingData?.location) || '5',
       owner_name: existingData?.owner_name || '',
       proof_load: String(existingData?.proof_load) || '',
       description: String(existingData?.description) || '',
       equipment_description: String(existingData?.equipment_description) || '',
       manufacturer: String(existingData?.manufacturer) || '',
-   //   tested_standard: String(existingData?.tested_standard) || '',
       approval_status: existingData?.approval_status ? 'Approved' : 'Not Approved',
     },
   });
@@ -144,38 +226,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-      if(data){
-      // if (data) { 
-      //   reset({
-      //     inspection_date: data.inspection_date || '',
-      //     site: String(data.site) || '',
-      //     authority: String(data.authority) || '',
-      //     standard: String(data.standard) || '',
-      //     job_order_no: String(data.job_order_no) || '',
-      //     equipment_no: String(data.equipment_no) || '',
-      //     title: data.title || '',
-      //     test_cert_coc_no: data.test_cert_coc_no || '',
-      //     safe_working_load: data.safe_working_load || '',
-      //     last_test_exam: data.last_test_exam || '',
-      //     next_test_exam: data.next_test_exam || '',
-      //     last_thorough_exam: data.last_thorough_exam || '',
-      //     next_thorough_exam: data.next_thorough_exam || '',
-      //     result: data.result || '',
-      //     type_of_exam: data.type_of_exam || '',
-      //     surveyor: String(data.surveyor) || 'sdsd',
-      //     defect_description: data.defect_description || '',
-      //     test_particulars: data.test_particulars || '',
-      //     location: String(data.location) || '5',
-      //     owner_name: String(data.owner_name) || '',
-      //     proof_load: String(data.proof_load) || 'sdsdsd',
-      //     description: String(data.description) || '',
-      //     equipment_description: String(data.equipment_description) || '',
-      //     manufacturer: String(data.manufacturer) || '',
-      //     tested_standard: data.tested_standard || '',
-      //     approval_status: data.approval_status ? 'Approved' : 'Not Approved',
-      //   });
-
-        // Set safety checklist values
+      if (data) {
         setSafetyChecklistValues({
           firstExamination: data.first_examination ? 'yes' : 'no',
           sixMonthInterval: data.six_month_interval ? 'yes' : 'no',
@@ -186,13 +237,13 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
           safeToUse: data.safe_to_use ? 'yes' : 'no',
         });
 
-        // Handle "Not Applicable" checkboxes
         setTestExamChecked(!data.next_test_exam || data.next_test_exam === "Not Applicable");
         setThoroughExamChecked(!data.next_thorough_exam || data.next_thorough_exam === "Not Applicable");
       }
     };
 
     fetchEquipmentData();
+    // eslint-disable-next-line
   }, [id]);
 
   // Fetch select options on mount
@@ -207,26 +258,26 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
         getAllSingleSubtopic("manufacturer"),
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
-      ]); 
-      setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setAuthorityOptions(authorities?.filter((item:any)=>item.status==="ACTIVE") || []);
+      ]);
+      setSiteOptions(sites?.filter((item: any) => item.status === "ACTIVE") || []);
+      setAuthorityOptions(authorities?.filter((item: any) => item.status === "ACTIVE") || []);
       setJobOrderNoOptions(jobOrders || []);
-      setEquipmentNoOptions(equipments?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setManufacturerOptions(manufacturers?.filter((item:any)=>item.status==="ACTIVE") || []);
+      setEquipmentNoOptions(equipments?.filter((item: any) => item.status === "ACTIVE") || []);
+      setStandardOptions(standards?.filter((item: any) => item.status === "ACTIVE") || []);
+      setManufacturerOptions(manufacturers?.filter((item: any) => item.status === "ACTIVE") || []);
       setSurveyorOptions(surveyors);
-      setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE") || []);
+      setOwnerOptions(owners?.filter((item: any) => item.status === "ACTIVE") || []);
     };
 
     fetchOptions();
-  }, [getAllSingleSubtopic]);
+    // eslint-disable-next-line
+  }, [getAllSingleSubtopic, invoke]);
 
   useEffect(() => {
     const fetchLocations = async () => {
       await makeApiCall(() => new MasterService().getLocationDetails(), {
         afterSuccess: (data: any) => {
           if (data) {
-            
             setLocationOptions(data);
           }
         }
@@ -237,7 +288,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
   // Watch equipment_no and update related fields
   const equipment_no = watch('equipment_no');
- 
+
   useEffect(() => {
     if (equipment_no) {
       const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
@@ -248,7 +299,6 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
         setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
         setValue('proof_load', String(selectedEquipment.proof_load) || '');
-       
         setValue('equipment_description', String(selectedEquipment.description) || '');
         setValue('title', String(selectedEquipment.title) || '');
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
@@ -257,18 +307,22 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
         setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
       }
     }
+    // eslint-disable-next-line
   }, [equipment_no, equipmentNoOptions, setValue]);
+
   const job_order_no = watch('job_order_no');
-  useEffect(()=>{
-    if(job_order_no){
+  useEffect(() => {
+    if (job_order_no) {
       const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-    
-       if(job_order){
+
+      if (job_order) {
         setValue('surveyor', job_order.surveyor)
         setValue('location', job_order.location)
-       }
+      }
     }
-  },[job_order_no])
+    // eslint-disable-next-line
+  }, [job_order_no]);
+
   // Handle "Not Applicable" checkboxes based on equipment data
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
@@ -276,6 +330,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
       setTestExamChecked(!selectedEquipment.next_test_date);
       setThoroughExamChecked(!selectedEquipment.next_thorough_date);
     }
+    // eslint-disable-next-line
   }, [equipment_no, equipmentNoOptions]);
 
   useEffect(() => {
@@ -297,9 +352,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
       const formData = {
         ...values,
         last_test_exam_certificate_no: values.last_test_exam_certificate_no,
-  next_test_exam_certificate_no: testExamChecked ? "" : values.next_test_exam_certificate_no,
-  last_thorough_exam_certificate_no: values.last_thorough_exam_certificate_no,
-  next_thorough_exam_certificate_no: thoroughExamChecked ? "" : values.next_thorough_exam_certificate_no,
+        // next_test_exam_certificate_no: testExamChecked ? "" : values.next_test_exam_certificate_no, // REMOVED
+        last_thorough_exam_certificate_no: values.last_thorough_exam_certificate_no,
+        // next_thorough_exam_certificate_no: thoroughExamChecked ? "" : values.next_thorough_exam_certificate_no, // REMOVED
         first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
         six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
         twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
@@ -356,40 +411,33 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     )}
                   </div>
 
-                  {/* Site */}
-                 {/* Location */}
-                 <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* Location */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="location" className="mt-3">Location</Label>
                     <div className='relative'>
-                    <Controller
-                      name="location"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="location">
-                            <SelectValue placeholder="Select location" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {locationOptions?.map((loc: any) => (
-                              <SelectItem key={loc.id} value={String(loc.location.id)}>
-                                {loc.location.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                      <Controller
+                        name="location"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="location">
+                              <SelectValue placeholder="Select location" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {locationOptions?.map((loc: any) => (
+                                <SelectItem key={loc.id} value={String(loc.location.id)}>
+                                  {loc.location.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      <AddLocationButton onClick={() => setIsLocation(true)} />
+                      {errors.location && (
+                        <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                       )}
-                    />
-                    {/* <Button
-                    size="icon"
-                    variant="outline"
-                    className="absolute bg-primary text-white font-bold right-0 top-0"
-                    onClick={()=>setIsLocation(true)}>
-
-                    <PlusIcon className="h-4 w-4" />
-                  </Button> */}
-                    {errors.location && (
-                      <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
-                    )}</div>
+                    </div>
                   </div>
 
                   {/* Authority */}
@@ -467,77 +515,73 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     )}
                   </div>
 
+                  {/* Site */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
-                    <Controller
-                      name="site"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="site">
-                            <SelectValue placeholder="Select site" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {siteOptions?.map((site: any) => (
-                              <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.name ?? site?.site}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                    <div className='relative'>
+                      <Controller
+                        name="site"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="site">
+                              <SelectValue placeholder="Select site" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {siteOptions?.map((site: any) => (
+                                <SelectItem key={site.id} value={String(site.id)}>
+                                  {site?.name ?? site?.site}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      <AddSiteButton onClick={() => setIsLocation(true)} />
+                      {errors.site && (
+                        <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                       )}
-                    />
-                    {errors.site && (
-                      <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
-                    )}
+                    </div>
                   </div>
-
                 </div>
 
                 {/* Equipment Information Title */}
                 <h2 className="text-base font-bold mt-6">Equipment Information</h2>
 
                 <div className="grid gap-4 grid-cols-2">
-                  {/* Equipment Information Section */}
+                  {/* Equipment No. */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_no" className="mt-3">Equipment No.</Label>
                     <div className='relative'>
-                    <Controller
-                      name="equipment_no"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="equipment_no">
-                            <SelectValue placeholder="Select equipment no." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {equipmentNoOptions?.map((equipment: any) => (
-                              <SelectItem key={equipment.id} value={String(equipment.id)}>
-                                {equipment?.equipment_no}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                      <Controller
+                        name="equipment_no"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="equipment_no">
+                              <SelectValue placeholder="Select equipment no." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {equipmentNoOptions?.map((equipment: any) => (
+                                <SelectItem key={equipment.id} value={String(equipment.id)}>
+                                  {equipment?.equipment_no}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      <AddEquipmentButton onClick={() => setIsEquipment(true)} />
+                      {errors.equipment_no && (
+                        <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
                       )}
-                    />
-                    {/* <Button
-                    size="icon"
-                    variant="outline"
-                    className="absolute bg-primary text-white font-bold right-0 top-0"
-                    onClick={()=>setIsEquipment(true)}>
-
-                    <PlusIcon className="h-4 w-4" />
-                  </Button> */}
-                    {errors.equipment_no && (
-                      <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
-                    )}</div>
+                    </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">Title</Label>
-                    <Input 
-                      id="title"  
-                      {...register('title')} 
-                      
+                    <Input
+                      id="title"
+                      {...register('title')}
                     />
                     {errors.title && (
                       <p className="text-red-500 text-[12px] ">{errors.title.message}</p>
@@ -547,10 +591,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                 <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
-                    <Input 
-                      id="equipment_description"  
-                      {...register('equipment_description')} 
-                      
+                    <Input
+                      id="equipment_description"
+                      {...register('equipment_description')}
                     />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
@@ -560,10 +603,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
-                    <Input 
-                      id="test_cert_coc_no"  
-                      {...register('test_cert_coc_no')} 
-                      
+                    <Input
+                      id="test_cert_coc_no"
+                      {...register('test_cert_coc_no')}
                     />
                     {errors.test_cert_coc_no && (
                       <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
@@ -571,10 +613,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
-                    <Input 
-                      id="safe_working_load"  
-                      {...register('safe_working_load')} 
-                      
+                    <Input
+                      id="safe_working_load"
+                      {...register('safe_working_load')}
                     />
                     {errors.safe_working_load && (
                       <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
@@ -582,10 +623,9 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="proof_load" className="mt-3">Proof Load:</Label>
-                    <Input 
-                      id="proof_load"  
-                      {...register('proof_load')} 
-                      
+                    <Input
+                      id="proof_load"
+                      {...register('proof_load')}
                     />
                     {errors.proof_load && (
                       <p className="text-red-500 text-[12px] ">{errors.proof_load.message}</p>
@@ -594,35 +634,76 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="standard" className="mt-3">Standard</Label>
                     <div className='relative'>
-                    <Controller
-                      name="standard"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="standard">
-                            <SelectValue placeholder="Select standard" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {standardOptions?.map((standard: any) => (
-                              <SelectItem key={standard.id} value={String(standard.id)}>
-                                {standard.standard}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                      <Controller
+                        name="standard"
+                        control={control}
+                        render={({ field }) => {
+                          const allStandardOptions = standardOptions?.map((std: any) => String(std.id)) || [];
+                          const value = allStandardOptions.includes(field.value) ? field.value : "";
+                          return (
+                            <Select
+                              value={value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger id="standard">
+                                <SelectValue
+                                  placeholder="Select or type standard"
+                                  {...(allStandardOptions.includes(field.value)
+                                    ? {}
+                                    : { children: field.value ? field.value : undefined })}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <div className="px-2 py-1 relative">
+                                  <Input
+                                    className="mt-2"
+                                    placeholder="Type standard name"
+                                    value={field.value || ""}
+                                    onChange={e => {
+                                      field.onChange(e.target.value);
+                                    }}
+                                  />
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                    onClick={async () => {
+                                      if (!field.value) return;
+                                      await makeApiCall(
+                                        () => new MasterService().addStandard({ standard: field.value }),
+                                        {
+                                          afterSuccess: (data: any) => {
+                                            setInvoke((prev) => !prev);
+                                            toastWithTimeout(ToastVariant.Success, "Standard added successfully");
+                                            if (data && data.id) {
+                                              field.onChange(String(data.id));
+                                            } else {
+                                              field.onChange("");
+                                            }
+                                          }
+                                        }
+                                      );
+                                    }}
+                                    type="button"
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
+                                {standardOptions?.map((std: any) => (
+                                  <SelectItem key={std.id} value={String(std.id)}>
+                                    {std.standard}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          );
+                        }}
+                      />
+                      <AddStandardButton onClick={() => setIsStandard(true)} />
+                      {errors.standard && (
+                        <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                       )}
-                    />
-                    {/* <Button
-                    size="icon"
-                    variant="outline"
-                    className="absolute bg-primary text-white font-bold right-0 top-0"
-                    onClick={()=>setIsStandard(true)}>
-
-                    <PlusIcon className="h-4 w-4" />
-                  </Button> */}
-                    {errors.standard && (
-                      <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
-                    )}</div>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -631,21 +712,20 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       id="last_test_exam"
                       type="date"
                       {...register('last_test_exam')}
-                      
                     />
                     {errors.last_test_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-    Last Test Certificate No.
-  </Label>
-  <Input
-    id="last_test_exam_certificate_no"
-    {...register('last_test_exam_certificate_no')}
-  />
-</div>
+                    <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
+                      Last Test Certificate No.
+                    </Label>
+                    <Input
+                      id="last_test_exam_certificate_no"
+                      {...register('last_test_exam_certificate_no')}
+                    />
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam" className="mt-3">Last Thorough Exam</Label>
@@ -653,22 +733,20 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       id="last_thorough_exam"
                       type="date"
                       {...register('last_thorough_exam')}
-                     
                     />
                     {errors.last_thorough_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-    Last Thorough Certificate No.
-  </Label>
-  <Input
-  
-    id="last_thorough_exam_certificate_no"
-    {...register('last_thorough_exam_certificate_no')}
-  />
-</div>
+                    <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
+                      Last Thorough Certificate No.
+                    </Label>
+                    <Input
+                      id="last_thorough_exam_certificate_no"
+                      {...register('last_thorough_exam_certificate_no')}
+                    />
+                  </div>
                 </div>
                 <div className="grid gap-4 grid-cols-1 w-full">
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
@@ -678,83 +756,86 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                         name="next_test_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input 
-                          
-                            id="next_test_exam"  
-                              className='w-[37%]'
-                            type="date" 
-                            {...field} 
-                            disabled={testExamChecked} 
+                          <Input
+                            id="next_test_exam"
+                            className='w-[37%]'
+                            type="date"
+                            {...field}
+                            disabled={testExamChecked}
                             value={testExamChecked ? "" : field.value || ""}
                           />
                         )}
                       />
-                      <Checkbox 
-                        className='w-6 h-6'  
-                        checked={testExamChecked} 
-                        onCheckedChange={(checked:any) => setTestExamChecked(checked)} 
-                      /> 
+                      <Checkbox
+                        className='w-6 h-6'
+                        checked={testExamChecked}
+                        onCheckedChange={(checked: any) => setTestExamChecked(checked)}
+                      />
                       <span className="text-[13px] w-[33%] ">Not Applicable</span>
                       {errors.next_test_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.next_test_exam.message}</p>
                       )}
                     </div>
                   </div>
+                  {/* REMOVED: Next Test Certificate No. */}
+                  {/* 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
-    Next Test Certificate No.
-  </Label>
-  <Input
-  className='w-[37%]'
-    id="next_test_exam_certificate_no"
-    disabled={testExamChecked}
-    {...register('next_test_exam_certificate_no')}
-  />
-</div>
-                  
-                
-                <div className="grid gap-4 grid-cols-1 w-full">
-                <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
-                    <div className="flex items-center gap-4">
-                      <Controller
-                        name={"next_thorough_exam"}
-                        control={control}
-                        render={({ field }) => (
-                          <Input 
-                            id={"next_thorough_exam"}  
-                            type="date" 
-                            {...field} 
+                    <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
+                      Next Test Certificate No.
+                    </Label>
+                    <Input
+                      className='w-[37%]'
+                      id="next_test_exam_certificate_no"
+                      disabled={testExamChecked}
+                      {...register('next_test_exam_certificate_no')}
+                    />
+                  </div>
+                  */}
+
+                  <div className="grid gap-4 grid-cols-1 w-full">
+                    <div className="grid grid-cols-[200px_1fr] gap-4">
+                      <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
+                      <div className="flex items-center gap-4">
+                        <Controller
+                          name={"next_thorough_exam"}
+                          control={control}
+                          render={({ field }) => (
+                            <Input
+                              id={"next_thorough_exam"}
+                              type="date"
+                              {...field}
                               className='w-[37%]'
-                            disabled={thoroughExamChecked} 
-                            value={thoroughExamChecked ? "" : field.value || ""}
-                          />
+                              disabled={thoroughExamChecked}
+                              value={thoroughExamChecked ? "" : field.value || ""}
+                            />
+                          )}
+                        />
+                        <Checkbox
+                          className={'w-6 h-6'}
+                          checked={thoroughExamChecked}
+                          onCheckedChange={(checked: any) => setThoroughExamChecked(checked!)}
+                        />
+                        <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                        {errors.next_thorough_exam && (
+                          <p className="text-red-500 text-[12px] ">{errors.next_thorough_exam.message}</p>
                         )}
-                      />
-                      <Checkbox 
-                        className={'w-6 h-6'} 
-                        checked={thoroughExamChecked} 
-                        
-                        onCheckedChange={(checked:any) => setThoroughExamChecked(checked!)} 
-                      /> 
-                      <span className="text-[13px] w-[33%] ">Not Applicable</span>
-                      {errors.next_thorough_exam && (
-                        <p className="text-red-500 text-[12px] ">{errors.next_thorough_exam.message}</p>
-                      )}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
-    Next Thorough Certificate No.
-  </Label>
-  <Input
-    className='w-[37%]'
-    id="next_thorough_exam_certificate_no"
-    disabled={thoroughExamChecked}
-    {...register('next_thorough_exam_certificate_no')}
-  />
-</div>
+                  {/* REMOVED: Next Thorough Certificate No. */}
+                  {/* 
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
+                      Next Thorough Certificate No.
+                    </Label>
+                    <Input
+                      className='w-[37%]'
+                      id="next_thorough_exam_certificate_no"
+                      disabled={thoroughExamChecked}
+                      {...register('next_thorough_exam_certificate_no')}
+                    />
+                  </div>
+                  */}
                 </div>
 
                 {/* Result Section */}
@@ -782,27 +863,81 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="owner_name" className="mt-3">Owner Name</Label>
-                    <Controller
-                      name="owner_name"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="owner_name">
-                            <SelectValue placeholder="Select owner" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ownerOptions?.map((owner: any) => (
-                              <SelectItem key={owner.id} value={String(owner.id)}>
-                                {owner?.owner}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                    <div className='relative'>
+                      <Controller
+                        name="owner_name"
+                        control={control}
+                        render={({ field }) => {
+                          const currentOwner = String(
+                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
+                              ?.owner_id ?? ""
+                          );
+                          const allOwnerOptions = ownerOptions?.map((owner: any) => String(owner.id)) || [];
+                          const value = currentOwner || field.value || "";
+
+                          return (
+                            <div className="flex w-full gap-2 items-center">
+                              <Select
+                                value={allOwnerOptions.includes(value) ? value : ""}
+                                onValueChange={(val) => field.onChange(val)}
+                              >
+                                <SelectTrigger id="owner_id" className="w-full">
+                                  <SelectValue
+                                    placeholder="Select or type owner"
+                                    {...(allOwnerOptions.includes(value)
+                                      ? {}
+                                      : { children: value ? value : undefined })}
+                                  />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <div className="px-2 py-1 relative">
+                                    <>
+                                      <Input
+                                        className="mt-2"
+                                        placeholder="Type owner name"
+                                        value={field.value || ""}
+                                        onChange={e => {
+                                          field.onChange(e.target.value);
+                                        }}
+                                      />
+                                      <Button
+                                        size="icon"
+                                        variant="outline"
+                                        className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                        onClick={() => {
+                                          makeApiCall(
+                                            () => new MasterService().addOwner({ owner: field.value }),
+                                            {
+                                              afterSuccess: () => {
+                                                setInvoke((prev) => !prev);
+                                                toastWithTimeout(ToastVariant.Success, "Owner added successfully")
+                                                field.onChange("");
+                                              }
+                                            }
+                                          )
+                                        }}
+                                        type="button"
+                                      >
+                                        Add
+                                      </Button>
+                                    </>
+                                  </div>
+                                  {ownerOptions?.map((owner: any) => (
+                                    <SelectItem key={owner.id} value={String(owner.id)}>
+                                      {owner.owner}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          );
+                        }}
+                      />
+                      <AddOwnerButton onClick={() => setIsLocation(true)} />
+                      {errors.owner_name && (
+                        <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
                       )}
-                    />
-                    {errors.owner_name && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
-                    )}
+                    </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
@@ -828,48 +963,79 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                       <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                     )}
                   </div>
-                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="tested_standard" className="mt-3">Tested Standard</Label>
-                    <Input 
-                      id="tested_standard" 
-                      {...register('tested_standard')} 
-                    />
-                    {errors.tested_standard && (
-                      <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
-                    )}
-                  </div> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
                     <div className='relative'>
-                    <Controller
-                      name="manufacturer"
-                      control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="manufacturer">
-                            <SelectValue placeholder="Select manufacturer" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {manufacturerOptions?.map((manufacturer: any) => (
-                              <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
-                                {manufacturer.manufacturer}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                      <Controller
+                        name="manufacturer"
+                        control={control}
+                        render={({ field }) => {
+                          const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
+                          const value = allManufacturerOptions.includes(field.value) ? field.value : "";
+                          return (
+                            <Select
+                              value={value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger id="manufacturer">
+                                <SelectValue
+                                  placeholder="Select or type manufacturer"
+                                  {...(allManufacturerOptions.includes(field.value)
+                                    ? {}
+                                    : { children: field.value ? field.value : undefined })}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <div className="px-2 py-1 relative">
+                                  <Input
+                                    className="mt-2"
+                                    placeholder="Type manufacturer name"
+                                    value={field.value || ""}
+                                    onChange={e => {
+                                      field.onChange(e.target.value);
+                                    }}
+                                  />
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                    onClick={async () => {
+                                      if (!field.value) return;
+                                      await makeApiCall(
+                                        () => new MasterService().addManufacturer({ manufacturer: field.value }),
+                                        {
+                                          afterSuccess: (data: any) => {
+                                            setInvoke((prev) => !prev);
+                                            toastWithTimeout(ToastVariant.Success, "Manufacturer added successfully");
+                                            if (data && data.id) {
+                                              field.onChange(String(data.id));
+                                            } else {
+                                              field.onChange("");
+                                            }
+                                          }
+                                        }
+                                      );
+                                    }}
+                                    type="button"
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
+                                {manufacturerOptions?.map((manu: any) => (
+                                  <SelectItem key={manu.id} value={String(manu.id)}>
+                                    {manu.manufacturer}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          );
+                        }}
+                      />
+                      <AddManufacturerButton onClick={() => setIsManufacturer(true)} />
+                      {errors.manufacturer && (
+                        <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                       )}
-                    />
-                    {/* <Button
-                    size="icon"
-                    variant="outline"
-                    className="absolute bg-primary text-white font-bold right-0 top-0"
-                    onClick={()=>setIsManufacturer(true)}>
-
-                    <PlusIcon className="h-4 w-4" />
-                  </Button> */}
-                    {errors.manufacturer && (
-                      <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
-                    )}</div>
+                    </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="approval_status" className="mt-3">Approval Status</Label>
@@ -918,10 +1084,10 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                     </div>
                   </div>
                 </div>
-               
+
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                    <SafetyChecklist 
+                    <SafetyChecklist
                       values={safetyChecklistValues}
                       onChange={handleSafetyChecklistChange}
                     />
@@ -929,39 +1095,27 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
                 </div>
                 <div className="space-y-4 w-full">
                   <div className="grid gap-4 grid-cols-1 w-full">
-                  <div className="grid grid-cols-[400px_1fr]  gap-4">
-                    <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                    <Input id="defect_description" className='my-auto' {...register('defect_description')} />
-                    {errors.defect_description && (
-                      <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
-                    )}
- 
-</div>
+                    <div className="grid grid-cols-[400px_1fr]  gap-4">
+                      <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
+                      <Input id="defect_description" className='my-auto' {...register('defect_description')} />
+                      {errors.defect_description && (
+                        <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
-                {/* <div className="space-y-4">
-                  <div className="grid gap-4 grid-cols-1">
-                  <div className="grid grid-cols-[400px_1fr]  gap-4">
-                    <Label htmlFor="test_particulars" className="mt-3 leading-5">Particulars of any tests carried out as part of the examination</Label>
-                    <Input id="test_particulars" className='' {...register('test_particulars')} />
-                    {errors.test_particulars && (
-                      <p className="text-red-500 text-[12px] ">{errors.test_particulars.message}</p>
-                    )}
-                     </div>
-                  </div>
-                </div> */}
                 <div className="flex justify-end gap-4">
-                  <Button 
-                    type="reset" 
-                    className="px-10" 
-                    onClick={onClose} 
+                  <Button
+                    type="reset"
+                    className="px-10"
+                    onClick={onClose}
                     variant="outline"
                   >
                     Cancel
                   </Button>
-                  <Button 
-                    className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border" 
-                    type="submit" 
+                  <Button
+                    className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border"
+                    type="submit"
                     disabled={loading}
                   >
                     {loading ? 'Saving...' : 'Save'}

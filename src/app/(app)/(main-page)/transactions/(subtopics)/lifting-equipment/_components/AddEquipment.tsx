@@ -22,10 +22,15 @@ import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import AnnexuresTable from './AnnexureTable';
 import { PlusIcon } from 'lucide-react';
+import AddLocationButton from '../../_components/Location/Location';
+import AddSiteButton from '../../_components/Site/Site';
+import AddEquipmentButton from '../../_components/Equipments/Equipments';
+import AddStandardButton from '../../_components/Standard/Standard';
+import AddManufacturerButton from '../../_components/Manufacturer/Manufacturer';
+import AddOwnerButton from '../../_components/Owner/Owner';
+import { AuthService } from '@/services/api/auth-service';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-
-
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
@@ -49,8 +54,9 @@ export default function EquipmentDetailsForm({
   // "Not Applicable" checkboxes for next test/thorough
   const [testExamChecked, setTestExamChecked] = useState(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
+
   /**
-   * Zod Schema
+   * Zod Schema (updated: removed next_test_exam_certificate_no and next_thorough_exam_certificate_no)
    */
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
@@ -69,9 +75,9 @@ export default function EquipmentDetailsForm({
     last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
     next_thorough_exam: string().optional(),
     last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
-    next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
     last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
-    next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
+    // next_test_exam_certificate_no: REMOVED
+    // next_thorough_exam_certificate_no: REMOVED
     result: string().nonempty('Result is required'),
     surveyor: string().nonempty('Surveyor is required'),
     result_description: string().nonempty('Test Particulars is required'),
@@ -79,7 +85,6 @@ export default function EquipmentDetailsForm({
     description: string().nonempty('Description Date is required').optional(),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
-   // tested_standard: string().nonempty('Tested Standard is required'),
     approval_status: string().nonempty('Approval Status is required'),
     location: string().nonempty('Location is required'),
     serial_no: string().nonempty('Serial No. is required'),
@@ -89,7 +94,6 @@ export default function EquipmentDetailsForm({
     year_of_manufacture: string().nonempty('Year of Manufacture is required'),
     owner_id: string().nonempty('Owner ID is required'),
     defect_description: string().nonempty('Defect Description is required'),
-    // test_particulars: string().nonempty('Test Particulars is required'),
   });
 
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
@@ -116,7 +120,7 @@ export default function EquipmentDetailsForm({
   const equipment_no = watch('equipment_no');
   const location = watch('location');
   const job_order_no = watch('job_order_no');
-
+  console.log(watch('job_order_no'));
   // Option states
   const [siteOptions, setSiteOptions] = useState<any[]>([]);
   const [authorityOptions, setAuthorityOptions] = useState<any[]>([]);
@@ -143,18 +147,17 @@ export default function EquipmentDetailsForm({
   });
 
   // Update "surveyor" when "job_order_no" changes
-  
   useEffect(() => {
     if (job_order_no) {
       const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-      console.log("----------------------------------------------", job_order)
+      console.log("----------------------------------------------", job_order);
       if (job_order) {
         setValue('surveyor', job_order.surveyor);
         setValue('location', job_order.location);
       }
     }
   }, [job_order_no, jobOrderNoOptions, setValue]);
- 
+
   // Auto-populate fields when equipment_no changes
   useEffect(() => {
     const selected = equipmentNoOptions.find((item: any) => item.id == equipment_no);
@@ -170,20 +173,21 @@ export default function EquipmentDetailsForm({
       setValue('title', String(selected.title) || '');
       setValue('registration_no', String(selected.registration_no) || '');
       setValue('last_test_exam', String(selected.last_test_date) || '');
-      console.log("----------------------------------------------", selected?.last_test_exam_certificate_no)
+      console.log("----------------------------------------------", selected?.last_test_exam_certificate_no);
       setValue('last_test_exam_certificate_no', selected?.last_test_exam_certificate_no ? String(selected?.last_test_exam_certificate_no) : '');
       setValue('next_test_exam', String(selected.next_test_date) || '');
-      setValue('next_test_exam_certificate_no', selected?.next_test_exam_certificate_no ? String(selected?.next_test_exam_certificate_no) : '');
+      // setValue('next_test_exam_certificate_no', selected?.next_test_exam_certificate_no ? String(selected?.next_test_exam_certificate_no) : ''); // REMOVED
       setValue('last_thorough_exam', String(selected.last_thorough_date) || '');
       setValue('last_thorough_exam_certificate_no', selected?.last_thorough_exam_certificate_no ? String(selected?.last_thorough_exam_certificate_no) : '');
       setValue('next_thorough_exam', String(selected.next_thorough_date) || '');
-      setValue('next_thorough_exam_certificate_no', selected?.next_thorough_exam_certificate_no ? String(selected?.next_thorough_exam_certificate_no) : '');
+      // setValue('next_thorough_exam_certificate_no', selected?.next_thorough_exam_certificate_no ? String(selected?.next_thorough_exam_certificate_no) : ''); // REMOVED
       setValue('serial_no', String(selected.serial_no) || '');
       setValue('model_no', String(selected.model_no) || '');
       setValue('owner_id', String(selected.owner_id) || '');
       // For "Owner No/ID"
       const foundOwner = ownerOptions.find((o: any) => o.id == selected.owner_id);
       setValue('owner_name', foundOwner?.code || '');
+      console.log("invokeddd");
     }
   }, [equipment_no, equipmentNoOptions, setValue, ownerOptions]);
 
@@ -222,8 +226,9 @@ export default function EquipmentDetailsForm({
     }
   }, [location, locationOptions]);
 
-  // Fetch all your subtopics & location details on mount
+  const [invoke, setInvoke] = useState(false);
   useEffect(() => {
+    console.log("invokewwww");
     (async () => {
       try {
         // fetch Surveyor
@@ -275,7 +280,7 @@ export default function EquipmentDetailsForm({
         toastWithTimeout(ToastVariant.Error, 'Failed to load form options.');
       }
     })();
-  }, [getAllSingleSubtopic]);
+  }, [getAllSingleSubtopic, invoke]);
 
   // If submission is successful, optionally reset
   useEffect(() => {
@@ -292,10 +297,12 @@ export default function EquipmentDetailsForm({
     }));
   };
 
-  // OnSubmit Handler
+  // OnSubmit Handler (updated: do not send next_test_exam_certificate_no and next_thorough_exam_certificate_no)
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
+       
+
       const formData = {
         ...values,
         first_examination: safetyChecklistValues.firstExamination === 'no' ? false : true,
@@ -314,12 +321,13 @@ export default function EquipmentDetailsForm({
         // New for last test/thorough
         last_test_exam: lastTestExamChecked ? 'Not Applicable' : values.last_test_exam,
         last_thorough_exam: lastThoroughExamChecked ? 'Not Applicable' : values.last_thorough_exam,
+        // next_test_exam_certificate_no and next_thorough_exam_certificate_no are not included
       };
-
+ 
       // Add the property & annexures to the record
       await addRecord(
         {
-          ...formData,
+          ...values,
           properties: data,
           annexures: propertyList,
         },
@@ -391,16 +399,9 @@ export default function EquipmentDetailsForm({
                           </Select>
                         )}
                       />
-                      {/* 
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={() => setIsLocation(true)}
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                      */}
+
+                      <AddLocationButton />
+
                       {errors.location && (
                         <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                       )}
@@ -489,7 +490,7 @@ export default function EquipmentDetailsForm({
                   </div>
 
                   {/* Site */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  <div className="grid grid-cols-[200px_1fr] gap-4 relative">
                     <Label htmlFor="site" className="mt-3">
                       Site
                     </Label>
@@ -511,6 +512,7 @@ export default function EquipmentDetailsForm({
                         </Select>
                       )}
                     />
+                    <AddSiteButton />
                     {errors.site && (
                       <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
@@ -546,16 +548,7 @@ export default function EquipmentDetailsForm({
                           </Select>
                         )}
                       />
-                      {/* 
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={() => setIsEquipment(true)}
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                      */}
+                      <AddEquipmentButton />
                       {errors.equipment_no && (
                         <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
                       )}
@@ -671,22 +664,57 @@ export default function EquipmentDetailsForm({
                         name="manufacturer"
                         control={control}
                         render={({ field }) => {
-                          const currentManufacturer = String(
-                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                              ?.manufacturer
-                          );
+                          const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
+                          const value = allManufacturerOptions.includes(field.value) ? field.value : "";
                           return (
                             <Select
-                              value={currentManufacturer || field.value}
+                              value={value}
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="manufacturer">
                                 <SelectValue
-                                  defaultValue={currentManufacturer || field.value}
-                                  placeholder="Select manufacturer"
+                                  placeholder="Select or type manufacturer"
+                                  {...(allManufacturerOptions.includes(field.value)
+                                    ? {}
+                                    : { children: field.value ? field.value : undefined })}
                                 />
                               </SelectTrigger>
                               <SelectContent>
+                                <div className="px-2 py-1 relative">
+                                  <Input
+                                    className="mt-2"
+                                    placeholder="Type manufacturer name"
+                                    value={field.value || ""}
+                                    onChange={e => {
+                                      field.onChange(e.target.value);
+                                    }}
+                                  />
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                    onClick={async () => {
+                                      if (!field.value) return;
+                                      await makeApiCall(
+                                        () => new MasterService().addManufacturer({ manufacturer: field.value }),
+                                        {
+                                          afterSuccess: (data: any) => {
+                                            setInvoke((prev) => !prev);
+                                            toastWithTimeout(ToastVariant.Success, "Manufacturer added successfully");
+                                            if (data && data.id) {
+                                              field.onChange(String(data.id));
+                                            } else {
+                                              field.onChange("");
+                                            }
+                                          }
+                                        }
+                                      );
+                                    }}
+                                    type="button"
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
                                 {manufacturerOptions?.map((manu: any) => (
                                   <SelectItem key={manu.id} value={String(manu.id)}>
                                     {manu.manufacturer}
@@ -697,20 +725,9 @@ export default function EquipmentDetailsForm({
                           );
                         }}
                       />
-                      {/* 
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={() => setIsManufacturer(true)}
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                      */}
+                      <AddManufacturerButton />
                       {errors.manufacturer && (
-                        <p className="text-red-500 text-[12px] ">
-                          {errors.manufacturer.message}
-                        </p>
+                        <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                       )}
                     </div>
                   </div>
@@ -759,22 +776,57 @@ export default function EquipmentDetailsForm({
                         name="standard"
                         control={control}
                         render={({ field }) => {
-                          const currentStandard = String(
-                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                              ?.standard
-                          );
+                          const allStandardOptions = standardOptions?.map((std: any) => String(std.id)) || [];
+                          const value = allStandardOptions.includes(field.value) ? field.value : "";
                           return (
                             <Select
-                              value={currentStandard || field.value}
+                              value={value}
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="standard">
                                 <SelectValue
-                                  defaultValue={currentStandard || field.value}
-                                  placeholder="Select standard"
+                                  placeholder="Select or type standard"
+                                  {...(allStandardOptions.includes(field.value)
+                                    ? {}
+                                    : { children: field.value ? field.value : undefined })}
                                 />
                               </SelectTrigger>
                               <SelectContent>
+                                <div className="px-2 py-1 relative">
+                                  <Input
+                                    className="mt-2"
+                                    placeholder="Type standard name"
+                                    value={field.value || ""}
+                                    onChange={e => {
+                                      field.onChange(e.target.value);
+                                    }}
+                                  />
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                    onClick={async () => {
+                                      if (!field.value) return;
+                                      await makeApiCall(
+                                        () => new MasterService().addStandard({ standard: field.value }),
+                                        {
+                                          afterSuccess: (data: any) => {
+                                            setInvoke((prev) => !prev);
+                                            toastWithTimeout(ToastVariant.Success, "Standard added successfully");
+                                            if (data && data.id) {
+                                              field.onChange(String(data.id));
+                                            } else {
+                                              field.onChange("");
+                                            }
+                                          }
+                                        }
+                                      );
+                                    }}
+                                    type="button"
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
                                 {standardOptions?.map((std: any) => (
                                   <SelectItem key={std.id} value={String(std.id)}>
                                     {std.standard}
@@ -785,16 +837,7 @@ export default function EquipmentDetailsForm({
                           );
                         }}
                       />
-                      {/*
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={() => setIsStandard(true)}
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                      */}
+                      <AddStandardButton />
                       {errors.standard && (
                         <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                       )}
@@ -816,7 +859,7 @@ export default function EquipmentDetailsForm({
 
                   {/* Owner Name */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owners" className="mt-3">
+                    <Label htmlFor="owner_id" className="mt-3">
                       Owner Name
                     </Label>
                     <div className="relative">
@@ -826,42 +869,73 @@ export default function EquipmentDetailsForm({
                         render={({ field }) => {
                           const currentOwner = String(
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                              ?.owner_id
+                              ?.owner_id ?? ""
                           );
+                          const allOwnerOptions = ownerOptions?.map((owner: any) => String(owner.id)) || [];
+                          const value = currentOwner || field.value || "";
+
                           return (
-                            <Select
-                              value={currentOwner || field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger id="owners">
-                                <SelectValue
-                                  defaultValue={currentOwner || field.value}
-                                  placeholder="Select owner"
-                                />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {ownerOptions?.map((owner: any) => (
-                                  <SelectItem key={owner.id} value={String(owner.id)}>
-                                    {owner.owner}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                            <div className="flex w-full gap-2 items-center">
+                              <Select
+                                value={allOwnerOptions.includes(value) ? value : ""}
+                                onValueChange={(val) => field.onChange(val)}
+                              >
+                                <SelectTrigger id="owner_id" className="w-full">
+                                  <SelectValue
+                                    placeholder="Select or type owner"
+                                    // Show typed value if not in options
+                                    {...(allOwnerOptions.includes(value)
+                                      ? {}
+                                      : { children: value ? value : undefined })}
+                                  />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <div className="px-2 py-1 relative">
+                                    <>
+                                      <Input
+                                        className="mt-2"
+                                        placeholder="Type owner name"
+                                        value={field.value || ""}
+                                        onChange={e => {
+                                          field.onChange(e.target.value);
+                                        }}
+                                      />
+                                      <Button
+                                        size="icon"
+                                        variant="outline"
+                                        className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                        onClick={() => {
+                                          makeApiCall(
+                                            () => new MasterService().addOwner({ owner: field.value }),
+                                            {
+                                              afterSuccess: () => {
+                                                setInvoke(!invoke);
+                                                toastWithTimeout(ToastVariant.Success, "Owner added successfully");
+                                                field.onChange("");
+                                              }
+                                            }
+                                          );
+                                        }}
+                                        type="button"
+                                      >
+                                        Add
+                                      </Button>
+                                    </>
+                                  </div>
+                                  {ownerOptions?.map((owner: any) => (
+                                    <SelectItem key={owner.id} value={String(owner.id)}>
+                                      {owner.owner}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
                           );
                         }}
                       />
-                      {/* 
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute bg-primary text-white font-bold right-0 top-0"
-                          onClick={() => setIsOwner(true)}
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                      */}
-                      {errors.owner_name && (
-                        <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
+                      <AddOwnerButton />
+                      {errors.owner_id && (
+                        <p className="text-red-500 text-[12px] ">{errors.owner_id.message}</p>
                       )}
                     </div>
                   </div>
@@ -906,7 +980,7 @@ export default function EquipmentDetailsForm({
                       </p>
                     )}
                   </div> */}
-                  </div>
+                </div>
                 <div className="grid gap-4 grid-cols-1 w-[64%]  ">
                   {/* Date of last proof load test + Not Applicable */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -981,9 +1055,7 @@ export default function EquipmentDetailsForm({
                                 ?.last_thorough_date
                                 ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date === 'NOT APPLICABLE'
                                   ? ''
-                                  : // : new Date(
-                                  equipmentNoOptions.find((item: any) => item.id == equipment_no)?.last_thorough_date
-                                // )?.toISOString()?.split('T')[0]
+                                  : equipmentNoOptions.find((item: any) => item.id == equipment_no)?.last_thorough_date
                                 : ''
                             }
                             {...field}
@@ -1013,7 +1085,6 @@ export default function EquipmentDetailsForm({
                   </div>
                 </div>
 
-
                 {/* Next exam row */}
                 <div className="grid gap-4 grid-cols-1 w-[64%]  ">
                   {/* Next test exam + Not Applicable */}
@@ -1036,13 +1107,9 @@ export default function EquipmentDetailsForm({
                                 equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                   ?.next_test_date !== 'NOT APPLICABLE'
                                 ?
-                                //new Date(
                                 equipmentNoOptions?.find(
                                   (item: any) => item?.id == equipment_no
                                 )?.next_test_date
-                                //  )
-                                // ?.toISOString()
-                                // ?.split('T')[0]
                                 : ''
                             }
                             {...field}
@@ -1062,6 +1129,8 @@ export default function EquipmentDetailsForm({
                       )}
                     </div>
                   </div>
+                  {/* Removed Next Test Certificate No. */}
+                  {/* 
                   <div className="grid grid-cols-[200px_1fr] gap-4 ">
                     <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
                       Next Test Certificate No.
@@ -1073,6 +1142,7 @@ export default function EquipmentDetailsForm({
                       {...register('next_test_exam_certificate_no')}
                     />
                   </div>
+                  */}
 
                   {/* Next thorough exam + Not Applicable */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
@@ -1094,13 +1164,9 @@ export default function EquipmentDetailsForm({
                                 equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                   ?.next_thorough_date !== 'Not Applicable'
                                 ?
-                                // new Date(
                                 equipmentNoOptions?.find(
                                   (item: any) => item?.id == equipment_no
                                 )?.next_thorough_date
-                                // )
-                                //   ?.toISOString()
-                                //   ?.split('T')[0]
                                 : ''
                             }
                             {...field}
@@ -1120,6 +1186,8 @@ export default function EquipmentDetailsForm({
                       )}
                     </div>
                   </div>
+                  {/* Removed Next Thorough Certificate No. */}
+                  {/* 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
                       Next Thorough Certificate No.
@@ -1131,6 +1199,7 @@ export default function EquipmentDetailsForm({
                       {...register('next_thorough_exam_certificate_no')}
                     />
                   </div>
+                  */}
 
                   {/* Lift Location conditionally shown */}
                   {equipmentNoOptions?.find((item: any) => item?.id == equipment_no)

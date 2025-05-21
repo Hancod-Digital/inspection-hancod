@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import SafetyChecklist from '@/components/safety-checklist';
- 
+
 import { useSubtopic } from '@/context/SubtopicContext';
 import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import Table from './AnnexureTable';
@@ -28,11 +28,18 @@ import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import 'react-quill/dist/quill.snow.css';
 
+// Add Button Components (dummy, replace with your actual implementations)
+const AddLocationButton = () => null;
+const AddSiteButton = () => null;
+const AddEquipmentButton = () => null;
+const AddStandardButton = () => null;
+const AddManufacturerButton = () => null;
+const AddOwnerButton = () => null;
+
 // Dynamically import ReactQuill to prevent SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 // Define schema for validation
-
 
 interface EquipmentDetailsEditFormProps {
   onClose: () => void;
@@ -44,6 +51,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const { getAllSingleSubtopic, findRecordById, updateRecord } = useSubtopic();
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
+  const [invoke, setInvoke] = useState(false);
   const currentData = id ? findRecordById(id) : null;
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
@@ -63,10 +71,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
     next_thorough_exam: string().optional(),
     last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
-    next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
+    // next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
     last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
-    next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
-  
+    // next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
+
     result: string().nonempty('Result is required'),
     surveyor: string().nonempty('Surveyor is required'),
     defect_description: string().nonempty('Defect Description is required'),
@@ -75,17 +83,17 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     description: string().nonempty('Description is required'),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
-   // tested_standard: string().nonempty('Tested Standard is required'),
+    // tested_standard: string().nonempty('Tested Standard is required'),
     approval_status: string().nonempty('Approval Status is required'),
   });
-  
+
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
- 
+
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       inspection_date: String(currentData?.inspection_date) || '',
-       site: String(currentData?.site) || '',
+      site: String(currentData?.site) || '',
       authority: String(currentData?.authority) || '',
       type_of_exam: currentData?.type_of_exam || '',
       job_order_no: String(currentData?.job_order_no) || '',
@@ -108,7 +116,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       description: currentData?.description || '',
       equipment_description: currentData?.equipment_description || '',
       manufacturer: String(currentData?.manufacturer) || '',
-  //    tested_standard: currentData?.tested_standard || '',
+      //    tested_standard: currentData?.tested_standard || '',
       approval_status: currentData?.approval_status == 'true' ? 'Approved' : 'Rejected',
     },
   });
@@ -144,25 +152,24 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const deleteRecord = async (id:number) => {
-    await makeApiCall(()=>new MasterService().deleteMultiEquipment(id),{
-      afterSuccess:()=>{
+  const deleteRecord = async (id: number) => {
+    await makeApiCall(() => new MasterService().deleteMultiEquipment(id), {
+      afterSuccess: () => {
         setExistingData(existingData.filter(item => item.id != id));
-        toastWithTimeout(ToastVariant.Default,'Equipment deleted successfully')
+        toastWithTimeout(ToastVariant.Default, 'Equipment deleted successfully')
       }
     })
-   }
+  }
   // Fetch existing equipment data
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-     
-      
+
       if (data) {
         // Populate form fields with existing data
         reset({
           inspection_date: String(data.inspection_date) || '',
-           site: String(data.site) || '',
+          site: String(data.site) || '',
           authority: String(data.authority) || '',
           type_of_exam: data.type_of_exam || '',
           job_order_no: String(data.job_order_no) || '',
@@ -180,16 +187,16 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           result: String(data.result) || '',
           surveyor: String(data.surveyor) || '',
           last_test_exam_certificate_no: data.last_test_exam_certificate_no || '',
-          next_test_exam_certificate_no: data.next_test_exam_certificate_no || '',
+          // next_test_exam_certificate_no: data.next_test_exam_certificate_no || '',
           last_thorough_exam_certificate_no: data.last_thorough_exam_certificate_no || '',
-          next_thorough_exam_certificate_no: data.next_thorough_exam_certificate_no || '',
+          // next_thorough_exam_certificate_no: data.next_thorough_exam_certificate_no || '',
           defect_description: data.defect_description || '',
           //test_particulars: data.test_particulars || '',
           owner_name: String(data.owner_name) || '',
           description: data.description || '',
           equipment_description: data.equipment_description || '',
           manufacturer: String(data.manufacturer) || '',
-        //  tested_standard: data.tested_standard || '',
+          //  tested_standard: data.tested_standard || '',
           approval_status: data.approval_status == 'true' ? 'Approved' : 'Rejected',
         });
 
@@ -216,8 +223,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   // Fetch select options on mount
   useEffect(() => {
     const fetchOptions = async () => {
-      const [sites,authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
-         getAllSingleSubtopic("site"),
+      const [sites, authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
+        getAllSingleSubtopic("site"),
         getAllSingleSubtopic("authority"),
         getAllSingleSubtopic("job_orders"),
         getAllSingleSubtopic("equipment"),
@@ -225,20 +232,20 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         getAllSingleSubtopic("manufacturer"),
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
-      ]);  
+      ]);
 
       // setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setAuthorityOptions(authorities?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setJobOrderNoOptions(jobOrders|| []);
-      setEquipmentNoOptions(equipments?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setStandardOptions(standards?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setManufacturerOptions(manufacturers?.filter((item:any)=>item.status==="ACTIVE") || []);
-      setSurveyorOptions(surveyors|| []);
-      setOwnerOptions(owners?.filter((item:any)=>item.status==="ACTIVE") || []);
+      setAuthorityOptions(authorities?.filter((item: any) => item.status === "ACTIVE") || []);
+      setJobOrderNoOptions(jobOrders || []);
+      setEquipmentNoOptions(equipments?.filter((item: any) => item.status === "ACTIVE") || []);
+      setStandardOptions(standards?.filter((item: any) => item.status === "ACTIVE") || []);
+      setManufacturerOptions(manufacturers?.filter((item: any) => item.status === "ACTIVE") || []);
+      setSurveyorOptions(surveyors || []);
+      setOwnerOptions(owners?.filter((item: any) => item.status === "ACTIVE") || []);
     };
 
     fetchOptions();
-  }, [getAllSingleSubtopic]);
+  }, [getAllSingleSubtopic, invoke]);
 
   // Fetch location options separately
   const [existingData, setExistingData] = useState<any[]>([]);
@@ -247,18 +254,18 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchLocations = async () => {
       const data = await makeApiCall(() => new MasterService().getLocationDetails(), {
-        afterSuccess: (data:any)=>{
+        afterSuccess: (data: any) => {
           if (data) {
-            setLocationOptions(data?.filter((item:any)=>item.location.status==="ACTIVE")); // Set the location options to the fetched data
+            setLocationOptions(data?.filter((item: any) => item.location.status === "ACTIVE")); // Set the location options to the fetched data
           }
         }
       });
     };
     fetchLocations();
-    const fetchEquipment = async() => {
-        await makeApiCall(() => new MasterService().fetchAllEquipments(id), {
-        afterSuccess: (data:any)=>{
-          
+    const fetchEquipment = async () => {
+      await makeApiCall(() => new MasterService().fetchAllEquipments(id), {
+        afterSuccess: (data: any) => {
+
           if (data) {
             setExistingData(data); // Set the location options to the fetched data
           }
@@ -273,10 +280,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
   useEffect(() => {
     const fetchSites = async () => {
-      const res =  locationOptions.filter((item: any) => item.location.id == location ? location : currentData?.location);
- 
+      const res = locationOptions.filter((item: any) => item.location.id == location ? location : currentData?.location);
+
       if (res.length > 0) {
-        setSiteOptions(res?.map((item)=>item.site)); // Set the area options to the fetched data
+        setSiteOptions(res?.map((item) => item.site)); // Set the area options to the fetched data
       } else {
         setSiteOptions([]); // Clear site options if no location is selected
       }
@@ -290,7 +297,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     if (equipment_no) {
       const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
-    
+
       if (selectedEquipment) {
         setValue('standard', String(selectedEquipment.standard) || '');
         setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
@@ -298,7 +305,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
         setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
         setValue('proof_load', String(selectedEquipment.proof_load) || '');
-        
+
         setValue('equipment_description', String(selectedEquipment.description) || '');
         setValue('title', String(selectedEquipment.title) || '');
         setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
@@ -318,16 +325,16 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     }
   }, [equipment_no, equipmentNoOptions]);
   const job_order_no = watch('job_order_no');
-  useEffect(()=>{
-    if(job_order_no){
+  useEffect(() => {
+    if (job_order_no) {
       const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-    
-       if(job_order){
+
+      if (job_order) {
         setValue('surveyor', job_order.surveyor)
         setValue('location', job_order.location)
-       }
+      }
     }
-  },[job_order_no])
+  }, [job_order_no])
   useEffect(() => {
     if (isSubmitSuccessful) {
       // Optionally reset the form or perform other actions
@@ -361,41 +368,41 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       owner_name: ownerOptions?.find((item: any) => item.id == watch('owner_name'))?.owner || '',
       manufacturer: manufacturerOptions?.find((item: any) => item.id === watch('manufacturer'))?.manufacturer || '',
       result: watch('result'),
-      last_test_exam_certificate_no: watch('last_test_exam_certificate_no') ,
-      next_test_exam_certificate_no: testExamChecked ? watch('next_test_exam_certificate_no') || '' : '',
-      last_thorough_exam_certificate_no:   watch('last_thorough_exam_certificate_no')  ,
-      next_thorough_exam_certificate_no: thoroughExamChecked ? watch('next_thorough_exam_certificate_no') || '' : '',
+      last_test_exam_certificate_no: watch('last_test_exam_certificate_no'),
+      // next_test_exam_certificate_no: testExamChecked ? watch('next_test_exam_certificate_no') || '' : '',
+      last_thorough_exam_certificate_no: watch('last_thorough_exam_certificate_no'),
+      // next_thorough_exam_certificate_no: thoroughExamChecked ? watch('next_thorough_exam_certificate_no') || '' : '',
       surveyor: surveyorOptions?.find((item: any) => item.id === watch('surveyor'))?.surveyor || '',
       approval_status: watch('approval_status'),
     };
     const otherfields = { result: watch('result'), equipment_no };
-    if(!watch('result')){
-      toastWithTimeout(ToastVariant.Default,"Result is required")
+    if (!watch('result')) {
+      toastWithTimeout(ToastVariant.Default, "Result is required")
       return
-    }else if(!watch('surveyor')){
-      toastWithTimeout(ToastVariant.Default,"Surveyor is required")
-      return
-
-    }else if(!watch('approval_status')){
-      toastWithTimeout(ToastVariant.Default,"Approval Status is required")
-      return
-    }else if(!watch('inspection_date')){
-      toastWithTimeout(ToastVariant.Default,"Inspection Date is required")
+    } else if (!watch('surveyor')) {
+      toastWithTimeout(ToastVariant.Default, "Surveyor is required")
       return
 
-    }else if(!watch('type_of_exam')){
-      toastWithTimeout(ToastVariant.Default,"Type of Exam is required")
+    } else if (!watch('approval_status')) {
+      toastWithTimeout(ToastVariant.Default, "Approval Status is required")
+      return
+    } else if (!watch('inspection_date')) {
+      toastWithTimeout(ToastVariant.Default, "Inspection Date is required")
       return
 
-    }else if(!watch('equipment_no')){
-      toastWithTimeout(ToastVariant.Default,"Equipment No. is required")
+    } else if (!watch('type_of_exam')) {
+      toastWithTimeout(ToastVariant.Default, "Type of Exam is required")
       return
-    }  
+
+    } else if (!watch('equipment_no')) {
+      toastWithTimeout(ToastVariant.Default, "Equipment No. is required")
+      return
+    }
     await makeApiCall(
       () => new MasterService().addEquipment(datas),
       {
-        afterSuccess: (data:any) => {
-          setExistingData([...existingData,data])
+        afterSuccess: (data: any) => {
+          setExistingData([...existingData, data])
           toastWithTimeout(ToastVariant.Success, "Equipment added");
           setIsSubmitted(true);
         }
@@ -419,22 +426,22 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
         approval_status: values.approval_status === "Approved" ? true : false,
         next_test_exam: testExamChecked ? "Not Applicable" : values.next_test_exam,
-        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam  
+        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam
       };
 
-    
+
       await updateRecord(id, formData);
 
       // Handle updating multi-equipments if any
-     
+
       if (existingData.length > 0) {
-        await Promise.all(existingData.map((item:any) => {
+        await Promise.all(existingData.map((item: any) => {
           return makeApiCall(
             () => new MasterService().updateSubtopicDetails('lifting_gear_multi_equipments', item.id, { lifting_gear_multi_id: id }), {}
           );
         }));
         console.log('All updates completed successfully');
-        
+
       }
 
       toastWithTimeout(ToastVariant.Success, 'Equipment details updated successfully');
@@ -484,18 +491,21 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       name="location"
                       control={control}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="location">
-                            <SelectValue placeholder="Select location" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {locationOptions?.map((location: any) => (
-                              <SelectItem key={location.id} value={String(location?.location?.id)}>
-                                {location?.location?.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="flex w-full gap-2 items-center">
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="location">
+                              <SelectValue placeholder="Select location" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {locationOptions?.map((loc: any) => (
+                                <SelectItem key={loc.id} value={String(loc.location.id)}>
+                                  {loc.location.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <AddLocationButton />
+                        </div>
                       )}
                     />
                     {errors.location && (
@@ -509,18 +519,21 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       name="site"
                       control={control}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="site">
-                            <SelectValue placeholder="Select site" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {siteOptions?.map((site: any) => (
-                              <SelectItem key={site.id} value={String(site.id)}>
-                                {site?.name} 
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="flex w-full gap-2 items-center">
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="site">
+                              <SelectValue placeholder="Select site" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {siteOptions?.map((site: any) => (
+                                <SelectItem key={site.id} value={String(site.id)}>
+                                  {site.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <AddSiteButton />
+                        </div>
                       )}
                     />
                     {errors.site && (
@@ -612,18 +625,21 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       name="equipment_no"
                       control={control}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="equipment_no">
-                            <SelectValue placeholder="Select equipment no." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {equipmentNoOptions?.map((equipment) => (
-                              <SelectItem key={equipment.id} value={String(equipment.id)}>
-                                {equipment?.equipment_no}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="flex w-full gap-2 items-center">
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="equipment_no">
+                              <SelectValue placeholder="Select equipment no." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {equipmentNoOptions?.map((eq: any) => (
+                                <SelectItem key={eq.id} value={String(eq.id)}>
+                                  {eq.equipment_no}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <AddEquipmentButton />
+                        </div>
                       )}
                     />
                     {errors.equipment_no && (
@@ -633,11 +649,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">Title</Label>
-                    <Input 
-                      id="title"  
-                      {...register('title')} 
-                      value={watch('title')} 
-                       // Make it read-only since it's auto-populated
+                    <Input
+                      id="title"
+                      {...register('title')}
+                      value={watch('title')}
+                    // Make it read-only since it's auto-populated
                     />
                     {errors.title && (
                       <p className="text-red-500 text-[12px] ">{errors.title.message}</p>
@@ -648,11 +664,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                 <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
-                    <Input 
-                      id="equipment_description"  
-                      {...register('equipment_description')} 
-                      value={watch('equipment_description')} 
-                       // Make it read-only since it's auto-populated
+                    <Input
+                      id="equipment_description"
+                      {...register('equipment_description')}
+                      value={watch('equipment_description')}
+                    // Make it read-only since it's auto-populated
                     />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
@@ -663,11 +679,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
-                    <Input 
-                      id="test_cert_coc_no"  
-                      {...register('test_cert_coc_no')} 
-                      value={watch('test_cert_coc_no')} 
-                       // Make it read-only since it's auto-populated
+                    <Input
+                      id="test_cert_coc_no"
+                      {...register('test_cert_coc_no')}
+                      value={watch('test_cert_coc_no')}
+                    // Make it read-only since it's auto-populated
                     />
                     {errors.test_cert_coc_no && (
                       <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
@@ -676,11 +692,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
-                    <Input 
-                      id="safe_working_load"  
-                      {...register('safe_working_load')} 
-                      value={watch('safe_working_load')} 
-                       // Make it read-only since it's auto-populated
+                    <Input
+                      id="safe_working_load"
+                      {...register('safe_working_load')}
+                      value={watch('safe_working_load')}
+                    // Make it read-only since it's auto-populated
                     />
                     {errors.safe_working_load && (
                       <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
@@ -689,11 +705,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="proof_load" className="mt-3">Proof Load:</Label>
-                    <Input 
-                      id="proof_load"  
-                      {...register('proof_load')} 
-                      value={watch('proof_load')} 
-                       // Make it read-only since it's auto-populated
+                    <Input
+                      id="proof_load"
+                      {...register('proof_load')}
+                      value={watch('proof_load')}
+                    // Make it read-only since it's auto-populated
                     />
                     {errors.proof_load && (
                       <p className="text-red-500 text-[12px] ">{errors.proof_load.message}</p>
@@ -706,23 +722,67 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       name="standard"
                       control={control}
                       render={({ field }) => {
-                        const currentStandard = String(watch('standard') || '');
+                        const allStandardOptions = standardOptions?.map((std: any) => String(std.id)) || [];
+                        const value = allStandardOptions.includes(field.value) ? field.value : "";
                         return (
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger id="standard">
-                              <SelectValue placeholder="Select standard" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {standardOptions?.map((standard) => (
-                                <SelectItem key={standard.id} value={String(standard.id)}>
-                                  {standard.standard}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <div className="flex w-full gap-2 items-center">
+                            <Select
+                              value={value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger id="standard">
+                                <SelectValue
+                                  placeholder="Select or type standard"
+                                  {...(allStandardOptions.includes(field.value)
+                                    ? {}
+                                    : { children: field.value ? field.value : undefined })}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <div className="px-2 py-1 relative">
+                                  <Input
+                                    className="mt-2"
+                                    placeholder="Type standard name"
+                                    value={field.value || ""}
+                                    onChange={e => {
+                                      field.onChange(e.target.value);
+                                    }}
+                                  />
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                    onClick={async () => {
+                                      if (!field.value) return;
+                                      await makeApiCall(
+                                        () => new MasterService().addStandard({ standard: field.value }),
+                                        {
+                                          afterSuccess: (data: any) => {
+                                            setInvoke((prev) => !prev);
+                                            toastWithTimeout(ToastVariant.Success, "Standard added successfully");
+                                            if (data && data.id) {
+                                              field.onChange(String(data.id));
+                                            } else {
+                                              field.onChange("");
+                                            }
+                                          }
+                                        }
+                                      );
+                                    }}
+                                    type="button"
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
+                                {standardOptions?.map((std: any) => (
+                                  <SelectItem key={std.id} value={String(std.id)}>
+                                    {std.standard}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <AddStandardButton />
+                          </div>
                         );
                       }}
                     />
@@ -738,7 +798,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       type="date"
                       {...register('last_test_exam')}
                       value={watch('last_test_exam')}
-                       // Make it read-only since it's auto-populated
+                    // Make it read-only since it's auto-populated
                     />
                     {errors.last_test_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
@@ -746,14 +806,14 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-    Last Test Certificate No.
-  </Label>
-  <Input
-    id="last_test_exam_certificate_no"
-    {...register('last_test_exam_certificate_no')}
-  />
-</div>
+                    <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
+                      Last Test Certificate No.
+                    </Label>
+                    <Input
+                      id="last_test_exam_certificate_no"
+                      {...register('last_test_exam_certificate_no')}
+                    />
+                  </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam" className="mt-3">Last Thorough Exam</Label>
                     <Input
@@ -761,21 +821,21 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       type="date"
                       {...register('last_thorough_exam')}
                       value={watch('last_thorough_exam')}
-                       // Make it read-only since it's auto-populated
+                    // Make it read-only since it's auto-populated
                     />
                     {errors.last_thorough_exam && (
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-    Last Thorough Certificate No.
-  </Label>
-  <Input
-    id="last_thorough_exam_certificate_no"
-    {...register('last_thorough_exam_certificate_no')}
-  />
-</div>
+                    <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
+                      Last Thorough Certificate No.
+                    </Label>
+                    <Input
+                      id="last_thorough_exam_certificate_no"
+                      {...register('last_thorough_exam_certificate_no')}
+                    />
+                  </div>
                 </div>
 
                 <div className="grid gap-4 grid-cols-1 w-[64%]">
@@ -786,37 +846,27 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         name="next_test_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input 
-                            id="next_test_exam"  
-                            type="date" 
-                            {...field} 
-                            disabled={testExamChecked} 
+                          <Input
+                            id="next_test_exam"
+                            type="date"
+                            {...field}
+                            disabled={testExamChecked}
                             value={testExamChecked ? "" : field.value}
                           />
                         )}
                       />
-                      <Checkbox 
-                        className='w-6 h-6'  
-                        checked={testExamChecked} 
-                        onCheckedChange={(checked:any) => setTestExamChecked(checked)} 
-                      /> 
+                      <Checkbox
+                        className='w-6 h-6'
+                        checked={testExamChecked}
+                        onCheckedChange={(checked: any) => setTestExamChecked(checked)}
+                      />
                       <span className="text-[13px] w-[33%] ">Not Applicable</span>
                       {errors.next_test_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.next_test_exam.message}</p>
                       )}
                     </div>
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4 ">
-  <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
-    Next Test Certificate No.
-  </Label>
-  <Input
-    id="next_test_exam_certificate_no"
-    disabled={testExamChecked}
-    className='w-[68%]'
-    {...register('next_test_exam_certificate_no')}
-  />
-</div>
+                  {/* Next Test Certificate No. REMOVED */}
                 </div>
                 <div className="grid gap-4 grid-cols-1 w-[64%]">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -826,37 +876,27 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         name={"next_thorough_exam"}
                         control={control}
                         render={({ field }) => (
-                          <Input 
-                            id={"next_thorough_exam"}  
-                            type="date" 
-                            {...field} 
-                            disabled={thoroughExamChecked} 
+                          <Input
+                            id={"next_thorough_exam"}
+                            type="date"
+                            {...field}
+                            disabled={thoroughExamChecked}
                             value={thoroughExamChecked ? "" : field.value}
                           />
                         )}
                       />
-                      <Checkbox 
-                        className={'w-6 h-6'} 
-                        checked={thoroughExamChecked} 
-                        onCheckedChange={(checked:any) => setThoroughExamChecked(checked!)} 
-                      /> 
+                      <Checkbox
+                        className={'w-6 h-6'}
+                        checked={thoroughExamChecked}
+                        onCheckedChange={(checked: any) => setThoroughExamChecked(checked!)}
+                      />
                       <span className="text-[13px] w-[33%] ">Not Applicable</span>
                       {errors.next_thorough_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.next_thorough_exam.message}</p>
                       )}
                     </div>
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-  <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
-    Next Thorough Certificate No.
-  </Label>
-  <Input
-    id="next_thorough_exam_certificate_no"
-    disabled={thoroughExamChecked}
-    className='w-[68%]'
-    {...register('next_thorough_exam_certificate_no')}
-  />
-</div>
+                  {/* Next Thorough Certificate No. REMOVED */}
                 </div>
 
                 {/* Result Section */}
@@ -888,20 +928,72 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Controller
                       name="owner_name"
                       control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="owner_name">
-                            <SelectValue placeholder="Select owner" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ownerOptions?.map((owner) => (
-                              <SelectItem key={owner.id} value={String(owner.id)}>
-                                {owner?.owner}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
+                      render={({ field }) => {
+                        const currentOwner = String(
+                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
+                            ?.owner_id ?? ""
+                        );
+                        const allOwnerOptions = ownerOptions?.map((owner: any) => String(owner.id)) || [];
+                        const value = currentOwner || field.value || "";
+
+                        return (
+                          <div className="flex w-full gap-2 items-center">
+                            <Select
+                              value={allOwnerOptions.includes(value) ? value : ""}
+                              onValueChange={(val) => field.onChange(val)}
+                            >
+                              <SelectTrigger id="owner_id" className="w-full">
+                                <SelectValue
+                                  placeholder="Select or type owner"
+                                  {...(allOwnerOptions.includes(value)
+                                    ? {}
+                                    : { children: value ? value : undefined })}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <div className="px-2 py-1 relative">
+                                  <>
+                                    <Input
+                                      className="mt-2"
+                                      placeholder="Type owner name"
+                                      value={field.value || ""}
+                                      onChange={e => {
+                                        field.onChange(e.target.value);
+                                      }}
+                                    />
+                                    <Button
+                                      size="icon"
+                                      variant="outline"
+                                      className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                      onClick={() => {
+                                        makeApiCall(
+                                          () => new MasterService().addOwner({ owner: field.value }),
+                                          {
+                                            afterSuccess: () => {
+                                              setInvoke(!invoke);
+                                              toastWithTimeout(ToastVariant.Success, "Owner added successfully")
+                                              field.onChange("");
+                                            }
+                                          }
+                                        )
+                                      }}
+                                      type="button"
+                                    >
+                                      Add
+                                    </Button>
+                                  </>
+                                </div>
+                                {ownerOptions?.map((owner: any) => (
+                                  <SelectItem key={owner.id} value={String(owner.id)}>
+                                    {owner.owner}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <AddOwnerButton />
+                          </div>
+                        );
+                      }}
                     />
                     {errors.owner_name && (
                       <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
@@ -919,7 +1011,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             <SelectValue placeholder="Select surveyor" />
                           </SelectTrigger>
                           <SelectContent>
-                            {surveyorOptions?.map((surveyor:any) => (
+                            {surveyorOptions?.map((surveyor: any) => (
                               <SelectItem key={surveyor.id} value={String(surveyor.id)}>
                                 {surveyor.surveyor}
                               </SelectItem>
@@ -950,20 +1042,70 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Controller
                       name="manufacturer"
                       control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="manufacturer">
-                            <SelectValue placeholder="Select manufacturer" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {manufacturerOptions?.map((manufacturer) => (
-                              <SelectItem key={manufacturer.id} value={String(manufacturer.id)}>
-                                {manufacturer.manufacturer}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
+                      render={({ field }) => {
+                        const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
+                        const value = allManufacturerOptions.includes(field.value) ? field.value : "";
+                        return (
+                          <div className="flex w-full gap-2 items-center">
+                            <Select
+                              value={value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger id="manufacturer">
+                                <SelectValue
+                                  placeholder="Select or type manufacturer"
+                                  {...(allManufacturerOptions.includes(field.value)
+                                    ? {}
+                                    : { children: field.value ? field.value : undefined })}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <div className="px-2 py-1 relative">
+                                  <Input
+                                    className="mt-2"
+                                    placeholder="Type manufacturer name"
+                                    value={field.value || ""}
+                                    onChange={e => {
+                                      field.onChange(e.target.value);
+                                    }}
+                                  />
+                                  <Button
+                                    size="icon"
+                                    variant="outline"
+                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
+                                    onClick={async () => {
+                                      if (!field.value) return;
+                                      await makeApiCall(
+                                        () => new MasterService().addManufacturer({ manufacturer: field.value }),
+                                        {
+                                          afterSuccess: (data: any) => {
+                                            setInvoke((prev) => !prev);
+                                            toastWithTimeout(ToastVariant.Success, "Manufacturer added successfully");
+                                            if (data && data.id) {
+                                              field.onChange(String(data.id));
+                                            } else {
+                                              field.onChange("");
+                                            }
+                                          }
+                                        }
+                                      );
+                                    }}
+                                    type="button"
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
+                                {manufacturerOptions?.map((manu: any) => (
+                                  <SelectItem key={manu.id} value={String(manu.id)}>
+                                    {manu.manufacturer}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <AddManufacturerButton />
+                          </div>
+                        );
+                      }}
                     />
                     {errors.manufacturer && (
                       <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
@@ -1022,7 +1164,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
                     <SafetyChecklist
@@ -1033,14 +1175,14 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                 </div>
                 <div className="space-y-4 w-full">
                   <div className="grid gap-4 grid-cols-1 w-full">
-                  <div className="grid grid-cols-[400px_1fr]  gap-4">
-                    <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                    <Input id="defect_description" className='my-auto' {...register('defect_description')} />
-                    {errors.defect_description && (
-                      <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
-                    )}
- 
-</div>
+                    <div className="grid grid-cols-[400px_1fr]  gap-4">
+                      <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
+                      <Input id="defect_description" className='my-auto' {...register('defect_description')} />
+                      {errors.defect_description && (
+                        <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
+                      )}
+
+                    </div>
                   </div>
                 </div>
                 {/* <div className="space-y-4">
@@ -1057,17 +1199,17 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
                 {/* Submit and Cancel Buttons */}
                 <div className="flex justify-end gap-4">
-                  <Button 
-                    type="reset" 
-                    className="px-10" 
-                    onClick={onClose} 
+                  <Button
+                    type="reset"
+                    className="px-10"
+                    onClick={onClose}
                     variant="outline"
                   >
                     Cancel
                   </Button>
-                  <Button 
-                    className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border" 
-                    type="submit" 
+                  <Button
+                    className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border"
+                    type="submit"
                     disabled={loading}
                   >
                     {loading ? 'Saving...' : 'Save'}

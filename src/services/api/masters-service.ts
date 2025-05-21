@@ -83,6 +83,24 @@ export class MasterService extends Supabase {
             return dateB - dateA; // Descending order
         });
     }
+    async addOwner(result:any){
+        const {data,error} = await this.supabase
+                             .from('owner').insert(result).select()
+        if(error) throw error;
+        return data[0];
+    }
+    async addManufacturer(result:any){
+        const {data,error} = await this.supabase
+                             .from('manufacturer').insert(result).select()
+        if(error) throw error;
+        return data[0];
+    }
+    async addStandard(result:any){
+        const {data,error} = await this.supabase
+                             .from('standard').insert(result).select()
+        if(error) throw error;
+        return data[0];
+    }
     async addEquipment(result:any){
         const {data,error} = await this.supabase
                              .from('lifting_gear_multi_equipments').insert(result).select()
