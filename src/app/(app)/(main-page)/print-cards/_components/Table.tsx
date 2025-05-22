@@ -227,7 +227,21 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                     )}
                                 </TableCell>
                                 <TableCell className="py-4">
-                                    <DropdownMenu>
+                                    <div className='flex flex-col items-center gap-2'>
+                                    <button
+                                           onClick={() => handleEditClick(idx + 1)}
+                                            className="bg-white p-1 px-2 flex rounded-md  border-primary border text-primary"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={async () => await deleteRecord(item.id)}
+                                            className="bg-white p-1 px-2 flex rounded-md  border-primary border text-primary"
+                                        >
+                                              Delete
+                                        </button>
+                                    </div>
+                                    {/* <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <button>
                                                 <ActionButtonIcon />
@@ -250,7 +264,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                                 }
                                             />
                                         </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    </DropdownMenu> */}
                                 </TableCell>
                             </TableRow>
                             <AnimatePresence>

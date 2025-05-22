@@ -56,7 +56,8 @@ export default function Component() {
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage alt={`${userName}'s avatar`} src="/placeholder.svg?height=32&width=32" />
+                        <AvatarImage alt={`${userName}'s avatar`}    src={userDetails?.avatar !== "" ? process.env.NEXT_PUBLIC_IMG_URL + userDetails?.avatar : "/placeholder.svg?height=100&width=100"}
+                   />
                         <AvatarFallback>{fallbackAvatar}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">

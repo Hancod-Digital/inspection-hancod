@@ -49,12 +49,11 @@ export class UserService extends Supabase {
     return error || data;
   }
 
-  async updateUser({name, email, phone, avatar, id} : {name:string,email:string,phone:number,avatar:string,id:number}) {
+  async updateUser({name, email, mobile, code, avatar, id} : {name:string,email:string,mobile:number,code:string,avatar:string,id:number}) {
     await this.ensureAuthenticated()
-     
     const { data, error } = await this.supabase
       .from('user')
-      .update({ name, email, phone, avatar })
+      .update({ name, email, phone:mobile, code, avatar })
       .eq('id', id)
       if (error) {
         throw new Error(error.message);

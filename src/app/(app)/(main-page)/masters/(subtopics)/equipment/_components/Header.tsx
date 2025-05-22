@@ -41,7 +41,7 @@ export default function Component({ onOpen, onSearchChange }:{onOpen: () => void
                     <Search className="absolute left-2 top-1/2 h-6 w-6 -translate-y-1/2 text-primary" />
                     <Input
                         type="search"
-                        placeholder="Search"
+                        placeholder="Search by title"
                         className="pl-10 pr-4 focus:border-primary w-full"
                         onChange={(e) => onSearchChange(e.target.value)}
                     />

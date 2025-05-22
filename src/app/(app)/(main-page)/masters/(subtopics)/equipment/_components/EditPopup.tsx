@@ -146,7 +146,7 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
   // When the component loads or data changes, set "Not Applicable" checkboxes
   useEffect(() => {
     if (!data) return;
-
+    console.log(data?.last_test_date, "data?.last_test_date", data?.next_test_date, "data?.next_test_date", data?.last_thorough_date, "data?.last_thorough_date", data?.next_thorough_date, "data?.next_thorough_date");
     // Last Test Date
     if (data.last_test_date) {
       setValue("last_test_date", data.last_test_date);

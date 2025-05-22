@@ -94,7 +94,7 @@ export default function EquipmentDetailsForm({
     year_of_manufacture: string().nonempty("Year of manufacture is required"),
     status: boolean().optional(),
     safe_working_load: string().nonempty("Safe working load is required"),
-    proof_load: string().nonempty("Proof load is required"),
+    proof_load: string().nonempty("Test load is required"),
   
     // The four date fields (any of which can be replaced by "Not Applicable"):
     last_test_date:  !lastTestExamChecked ? string().nonempty("Last test date is required") : string().optional(),
@@ -632,7 +632,7 @@ export default function EquipmentDetailsForm({
                     {/* Proof Load */}
                     <div className="grid grid-cols-[200px_1fr] items-start gap-4">
                       <Label className="mt-3" htmlFor="proof_load">
-                        Proof Load
+                        Test Load
                       </Label>
                       <div>
                         <Controller

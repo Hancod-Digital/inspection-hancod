@@ -707,7 +707,7 @@ export default function EquipmentDetailsEditForm({
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_test_exam" className="mt-3">Last Test Exam</Label>
+                    <Label htmlFor="last_test_exam" className="mt-3">Date of last proof load test</Label>
                     <Input
                       id="last_test_exam"
                       type="date"
@@ -719,7 +719,7 @@ export default function EquipmentDetailsEditForm({
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                      Last Test Certificate No.
+                      Certificate No.
                     </Label>
                     <Input
                       id="last_test_exam_certificate_no"
@@ -728,7 +728,7 @@ export default function EquipmentDetailsEditForm({
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_thorough_exam" className="mt-3">Last Thorough Exam</Label>
+                    <Label htmlFor="last_thorough_exam" className="mt-3">Date of last examination</Label>
                     <Input
                       id="last_thorough_exam"
                       type="date"
@@ -740,7 +740,7 @@ export default function EquipmentDetailsEditForm({
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-                      Last Thorough Certificate No.
+                      Certificate No.
                     </Label>
                     <Input
                       id="last_thorough_exam_certificate_no"
@@ -750,7 +750,7 @@ export default function EquipmentDetailsEditForm({
                 </div>
                 <div className="grid gap-4 grid-cols-1 w-full">
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                    <Label className='mt-3' htmlFor="next_test_exam">Next Test Exam</Label>
+                    <Label className='mt-3' htmlFor="next_test_exam">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name="next_test_exam"
@@ -794,7 +794,7 @@ export default function EquipmentDetailsEditForm({
 
                   <div className="grid gap-4 grid-cols-1 w-full">
                     <div className="grid grid-cols-[200px_1fr] gap-4">
-                      <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
+                      <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                       <div className="flex items-center gap-4">
                         <Controller
                           name={"next_thorough_exam"}

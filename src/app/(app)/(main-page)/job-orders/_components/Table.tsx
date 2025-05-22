@@ -56,7 +56,7 @@ export default function JobTable({isState,setIsState,search,setSearch}:{isState:
   const handleCloseEdit = () => {
     setEditingRow(null);
   };
-const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage,currentData}=usePagination(jobOrders.filter((item:any)=>item.job_no.includes(search)))
+const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage,currentData}=usePagination(jobOrders.filter((item:any)=>item.job_no.toLowerCase().includes(search.toLowerCase())))
   return (
     <div className="px-8 py-3 bg-white w-[98%] mx-auto">
       <Table className="w-full">

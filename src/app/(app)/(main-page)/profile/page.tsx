@@ -33,37 +33,52 @@ const passwordSchema = z.object({
 
 
 export default function Component() {
-  const [activeTab, setActiveTab] = useState("personal");
-  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
-  const [fileBuffer, setFileBuffer] = useState<File | null>(null);
-  const [countryCode, setCountryCode] = useState('+974');  // Default country code
-// Zod Schema for validation
-const getPhoneValidationSchema = (code: string) => {
-     
-  const countryInfo = countryCodes.find((country:any) => country.e164_cc === code.replace('+', ''));
-
-  if (!countryInfo) {
-    return z.string().nonempty("Phone number is required");
-  }
-
-  const maxLength = countryInfo.example.length;
-
-  return z.string()
-    .nonempty("Phone number is required")
-    .refine
-    (
-      (value) => value.length == maxLength,
-      `Phone number should be ${maxLength} digits for ${countryInfo.name}`
-    );
-};
-const schema = z.object({
-  name: z.string().min(1, "Full Name is required"),
-  email: z.string().email("Invalid email address"),
-  mobile: getPhoneValidationSchema(countryCode),
-});
   const { data: userDetails, isSuccess } = useQuery({
     queryKey: ['userDetails'],
     queryFn: fetchUserDetails,
+  });
+
+  // Set initial country code from userDetails?.code if available, else fallback to '+974'
+  const initialCountryCode = userDetails?.code
+    ? (userDetails.code.startsWith('+') ? userDetails.code : `+${userDetails.code}`)
+    : '+974';
+
+  // Use a state that updates when userDetails changes
+  const [countryCode, setCountryCode] = useState(initialCountryCode);
+
+  // Ensure countryCode updates if userDetails changes (e.g., after fetch)
+  useEffect(() => {
+    if (userDetails?.code) {
+      setCountryCode(userDetails.code.startsWith('+') ? userDetails.code : `+${userDetails.code}`);
+    }
+  }, [userDetails?.code]);
+
+  const [activeTab, setActiveTab] = useState("personal");
+  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [fileBuffer, setFileBuffer] = useState<File | null>(null);
+
+  // Zod Schema for validation
+  const getPhoneValidationSchema = (code: string) => {
+    const countryInfo = countryCodes.find((country:any) => country.e164_cc === code.replace('+', ''));
+
+    if (!countryInfo) {
+      return z.string().nonempty("Phone number is required");
+    }
+
+    const maxLength = countryInfo.example.length;
+
+    return z.string()
+      .nonempty("Phone number is required")
+      .refine(
+        (value) => value.length == maxLength,
+        `Phone number should be ${maxLength} digits for ${countryInfo.name}`
+      );
+  };
+
+  const schema = z.object({
+    name: z.string().min(1, "Full Name is required"),
+    email: z.string().email("Invalid email address"),
+    mobile: getPhoneValidationSchema(countryCode),
   });
 
   useEffect(() => {
@@ -100,13 +115,46 @@ const schema = z.object({
     }
   };
 
+  // Helper function to extract country code and phone number
+  const extractPhoneDetails = (fullPhone: any) => {
+    // Ensure fullPhone is a string
+    if (typeof fullPhone !== 'string') {
+      if (fullPhone == null) {
+        return { countryCode: initialCountryCode, phoneNumber: '' };
+      }
+      // Try to convert to string if possible
+      try {
+        fullPhone = String(fullPhone);
+      } catch {
+        return { countryCode: initialCountryCode, phoneNumber: '' };
+      }
+    }
+    if (!fullPhone) return { countryCode: initialCountryCode, phoneNumber: '' };
+    
+    // Supported country codes in descending order of length to ensure proper matching
+    const supportedCodes = ['+974', '+91', '+44', '+1'];
+    supportedCodes.sort((a, b) => b.length - a.length); // Sort by length (longest first)
+    
+    for (const code of supportedCodes) {
+      if (fullPhone.startsWith(code)) {
+        return {
+          countryCode: code,
+          phoneNumber: fullPhone.substring(code.length)
+        };
+      }
+    }
+    
+    // Default fallback if no code matches
+    return { countryCode: initialCountryCode, phoneNumber: fullPhone };
+  };
+
   // Setup react-hook-form
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: userDetails?.name || "",
-      email: userDetails?.email || "",
-      mobile: userDetails?.phone || "",
+      name: "",
+      email: "",
+      mobile: "",
     },
   });
 
@@ -118,14 +166,15 @@ const schema = z.object({
       confirmPassword: "",
     },
   });
-  const router = useRouter()
+
+  const router = useRouter();
+  
   const handleLogout = () => {
     const service = new AuthService();
     makeApiCall(
       () => service.userLogout(),
       {
         toastContent: "Logout Successful",
-
         afterSuccess: () => {
           router.push('/login');
           router.refresh();
@@ -133,6 +182,7 @@ const schema = z.object({
       }
     );
   };
+
   const onSubmitPassword = async (data: any) => {
     try {
       // Step 1: Verify the new password (using a promise-based approach)
@@ -146,7 +196,6 @@ const schema = z.object({
             },
             afterError: (error: any) => {
               toastWithTimeout(ToastVariant.Destructive, "Error: Invalid password");
-
               reject(error);  // Reject the promise with the error
             }
           }
@@ -160,10 +209,9 @@ const schema = z.object({
             () => new AuthService().change_authenticated_password(data.newPassword),
             {
               afterSuccess: (data: any) => {
-
                 toastWithTimeout(ToastVariant.Success, "Password Updated Successfully");
                 resetPasswordForm();
-                handleLogout()
+                handleLogout();
                 resolve(true);  // Resolve the promise after successful password change
               },
               afterError: (err: any) => {
@@ -173,8 +221,6 @@ const schema = z.object({
             }
           );
         });
-      } else {
-
       }
     } catch (error) {
       console.error("Password update failed:", error);
@@ -183,10 +229,25 @@ const schema = z.object({
 
   const queryClient = useQueryClient();
 
-
+  // Effect to handle user details loading and form reset
   useEffect(() => {
     if (isSuccess && userDetails) {
-      reset(userDetails);
+      // Extract country code and phone number
+      const { countryCode: extractedCode, phoneNumber } = extractPhoneDetails(userDetails.phone || '');
+      
+      // Update the country code state, prefer userDetails.code if available
+      if (userDetails.code) {
+        setCountryCode(userDetails.code.startsWith('+') ? userDetails.code : `+${userDetails.code}`);
+      } else {
+        setCountryCode(extractedCode);
+      }
+      
+      // Reset form with user details and extracted phone number
+      reset({
+        name: userDetails.name || "",
+        email: userDetails.email || "",
+        mobile: phoneNumber || ""
+      });
     }
   }, [isSuccess, reset, userDetails]);
 
@@ -213,11 +274,12 @@ const schema = z.object({
 
   const onSubmit = async (data: any) => {
     const fullMobileNumber = `${countryCode}${data.mobile}`;  // Combine country code with mobile number
-    data.mobile = fullMobileNumber;
-
+    
     makeApiCall(
       async () => new UserService().updateUser({
         ...data,
+        mobile: data.mobile,  // Use the combined number for the API
+        code: countryCode,
         avatar: fileBuffer ? await uploadImage() : userDetails?.avatar,
         id: userDetails.id,
       }), {
@@ -225,10 +287,9 @@ const schema = z.object({
         toastWithTimeout(ToastVariant.Success, "Profile Updated");
         queryClient.invalidateQueries({ queryKey: ['userDetails'] });
         queryClient.refetchQueries({ queryKey: ['userDetails'] });
-       
       },
       afterError: (err: any) => {
-         toastWithTimeout(ToastVariant.Success, "An Error Occured");
+        toastWithTimeout(ToastVariant.Success, "An Error Occurred");
       }
     });
   };
@@ -275,7 +336,7 @@ const schema = z.object({
                     <AvatarFallback>{fallbackAvatar}</AvatarFallback>
                   </Avatar>
 
-                  <a href="#" id="upload_link" className="text-[#8B1F41] hover:underline">Upload Image </a>
+                  <a href="#" id="upload_link" className="text-[#8B1F41] hover:underline">Upload Image</a>
                 </div>
 
                 {/* Form Fields */}
@@ -295,7 +356,19 @@ const schema = z.object({
                   <div className="flex items-center space-x-4">
                     <Label htmlFor="mobile" className="w-[150px]">Mobile Number</Label>
                     <div className="flex-1 flex space-x-2">
-                      <Select value={countryCode} onValueChange={setCountryCode}>
+                      <Select
+                        value={countryCode}
+                        onValueChange={(value) => {
+                          setCountryCode(value);
+                          // When country code changes, we need to revalidate the phone number
+                          const currentPhone = register("mobile").value;
+                          if (currentPhone) {
+                            setValue("mobile", currentPhone, { 
+                              shouldValidate: true 
+                            });
+                          }
+                        }}
+                      >
                         <SelectTrigger className="w-[80px]">
                           <SelectValue placeholder="Code" />
                         </SelectTrigger>
@@ -304,10 +377,10 @@ const schema = z.object({
                           <SelectItem value="+1">+1</SelectItem>
                           <SelectItem value="+44">+44</SelectItem>
                           <SelectItem value="+974">+974</SelectItem>
-
                         </SelectContent>
                       </Select>
-                      <Input  {...register("mobile")}
+                      <Input
+                        {...register("mobile")}
                         id="mobile"
                         type="tel"
                         inputMode="numeric"
@@ -332,7 +405,6 @@ const schema = z.object({
             </form>
           </TabsContent>
 
-          {/* Password Change Form */}
           {/* Password Change Form */}
           <TabsContent value="password" className="bg-white p-5">
             <div className="space-y-4 max-w-md">
@@ -360,7 +432,6 @@ const schema = z.object({
               </form>
             </div>
           </TabsContent>
-
         </Tabs>
       </CardContent>
     </Card>

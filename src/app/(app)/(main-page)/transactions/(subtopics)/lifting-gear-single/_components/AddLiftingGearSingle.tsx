@@ -68,9 +68,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
     approval_status: string().nonempty('Approval Status is required'),
-    last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+    last_test_exam_certificate_no: string().optional(),
     // next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
-    last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
+    last_thorough_exam_certificate_no: string().optional(),
     // next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
   });
    
@@ -554,7 +554,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">
-                      Last Test Exam
+                      Date of last proof load test
                     </Label>
                     <Input
                       id="last_test_exam"
@@ -585,7 +585,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam" className="mt-3">
-                      Last Thorough Exam
+                      Date of last examination
                     </Label>
                     <Input
                       id="last_thorough_exam"
@@ -617,7 +617,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                 </div>
                 <div className="grid gap-4 grid-cols-1 w-[64%]">
                   <div className="grid grid-cols-[200px_1fr]   items-start gap-4">
-                    <Label className='mt-3' htmlFor="next_test_date">Next Test Exam</Label>
+                    <Label className='mt-3' htmlFor="next_test_date">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name="next_test_exam"
@@ -640,7 +640,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                   {/* Removed Next Test Certificate No. */}
                   <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
-                    <Label className='mt-3' htmlFor={"next_thorough_exam"}>Next Thorough Exam</Label>
+                    <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name={"next_thorough_exam"}
