@@ -74,8 +74,8 @@ export default function EquipmentDetailsForm({
     next_test_exam: string().optional(),
     last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
     next_thorough_exam: string().optional(),
-    last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
-    last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
+    last_test_exam_certificate_no: string().optional(),
+    last_thorough_exam_certificate_no: string().optional(),
     // next_test_exam_certificate_no: REMOVED
     // next_thorough_exam_certificate_no: REMOVED
     result: string().nonempty('Result is required'),
@@ -116,11 +116,6 @@ export default function EquipmentDetailsForm({
     setValue,
   } = methods;
 
-  // Watch form fields
-  const equipment_no = watch('equipment_no');
-  const location = watch('location');
-  const job_order_no = watch('job_order_no');
-  console.log(watch('job_order_no'));
   // Option states
   const [siteOptions, setSiteOptions] = useState<any[]>([]);
   const [authorityOptions, setAuthorityOptions] = useState<any[]>([]);
@@ -146,26 +141,53 @@ export default function EquipmentDetailsForm({
     safeToUse: 'no',
   });
 
+  // Watch values for select fields
+  const equipment_no = watch('equipment_no');
+  const location = watch('location');
+
   // Update "surveyor" when "job_order_no" changes
+  const job_order_no = watch('job_order_no');
   useEffect(() => {
     if (job_order_no) {
-      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-      console.log("----------------------------------------------", job_order);
+      const job_order = jobOrderNoOptions.find((item: any) => String(item.id) === String(job_order_no));
       if (job_order) {
-        setValue('surveyor', job_order.surveyor);
-        setValue('location', job_order.location);
+        setValue('surveyor', job_order.surveyor ? String(job_order.surveyor) : '');
+        setValue('location', job_order.location ? String(job_order.location) : '');
       }
     }
   }, [job_order_no, jobOrderNoOptions, setValue]);
 
   // Auto-populate fields when equipment_no changes
   useEffect(() => {
-    const selected = equipmentNoOptions.find((item: any) => item.id == equipment_no);
+    const selected = equipmentNoOptions.find((item: any) => String(item.id) === String(equipment_no));
     setSelectedEquipment(selected);
 
     if (selected) {
-      setValue('standard', String(selected.standard) || '');
-      setValue('manufacturer', String(selected.manufacturer) || '');
+      // Set Standard
+      if (selected.standard) {
+        // Try to find the standard in the options by id or name
+        const foundStandard = standardOptions.find(
+          (std: any) =>
+            String(std.id) === String(selected.standard) ||
+            std.standard === selected.standard
+        );
+        setValue('standard', foundStandard ? String(foundStandard.id) : String(selected.standard));
+      } else {
+        setValue('standard', '');
+      }
+
+      // Set Manufacturer
+      if (selected.manufacturer) {
+        const foundManufacturer = manufacturerOptions.find(
+          (manu: any) =>
+            String(manu.id) === String(selected.manufacturer) ||
+            manu.manufacturer === selected.manufacturer
+        );
+        setValue('manufacturer', foundManufacturer ? String(foundManufacturer.id) : String(selected.manufacturer));
+      } else {
+        setValue('manufacturer', '');
+      }
+
       setValue('year_of_manufacture', String(selected.year_of_manufacture) || '');
       setValue('test_cert_coc_no', String(selected.test_certificate_no) || '');
       setValue('safe_working_load', String(selected.safe_working_load) || '');
@@ -173,27 +195,34 @@ export default function EquipmentDetailsForm({
       setValue('title', String(selected.title) || '');
       setValue('registration_no', String(selected.registration_no) || '');
       setValue('last_test_exam', String(selected.last_test_date) || '');
-      console.log("----------------------------------------------", selected?.last_test_exam_certificate_no);
       setValue('last_test_exam_certificate_no', selected?.last_test_exam_certificate_no ? String(selected?.last_test_exam_certificate_no) : '');
       setValue('next_test_exam', String(selected.next_test_date) || '');
-      // setValue('next_test_exam_certificate_no', selected?.next_test_exam_certificate_no ? String(selected?.next_test_exam_certificate_no) : ''); // REMOVED
       setValue('last_thorough_exam', String(selected.last_thorough_date) || '');
       setValue('last_thorough_exam_certificate_no', selected?.last_thorough_exam_certificate_no ? String(selected?.last_thorough_exam_certificate_no) : '');
       setValue('next_thorough_exam', String(selected.next_thorough_date) || '');
-      // setValue('next_thorough_exam_certificate_no', selected?.next_thorough_exam_certificate_no ? String(selected?.next_thorough_exam_certificate_no) : ''); // REMOVED
       setValue('serial_no', String(selected.serial_no) || '');
       setValue('model_no', String(selected.model_no) || '');
-      setValue('owner_id', String(selected.owner_id) || '');
-      // For "Owner No/ID"
-      const foundOwner = ownerOptions.find((o: any) => o.id == selected.owner_id);
-      setValue('owner_name', foundOwner?.code || '');
-      console.log("invokeddd");
+
+      // Set Owner
+      if (selected.owner_id) {
+        const foundOwner = ownerOptions.find(
+          (o: any) =>
+            String(o.id) === String(selected.owner_id) ||
+            o.owner === selected.owner_id ||
+            o.code === selected.owner_id
+        );
+        setValue('owner_id', foundOwner ? String(foundOwner.id) : String(selected.owner_id));
+        setValue('owner_name', foundOwner?.code || '');
+      } else {
+        setValue('owner_id', '');
+        setValue('owner_name', '');
+      }
     }
-  }, [equipment_no, equipmentNoOptions, setValue, ownerOptions]);
+  }, [equipment_no, equipmentNoOptions, setValue, ownerOptions, standardOptions, manufacturerOptions]);
 
   // Check if next_test_date/next_thorough_date is null -> set checkboxes
   useEffect(() => {
-    const selected = equipmentNoOptions?.find((item: any) => item?.id == equipment_no);
+    const selected = equipmentNoOptions?.find((item: any) => String(item?.id) === String(equipment_no));
     if (selected) {
       if (!selected.last_test_date || selected.last_test_date === 'Not Applicable') {
         setLastTestExamChecked(true);
@@ -220,7 +249,7 @@ export default function EquipmentDetailsForm({
 
   // Fetch Sites based on Location
   useEffect(() => {
-    const res = locationOptions.filter((item: any) => item.location.id == location);
+    const res = locationOptions.filter((item: any) => String(item.location.id) === String(location));
     if (res.length > 0) {
       setSiteOptions(res.map((item: any) => item.site));
     }
@@ -228,7 +257,6 @@ export default function EquipmentDetailsForm({
 
   const [invoke, setInvoke] = useState(false);
   useEffect(() => {
-    console.log("invokewwww");
     (async () => {
       try {
         // fetch Surveyor
@@ -301,8 +329,6 @@ export default function EquipmentDetailsForm({
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
-       
-
       const formData = {
         ...values,
         first_examination: safetyChecklistValues.firstExamination === 'no' ? false : true,
@@ -323,7 +349,7 @@ export default function EquipmentDetailsForm({
         last_thorough_exam: lastThoroughExamChecked ? 'Not Applicable' : values.last_thorough_exam,
         // next_test_exam_certificate_no and next_thorough_exam_certificate_no are not included
       };
- 
+
       // Add the property & annexures to the record
       await addRecord(
         {

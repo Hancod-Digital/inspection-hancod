@@ -152,31 +152,61 @@ export default function EditEquipmentDetailsForm({
 
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
+  // --- Fix: Track select defaults for standard, manufacturer, owner ---
+  // We'll use useEffect to set the default values for these fields after options are loaded
+
+  // Track when options are loaded
+  const [optionsLoaded, setOptionsLoaded] = useState(false);
+
+  // Fetch all select options on component mount
+  const [item_type, setItem_type] = useState<any>("");
   useEffect(() => {
-    const fetchEquipmentData = async () => {
-      const data = await findRecordById(id);
+    const fetchOptions = async () => {
+      try {
+        const [
+          authorities,
+          jobOrders,
+          equipmentNos,
+          standards,
+          manufacturers,
+          surveyors,
+          owners
+        ] = await Promise.all([
+          // getAllSingleSubtopic("site"),
+          getAllSingleSubtopic("authority"),
+          getAllSingleSubtopic("job_orders"),
+          getAllSingleSubtopic("equipment"),
+          getAllSingleSubtopic("standard"),
+          getAllSingleSubtopic("manufacturer"),
+          getAllSingleSubtopic("surveyor"),
+          getAllSingleSubtopic("owner"),
+          makeApiCall(() => new MasterService().getLocationDetails(), {
+            afterSuccess: (data: any) => setLocationOptions(data.filter((item: any) => item.location.status === "ACTIVE")),
+          }),
+        ]);
 
-      if (data) {
-        setSafetyChecklistValues({
-          firstExamination: data.first_examination ? 'yes' : 'no',
-          sixMonthInterval: data.six_month_interval ? 'yes' : 'no',
-          twelveMonthInterval: data.twelve_month_interval ? 'yes' : 'no',
-          correctInstallation: data.correct_installation ? 'yes' : 'no',
-          examinationScheme: data.examination_scheme ? 'yes' : 'no',
-          exceptionalCircumstances: data.exceptional_circumstances ? 'yes' : 'no',
-          safeToUse: data.safe_to_use ? 'yes' : 'no',
-        });
-
-        // Handle "Not Applicable" checkboxes
-        setTestExamChecked(!data.next_test_exam || data.next_test_exam === "Not Applicable");
-        setThoroughExamChecked(!data.next_thorough_exam || data.next_thorough_exam === "Not Applicable");
+        setAuthorityOptions(authorities?.filter((item: any) => item.status === "ACTIVE") || []);
+        setJobOrderNoOptions(jobOrders || []);
+        setEquipmentNoOptions(equipmentNos?.filter((item: any) => item.status === "ACTIVE") || []);
+        setStandardOptions(standards?.filter((item: any) => item.status === "ACTIVE") || []);
+        setManufacturerOptions(manufacturers?.filter((item: any) => item.status === "ACTIVE") || []);
+        setSurveyorOptions(surveyors || []);
+        setOwnerOptions(owners?.filter((item: any) => item.status == "ACTIVE") || []);
+        setOptionsLoaded(true);
+      } catch (error) {
+        console.error("Error fetching select options:", error);
+        toastWithTimeout(ToastVariant.Error, "Failed to load form options.");
       }
     };
 
-    fetchEquipmentData();
+    fetchOptions();
     // eslint-disable-next-line
-  }, [id, findRecordById]);
+  }, [invoke]);
 
+  // --- End Fix: Track select defaults for standard, manufacturer, owner ---
+
+  // Get existingData after options are loaded
+  // (existingData is not async, but we want to set select defaults after options are loaded)
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: existingData ? {
@@ -184,11 +214,9 @@ export default function EditEquipmentDetailsForm({
       site: String(existingData.site) || '',
       lift_location: existingData.lift_location || '',
       authority: String(existingData.authority) || '',
-      standard: String(existingData.standard) || '',
+      standard: existingData.standard ? String(existingData.standard) : '',
       last_test_exam_certificate_no: existingData.last_test_exam_certificate_no || '',
-      // next_test_exam_certificate_no: existingData.next_test_exam_certificate_no || '',
       last_thorough_exam_certificate_no: existingData.last_thorough_exam_certificate_no || '',
-      // next_thorough_exam_certificate_no: existingData.next_thorough_exam_certificate_no || '',
       type_of_exam: existingData.type_of_exam || '',
       description_of_test: existingData.description_of_test || '',
       job_order_no: String(existingData.job_order_no) || '',
@@ -207,16 +235,14 @@ export default function EditEquipmentDetailsForm({
       result_description: existingData.result_description || '',
       owner_name: existingData.owner_name || '',
       defect_description: existingData.defect_description || '',
-      //  test_particulars: existingData.test_particulars || '',
       description: existingData.description || '',
       equipment_description: existingData.equipment_description || '',
-      manufacturer: String(existingData.manufacturer) || '',
+      manufacturer: existingData.manufacturer ? String(existingData.manufacturer) : '',
       registration_no: existingData.registration_no || '',
-      //   tested_standard: existingData.tested_standard || '',
       approval_status: existingData.approval_status == 'true' ? "Approved" : "Rejected" || '',
       location: String(existingData.location) || '',
       serial_no: existingData.serial_no || '',
-      owner_id: String(existingData.owner_id) || '',
+      owner_id: existingData.owner_id ? String(existingData.owner_id) : '',
     } : {},
   });
 
@@ -229,12 +255,42 @@ export default function EditEquipmentDetailsForm({
     setValue,
     formState: { isSubmitSuccessful, errors },
   } = methods;
+
+  // --- Fix: Set select defaults for standard, manufacturer, owner after options loaded ---
+  useEffect(() => {
+    if (!existingData) return;
+    if (!optionsLoaded) return;
+
+    // Set standard
+    if (existingData.standard) {
+      const stdId = String(existingData.standard);
+      const found = standardOptions.find((s: any) => String(s.id) === stdId);
+      if (found) setValue('standard', stdId);
+    }
+
+    // Set manufacturer
+    if (existingData.manufacturer) {
+      const manuId = String(existingData.manufacturer);
+      const found = manufacturerOptions.find((m: any) => String(m.id) === manuId);
+      if (found) setValue('manufacturer', manuId);
+    }
+
+    // Set owner_id
+    if (existingData.owner_id) {
+      const ownerId = String(existingData.owner_id);
+      const found = ownerOptions.find((o: any) => String(o.id) === ownerId);
+      if (found) setValue('owner_id', ownerId);
+    }
+    // eslint-disable-next-line
+  }, [optionsLoaded, existingData, setValue, standardOptions, manufacturerOptions, ownerOptions]);
+  // --- End Fix ---
+
   const handleSafetyChecklistChange = (name: string, value: string) => {
     setSafetyChecklistValues(prev => ({
       ...prev,
       [name]: value
     }));
-  }; console.log(errors);
+  };
 
   // Watch equipment_no to set related fields
   const equipment_no = watch('equipment_no');
@@ -247,78 +303,62 @@ export default function EditEquipmentDetailsForm({
     }
   }, [isSubmitSuccessful, reset, onClose]);
 
-  // Fetch all select options on component mount
-  const [item_type, setItem_type] = useState<any>("");
+  // Handle equipment_no changes to set related fields
   useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const [authorities, jobOrders, equipmentNos, standards, manufacturers, surveyors, owners] = await Promise.all([
-          // getAllSingleSubtopic("site"),
-          getAllSingleSubtopic("authority"),
-          getAllSingleSubtopic("job_orders"),
-          getAllSingleSubtopic("equipment"),
-          getAllSingleSubtopic("standard"),
-          getAllSingleSubtopic("manufacturer"),
-          getAllSingleSubtopic("surveyor"),
-          getAllSingleSubtopic("owner"),
-          makeApiCall(() => new MasterService().getLocationDetails(), {
-            afterSuccess: (data: any) => setLocationOptions(data.filter((item: any) => item.location.status === "ACTIVE")),
-          }),
-        ]);
-
-        // setSiteOptions(sites?.filter((item:any)=>item.status==="ACTIVE") || []);
-        setAuthorityOptions(authorities?.filter((item: any) => item.status === "ACTIVE") || []);
-        setJobOrderNoOptions(jobOrders || []);
-        setEquipmentNoOptions(equipmentNos?.filter((item: any) => item.status === "ACTIVE") || []);
-        setStandardOptions(standards?.filter((item: any) => item.status === "ACTIVE") || []);
-        setManufacturerOptions(manufacturers?.filter((item: any) => item.status === "ACTIVE") || []);
-        setSurveyorOptions(surveyors || []);
-        setOwnerOptions(owners?.filter((item: any) => item.status == "ACTIVE") || []);
-      } catch (error) {
-        console.error("Error fetching select options:", error);
-        toastWithTimeout(ToastVariant.Error, "Failed to load form options.");
-      }
-    };
-
-    fetchOptions();
-
-    // Handle equipment_no changes to set related fields
     if (equipment_no && equipmentNoOptions.length > 0) {
       const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
 
       setItem_type(selectedEquipment?.property_table_type);
 
       if (selectedEquipment) {
-        setValue('standard', String(selectedEquipment.standard) || ''); // Update standard
-        setValue('manufacturer', String(selectedEquipment.manufacturer) || ''); // Update manufacturer
-        setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || ''); // Update year of manufacture
-        setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || ''); // Update test cert/coc no
-        setValue('safe_working_load', String(selectedEquipment.safe_working_load) || ''); // Update safe working load
+        // Set standard if available in options
+        if (selectedEquipment.standard) {
+          const stdId = String(selectedEquipment.standard);
+          const found = standardOptions.find((s: any) => String(s.id) === stdId);
+          setValue('standard', found ? stdId : selectedEquipment.standard);
+        }
+        // Set manufacturer if available in options
+        if (selectedEquipment.manufacturer) {
+          const manuId = String(selectedEquipment.manufacturer);
+          const found = manufacturerOptions.find((m: any) => String(m.id) === manuId);
+          setValue('manufacturer', found ? manuId : selectedEquipment.manufacturer);
+        }
+        setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || '');
+        setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
+        setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
 
-        setValue('equipment_description', String(selectedEquipment.description) || ''); // Update equipment description
-        setValue('title', String(selectedEquipment.title) || ''); // Update title
-        setValue('last_test_exam_certificate_no', String(selectedEquipment.last_test_exam_certificate_no) || ''); // Update last test exam certificate no
-        // setValue('next_test_exam_certificate_no', String(selectedEquipment.next_test_exam_certificate_no) || ''); // Removed
-        setValue('last_thorough_exam_certificate_no', String(selectedEquipment.last_thorough_exam_certificate_no) || ''); // Update last thorough exam certificate no
-        // setValue('next_thorough_exam_certificate_no', String(selectedEquipment.next_thorough_exam_certificate_no) || ''); // Removed
+        setValue('equipment_description', String(selectedEquipment.description) || '');
+        setValue('title', String(selectedEquipment.title) || '');
+        setValue('last_test_exam_certificate_no', String(selectedEquipment.last_test_exam_certificate_no) || '');
+        setValue('last_thorough_exam_certificate_no', String(selectedEquipment.last_thorough_exam_certificate_no) || '');
 
-        setValue('owner_name', String(ownerOptions.find((item: any) => item.id == selectedEquipment.owner_id)?.code) || ''); // Update owner
-        setValue('registration_no', String(selectedEquipment.registration_no) || ''); // Update registration no
-        setValue('last_test_exam', String(selectedEquipment.last_test_date) || ''); // Update last test exam
-        setValue('next_test_exam', String(selectedEquipment.next_test_date) || ''); // Update next test exam
-        setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || ''); // Update last thorough exam
-        setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || ''); // Update next thorough exam
-        setValue('serial_no', String(selectedEquipment.serial_no) || ''); // Update serial no
-        setValue('model_no', String(selectedEquipment.model_no) || ''); // Update model_no
-        setValue('owner_id', String(selectedEquipment.owner_id) || ''); // Update owner id
+        // Set owner_name and owner_id if available in options
+        if (selectedEquipment.owner_id) {
+          const ownerId = String(selectedEquipment.owner_id);
+          const found = ownerOptions.find((o: any) => String(o.id) === ownerId);
+          setValue('owner_id', found ? ownerId : selectedEquipment.owner_id);
+          setValue('owner_name', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
+        }
+
+        setValue('registration_no', String(selectedEquipment.registration_no) || '');
+        setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
+        setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
+        setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
+        setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
+        setValue('serial_no', String(selectedEquipment.serial_no) || '');
+        setValue('model_no', String(selectedEquipment.model_no) || '');
       }
     }
-
     // eslint-disable-next-line
   }, [
     equipment_no,
-    invoke
-  ]); // Add all dependencies here
+    invoke,
+    standardOptions,
+    manufacturerOptions,
+    ownerOptions,
+    setValue,
+    equipmentNoOptions
+  ]);
 
   useEffect(() => {
     if (job_order_no) {
@@ -657,11 +697,11 @@ export default function EditEquipmentDetailsForm({
                       control={control}
                       render={({ field }) => {
                         const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
-                        const value = allManufacturerOptions.includes(field.value) ? field.value : "";
+                        // Fix: Use field.value directly, don't override with "" if not found
                         return (
                           <div className="flex items-center gap-2 relative">
                             <Select
-                              value={value}
+                              value={field.value || ""}
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="manufacturer">
@@ -748,11 +788,11 @@ export default function EditEquipmentDetailsForm({
                       control={control}
                       render={({ field }) => {
                         const allStandardOptions = standardOptions?.map((std: any) => String(std.id)) || [];
-                        const value = allStandardOptions.includes(field.value) ? field.value : "";
+                        // Fix: Use field.value directly, don't override with "" if not found
                         return (
                           <div className="flex items-center gap-2 relative">
                             <Select
-                              value={value}
+                              value={field.value || ""}
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="standard">
@@ -830,25 +870,20 @@ export default function EditEquipmentDetailsForm({
                       name="owner_id"
                       control={control}
                       render={({ field }) => {
-                        const currentOwner = String(
-                          equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                            ?.owner_id ?? ""
-                        );
+                        // Fix: Use field.value directly, don't override with "" if not found
                         const allOwnerOptions = ownerOptions?.map((owner: any) => String(owner.id)) || [];
-                        const value = currentOwner || field.value || "";
-
                         return (
                           <div className="flex w-full gap-2 items-center relative">
                             <Select
-                              value={allOwnerOptions.includes(value) ? value : ""}
+                              value={field.value || ""}
                               onValueChange={(val) => field.onChange(val)}
                             >
                               <SelectTrigger id="owner_id" className="w-full">
                                 <SelectValue
                                   placeholder="Select or type owner"
-                                  {...(allOwnerOptions.includes(value)
+                                  {...(allOwnerOptions.includes(field.value)
                                     ? {}
-                                    : { children: value ? value : undefined })}
+                                    : { children: field.value ? field.value : undefined })}
                                 />
                               </SelectTrigger>
                               <SelectContent>
