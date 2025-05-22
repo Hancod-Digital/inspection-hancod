@@ -361,9 +361,9 @@ export default function Component() {
                         onValueChange={(value) => {
                           setCountryCode(value);
                           // When country code changes, we need to revalidate the phone number
-                          const currentPhone = register("mobile").value;
-                          if (currentPhone) {
-                            setValue("mobile", currentPhone, { 
+                          const currentPhone:any = register("mobile");
+                          if (currentPhone?.value) {
+                            setValue("mobile", currentPhone?.value, { 
                               shouldValidate: true 
                             });
                           }
