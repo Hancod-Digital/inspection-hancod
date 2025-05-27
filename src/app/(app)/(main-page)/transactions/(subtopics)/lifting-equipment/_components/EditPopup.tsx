@@ -129,9 +129,9 @@ export default function EditEquipmentDetailsForm({
     lift_location: string()
       .optional()
       .nullable(),
-    last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? string().optional() : string().nonempty('Last Test Exam Certificate No. is required'),
+    last_test_exam_certificate_no: string().optional(),
     // next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
-    last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? string().optional() : string().nonempty('Last Thorough Exam Certificate No. is required'),
+    last_thorough_exam_certificate_no: string().optional() ,
     // next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
     title: string().nonempty('Title is required'),
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),

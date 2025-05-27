@@ -117,8 +117,22 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
       const data = new Uint8Array(e.target?.result as ArrayBuffer)
       const workbook = XLSX.read(data, { type: "array" })
       const worksheet = workbook.Sheets[workbook.SheetNames[0]]
-      const jsonData = XLSX.utils.sheet_to_json(worksheet)
-      handleDuplicates(jsonData)
+      
+      // Set raw: false to convert dates and cellDates: true to detect date cells
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+        raw: false,
+        dateNF: 'yyyy-mm-dd',
+        cellDates: true
+      })
+      
+      // Process dates and handle any special values
+      const processedData = jsonData.map((row: any) => {
+        const processed: any = { ...row };
+        // Convert date fields if needed
+        return processed;
+      });
+      
+      handleDuplicates(processedData)
     }
     reader.readAsArrayBuffer(file)
   }

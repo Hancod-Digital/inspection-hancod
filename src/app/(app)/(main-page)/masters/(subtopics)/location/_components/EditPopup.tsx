@@ -39,31 +39,44 @@ interface EquipmentDetailsFormProps {
 export default function EquipmentDetailsForm({ onClose, id, setIsSite }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [siteData, setSiteData] = useState<any[]>([]); // State for site dropdown options
-  const [datas, setData] = useState<any>(null); // State for existing record data
+  const [locationData, setLocationData] = useState<any>(null); // State for existing record data
 
-  const { updateRecord, findRecordByIdWithReference, getAllSingleSubtopic,FetchLocationDetails } = useSubtopic();
+  const { updateRecord, getAllSingleSubtopic } = useSubtopic();
  
-
+  // Fetch the specific location data by ID
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchLocationDetails = async () => {
       try {
-        const datas = await new MasterService().getLocationDetails();
-      
-        setData(datas); // Update state with the fetched data
+        // Fetch all location details
+        const masterService = new MasterService();
+        const allLocationData = await masterService.getLocationDetails();
+        
+        // Find the specific location by ID
+        const specificLocation = allLocationData?.find((item: any) => 
+          item.location?.id === id
+        );
+        
+        if (specificLocation) {
+          setLocationData(specificLocation);
+        } else {
+          console.log("Location not found with ID:", id);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching location details:', error);
       }
     };
-    fetchData();
-  }, []); // Empty dependency array ensures this runs once when the component mounts
 
-  
+    if (id) {
+      fetchLocationDetails();
+    }
+  }, [id]);
+
   const methods = useForm<EquipmentDetailsSchemaType>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
-      location: datas?.find((item:any)=>item.location?.id==id)?.location?.name || '',
-      site: String(datas?.find((item:any)=>item.location?.id==id)?.site?.id) || '',
-      status: datas?.find((item:any)=>item.location?.id==id)?.location?.status || '',
+      location: '',
+      site: '',
+      status: '',
     },
   });
 
@@ -73,6 +86,18 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
     control,
     formState: { isSubmitSuccessful, errors },
   } = methods;
+  // Update form values when location data is fetched
+  useEffect(() => {
+    if (locationData) {
+      reset({
+        location: locationData.location?.name || '',
+        site: String(locationData.site?.id) || '',
+        status: locationData.location?.status || '',
+      });
+    }
+  }, [locationData, reset]);
+  
+ 
  
  
 

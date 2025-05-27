@@ -158,6 +158,7 @@ export default function SurveyForm({ onClose, id,setIsState,isState }: SurveyFor
                     <Label htmlFor="contact_number">Contact Number</Label>
                     <Input 
                       id="contact_number" 
+                      type="number"
                       defaultValue={defaultValues.contact_number} 
                       {...methods.register('contact_number')} 
                     />

@@ -128,7 +128,7 @@ export default function SurveyForm({ onClose,setIsState,isState }: SurveyFormPro
 
                   <div className="grid grid-cols-[150px_1fr] items-center gap-4">
                     <Label htmlFor="contactNumber">Contact Number</Label>
-                    <Input id="contactNumber" {...methods.register('contactNumber')} />
+                    <Input id="contactNumber" type="number" {...methods.register('contactNumber')} />
                     {errors.contactNumber && (
                       <p className="text-red-500">{errors.contactNumber.message}</p>
                     )}
