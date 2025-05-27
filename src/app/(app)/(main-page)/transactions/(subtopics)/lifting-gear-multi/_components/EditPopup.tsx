@@ -51,6 +51,12 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const { getAllSingleSubtopic, findRecordById, updateRecord } = useSubtopic();
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
+  const [lastTestExamChecked, setLastTestExamChecked] = useState<boolean>(false);
+  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState<boolean>(false);
+  const [testExamNotAvailable, setTestExamNotAvailable] = useState<boolean>(false);
+  const [thoroughExamNotAvailable, setThoroughExamNotAvailable] = useState<boolean>(false);
+  const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState<boolean>(false);
+  const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<boolean>(false);
   const [invoke, setInvoke] = useState(false);
   const currentData = id ? findRecordById(id) : null;
   const equipmentDetailsSchema = object({
@@ -211,9 +217,18 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           safeToUse: data.safe_to_use ? 'yes' : 'no',
         });
 
-        // Handle "Not Applicable" checkboxes
+        // Handle "Not Applicable" and "Not Available" checkboxes
         setTestExamChecked(!data.next_test_exam || data.next_test_exam === "Not Applicable");
+        setTestExamNotAvailable(data.next_test_exam === "Not Available");
+        
         setThoroughExamChecked(!data.next_thorough_exam || data.next_thorough_exam === "Not Applicable");
+        setThoroughExamNotAvailable(data.next_thorough_exam === "Not Available");
+        
+        setLastTestExamChecked(!data.last_test_exam || data.last_test_exam === "Not Applicable");
+        setLastTestExamNotAvailable(data.last_test_exam === "Not Available");
+        
+        setLastThoroughExamChecked(!data.last_thorough_exam || data.last_thorough_exam === "Not Applicable");
+        setLastThoroughExamNotAvailable(data.last_thorough_exam === "Not Available");
       }
     };
 
@@ -316,12 +331,57 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     }
   }, [equipment_no, equipmentNoOptions, setValue]);
 
-  // Handle "Not Applicable" checkboxes based on equipment data
+  // Handle "Not Applicable" and "Not Available" checkboxes based on equipment data
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find((item) => item.id === equipment_no);
     if (selectedEquipment) {
-      setTestExamChecked(!selectedEquipment.next_test_date);
-      setThoroughExamChecked(!selectedEquipment.next_thorough_date);
+      // Handle next_test_date
+      if (selectedEquipment.next_test_date == null) {
+        setTestExamChecked(true);
+        setTestExamNotAvailable(false);
+      } else if (selectedEquipment.next_test_date === "Not Available") {
+        setTestExamNotAvailable(true);
+        setTestExamChecked(false);
+      } else {
+        setTestExamChecked(false);
+        setTestExamNotAvailable(false);
+      }
+      
+      // Handle next_thorough_date
+      if (selectedEquipment.next_thorough_date == null) {
+        setThoroughExamChecked(true);
+        setThoroughExamNotAvailable(false);
+      } else if (selectedEquipment.next_thorough_date === "Not Available") {
+        setThoroughExamNotAvailable(true);
+        setThoroughExamChecked(false);
+      } else {
+        setThoroughExamChecked(false);
+        setThoroughExamNotAvailable(false);
+      }
+      
+      // Handle last_test_date
+      if (selectedEquipment.last_test_date == null) {
+        setLastTestExamChecked(true);
+        setLastTestExamNotAvailable(false);
+      } else if (selectedEquipment.last_test_date === "Not Available") {
+        setLastTestExamNotAvailable(true);
+        setLastTestExamChecked(false);
+      } else {
+        setLastTestExamChecked(false);
+        setLastTestExamNotAvailable(false);
+      }
+      
+      // Handle last_thorough_date
+      if (selectedEquipment.last_thorough_date == null) {
+        setLastThoroughExamChecked(true);
+        setLastThoroughExamNotAvailable(false);
+      } else if (selectedEquipment.last_thorough_date === "Not Available") {
+        setLastThoroughExamNotAvailable(true);
+        setLastThoroughExamChecked(false);
+      } else {
+        setLastThoroughExamChecked(false);
+        setLastThoroughExamNotAvailable(false);
+      }
     }
   }, [equipment_no, equipmentNoOptions]);
   const job_order_no = watch('job_order_no');
@@ -356,20 +416,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       inspection_date: watch('inspection_date'),
       type_of_exam: watch('type_of_exam'),
       title: watch('title'),
-      equipment_description: watch('equipment_description'),
-      test_cert_coc_no: watch('test_cert_coc_no'),
-      safe_working_load: watch('safe_working_load'),
-      proof_load: watch('proof_load'),
-      standard: standardOptions?.find((item: any) => item.id === watch('standard'))?.standard || '',
-      last_test_exam: watch('last_test_exam') || '',
-      last_thorough_exam: watch('last_thorough_exam') || '',
-      next_test_exam: testExamChecked ? "Not Applicable" : watch('next_test_exam'),
-      next_thorough_exam: thoroughExamChecked ? "Not Applicable" : watch('next_thorough_exam'),
-      owner_name: ownerOptions?.find((item: any) => item.id == watch('owner_name'))?.owner || '',
-      manufacturer: manufacturerOptions?.find((item: any) => item.id === watch('manufacturer'))?.manufacturer || '',
-      result: watch('result'),
-      last_test_exam_certificate_no: watch('last_test_exam_certificate_no'),
-      // next_test_exam_certificate_no: testExamChecked ? watch('next_test_exam_certificate_no') || '' : '',
       last_thorough_exam_certificate_no: watch('last_thorough_exam_certificate_no'),
       // next_thorough_exam_certificate_no: thoroughExamChecked ? watch('next_thorough_exam_certificate_no') || '' : '',
       surveyor: surveyorOptions?.find((item: any) => item.id === watch('surveyor'))?.surveyor || '',
@@ -425,8 +471,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
         safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
         approval_status: values.approval_status === "Approved" ? true : false,
-        next_test_exam: testExamChecked ? "Not Applicable" : values.next_test_exam,
-        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam
+        last_test_exam: lastTestExamChecked ? "Not Applicable" : lastTestExamNotAvailable ? "Not Available" : values.last_test_exam,
+        last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam,
+        next_test_exam: testExamChecked ? "Not Applicable" : testExamNotAvailable ? "Not Available" : values.next_test_exam,
+        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam
       };
 
 
@@ -793,16 +841,52 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">Date of last proof load test</Label>
-                    <Input
-                      id="last_test_exam"
-                      type="date"
-                      {...register('last_test_exam')}
-                      value={watch('last_test_exam')}
-                    // Make it read-only since it's auto-populated
-                    />
-                    {errors.last_test_exam && (
-                      <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
-                    )}
+                    <div className="flex items-center gap-4">
+                      <Controller
+                        name="last_test_exam"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="last_test_exam"
+                            type="date"
+                            {...field}
+                            disabled={lastTestExamChecked}
+                            value={lastTestExamChecked ? "" : field.value}
+                          />
+                        )}
+                      />
+                      <div className="flex items-center gap-2">
+                        <Checkbox 
+                          className='w-6 h-6' 
+                          checked={lastTestExamChecked} 
+                          onCheckedChange={(checked: any) => {
+                            if (checked) {
+                              setLastTestExamChecked(true);
+                              setLastTestExamNotAvailable(false);
+                            } else {
+                              setLastTestExamChecked(false);
+                            }
+                          }} 
+                        /> 
+                        <span className="text-[13px] mr-4">Not Applicable</span>
+                        <Checkbox 
+                          className='w-6 h-6' 
+                          checked={lastTestExamNotAvailable} 
+                          onCheckedChange={(checked: any) => {
+                            if (checked) {
+                              setLastTestExamNotAvailable(true);
+                              setLastTestExamChecked(false);
+                            } else {
+                              setLastTestExamNotAvailable(false);
+                            }
+                          }} 
+                        /> 
+                        <span className="text-[13px]">Not Available</span>
+                      </div>
+                      {errors.last_test_exam && (
+                        <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -815,18 +899,53 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     />
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_thorough_exam" className="mt-3">Date of last examination
-                    </Label>
-                    <Input
-                      id="last_thorough_exam"
-                      type="date"
-                      {...register('last_thorough_exam')}
-                      value={watch('last_thorough_exam')}
-                    // Make it read-only since it's auto-populated
-                    />
-                    {errors.last_thorough_exam && (
-                      <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
-                    )}
+                    <Label htmlFor="last_thorough_exam" className="mt-3">Date of last examination</Label>
+                    <div className="flex items-center gap-4">
+                      <Controller
+                        name="last_thorough_exam"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="last_thorough_exam"
+                            type="date"
+                            {...field}
+                            disabled={lastThoroughExamChecked}
+                            value={lastThoroughExamChecked ? "" : field.value}
+                          />
+                        )}
+                      />
+                      <div className="flex items-center gap-2">
+                        <Checkbox 
+                          className='w-6 h-6' 
+                          checked={lastThoroughExamChecked} 
+                          onCheckedChange={(checked: any) => {
+                            if (checked) {
+                              setLastThoroughExamChecked(true);
+                              setLastThoroughExamNotAvailable(false);
+                            } else {
+                              setLastThoroughExamChecked(false);
+                            }
+                          }} 
+                        /> 
+                        <span className="text-[13px] mr-4">Not Applicable</span>
+                        <Checkbox 
+                          className='w-6 h-6' 
+                          checked={lastThoroughExamNotAvailable} 
+                          onCheckedChange={(checked: any) => {
+                            if (checked) {
+                              setLastThoroughExamNotAvailable(true);
+                              setLastThoroughExamChecked(false);
+                            } else {
+                              setLastThoroughExamNotAvailable(false);
+                            }
+                          }} 
+                        /> 
+                        <span className="text-[13px]">Not Available</span>
+                      </div>
+                      {errors.last_thorough_exam && (
+                        <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
+                      )}
+                    </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
@@ -856,12 +975,34 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                           />
                         )}
                       />
-                      <Checkbox
-                        className='w-6 h-6'
-                        checked={testExamChecked}
-                        onCheckedChange={(checked: any) => setTestExamChecked(checked)}
-                      />
-                      <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          className='w-6 h-6'
+                          checked={testExamChecked}
+                          onCheckedChange={(checked: any) => {
+                            if (checked) {
+                              setTestExamChecked(true);
+                              setTestExamNotAvailable(false);
+                            } else {
+                              setTestExamChecked(false);
+                            }
+                          }}
+                        />
+                        <span className="text-[13px] mr-4">Not Applicable</span>
+                        <Checkbox
+                          className='w-6 h-6'
+                          checked={testExamNotAvailable}
+                          onCheckedChange={(checked: any) => {
+                            if (checked) {
+                              setTestExamNotAvailable(true);
+                              setTestExamChecked(false);
+                            } else {
+                              setTestExamNotAvailable(false);
+                            }
+                          }}
+                        />
+                        <span className="text-[13px]">Not Available</span>
+                      </div>
                       {errors.next_test_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.next_test_exam.message}</p>
                       )}
@@ -886,12 +1027,34 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                           />
                         )}
                       />
-                      <Checkbox
-                        className={'w-6 h-6'}
-                        checked={thoroughExamChecked}
-                        onCheckedChange={(checked: any) => setThoroughExamChecked(checked!)}
-                      />
-                      <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          className={'w-6 h-6'}
+                          checked={thoroughExamChecked}
+                          onCheckedChange={(checked: any) => {
+                            if (checked) {
+                              setThoroughExamChecked(true);
+                              setThoroughExamNotAvailable(false);
+                            } else {
+                              setThoroughExamChecked(false);
+                            }
+                          }}
+                        />
+                        <span className="text-[13px] mr-4">Not Applicable</span>
+                        <Checkbox
+                          className={'w-6 h-6'}
+                          checked={thoroughExamNotAvailable}
+                          onCheckedChange={(checked: any) => {
+                            if (checked) {
+                              setThoroughExamNotAvailable(true);
+                              setThoroughExamChecked(false);
+                            } else {
+                              setThoroughExamNotAvailable(false);
+                            }
+                          }}
+                        />
+                        <span className="text-[13px]">Not Available</span>
+                      </div>
                       {errors.next_thorough_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.next_thorough_exam.message}</p>
                       )}

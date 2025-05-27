@@ -125,6 +125,12 @@ export default function EquipmentDetailsEditForm({
   const { getAllSingleSubtopic, findRecordById, updateRecord } = useSubtopic();
   const [testExamChecked, setTestExamChecked] = useState<boolean>(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState<boolean>(false);
+  const [lastTestExamChecked, setLastTestExamChecked] = useState<boolean>(false);
+  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState<boolean>(false);
+  const [testExamNotAvailable, setTestExamNotAvailable] = useState<boolean>(false);
+  const [thoroughExamNotAvailable, setThoroughExamNotAvailable] = useState<boolean>(false);
+  const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState<boolean>(false);
+  const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<boolean>(false);
   const [invoke, setInvoke] = useState(false);
   const existingData = id ? findRecordById(id) : null;
 
@@ -237,8 +243,15 @@ export default function EquipmentDetailsEditForm({
           safeToUse: data.safe_to_use ? 'yes' : 'no',
         });
 
-        setTestExamChecked(!data.next_test_exam || data.next_test_exam === "Not Applicable");
-        setThoroughExamChecked(!data.next_thorough_exam || data.next_thorough_exam === "Not Applicable");
+        setTestExamChecked(data.next_test_exam === "Not Applicable");
+        setThoroughExamChecked(data.next_thorough_exam === "Not Applicable");
+        setLastTestExamChecked(data.last_test_exam === "Not Applicable");
+        setLastThoroughExamChecked(data.last_thorough_exam === "Not Applicable");
+        
+        setTestExamNotAvailable(data.next_test_exam === "Not Available");
+        setThoroughExamNotAvailable(data.next_thorough_exam === "Not Available");
+        setLastTestExamNotAvailable(data.last_test_exam === "Not Available");
+        setLastThoroughExamNotAvailable(data.last_thorough_exam === "Not Available");
       }
     };
 
@@ -329,6 +342,8 @@ export default function EquipmentDetailsEditForm({
     if (selectedEquipment) {
       setTestExamChecked(!selectedEquipment.next_test_date);
       setThoroughExamChecked(!selectedEquipment.next_thorough_date);
+      setLastTestExamChecked(!selectedEquipment.last_test_date);
+      setLastThoroughExamChecked(!selectedEquipment.last_thorough_date);
     }
     // eslint-disable-next-line
   }, [equipment_no, equipmentNoOptions]);
@@ -363,8 +378,10 @@ export default function EquipmentDetailsEditForm({
         exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
         safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
         approval_status: values.approval_status === "Approved" ? true : false,
-        next_test_exam: testExamChecked ? "Not Applicable" : values.next_test_exam,
-        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : values.next_thorough_exam
+        last_test_exam: lastTestExamChecked ? "Not Applicable" : (lastTestExamNotAvailable ? "Not Available" : values.last_test_exam),
+        last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : (lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam),
+        next_test_exam: testExamChecked ? "Not Applicable" : (testExamNotAvailable ? "Not Available" : values.next_test_exam),
+        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : (thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam)
       };
 
       await updateRecord(id, formData);
@@ -708,14 +725,42 @@ export default function EquipmentDetailsEditForm({
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">Date of last proof load test</Label>
-                    <Input
-                      id="last_test_exam"
-                      type="date"
-                      {...register('last_test_exam')}
-                    />
-                    {errors.last_test_exam && (
-                      <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
-                    )}
+                    <div className="flex items-center gap-4">
+                      <Controller
+                        name="last_test_exam"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="last_test_exam"
+                            type="date"
+                            {...field}
+                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
+                            value={(lastTestExamChecked || lastTestExamNotAvailable) ? "" : field.value || ""}
+                          />
+                        )}
+                      />
+                      <Checkbox 
+                        className='w-6 h-6' 
+                        checked={lastTestExamChecked} 
+                        onCheckedChange={(checked: any) => {
+                          setLastTestExamChecked(checked);
+                          if (checked) setLastTestExamNotAvailable(false);
+                        }} 
+                      /> 
+                      <span className="text-[13px] w-[15%] ">Not Applicable</span>
+                      <Checkbox 
+                        className='w-6 h-6' 
+                        checked={lastTestExamNotAvailable} 
+                        onCheckedChange={(checked: any) => {
+                          setLastTestExamNotAvailable(checked);
+                          if (checked) setLastTestExamChecked(false);
+                        }} 
+                      /> 
+                      <span className="text-[13px] w-[15%] ">Not Available</span>
+                      {errors.last_test_exam && (
+                        <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
+                      )}
+                    </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
@@ -729,14 +774,42 @@ export default function EquipmentDetailsEditForm({
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam" className="mt-3">Date of last examination</Label>
-                    <Input
-                      id="last_thorough_exam"
-                      type="date"
-                      {...register('last_thorough_exam')}
-                    />
-                    {errors.last_thorough_exam && (
-                      <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
-                    )}
+                    <div className="flex items-center gap-4">
+                      <Controller
+                        name="last_thorough_exam"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            id="last_thorough_exam"
+                            type="date"
+                            {...field}
+                            disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
+                            value={(lastThoroughExamChecked || lastThoroughExamNotAvailable) ? "" : field.value || ""}
+                          />
+                        )}
+                      />
+                      <Checkbox 
+                        className='w-6 h-6' 
+                        checked={lastThoroughExamChecked} 
+                        onCheckedChange={(checked: any) => {
+                          setLastThoroughExamChecked(checked);
+                          if (checked) setLastThoroughExamNotAvailable(false);
+                        }} 
+                      /> 
+                      <span className="text-[13px] w-[15%] ">Not Applicable</span>
+                      <Checkbox 
+                        className='w-6 h-6' 
+                        checked={lastThoroughExamNotAvailable} 
+                        onCheckedChange={(checked: any) => {
+                          setLastThoroughExamNotAvailable(checked);
+                          if (checked) setLastThoroughExamChecked(false);
+                        }} 
+                      /> 
+                      <span className="text-[13px] w-[15%] ">Not Available</span>
+                      {errors.last_thorough_exam && (
+                        <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
+                      )}
+                    </div>
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
@@ -761,17 +834,29 @@ export default function EquipmentDetailsEditForm({
                             className='w-[37%]'
                             type="date"
                             {...field}
-                            disabled={testExamChecked}
-                            value={testExamChecked ? "" : field.value || ""}
+                            disabled={testExamChecked || testExamNotAvailable}
+                            value={(testExamChecked || testExamNotAvailable) ? "" : field.value || ""}
                           />
                         )}
                       />
                       <Checkbox
                         className='w-6 h-6'
                         checked={testExamChecked}
-                        onCheckedChange={(checked: any) => setTestExamChecked(checked)}
+                        onCheckedChange={(checked: any) => {
+                          setTestExamChecked(checked);
+                          if (checked) setTestExamNotAvailable(false);
+                        }}
                       />
-                      <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                      <span className="text-[13px] w-[15%] ">Not Applicable</span>
+                      <Checkbox
+                        className='w-6 h-6'
+                        checked={testExamNotAvailable}
+                        onCheckedChange={(checked: any) => {
+                          setTestExamNotAvailable(checked);
+                          if (checked) setTestExamChecked(false);
+                        }}
+                      />
+                      <span className="text-[13px] w-[15%] ">Not Available</span>
                       {errors.next_test_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.next_test_exam.message}</p>
                       )}
@@ -805,17 +890,29 @@ export default function EquipmentDetailsEditForm({
                               type="date"
                               {...field}
                               className='w-[37%]'
-                              disabled={thoroughExamChecked}
-                              value={thoroughExamChecked ? "" : field.value || ""}
+                              disabled={thoroughExamChecked || thoroughExamNotAvailable}
+                              value={(thoroughExamChecked || thoroughExamNotAvailable) ? "" : field.value || ""}
                             />
                           )}
                         />
                         <Checkbox
                           className={'w-6 h-6'}
                           checked={thoroughExamChecked}
-                          onCheckedChange={(checked: any) => setThoroughExamChecked(checked!)}
+                          onCheckedChange={(checked: any) => {
+                            setThoroughExamChecked(checked);
+                            if (checked) setThoroughExamNotAvailable(false);
+                          }}
                         />
-                        <span className="text-[13px] w-[33%] ">Not Applicable</span>
+                        <span className="text-[13px] w-[15%] ">Not Applicable</span>
+                        <Checkbox
+                          className={'w-6 h-6'}
+                          checked={thoroughExamNotAvailable}
+                          onCheckedChange={(checked: any) => {
+                            setThoroughExamNotAvailable(checked);
+                            if (checked) setThoroughExamChecked(false);
+                          }}
+                        />
+                        <span className="text-[13px] w-[15%] ">Not Available</span>
                         {errors.next_thorough_exam && (
                           <p className="text-red-500 text-[12px] ">{errors.next_thorough_exam.message}</p>
                         )}

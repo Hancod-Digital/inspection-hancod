@@ -54,6 +54,9 @@ export default function EquipmentDetailsForm({
   // "Not Applicable" checkboxes for next test/thorough
   const [testExamChecked, setTestExamChecked] = useState(false);
   const [thoroughExamChecked, setThoroughExamChecked] = useState(false);
+  // "Not Available" checkboxes for next test/thorough
+  const [testExamNotAvailable, setTestExamNotAvailable] = useState(false);
+  const [thoroughExamNotAvailable, setThoroughExamNotAvailable] = useState(false);
 
   /**
    * Zod Schema (updated: removed next_test_exam_certificate_no and next_thorough_exam_certificate_no)
@@ -97,9 +100,12 @@ export default function EquipmentDetailsForm({
   });
 
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
-  // New: "Not Applicable" checkboxes for last test/thorough
+  // "Not Applicable" checkboxes for last test/thorough
   const [lastTestExamChecked, setLastTestExamChecked] = useState(false);
   const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState(false);
+  // "Not Available" checkboxes for last test/thorough
+  const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState(false);
+  const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState(false);
 
   const { getAllSingleSubtopic, addRecord } = useSubtopic();
 
@@ -224,25 +230,48 @@ export default function EquipmentDetailsForm({
   useEffect(() => {
     const selected = equipmentNoOptions?.find((item: any) => String(item?.id) === String(equipment_no));
     if (selected) {
-      if (!selected.last_test_date || selected.last_test_date === 'Not Applicable') {
+      if (selected.last_test_date === 'Not Applicable') {
         setLastTestExamChecked(true);
+        setLastTestExamNotAvailable(false);
+      } else if (selected.last_test_date === 'Not Available') {
+        setLastTestExamNotAvailable(true);
+        setLastTestExamChecked(false);
       } else {
         setLastTestExamChecked(false);
+        setLastTestExamNotAvailable(false);
       }
-      if (!selected.last_thorough_date || selected.last_thorough_date === 'Not Applicable') {
+      
+      if (selected.last_thorough_date === 'Not Applicable') {
         setLastThoroughExamChecked(true);
+        setLastThoroughExamNotAvailable(false);
+      } else if (selected.last_thorough_date === 'Not Available') {
+        setLastThoroughExamNotAvailable(true);
+        setLastThoroughExamChecked(false);
       } else {
         setLastThoroughExamChecked(false);
+        setLastThoroughExamNotAvailable(false);
       }
-      if (!selected.next_test_date || selected.next_test_date === 'Not Applicable') {
+      
+      if (selected.next_test_date === 'Not Applicable') {
         setTestExamChecked(true);
+        setTestExamNotAvailable(false);
+      } else if (selected.next_test_date === 'Not Available') {
+        setTestExamNotAvailable(true);
+        setTestExamChecked(false);
       } else {
         setTestExamChecked(false);
+        setTestExamNotAvailable(false);
       }
-      if (!selected.next_thorough_date || selected.next_thorough_date === 'Not Applicable') {
+      
+      if (selected.next_thorough_date === 'Not Applicable') {
         setThoroughExamChecked(true);
+        setThoroughExamNotAvailable(false);
+      } else if (selected.next_thorough_date === 'Not Available') {
+        setThoroughExamNotAvailable(true);
+        setThoroughExamChecked(false);
       } else {
         setThoroughExamChecked(false);
+        setThoroughExamNotAvailable(false);
       }
     }
   }, [equipment_no, equipmentNoOptions]);
@@ -340,20 +369,20 @@ export default function EquipmentDetailsForm({
         safe_to_use: safetyChecklistValues.safeToUse === 'no' ? false : true,
         approval_status: values.approval_status === 'Approved' ? true : false,
 
-        // "Not Applicable" logic
-        next_test_exam: testExamChecked ? 'Not Applicable' : values.next_test_exam,
-        next_thorough_exam: thoroughExamChecked ? 'Not Applicable' : values.next_thorough_exam,
+        // Handle "Not Applicable" and "Not Available" logic
+        next_test_exam: testExamChecked ? 'Not Applicable' : (testExamNotAvailable ? 'Not Available' : values.next_test_exam),
+        next_thorough_exam: thoroughExamChecked ? 'Not Applicable' : (thoroughExamNotAvailable ? 'Not Available' : values.next_thorough_exam),
 
-        // New for last test/thorough
-        last_test_exam: lastTestExamChecked ? 'Not Applicable' : values.last_test_exam,
-        last_thorough_exam: lastThoroughExamChecked ? 'Not Applicable' : values.last_thorough_exam,
+        // For last test/thorough
+        last_test_exam: lastTestExamChecked ? 'Not Applicable' : (lastTestExamNotAvailable ? 'Not Available' : values.last_test_exam),
+        last_thorough_exam: lastThoroughExamChecked ? 'Not Applicable' : (lastThoroughExamNotAvailable ? 'Not Available' : values.last_thorough_exam),
         // next_test_exam_certificate_no and next_thorough_exam_certificate_no are not included
       };
 
       // Add the property & annexures to the record
       await addRecord(
         {
-          ...values,
+          ...formData,
           properties: data,
           annexures: propertyList,
         },
@@ -1021,7 +1050,7 @@ export default function EquipmentDetailsForm({
                           <Input
                             id="last_test_exam"
                             type="date"
-                            disabled={lastTestExamChecked}
+                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item.id == equipment_no)?.last_test_date === 'NOT APPLICABLE'
                                 ? ''
@@ -1043,9 +1072,21 @@ export default function EquipmentDetailsForm({
                       <Checkbox
                         className="w-6 h-6"
                         checked={lastTestExamChecked}
-                        onCheckedChange={(checked: any) => setLastTestExamChecked(checked)}
+                        onCheckedChange={(checked: any) => {
+                          setLastTestExamChecked(checked);
+                          if (checked) setLastTestExamNotAvailable(false);
+                        }}
                       />
-                      <span className="text-[13px] w-[33%]">Not Applicable</span>
+                      <span className="text-[13px] w-[15%]">Not Applicable</span>
+                      <Checkbox
+                        className="w-6 h-6"
+                        checked={lastTestExamNotAvailable}
+                        onCheckedChange={(checked: any) => {
+                          setLastTestExamNotAvailable(checked);
+                          if (checked) setLastTestExamChecked(false);
+                        }}
+                      />
+                      <span className="text-[13px] w-[15%]">Not Available</span>
                       {errors.last_test_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
                       )}
@@ -1075,7 +1116,7 @@ export default function EquipmentDetailsForm({
                           <Input
                             id="last_thorough_exam"
                             type="date"
-                            disabled={lastThoroughExamChecked}
+                            disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                 ?.last_thorough_date
@@ -1091,9 +1132,21 @@ export default function EquipmentDetailsForm({
                       <Checkbox
                         className="w-6 h-6"
                         checked={lastThoroughExamChecked}
-                        onCheckedChange={(checked: any) => setLastThoroughExamChecked(checked)}
+                        onCheckedChange={(checked: any) => {
+                          setLastThoroughExamChecked(checked);
+                          if (checked) setLastThoroughExamNotAvailable(false);
+                        }}
                       />
-                      <span className="text-[13px] w-[33%]">Not Applicable</span>
+                      <span className="text-[13px] w-[15%]">Not Applicable</span>
+                      <Checkbox
+                        className="w-6 h-6"
+                        checked={lastThoroughExamNotAvailable}
+                        onCheckedChange={(checked: any) => {
+                          setLastThoroughExamNotAvailable(checked);
+                          if (checked) setLastThoroughExamChecked(false);
+                        }}
+                      />
+                      <span className="text-[13px] w-[15%]">Not Available</span>
                       {errors.last_thorough_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam.message}</p>
                       )}
@@ -1126,7 +1179,7 @@ export default function EquipmentDetailsForm({
                           <Input
                             id="next_test_exam"
                             type="date"
-                            disabled={testExamChecked}
+                            disabled={testExamChecked || testExamNotAvailable}
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                 ?.next_test_date &&
@@ -1145,9 +1198,21 @@ export default function EquipmentDetailsForm({
                       <Checkbox
                         className="w-6 h-6"
                         checked={testExamChecked}
-                        onCheckedChange={(checked: any) => setTestExamChecked(checked)}
+                        onCheckedChange={(checked: any) => {
+                          setTestExamChecked(checked);
+                          if (checked) setTestExamNotAvailable(false);
+                        }}
                       />
-                      <span className="text-[13px] w-[33%]">Not Applicable</span>
+                      <span className="text-[13px] w-[15%]">Not Applicable</span>
+                      <Checkbox
+                        className="w-6 h-6"
+                        checked={testExamNotAvailable}
+                        onCheckedChange={(checked: any) => {
+                          setTestExamNotAvailable(checked);
+                          if (checked) setTestExamChecked(false);
+                        }}
+                      />
+                      <span className="text-[13px] w-[15%]">Not Available</span>
                       {errors.next_test_exam && (
                         <p className="text-red-500 text-[12px] ">
                           {errors.next_test_exam.message}
@@ -1183,7 +1248,7 @@ export default function EquipmentDetailsForm({
                           <Input
                             id="next_thorough_exam"
                             type="date"
-                            disabled={thoroughExamChecked}
+                            disabled={thoroughExamChecked || thoroughExamNotAvailable}
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
                                 ?.next_thorough_date &&
@@ -1202,9 +1267,21 @@ export default function EquipmentDetailsForm({
                       <Checkbox
                         className="w-6 h-6"
                         checked={thoroughExamChecked}
-                        onCheckedChange={(checked: any) => setThoroughExamChecked(checked)}
+                        onCheckedChange={(checked: any) => {
+                          setThoroughExamChecked(checked);
+                          if (checked) setThoroughExamNotAvailable(false);
+                        }}
                       />
-                      <span className="text-[13px] w-[33%]">Not Applicable</span>
+                      <span className="text-[13px] w-[15%]">Not Applicable</span>
+                      <Checkbox
+                        className="w-6 h-6"
+                        checked={thoroughExamNotAvailable}
+                        onCheckedChange={(checked: any) => {
+                          setThoroughExamNotAvailable(checked);
+                          if (checked) setThoroughExamChecked(false);
+                        }}
+                      />
+                      <span className="text-[13px] w-[15%]">Not Available</span>
                       {errors.next_thorough_exam && (
                         <p className="text-red-500 text-[12px] ">
                           {errors.next_thorough_exam.message}
