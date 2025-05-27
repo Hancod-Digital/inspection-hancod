@@ -245,7 +245,7 @@ export default function EditEquipmentDetailsForm({
       equipment_description: existingData.equipment_description || '',
       manufacturer: existingData.manufacturer ? String(existingData.manufacturer) : '',
       registration_no: existingData.registration_no || '',
-      approval_status: existingData.approval_status == 'true' ? "Approved" : "Rejected" || '',
+      approval_status: existingData.approval_status == 'true' ? "Approved" : "Rejected",
       location: String(existingData.location) || '',
       serial_no: existingData.serial_no || '',
       owner_id: existingData.owner_id ? String(existingData.owner_id) : '',
@@ -335,8 +335,8 @@ export default function EditEquipmentDetailsForm({
 
         setValue('equipment_description', String(selectedEquipment.description) || '');
         setValue('title', String(selectedEquipment.title) || '');
-        setValue('last_test_exam_certificate_no', String(selectedEquipment.last_test_exam_certificate_no) || '');
-        setValue('last_thorough_exam_certificate_no', String(selectedEquipment.last_thorough_exam_certificate_no) || '');
+        setValue('last_test_exam_certificate_no', selectedEquipment.last_test_exam_certificate_no ? String(selectedEquipment.last_test_exam_certificate_no) : '');
+        setValue('last_thorough_exam_certificate_no', selectedEquipment.last_thorough_exam_certificate_no ? String(selectedEquipment.last_thorough_exam_certificate_no) : '');
 
         // Set owner_name and owner_id if available in options
         if (selectedEquipment.owner_id) {
