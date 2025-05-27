@@ -471,6 +471,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
         safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
         approval_status: values.approval_status === "Approved" ? true : false,
+        // Set certificate numbers to empty string when dates are Not Applicable or Not Available
+        last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? '' : values.last_test_exam_certificate_no,
+        last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? '' : values.last_thorough_exam_certificate_no,
         last_test_exam: lastTestExamChecked ? "Not Applicable" : lastTestExamNotAvailable ? "Not Available" : values.last_test_exam,
         last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam,
         next_test_exam: testExamChecked ? "Not Applicable" : testExamNotAvailable ? "Not Available" : values.next_test_exam,
@@ -895,6 +898,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     </Label>
                     <Input
                       id="last_test_exam_certificate_no"
+                      disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
                     />
                   </div>
@@ -953,6 +957,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     </Label>
                     <Input
                       id="last_thorough_exam_certificate_no"
+                      disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
                     />
                   </div>

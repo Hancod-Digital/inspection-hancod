@@ -284,7 +284,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         last_test_exam: lastTestExamChecked ? "Not Applicable" : lastTestExamNotAvailable ? "Not Available" : values.last_test_exam,
         last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam,
         next_test_exam: testExamChecked ? "Not Applicable" : testExamNotAvailable ? "Not Available" : values.next_test_exam,
-        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam
+        next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam,
+        last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? "" : values.last_test_exam_certificate_no,
+        last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? "" : values.last_thorough_exam_certificate_no
       };
       await addRecord(formData, null, "lifting_gear_single");
     } catch (error) {
@@ -653,6 +655,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     <Input
                       id="last_test_exam_certificate_no"
                       type="text"
+                      disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
                     />
                     {errors.last_test_exam_certificate_no && (
@@ -713,6 +716,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     <Input
                       id="last_thorough_exam_certificate_no"
                       type="text"
+                      disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
                     />
                     {errors.last_thorough_exam_certificate_no && (

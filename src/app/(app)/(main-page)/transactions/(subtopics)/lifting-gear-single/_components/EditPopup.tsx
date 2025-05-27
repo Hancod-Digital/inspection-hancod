@@ -366,9 +366,9 @@ export default function EquipmentDetailsEditForm({
     try {
       const formData = {
         ...values,
-        last_test_exam_certificate_no: values.last_test_exam_certificate_no,
+        last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? "" : values.last_test_exam_certificate_no,
         // next_test_exam_certificate_no: testExamChecked ? "" : values.next_test_exam_certificate_no, // REMOVED
-        last_thorough_exam_certificate_no: values.last_thorough_exam_certificate_no,
+        last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? "" : values.last_thorough_exam_certificate_no,
         // next_thorough_exam_certificate_no: thoroughExamChecked ? "" : values.next_thorough_exam_certificate_no, // REMOVED
         first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
         six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
@@ -768,6 +768,7 @@ export default function EquipmentDetailsEditForm({
                     </Label>
                     <Input
                       id="last_test_exam_certificate_no"
+                      disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
                     />
                   </div>
@@ -817,6 +818,7 @@ export default function EquipmentDetailsEditForm({
                     </Label>
                     <Input
                       id="last_thorough_exam_certificate_no"
+                      disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
                     />
                   </div>

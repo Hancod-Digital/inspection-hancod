@@ -129,9 +129,9 @@ export default function EditEquipmentDetailsForm({
     lift_location: string()
       .optional()
       .nullable(),
-    last_test_exam_certificate_no: lastTestExamChecked ? string().optional() : string().nonempty('Last Test Exam Certificate No. is required'),
+    last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? string().optional() : string().nonempty('Last Test Exam Certificate No. is required'),
     // next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
-    last_thorough_exam_certificate_no: lastThoroughExamChecked ? string().optional() : string().nonempty('Last Thorough Exam Certificate No. is required'),
+    last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? string().optional() : string().nonempty('Last Thorough Exam Certificate No. is required'),
     // next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
     title: string().nonempty('Title is required'),
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
@@ -381,14 +381,17 @@ export default function EditEquipmentDetailsForm({
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find(item => item.id == equipment_no);
     if (selectedEquipment) {
+      console.log("selectedEquipment", selectedEquipment)
       // Last Test Exam
       if (selectedEquipment.last_test_date === "Not Applicable") {
         setLastTestExamChecked(true);
         setLastTestExamNotAvailable(false);
       } else if (selectedEquipment.last_test_date === "Not Available") {
+        console.log("last_test_date", selectedEquipment.last_test_date)
         setLastTestExamNotAvailable(true);
         setLastTestExamChecked(false);
       } else {
+        console.log("last_test_date", selectedEquipment.last_test_date)
         setLastTestExamChecked(false);
         setLastTestExamNotAvailable(false);
       }
@@ -461,12 +464,18 @@ export default function EditEquipmentDetailsForm({
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : (thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam),
         last_test_exam: lastTestExamChecked ? "Not Applicable" : (lastTestExamNotAvailable ? "Not Available" : values.last_test_exam),
         last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : (lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam),
+        // Set certificate numbers to empty string when dates are Not Applicable or Not Available
+        last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? '' : values.last_test_exam_certificate_no,
+        last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? '' : values.last_thorough_exam_certificate_no,
         approval_status: values.approval_status === "Approved" ? true : false,
 
         properties: data,
         annexures: annexureList,
       };
 
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      console.log({ ...formData, properties: data, annexures: propertyList })
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
       await updateRecord(id, { ...formData, properties: data, annexures: propertyList });
     } catch (error) {
       console.error('Error updating record:', error);
@@ -488,7 +497,7 @@ export default function EditEquipmentDetailsForm({
       </Card>
     );
   }
-
+  console.log("erros", errors)
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -1055,7 +1064,7 @@ export default function EditEquipmentDetailsForm({
                       Last Test Certificate No.
                     </Label>
                     <Input
-                      disabled={lastTestExamChecked}
+                      disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       id="last_test_exam_certificate_no"
                       {...register('last_test_exam_certificate_no')}
                     />
@@ -1108,7 +1117,7 @@ export default function EditEquipmentDetailsForm({
                       Last Thorough Certificate No.
                     </Label>
                     <Input
-                      disabled={lastThoroughExamChecked}
+                      disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       id="last_thorough_exam_certificate_no"
                       {...register('last_thorough_exam_certificate_no')}
                     />

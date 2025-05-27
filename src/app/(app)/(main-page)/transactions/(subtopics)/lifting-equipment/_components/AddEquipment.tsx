@@ -376,6 +376,9 @@ export default function EquipmentDetailsForm({
         // For last test/thorough
         last_test_exam: lastTestExamChecked ? 'Not Applicable' : (lastTestExamNotAvailable ? 'Not Available' : values.last_test_exam),
         last_thorough_exam: lastThoroughExamChecked ? 'Not Applicable' : (lastThoroughExamNotAvailable ? 'Not Available' : values.last_thorough_exam),
+        // Set certificate numbers to empty string when dates are Not Applicable or Not Available
+        last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? '' : values.last_test_exam_certificate_no,
+        last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? '' : values.last_thorough_exam_certificate_no,
         // next_test_exam_certificate_no and next_thorough_exam_certificate_no are not included
       };
 
@@ -400,7 +403,7 @@ export default function EquipmentDetailsForm({
       setLoading(false);
     }
   };
-
+console.log("erros", errors)
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -1097,7 +1100,7 @@ export default function EquipmentDetailsForm({
                       Last Test Certificate No.
                     </Label>
                     <Input
-                      disabled={lastTestExamChecked}
+                      disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       id="last_test_exam_certificate_no"
                       {...register('last_test_exam_certificate_no')}
                     />
@@ -1157,7 +1160,7 @@ export default function EquipmentDetailsForm({
                       Last Thorough Certificate No.
                     </Label>
                     <Input
-                      disabled={lastThoroughExamChecked}
+                      disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       id="last_thorough_exam_certificate_no"
                       {...register('last_thorough_exam_certificate_no')}
                     />
