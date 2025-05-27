@@ -1066,7 +1066,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid gap-4 grid-cols-1 w-full">
                     <div className="grid grid-cols-[400px_1fr]  gap-4">
                       <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                      <Input id="defect_description" className='my-auto' {...register('defect_description')} />
+                      <Input maxLength={50} id="defect_description" className='my-auto' {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                       )}

@@ -660,19 +660,19 @@ export default function EquipmentDetailsEditForm({
                         name="standard"
                         control={control}
                         render={({ field }) => {
-                          const allStandardOptions = standardOptions?.map((std: any) => String(std.id)) || [];
-                          const value = allStandardOptions.includes(field.value) ? field.value : "";
+                          // Check if value is in options list or needs to be displayed as custom value
+                          const stdItem = standardOptions?.find((std: any) => String(std.id) === field.value);
+                          const displayValue = stdItem ? field.value : field.value;
+                          
                           return (
                             <Select
-                              value={value}
+                              value={displayValue}
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="standard">
                                 <SelectValue
                                   placeholder="Select or type standard"
-                                  {...(allStandardOptions.includes(field.value)
-                                    ? {}
-                                    : { children: field.value ? field.value : undefined })}
+                                  {...(stdItem ? {} : { children: stdItem?.standard || field.value })}
                                 />
                               </SelectTrigger>
                               <SelectContent>
@@ -972,25 +972,20 @@ export default function EquipmentDetailsEditForm({
                         name="owner_name"
                         control={control}
                         render={({ field }) => {
-                          const currentOwner = String(
-                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                              ?.owner_id ?? ""
-                          );
-                          const allOwnerOptions = ownerOptions?.map((owner: any) => String(owner.id)) || [];
-                          const value = currentOwner || field.value || "";
-
+                          // Find if selected value matches an option
+                          const ownerItem = ownerOptions?.find((owner: any) => String(owner.id) === field.value);
+                          const displayValue = field.value || "";
+                          
                           return (
                             <div className="flex w-full gap-2 items-center">
                               <Select
-                                value={allOwnerOptions.includes(value) ? value : ""}
-                                onValueChange={(val) => field.onChange(val)}
+                                value={displayValue}
+                                onValueChange={(val) => field.onChange(String(val))}
                               >
                                 <SelectTrigger id="owner_id" className="w-full">
                                   <SelectValue
                                     placeholder="Select or type owner"
-                                    {...(allOwnerOptions.includes(value)
-                                      ? {}
-                                      : { children: value ? value : undefined })}
+                                    {...(ownerItem ? {} : { children: displayValue })}
                                   />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -999,7 +994,7 @@ export default function EquipmentDetailsEditForm({
                                       <Input
                                         className="mt-2"
                                         placeholder="Type owner name"
-                                        value={field.value || ""}
+                                        value={typeof field.value === 'string' ? field.value : ""}
                                         onChange={e => {
                                           field.onChange(e.target.value);
                                         }}
@@ -1008,14 +1003,19 @@ export default function EquipmentDetailsEditForm({
                                         size="icon"
                                         variant="outline"
                                         className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
-                                        onClick={() => {
-                                          makeApiCall(
+                                        onClick={async () => {
+                                          if (!field.value) return;
+                                          await makeApiCall(
                                             () => new MasterService().addOwner({ owner: field.value }),
                                             {
-                                              afterSuccess: () => {
+                                              afterSuccess: (data: any) => {
                                                 setInvoke((prev) => !prev);
-                                                toastWithTimeout(ToastVariant.Success, "Owner added successfully")
-                                                field.onChange("");
+                                                toastWithTimeout(ToastVariant.Success, "Owner added successfully");
+                                                if (data && data.id) {
+                                                  field.onChange(String(data.id));
+                                                } else {
+                                                  field.onChange("");
+                                                }
                                               }
                                             }
                                           )
@@ -1074,19 +1074,19 @@ export default function EquipmentDetailsEditForm({
                         name="manufacturer"
                         control={control}
                         render={({ field }) => {
-                          const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
-                          const value = allManufacturerOptions.includes(field.value) ? field.value : "";
+                          // Find if selected value matches an option
+                          const manuItem = manufacturerOptions?.find((manu: any) => String(manu.id) === field.value);
+                          const displayValue = manuItem ? field.value : field.value;
+                          
                           return (
                             <Select
-                              value={value}
+                              value={displayValue}
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="manufacturer">
                                 <SelectValue
                                   placeholder="Select or type manufacturer"
-                                  {...(allManufacturerOptions.includes(field.value)
-                                    ? {}
-                                    : { children: field.value ? field.value : undefined })}
+                                  {...(manuItem ? {} : { children: manuItem?.manufacturer || field.value })}
                                 />
                               </SelectTrigger>
                               <SelectContent>
@@ -1201,7 +1201,7 @@ export default function EquipmentDetailsEditForm({
                   <div className="grid gap-4 grid-cols-1 w-full">
                     <div className="grid grid-cols-[400px_1fr]  gap-4">
                       <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                      <Input id="defect_description" className='my-auto' {...register('defect_description')} />
+                      <Input  maxLength={50} id="defect_description" className='my-auto' {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                       )}
