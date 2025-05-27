@@ -878,7 +878,7 @@ position: absolute;
       htmlString = htmlString.replace(/\{\{two\}\}/g, formatDateWithHyphen(item?.inspection_date) || '');
       htmlString = htmlString.replace(/\{\{three\}\}/g, item?.certificate_no || '');
       htmlString = htmlString.replace(/\{\{four\}\}/g,
-        jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || ''
+        jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '' 
       );
       htmlString = htmlString.replace(/\{\{five\}\}/g, item?.version || '');
 
