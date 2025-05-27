@@ -136,7 +136,28 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     watch,
     setValue,
   } = methods;
+  const equipmentNoChanged = (value: string, field: any) => {
+    console.log("Selected equipment no:", value)
+    const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
 
+      if (selectedEquipment) {
+        setValue('standard', String(selectedEquipment.standard) || '');
+        setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
+        setValue('owner_name', String(selectedEquipment.owner_id) || '');
+        setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
+        setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
+        setValue('proof_load', String(selectedEquipment.proof_load) || '');
+
+        setValue('equipment_description', String(selectedEquipment.description) || '');
+        setValue('title', String(selectedEquipment.title) || '');
+        setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
+        setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
+        setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
+        setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
+      }
+    
+    field.onChange(value)
+  }
   const [siteOptions, setSiteOptions] = useState<any[]>([]);
   const [authorityOptions, setAuthorityOptions] = useState<any[]>([]);
   const [jobOrderNoOptions, setJobOrderNoOptions] = useState<any[]>([]);
@@ -309,28 +330,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   // Watch equipment_no and update related fields
   const equipment_no = watch('equipment_no');
 
-  useEffect(() => {
-    if (equipment_no) {
-      const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
-
-      if (selectedEquipment) {
-        setValue('standard', String(selectedEquipment.standard) || '');
-        setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
-        setValue('owner_name', String(selectedEquipment.owner_id) || '');
-        setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
-        setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
-        setValue('proof_load', String(selectedEquipment.proof_load) || '');
-
-        setValue('equipment_description', String(selectedEquipment.description) || '');
-        setValue('title', String(selectedEquipment.title) || '');
-        setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
-        setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
-        setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
-        setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
-      }
-    }
-  }, [equipment_no, equipmentNoOptions, setValue]);
-
+  
   // Handle "Not Applicable" and "Not Available" checkboxes based on equipment data
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find((item) => item.id === equipment_no);
@@ -677,7 +677,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       control={control}
                       render={({ field }) => (
                         <div className="flex w-full gap-2 items-center">
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select onValueChange={(value) => equipmentNoChanged(value, field)} value={field.value}>
                             <SelectTrigger id="equipment_no">
                               <SelectValue placeholder="Select equipment no." />
                             </SelectTrigger>

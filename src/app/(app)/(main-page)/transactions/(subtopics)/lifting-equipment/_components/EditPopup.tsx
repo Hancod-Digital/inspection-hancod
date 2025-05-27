@@ -261,7 +261,52 @@ export default function EditEquipmentDetailsForm({
     setValue,
     formState: { isSubmitSuccessful, errors },
   } = methods;
+  const equipmentNoChanged = (value: string, field: any) => {
+    console.log("Selected equipment no:", value)
+    const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
 
+    setItem_type(selectedEquipment?.property_table_type);
+
+    if (selectedEquipment) {
+      // Set standard if available in options
+      if (selectedEquipment.standard) {
+        const stdId = String(selectedEquipment.standard);
+        const found = standardOptions.find((s: any) => String(s.id) === stdId);
+        setValue('standard', found ? stdId : selectedEquipment.standard);
+      }
+      // Set manufacturer if available in options
+      if (selectedEquipment.manufacturer) {
+        const manuId = String(selectedEquipment.manufacturer);
+        const found = manufacturerOptions.find((m: any) => String(m.id) === manuId);
+        setValue('manufacturer', found ? manuId : selectedEquipment.manufacturer);
+      }
+      setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || '');
+      setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
+      setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
+
+      setValue('equipment_description', String(selectedEquipment.description) || '');
+      setValue('title', String(selectedEquipment.title) || '');
+      setValue('last_test_exam_certificate_no', selectedEquipment.last_test_exam_certificate_no ? String(selectedEquipment.last_test_exam_certificate_no) : '');
+      setValue('last_thorough_exam_certificate_no', selectedEquipment.last_thorough_exam_certificate_no ? String(selectedEquipment.last_thorough_exam_certificate_no) : '');
+
+      // Set owner_name and owner_id if available in options
+      if (selectedEquipment.owner_id) {
+        const ownerId = String(selectedEquipment.owner_id);
+        const found = ownerOptions.find((o: any) => String(o.id) === ownerId);
+        setValue('owner_id', found ? ownerId : selectedEquipment.owner_id);
+        setValue('owner_name', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
+      }
+
+      setValue('registration_no', String(selectedEquipment.registration_no) || '');
+      setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
+      setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
+      setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
+      setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
+      setValue('serial_no', String(selectedEquipment.serial_no) || '');
+      setValue('model_no', String(selectedEquipment.model_no) || '');
+    }
+    field.onChange(value)
+  }
   // --- Fix: Set select defaults for standard, manufacturer, owner after options loaded ---
   useEffect(() => {
     if (!existingData) return;
@@ -310,61 +355,20 @@ export default function EditEquipmentDetailsForm({
   }, [isSubmitSuccessful, reset, onClose]);
 
   // Handle equipment_no changes to set related fields
-  useEffect(() => {
-    if (equipment_no && equipmentNoOptions.length > 0) {
-      const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
-
-      setItem_type(selectedEquipment?.property_table_type);
-
-      if (selectedEquipment) {
-        // Set standard if available in options
-        if (selectedEquipment.standard) {
-          const stdId = String(selectedEquipment.standard);
-          const found = standardOptions.find((s: any) => String(s.id) === stdId);
-          setValue('standard', found ? stdId : selectedEquipment.standard);
-        }
-        // Set manufacturer if available in options
-        if (selectedEquipment.manufacturer) {
-          const manuId = String(selectedEquipment.manufacturer);
-          const found = manufacturerOptions.find((m: any) => String(m.id) === manuId);
-          setValue('manufacturer', found ? manuId : selectedEquipment.manufacturer);
-        }
-        setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || '');
-        setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
-        setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
-
-        setValue('equipment_description', String(selectedEquipment.description) || '');
-        setValue('title', String(selectedEquipment.title) || '');
-        setValue('last_test_exam_certificate_no', selectedEquipment.last_test_exam_certificate_no ? String(selectedEquipment.last_test_exam_certificate_no) : '');
-        setValue('last_thorough_exam_certificate_no', selectedEquipment.last_thorough_exam_certificate_no ? String(selectedEquipment.last_thorough_exam_certificate_no) : '');
-
-        // Set owner_name and owner_id if available in options
-        if (selectedEquipment.owner_id) {
-          const ownerId = String(selectedEquipment.owner_id);
-          const found = ownerOptions.find((o: any) => String(o.id) === ownerId);
-          setValue('owner_id', found ? ownerId : selectedEquipment.owner_id);
-          setValue('owner_name', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
-        }
-
-        setValue('registration_no', String(selectedEquipment.registration_no) || '');
-        setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
-        setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
-        setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
-        setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
-        setValue('serial_no', String(selectedEquipment.serial_no) || '');
-        setValue('model_no', String(selectedEquipment.model_no) || '');
-      }
-    }
-    // eslint-disable-next-line
-  }, [
-    equipment_no,
-    invoke,
-    standardOptions,
-    manufacturerOptions,
-    ownerOptions,
-    setValue,
-    equipmentNoOptions
-  ]);
+  // useEffect(() => {
+  //   if (equipment_no && equipmentNoOptions.length > 0) {
+      
+  //   }
+  //   // eslint-disable-next-line
+  // }, [
+  //   equipment_no,
+  //   invoke,
+  //   standardOptions,
+  //   manufacturerOptions,
+  //   ownerOptions,
+  //   setValue,
+  //   equipmentNoOptions
+  // ]);
 
   useEffect(() => {
     if (job_order_no) {
@@ -677,7 +681,7 @@ export default function EditEquipmentDetailsForm({
                         name="equipment_no"
                         control={control}
                         render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select onValueChange={(value) => equipmentNoChanged(value, field)} value={field.value}>
                             <SelectTrigger id="equipment_no">
                               <SelectValue placeholder="Select equipment no." />
                             </SelectTrigger>

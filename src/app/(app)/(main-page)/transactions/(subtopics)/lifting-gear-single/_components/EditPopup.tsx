@@ -133,8 +133,26 @@ export default function EquipmentDetailsEditForm({
   const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<boolean>(false);
   const [invoke, setInvoke] = useState(false);
   const existingData = id ? findRecordById(id) : null;
-
-  // Define schema for validation
+  const equipmentNoChanged = (value: string, field: any) => {
+    console.log("Selected equipment no:", value)
+    const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
+    if (selectedEquipment) {
+      setValue('standard', String(selectedEquipment.standard) || '');
+      setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
+      setValue('owner_name', String(selectedEquipment.owner_id) || '');
+      setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
+      setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
+      setValue('proof_load', String(selectedEquipment.proof_load) || '');
+      setValue('equipment_description', String(selectedEquipment.description) || '');
+      setValue('title', String(selectedEquipment.title) || '');
+      setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
+      setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
+      setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
+      setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
+    }
+    field.onChange(value)
+  }
+   // Define schema for validation
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
     site: string().nonempty('Site is required'),
@@ -153,9 +171,9 @@ export default function EquipmentDetailsEditForm({
     type_of_exam: string().nonempty('Type of Exam is required'),
     surveyor: string().nonempty('Surveyor is required'),
     defect_description: string().nonempty('Defect Description is required'),
-    last_test_exam_certificate_no: string().nonempty('Last Test Exam Certificate No. is required'),
+    last_test_exam_certificate_no: string().optional(),
     // next_test_exam_certificate_no: string().optional(), // REMOVED
-    last_thorough_exam_certificate_no: string().nonempty('Last Thorough Exam Certificate No. is required'),
+    last_thorough_exam_certificate_no: string().optional(),
     // next_thorough_exam_certificate_no: string().optional(), // REMOVED
     location: string().nonempty('Location is required'),
     owner_name: string().nonempty('Owner Name is required'),
@@ -243,6 +261,13 @@ export default function EquipmentDetailsEditForm({
           safeToUse: data.safe_to_use ? 'yes' : 'no',
         });
 
+        // Store the original values regardless of checkbox state
+        setValue('last_test_exam', data.last_test_exam || '');
+        setValue('last_thorough_exam', data.last_thorough_exam || '');
+        setValue('next_test_exam', data.next_test_exam || '');
+        setValue('next_thorough_exam', data.next_thorough_exam || '');
+
+        // Now set the checkboxes based on those values
         setTestExamChecked(data.next_test_exam === "Not Applicable");
         setThoroughExamChecked(data.next_thorough_exam === "Not Applicable");
         setLastTestExamChecked(data.last_test_exam === "Not Applicable");
@@ -299,29 +324,7 @@ export default function EquipmentDetailsEditForm({
     fetchLocations();
   }, []);
 
-  // Watch equipment_no and update related fields
-  const equipment_no = watch('equipment_no');
-
-  useEffect(() => {
-    if (equipment_no) {
-      const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
-      if (selectedEquipment) {
-        setValue('standard', String(selectedEquipment.standard) || '');
-        setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
-        setValue('owner_name', String(selectedEquipment.owner_id) || '');
-        setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
-        setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
-        setValue('proof_load', String(selectedEquipment.proof_load) || '');
-        setValue('equipment_description', String(selectedEquipment.description) || '');
-        setValue('title', String(selectedEquipment.title) || '');
-        setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
-        setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
-        setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
-        setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
-      }
-    }
-    // eslint-disable-next-line
-  }, [equipment_no, equipmentNoOptions, setValue]);
+ 
 
   const job_order_no = watch('job_order_no');
   useEffect(() => {
@@ -335,7 +338,7 @@ export default function EquipmentDetailsEditForm({
     }
     // eslint-disable-next-line
   }, [job_order_no]);
-
+   const equipment_no = watch('equipment_no');
   // Handle "Not Applicable" checkboxes based on equipment data
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
@@ -383,7 +386,9 @@ export default function EquipmentDetailsEditForm({
         next_test_exam: testExamChecked ? "Not Applicable" : (testExamNotAvailable ? "Not Available" : values.next_test_exam),
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : (thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam)
       };
-
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      console.log(formData)
+      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
       await updateRecord(id, formData);
 
       toastWithTimeout(ToastVariant.Success, 'Equipment details updated successfully');
@@ -574,7 +579,7 @@ export default function EquipmentDetailsEditForm({
                         name="equipment_no"
                         control={control}
                         render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select onValueChange={(value) => equipmentNoChanged(value, field)} value={field.value}>
                             <SelectTrigger id="equipment_no">
                               <SelectValue placeholder="Select equipment no." />
                             </SelectTrigger>
