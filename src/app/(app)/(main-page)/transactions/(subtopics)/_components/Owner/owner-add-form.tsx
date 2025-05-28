@@ -82,7 +82,7 @@ export default function OwnerAddForm({ onClose }: OwnerAddFormProps) {
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
                   {/* Owner Field */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label htmlFor="owner" className="mt-3">Owner</Label>
                     <div>
                       <Input id="owner" {...methods.register("owner")} />
@@ -92,7 +92,7 @@ export default function OwnerAddForm({ onClose }: OwnerAddFormProps) {
                     </div>
                   </div>
                   {/* Address Field */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label htmlFor="address" className="mt-3">Address</Label>
                     <div>
                       <Input id="address" {...methods.register("address")} />
@@ -102,7 +102,7 @@ export default function OwnerAddForm({ onClose }: OwnerAddFormProps) {
                     </div>
                   </div>
                   {/* Code Field */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label htmlFor="code" className="mt-3">Code</Label>
                     <div>
                       <Input id="code" {...methods.register("code")} />
@@ -112,7 +112,7 @@ export default function OwnerAddForm({ onClose }: OwnerAddFormProps) {
                     </div>
                   </div>
                   {/* Status Field */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-full gap-4">
                     <Label htmlFor="status" className="mt-3">Status</Label>
                     <div>
                       <Controller

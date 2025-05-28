@@ -27,18 +27,15 @@ import Table from './AnnexureTable';
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import 'react-quill/dist/quill.snow.css';
-
-// Add Button Components (dummy, replace with your actual implementations)
-const AddLocationButton = () => null;
-const AddSiteButton = () => null;
-const AddEquipmentButton = () => null;
-const AddStandardButton = () => null;
-const AddManufacturerButton = () => null;
-const AddOwnerButton = () => null;
-
+import AddOwnerButton from '../../_components/Owner/Owner';
+import AddManufacturerButton from '../../_components/Manufacturer/Manufacturer';
+import AddStandardButton from '../../_components/Standard/Standard';
+import AddEquipmentButton from '../../_components/Equipments/Equipments';
+import AddSiteButton from '../../_components/Site/Site';
+import AddLocationButton from '../../_components/Location/Location';
 // Dynamically import ReactQuill to prevent SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-
+ 
 // Define schema for validation
 
 interface EquipmentDetailsEditFormProps {
@@ -57,6 +54,12 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   const [thoroughExamNotAvailable, setThoroughExamNotAvailable] = useState<boolean>(false);
   const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState<boolean>(false);
   const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<boolean>(false);
+
+  const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
+    const [isOwnerTyping, setIsOwnerTyping] = useState(false);
+    const [isStandardTyping, setIsStandardTyping] = useState(false);
+
+
   const [invoke, setInvoke] = useState(false);
   const currentData = id ? findRecordById(id) : null;
   const equipmentDetailsSchema = object({
@@ -583,7 +586,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  <div className="grid grid-cols-[200px_1fr] gap-4 relative">
                     <Label htmlFor="location" className="mt-3">Location</Label>
                     <Controller
                       name="location"
@@ -611,7 +614,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  <div className="grid grid-cols-[200px_1fr] gap-4 relative">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
                       name="site"
@@ -717,7 +720,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
                 <div className="grid gap-4 grid-cols-2">
                   {/* Equipment Information Section */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  <div className="grid grid-cols-[200px_1fr] gap-4 relative">
                     <Label htmlFor="equipment_no" className="mt-3">Equipment No.</Label>
                     <Controller
                       name="equipment_no"
@@ -814,7 +817,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  <div className="grid grid-cols-[200px_1fr] gap-4 relative">
                     <Label htmlFor="standard" className="mt-3">Standard</Label>
                     <Controller
                       name="standard"
@@ -823,7 +826,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         const allStandardOptions = standardOptions?.map((std: any) => String(std.id)) || [];
                         const value = allStandardOptions.includes(field.value) ? field.value : "";
                         return (
-                          <div className="flex w-full gap-2 items-center">
+                          <div className="flex w-full gap-2 items-center relative">
                             <Select
                               value={value}
                               onValueChange={field.onChange}
@@ -841,8 +844,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                                   <Input
                                     className="mt-2"
                                     placeholder="Type standard name"
-                                    value={field.value || ""}
+                                    value={!isStandardTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsStandardTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -851,6 +855,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsStandardTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addStandard({ standard: field.value }),
@@ -1153,8 +1158,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         const value = currentOwner || field.value || "";
 
                         return (
-                          <div className="flex w-full gap-2 items-center">
-                            <Select
+                          <div className="flex w-full gap-2 items-center relative">
+                            <Select 
                               value={allOwnerOptions.includes(value) ? value : ""}
                               onValueChange={(val) => field.onChange(val)}
                             >
@@ -1172,8 +1177,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                                     <Input
                                       className="mt-2"
                                       placeholder="Type owner name"
-                                      value={field.value || ""}
+                                      value={!isOwnerTyping ? field.value : ""}
                                       onChange={e => {
+                                        setIsOwnerTyping(true);
                                         field.onChange(e.target.value);
                                       }}
                                     />
@@ -1182,6 +1188,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                                       variant="outline"
                                       className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                       onClick={() => {
+                                        setIsOwnerTyping(false);
                                         makeApiCall(
                                           () => new MasterService().addOwner({ owner: field.value }),
                                           {
@@ -1262,7 +1269,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
                         const value = allManufacturerOptions.includes(field.value) ? field.value : "";
                         return (
-                          <div className="flex w-full gap-2 items-center">
+                          <div className="flex w-full gap-2 items-center relative">
                             <Select
                               value={value}
                               onValueChange={field.onChange}
@@ -1280,8 +1287,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                                   <Input
                                     className="mt-2"
                                     placeholder="Type manufacturer name"
-                                    value={field.value || ""}
+                                    value={!isManufacturerTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsManufacturerTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -1290,6 +1298,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsManufacturerTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addManufacturer({ manufacturer: field.value }),

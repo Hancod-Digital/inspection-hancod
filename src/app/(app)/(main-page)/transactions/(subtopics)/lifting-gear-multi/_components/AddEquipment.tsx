@@ -22,13 +22,12 @@ import { ToastVariant, toastWithTimeout } from '@/components/ui/use-toast';
 import { PlusIcon } from 'lucide-react';
 
 // Dummy Add*Button components for demonstration
-const AddOwnerButton = () => null;
-const AddManufacturerButton = () => null;
-const AddStandardButton = () => null;
-const AddEquipmentButton = () => null;
-const AddSiteButton = () => null;
-const AddLocationButton = () => null;
-
+import AddOwnerButton from '../../_components/Owner/Owner';
+import AddManufacturerButton from '../../_components/Manufacturer/Manufacturer';
+import AddStandardButton from '../../_components/Standard/Standard';
+import AddEquipmentButton from '../../_components/Equipments/Equipments';
+import AddSiteButton from '../../_components/Site/Site';
+import AddLocationButton from '../../_components/Location/Location';
 interface AddEquipmentProps {
   onClose: () => void;
   setIsLocation: (value: boolean) => void;
@@ -106,6 +105,10 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
   const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
   const [ownerOptions, setOwnerOptions] = useState<any>([])
   const [locationOptions, setLocationOptions] = useState<any>([]);
+
+const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
+  const [isOwnerTyping, setIsOwnerTyping] = useState(false);
+  const [isStandardTyping, setIsStandardTyping] = useState(false);
 
   const { watch, setValue } = methods
   const { equipment_no, inspection_date, type_of_exam, standard, title, equipment_description, test_cert_coc_no, safe_working_load, proof_load, last_test_exam, last_thorough_exam, next_test_exam, next_thorough_exam, owner_name, manufacturer, approval_status, result, surveyor, location } = watch()
@@ -648,8 +651,9 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
                                   <Input
                                     className="mt-2"
                                     placeholder="Type standard name"
-                                    value={field.value || ""}
+                                    value={!isStandardTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsStandardTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -658,6 +662,7 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsStandardTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addStandard({ standard: field.value }),
@@ -981,7 +986,7 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
                           const value = currentOwner || field.value || "";
 
                           return (
-                            <div className="flex w-full gap-2 items-center">
+                            <div className="flex w-full gap-2 items-center relative">
                               <Select
                                 value={allOwnerOptions.includes(value) ? value : ""}
                                 onValueChange={(val) => field.onChange(val)}
@@ -1000,8 +1005,9 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
                                       <Input
                                         className="mt-2"
                                         placeholder="Type owner name"
-                                        value={field.value || ""}
+                                        value={!isOwnerTyping ? field.value : ""}
                                         onChange={e => {
+                                          setIsOwnerTyping(true);
                                           field.onChange(e.target.value);
                                         }}
                                       />
@@ -1010,6 +1016,7 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
                                         variant="outline"
                                         className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                         onClick={() => {
+                                          setIsOwnerTyping(false);
                                           makeApiCall(
                                             () => new MasterService().addOwner({ owner: field.value }),
                                             {
@@ -1098,8 +1105,9 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
                                     <Input
                                       className="mt-2"
                                       placeholder="Type manufacturer name"
-                                      value={field.value || ""}
+                                      value={!isManufacturerTyping ? field.value : ""}
                                       onChange={e => {
+                                        setIsManufacturerTyping(true);
                                         field.onChange(e.target.value);
                                       }}
                                     />
@@ -1108,6 +1116,7 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
                                       variant="outline"
                                       className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                       onClick={async () => {
+                                        setIsManufacturerTyping(false);
                                         if (!field.value) return;
                                         await makeApiCall(
                                           () => new MasterService().addManufacturer({ manufacturer: field.value }),

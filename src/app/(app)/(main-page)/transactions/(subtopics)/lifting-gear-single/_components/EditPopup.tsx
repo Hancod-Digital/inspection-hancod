@@ -24,85 +24,12 @@ import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 import { PlusIcon } from 'lucide-react';
 
-// Add Button Components
-function AddLocationButton({ onClick }: { onClick?: () => void }) {
-  return (
-    <Button
-      size="icon"
-      variant="outline"
-      className="absolute bg-primary text-white font-bold right-0 top-0"
-      onClick={onClick}
-      type="button"
-    >
-      <PlusIcon className="h-4 w-4" />
-    </Button>
-  );
-}
-function AddSiteButton({ onClick }: { onClick?: () => void }) {
-  return (
-    <Button
-      size="icon"
-      variant="outline"
-      className="absolute bg-primary text-white font-bold right-0 top-0"
-      onClick={onClick}
-      type="button"
-    >
-      <PlusIcon className="h-4 w-4" />
-    </Button>
-  );
-}
-function AddEquipmentButton({ onClick }: { onClick?: () => void }) {
-  return (
-    <Button
-      size="icon"
-      variant="outline"
-      className="absolute bg-primary text-white font-bold right-0 top-0"
-      onClick={onClick}
-      type="button"
-    >
-      <PlusIcon className="h-4 w-4" />
-    </Button>
-  );
-}
-function AddStandardButton({ onClick }: { onClick?: () => void }) {
-  return (
-    <Button
-      size="icon"
-      variant="outline"
-      className="absolute bg-primary text-white font-bold right-0 top-0"
-      onClick={onClick}
-      type="button"
-    >
-      <PlusIcon className="h-4 w-4" />
-    </Button>
-  );
-}
-function AddManufacturerButton({ onClick }: { onClick?: () => void }) {
-  return (
-    <Button
-      size="icon"
-      variant="outline"
-      className="absolute bg-primary text-white font-bold right-0 top-0"
-      onClick={onClick}
-      type="button"
-    >
-      <PlusIcon className="h-4 w-4" />
-    </Button>
-  );
-}
-function AddOwnerButton({ onClick }: { onClick?: () => void }) {
-  return (
-    <Button
-      size="icon"
-      variant="outline"
-      className="absolute bg-primary text-white font-bold right-0 top-0"
-      onClick={onClick}
-      type="button"
-    >
-      <PlusIcon className="h-4 w-4" />
-    </Button>
-  );
-}
+import AddLocationButton from '../../_components/Location/Location';
+import AddSiteButton from '../../_components/Site/Site';
+import AddEquipmentButton from '../../_components/Equipments/Equipments';
+import AddStandardButton from '../../_components/Standard/Standard';
+import AddManufacturerButton from '../../_components/Manufacturer/Manufacturer';
+import AddOwnerButton from '../../_components/Owner/Owner';
 
 interface EquipmentDetailsEditFormProps {
   onClose: () => void;
@@ -132,6 +59,10 @@ export default function EquipmentDetailsEditForm({
   const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState<boolean>(false);
   const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<boolean>(false);
   const [invoke, setInvoke] = useState(false);
+  const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
+  const [isOwnerTyping, setIsOwnerTyping] = useState(false);
+  const [isStandardTyping, setIsStandardTyping] = useState(false);
+
   const existingData = id ? findRecordById(id) : null;
   const equipmentNoChanged = (value: string, field: any) => {
     console.log("Selected equipment no:", value)
@@ -675,8 +606,9 @@ export default function EquipmentDetailsEditForm({
                                   <Input
                                     className="mt-2"
                                     placeholder="Type standard name"
-                                    value={field.value || ""}
+                                    value={!isStandardTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsStandardTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -685,6 +617,7 @@ export default function EquipmentDetailsEditForm({
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsStandardTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addStandard({ standard: field.value }),
@@ -989,8 +922,9 @@ export default function EquipmentDetailsEditForm({
                                       <Input
                                         className="mt-2"
                                         placeholder="Type owner name"
-                                        value={typeof field.value === 'string' ? field.value : ""}
+                                        value={!isOwnerTyping ? field.value : ""}
                                         onChange={e => {
+                                          setIsOwnerTyping(true);
                                           field.onChange(e.target.value);
                                         }}
                                       />
@@ -999,6 +933,7 @@ export default function EquipmentDetailsEditForm({
                                         variant="outline"
                                         className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                         onClick={async () => {
+                                          setIsOwnerTyping(false);
                                           if (!field.value) return;
                                           await makeApiCall(
                                             () => new MasterService().addOwner({ owner: field.value }),
@@ -1089,8 +1024,9 @@ export default function EquipmentDetailsEditForm({
                                   <Input
                                     className="mt-2"
                                     placeholder="Type manufacturer name"
-                                    value={field.value || ""}
+                                    value={!isManufacturerTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsManufacturerTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -1099,6 +1035,7 @@ export default function EquipmentDetailsEditForm({
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsManufacturerTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addManufacturer({ manufacturer: field.value }),

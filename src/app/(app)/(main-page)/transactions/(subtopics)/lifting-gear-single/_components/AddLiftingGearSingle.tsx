@@ -21,12 +21,14 @@ import { makeApiCall } from '@/lib/apicaller';
 import { PlusIcon } from 'lucide-react';
 import { toastWithTimeout } from '@/components/ui/use-toast';
 import { ToastVariant } from '@/components/ui/use-toast';
-function AddLocationButton() { return null; }
-function AddSiteButton() { return null; }
-function AddEquipmentButton() { return null; }
-function AddStandardButton() { return null; }
-function AddManufacturerButton() { return null; }
-function AddOwnerButton() { return null; }
+
+
+import AddLocationButton from '../../_components/Location/Location';
+import AddSiteButton from '../../_components/Site/Site';
+import AddEquipmentButton from '../../_components/Equipments/Equipments';
+import AddStandardButton from '../../_components/Standard/Standard';
+import AddManufacturerButton from '../../_components/Manufacturer/Manufacturer';
+import AddOwnerButton from '../../_components/Owner/Owner';
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
@@ -47,6 +49,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState<any>(false);
   const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<any>(false);
   const [invoke, setInvoke] = useState(false);
+
+  
+  const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
+  const [isOwnerTyping, setIsOwnerTyping] = useState(false);
+  const [isStandardTyping, setIsStandardTyping] = useState(false);
 
   // Remove next_test_exam_certificate_no and next_thorough_exam_certificate_no from schema
   const equipmentDetailsSchema = object({
@@ -554,8 +561,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                   <Input
                                     className="mt-2"
                                     placeholder="Type standard name"
-                                    value={field.value || ""}
+                                    value={!isStandardTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsStandardTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -564,6 +572,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsStandardTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addStandard({ standard: field.value }),
@@ -848,7 +857,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         const allOwnerOptions = ownerOptions?.map((owner: any) => String(owner.id)) || [];
                         const value = currentOwner || field.value || "";
                         return (
-                          <div className="flex w-full gap-2 items-center">
+                          <div className="flex w-full gap-2 items-center relative">
                             <Select
                               value={allOwnerOptions.includes(value) ? value : ""}
                               onValueChange={(val) => field.onChange(val)}
@@ -866,8 +875,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                   <Input
                                     className="mt-2"
                                     placeholder="Type owner name"
-                                    value={field.value || ""}
+                                    value={!isOwnerTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsOwnerTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -876,6 +886,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={() => {
+                                      setIsOwnerTyping(false);
                                       makeApiCall(
                                         () => new MasterService().addOwner({ owner: field.value }),
                                         {
@@ -932,11 +943,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                     )}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  <div className="grid grid-cols-[200px_1fr] gap-4 relative">
                     <Label htmlFor="manufacturer" className="mt-3">
                       Manufacturer
                     </Label>
-                    <div className='relative'>
+                    <div className='relative '>
                       <Controller
                         name="manufacturer"
                         control={control}
@@ -947,7 +958,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                             <Select
                               value={value}
                               onValueChange={field.onChange}
-                            >
+                            > 
                               <SelectTrigger id="manufacturer">
                                 <SelectValue
                                   placeholder="Select or type manufacturer"
@@ -961,9 +972,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                   <Input
                                     className="mt-2"
                                     placeholder="Type manufacturer name"
-                                    value={field.value || ""}
+                                    value={!isManufacturerTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsManufacturerTyping(true);
                                       field.onChange(e.target.value);
+                                     
                                     }}
                                   />
                                   <Button
@@ -971,6 +984,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsManufacturerTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addManufacturer({ manufacturer: field.value }),

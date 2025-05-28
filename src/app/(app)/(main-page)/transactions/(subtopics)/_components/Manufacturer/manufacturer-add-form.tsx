@@ -77,7 +77,7 @@ export default function ManufacturerAddForm({ onClose }: ManufacturerAddFormProp
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
                   {/* Manufacturer Field */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">
                       Manufacturer
                     </Label>
@@ -90,7 +90,7 @@ export default function ManufacturerAddForm({ onClose }: ManufacturerAddFormProp
                   </div>
 
                   {/* Address Field */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label htmlFor="address" className="mt-3">
                       Address
                     </Label>
@@ -103,7 +103,7 @@ export default function ManufacturerAddForm({ onClose }: ManufacturerAddFormProp
                   </div>
 
                   {/* Status Field */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
+                  <div className="grid grid-cols-[200px_1fr] w-full gap-4">
                     <Label htmlFor="status" className="mt-3">
                       Status
                     </Label>

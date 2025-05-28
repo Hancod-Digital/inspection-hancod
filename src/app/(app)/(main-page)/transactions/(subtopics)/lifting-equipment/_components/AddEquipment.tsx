@@ -133,6 +133,11 @@ export default function EquipmentDetailsForm({
   const [ownerOptions, setOwnerOptions] = useState<any[]>([]);
   const [locationOptions, setLocationOptions] = useState<any[]>([]);
 
+  const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
+  const [isOwnerTyping, setIsOwnerTyping] = useState(false);
+  const [isStandardTyping, setIsStandardTyping] = useState(false);
+
+
   const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
   const [data, setData] = useState<{ [key: string]: string }[]>([]); // For PropertyTable
   const [propertyList, setPropertyList] = useState<any[]>([]); // For AnnexuresTable
@@ -742,8 +747,9 @@ console.log("erros", errors)
                                   <Input
                                     className="mt-2"
                                     placeholder="Type manufacturer name"
-                                    value={field.value || ""}
+                                    value={!isManufacturerTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsManufacturerTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -752,6 +758,7 @@ console.log("erros", errors)
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsManufacturerTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addManufacturer({ manufacturer: field.value }),
@@ -854,8 +861,9 @@ console.log("erros", errors)
                                   <Input
                                     className="mt-2"
                                     placeholder="Type standard name"
-                                    value={field.value || ""}
+                                    value={!isStandardTyping ? field.value : ""}
                                     onChange={e => {
+                                      setIsStandardTyping(true);
                                       field.onChange(e.target.value);
                                     }}
                                   />
@@ -864,6 +872,7 @@ console.log("erros", errors)
                                     variant="outline"
                                     className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                     onClick={async () => {
+                                      setIsStandardTyping(false);
                                       if (!field.value) return;
                                       await makeApiCall(
                                         () => new MasterService().addStandard({ standard: field.value }),
@@ -953,8 +962,9 @@ console.log("erros", errors)
                                       <Input
                                         className="mt-2"
                                         placeholder="Type owner name"
-                                        value={field.value || ""}
+                                        value={!isOwnerTyping ? field.value : ""}
                                         onChange={e => {
+                                          setIsOwnerTyping(true);
                                           field.onChange(e.target.value);
                                         }}
                                       />
@@ -963,6 +973,7 @@ console.log("erros", errors)
                                         variant="outline"
                                         className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
                                         onClick={() => {
+                                          setIsOwnerTyping(false);
                                           makeApiCall(
                                             () => new MasterService().addOwner({ owner: field.value }),
                                             {
