@@ -51,7 +51,7 @@ export function generateRows(rows: any[]) {
       <span class="table-header header${rowNumber}-status">${condition}</span>
       <span class="table-header header${rowNumber}-description">${property}</span>
       <span class="table-header header${rowNumber}-sl-no">${displaySlNo}</span>
-      <span class="table-header header${rowNumber}-remark">${remarks}</span>
+      <span class="table-header header${rowNumber}-remark">${remarks || "-"}</span>
     `;
 
     // Append CSS for this row

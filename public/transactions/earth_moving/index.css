@@ -860,7 +860,7 @@ button {
   padding-top: 12px;
   position: absolute;
   width: 77%;
-  height: calc(82 * var(--rpx));
+  
   top: calc(49.4296875 * var(--rpx));
    
   color: #0f1422;

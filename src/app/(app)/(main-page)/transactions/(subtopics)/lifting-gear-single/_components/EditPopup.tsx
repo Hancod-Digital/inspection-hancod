@@ -149,6 +149,10 @@ export default function EquipmentDetailsEditForm({
       setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
       setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
       setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
+      setTestExamChecked(!selectedEquipment.next_test_date);
+      setThoroughExamChecked(!selectedEquipment.next_thorough_date);
+      setLastTestExamChecked(!selectedEquipment.last_test_date);
+      setLastThoroughExamChecked(!selectedEquipment.last_thorough_date);
     }
     field.onChange(value)
   }
@@ -202,6 +206,8 @@ export default function EquipmentDetailsEditForm({
       next_test_exam: existingData?.next_test_exam || '',
       last_thorough_exam: existingData?.last_thorough_exam || '',
       next_thorough_exam: existingData?.next_thorough_exam || '',
+      last_test_exam_certificate_no: existingData?.last_test_exam_certificate_no || '',
+      last_thorough_exam_certificate_no: existingData?.last_thorough_exam_certificate_no || '',
       result: existingData?.result || '',
       type_of_exam: existingData?.type_of_exam || '',
       surveyor: String(existingData?.surveyor) || '',
@@ -266,7 +272,7 @@ export default function EquipmentDetailsEditForm({
         setValue('last_thorough_exam', data.last_thorough_exam || '');
         setValue('next_test_exam', data.next_test_exam || '');
         setValue('next_thorough_exam', data.next_thorough_exam || '');
-
+        console.log("data",data)
         // Now set the checkboxes based on those values
         setTestExamChecked(data.next_test_exam === "Not Applicable");
         setThoroughExamChecked(data.next_thorough_exam === "Not Applicable");
@@ -339,18 +345,7 @@ export default function EquipmentDetailsEditForm({
     // eslint-disable-next-line
   }, [job_order_no]);
    const equipment_no = watch('equipment_no');
-  // Handle "Not Applicable" checkboxes based on equipment data
-  useEffect(() => {
-    const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
-    if (selectedEquipment) {
-      setTestExamChecked(!selectedEquipment.next_test_date);
-      setThoroughExamChecked(!selectedEquipment.next_thorough_date);
-      setLastTestExamChecked(!selectedEquipment.last_test_date);
-      setLastThoroughExamChecked(!selectedEquipment.last_thorough_date);
-    }
-    // eslint-disable-next-line
-  }, [equipment_no, equipmentNoOptions]);
-
+  
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();

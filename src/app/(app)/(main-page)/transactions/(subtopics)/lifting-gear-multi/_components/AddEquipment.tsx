@@ -1195,7 +1195,7 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                    <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
+                    <Table equipmentOptions={equipmentNoOptions} onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
                   </div>
                 </div>
 

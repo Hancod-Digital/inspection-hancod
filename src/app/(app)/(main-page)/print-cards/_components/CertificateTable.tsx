@@ -681,11 +681,11 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             };
         };
     };
-    const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage} = usePagination(data)
+    const {currentPage, totalPages, handlePreviousPage, handleNextPage, setCurrentPage, currentData, goToPage} = usePagination(data)
 
 
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative">
             <Table className="w-full">
                 <TableHeader>
                     <TableRow>
@@ -700,7 +700,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((item: any, idx: number) => (
+                    {currentData?.map((item: any, idx: number) => (
                         <React.Fragment key={idx + 1}>
                             <TableRow>
                                 <TableCell className="py-4">{item?.id}</TableCell>
@@ -779,9 +779,15 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                     ))}
                 </TableBody>
             </Table>
-            <div className='absolute bottom-0 right-0 '>
-                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
-                </div>
+            <div className='mt-4 flex justify-center pb-4'>
+                <PaginationDemo 
+                    currentPage={currentPage} 
+                    totalPages={totalPages} 
+                    onPreviousPage={handlePreviousPage} 
+                    onNextPage={handleNextPage} 
+                    onPageChange={goToPage} 
+                />
+            </div>
         </div>
     );
 }

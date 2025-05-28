@@ -89,7 +89,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     description: string().nonempty('Description is required'),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
-    // tested_standard: string().nonempty('Tested Standard is required'),
+    //  tested_standard: string().nonempty('Tested Standard is required'),
     approval_status: string().nonempty('Approval Status is required'),
   });
 
@@ -278,10 +278,43 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       setManufacturerOptions(manufacturers?.filter((item: any) => item.status === "ACTIVE") || []);
       setSurveyorOptions(surveyors || []);
       setOwnerOptions(owners?.filter((item: any) => item.status === "ACTIVE") || []);
+      
+      // Once options are loaded, find and set the correct IDs for select fields
+      if (currentData && id) {
+        // Match standard name to ID
+        if (currentData.standard) {
+          const standardObj = standards?.find((s: any) => 
+            s.standard === currentData.standard || String(s.id) === String(currentData.standard)
+          );
+          if (standardObj) {
+            setValue('standard', String(standardObj.id));
+          }
+        }
+        
+        // Match manufacturer name to ID
+        if (currentData.manufacturer) {
+          const manufacturerObj = manufacturers?.find((m: any) => 
+            m.manufacturer === currentData.manufacturer || String(m.id) === String(currentData.manufacturer)
+          );
+          if (manufacturerObj) {
+            setValue('manufacturer', String(manufacturerObj.id));
+          }
+        }
+        
+        // Match owner name to ID
+        if (currentData.owner_name) {
+          const ownerObj = owners?.find((o: any) => 
+            o.owner === currentData.owner_name || String(o.id) === String(currentData.owner_name)
+          );
+          if (ownerObj) {
+            setValue('owner_name', String(ownerObj.id));
+          }
+        }
+      }
     };
 
     fetchOptions();
-  }, [getAllSingleSubtopic, invoke]);
+  }, [getAllSingleSubtopic, invoke, id, currentData, setValue]);
 
   // Fetch location options separately
   const [existingData, setExistingData] = useState<any[]>([]);
@@ -319,7 +352,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       const res = locationOptions.filter((item: any) => item.location.id == location ? location : currentData?.location);
 
       if (res.length > 0) {
-        setSiteOptions(res?.map((item) => item.site)); // Set the area options to the fetched data
+        console.log("ressss",res)
+        setSiteOptions(res?.filter((item) => item.site !=null)); // Set the area options to the fetched data
       } else {
         setSiteOptions([]); // Clear site options if no location is selected
       }
@@ -408,42 +442,56 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       [name]: value
     }));
   };
-
+  console.log(siteOptions)
   // Function to handle adding equipment to multi-equipments (AnnexureTable)
   const addEquipmentToMulti = async () => {
-    const datas = {
-      equipment_no,
-      inspection_date: watch('inspection_date'),
-      type_of_exam: watch('type_of_exam'),
-      title: watch('title'),
-      last_thorough_exam_certificate_no: watch('last_thorough_exam_certificate_no'),
-      // next_thorough_exam_certificate_no: thoroughExamChecked ? watch('next_thorough_exam_certificate_no') || '' : '',
-      surveyor: surveyorOptions?.find((item: any) => item.id === watch('surveyor'))?.surveyor || '',
-      approval_status: watch('approval_status'),
-    };
-    const otherfields = { result: watch('result'), equipment_no };
+    // Validation checks first
     if (!watch('result')) {
       toastWithTimeout(ToastVariant.Default, "Result is required")
       return
     } else if (!watch('surveyor')) {
       toastWithTimeout(ToastVariant.Default, "Surveyor is required")
       return
-
     } else if (!watch('approval_status')) {
       toastWithTimeout(ToastVariant.Default, "Approval Status is required")
       return
     } else if (!watch('inspection_date')) {
       toastWithTimeout(ToastVariant.Default, "Inspection Date is required")
       return
-
     } else if (!watch('type_of_exam')) {
       toastWithTimeout(ToastVariant.Default, "Type of Exam is required")
       return
-
     } else if (!watch('equipment_no')) {
       toastWithTimeout(ToastVariant.Default, "Equipment No. is required")
       return
     }
+  
+    // Get the selected equipment's full data
+    const selectedEquipment = equipmentNoOptions.find((item) => item.id == equipment_no);
+    
+    const datas = {
+      equipment_no,
+      inspection_date: watch('inspection_date'),
+      type_of_exam: watch('type_of_exam'),
+      title: watch('title'),
+      equipment_description: selectedEquipment?.description || '',
+      test_cert_coc_no: selectedEquipment?.test_certificate_no || '',
+      safe_working_load: selectedEquipment?.safe_working_load || '',
+      proof_load: selectedEquipment?.proof_load || '',
+      last_test_exam: lastTestExamChecked ? "Not Applicable" : lastTestExamNotAvailable ? "Not Available" : selectedEquipment?.last_test_date || '',
+      next_test_exam: testExamChecked ? "Not Applicable" : testExamNotAvailable ? "Not Available" : selectedEquipment?.next_test_date || '',
+      last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : lastThoroughExamNotAvailable ? "Not Available" : selectedEquipment?.last_thorough_date || '',
+      next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : selectedEquipment?.next_thorough_date || '',
+      result: watch('result'),
+      owner_name: selectedEquipment?.owner_id || '',
+      surveyor: watch('surveyor'),
+      manufacturer: selectedEquipment?.manufacturer || '',
+      standard: selectedEquipment?.standard || '',
+      approval_status: watch('approval_status'),
+      last_thorough_exam_certificate_no: watch('last_thorough_exam_certificate_no'),
+      last_test_exam_certificate_no: watch('last_test_exam_certificate_no')
+    };
+  
     await makeApiCall(
       () => new MasterService().addEquipment(datas),
       {
@@ -455,7 +503,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       }
     );
   };
-
   // Handle form submission
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
@@ -576,9 +623,9 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                               <SelectValue placeholder="Select site" />
                             </SelectTrigger>
                             <SelectContent>
-                              {siteOptions?.map((site: any) => (
-                                <SelectItem key={site.id} value={String(site.id)}>
-                                  {site.name}
+                              {siteOptions?.map((item: any) => (
+                                <SelectItem key={item?.site?.id} value={String(item?.site?.id)}>
+                                  {item?.site?.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -853,7 +900,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             id="last_test_exam"
                             type="date"
                             {...field}
-                            disabled={lastTestExamChecked}
+                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
                             value={lastTestExamChecked ? "" : field.value}
                           />
                         )}
@@ -913,7 +960,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             id="last_thorough_exam"
                             type="date"
                             {...field}
-                            disabled={lastThoroughExamChecked}
+                            disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                             value={lastThoroughExamChecked ? "" : field.value}
                           />
                         )}
@@ -975,7 +1022,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             id="next_test_exam"
                             type="date"
                             {...field}
-                            disabled={testExamChecked}
+                            disabled={testExamChecked  || testExamNotAvailable}
                             value={testExamChecked ? "" : field.value}
                           />
                         )}
@@ -1027,7 +1074,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                             id={"next_thorough_exam"}
                             type="date"
                             {...field}
-                            disabled={thoroughExamChecked}
+                            disabled={thoroughExamChecked || thoroughExamNotAvailable}
                             value={thoroughExamChecked ? "" : field.value}
                           />
                         )}
@@ -1330,7 +1377,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                 </div>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1">
-                    <Table onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
+                    <Table equipmentOptions={equipmentNoOptions} onFunction={addEquipmentToMulti} isSubmitted={isSubmitted} existingData={existingData} setValue={setValue} deleteRecord={deleteRecord} />
                   </div>
                 </div>
 

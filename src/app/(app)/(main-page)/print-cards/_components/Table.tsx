@@ -167,7 +167,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
 
 
     return (
-        <div className="px-8 py-3 bg-white w-[98%] mx-auto ">
+        <div className="px-8 py-3 bg-white w-[98%] mx-auto relative">
             
             <Table className="w-full ">
                 <TableHeader>
@@ -182,7 +182,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((item: any, idx: number) => (
+                    {currentData?.map((item: any, idx: number) => (
                         <React.Fragment key={idx + 1}>
                             <TableRow className=''>
                                 <TableCell className="py-4">{item.id}</TableCell>
@@ -287,9 +287,15 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     ))}
                 </TableBody>
             </Table>
-            <div className='absolute bottom-0 right-0 '>
-                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
-                </div>
+            <div className='mt-4 flex justify-center pb-4'>
+                <PaginationDemo 
+                    currentPage={currentPage} 
+                    totalPages={totalPages} 
+                    onPreviousPage={handlePreviousPage} 
+                    onNextPage={handleNextPage} 
+                    onPageChange={goToPage} 
+                />
+            </div>
         </div>
     );
 }

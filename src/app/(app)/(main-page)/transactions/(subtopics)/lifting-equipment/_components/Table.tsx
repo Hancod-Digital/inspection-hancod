@@ -123,9 +123,13 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location || "");
           htmlString = htmlString.replace(/\{\{six\}\}/g, formatDateWithHyphen(item?.inspection_date) || '');
 
-          htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer);
-          htmlString = htmlString.replace(/\{\{six12\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : item?.year_of_manufacture.split('-')[0]);
-          htmlString = htmlString.replace(/\{\{six2\}\}/g, equipment?.registration_no || '');
+         // htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer);
+         // htmlString = htmlString.replace(/\{\{six12\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : item?.year_of_manufacture.split('-')[0]);
+           
+         htmlString = htmlString.replace(/\{\{six1\}\}/g,  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer);
+         htmlString = htmlString.replace(/\{\{six12\}\}/g,  item?.year_of_manufacture.split('-')[0]);
+
+         htmlString = htmlString.replace(/\{\{six2\}\}/g,  equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.owner_name : equipment?.registration_no || '');
           htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer : data[0]?.serial_no || '');
           htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
           htmlString = htmlString.replace(/\{\{six5\}\}/g, item?.owner_name || '');
@@ -184,7 +188,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
                 return `<li>${swl}</li>`;
               }
             });
-
+            htmlString = htmlString.replace(/\{\{coc\}\}/g, item?.test_cert_coc_no);
           htmlString = htmlString.replace(/\{\{nine\}\}/g, conditions.length ? `<ul>${conditions.join('')}</ul>` : '');
           htmlString = htmlString.replace(/\{\{ten\}\}/g, boomLengths.length ? `<ul>${boomLengths.join('')}</ul>` : '');
           htmlString = htmlString.replace(/\{\{eleven\}\}/g, radii.length ? `<ul>${radii.join('')}</ul>` : '');
@@ -197,37 +201,43 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           // htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam) || '');
           // htmlString = htmlString.replace(/\{\{fifteen\}\}/g,  formatDateWithHyphen(item?.last_thorough_exam) || '');
           // htmlString = htmlString.replace(/\{\{sixteen\}\}/g,  formatDateWithHyphen(item?.next_thorough_exam) || '');
-
+            {/**
+              last proof load test = last_test_exam should be placed at aug, aug-css, aug-certification-no
+              last examination = last_thorough_exam  
+              next proof load test = next_test_exam
+              next examination = next_thorough_exam
+              
+              */}
           if (item?.last_test_exam_certificate_no != "") {
             console.log("last_test_exam_certificate_no", item?.last_test_exam_certificate_no)
-            htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${item?.last_test_exam != "Not Available" || item?.last_test_exam != "Not Applicable" ? formatDateWithHyphen(item?.last_test_exam) : item?.last_test_exam}</span><span class="not-available-certificate-no">${item.last_test_exam_certificate_no || "Not Available"}</span>`);
+            htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="aug">${item?.last_test_exam == "Not Available" ? "Not Available" : item?.last_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_test_exam)}</span><span class="aug-certificate-no">${item.last_test_exam_certificate_no || "Not Available"}</span>`);
           } else {
-            console.log("last_test_exam_certificate_no", item?.last_test_exam_certificate_no)
-            htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available-css">${item?.last_test_exam != "Not Available" || item?.last_test_exam != "Not Applicable" ? formatDateWithHyphen(item?.last_test_exam) : item?.last_test_exam}</span>`);
+            console.log("last_test_exam_certificate_no")
+            htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="aug-css">${item?.last_test_exam == "Not Available" ? "Not Available" : item?.last_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_test_exam)}</span>`);
           }
 
           if (item?.next_test_exam_certificate_no != "" && item?.next_test_exam_certificate_no) {
             console.log("next_test_exam_certificate_no", item?.next_test_exam_certificate_no)
-            htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="mar">${item?.next_test_exam != "Not Available" || item?.last_test_exam != "Not Applicable" ? formatDateWithHyphen(item?.next_test_exam) : item?.next_test_exam}</span><span class="mar-certificate-no">${item.next_test_exam_certificate_no || "Not Available"}</span>`);
+            htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="aug-30">${item?.next_test_exam == "Not Available" ? "Not Available" : item?.next_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_test_exam)}</span><span class="aug-30-certificate-no">${item.next_test_exam_certificate_no || "Not Available"}</span>`);
           } else {
             console.log("next_test_exam_certificate_no", item?.next_test_exam_certificate_no)
-            htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="mar-css">${item?.next_test_exam != "Not Available" || item?.last_test_exam != "Not Applicable" ? formatDateWithHyphen(item?.next_test_exam) : item?.next_test_exam}</span>`);
+            htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="aug-30-css">${item?.next_test_exam == "Not Available" ? "Not Available" : item?.next_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_test_exam)}</span>`);
           }
 
           if (item?.last_thorough_exam_certificate_no != "") {
             console.log("last_thorough_exam_certificate_no", item?.last_thorough_exam_certificate_no)
-            htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="aug-30">${item?.last_thorough_exam != "Not Available" || item?.last_thorough_exam != "Not Applicable" ? formatDateWithHyphen(item?.last_thorough_exam) : item?.last_thorough_exam}</span><span class="aug-30-certificate-no">${item.last_thorough_exam_certificate_no || "Not Available"}</span>`);
+            htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-available">${item?.last_thorough_exam == "Not Available"  ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span><span class="not-available-certificate-no">${item.last_thorough_exam_certificate_no || "Not Available"}</span>`);
           } else {
             console.log("last_thorough_exam_certificate_no", item?.last_thorough_exam_certificate_no)
-            htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="aug-30-css">${item?.last_thorough_exam != "Not Available" || item?.last_thorough_exam != "Not Applicable" ? formatDateWithHyphen(item?.last_thorough_exam) : item?.last_thorough_exam}</span>`);
+            htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-available-css">${item?.last_thorough_exam == "Not Available" ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span>`);
           }
 
           if (item?.next_thorough_exam_certificate_no != "" && item?.next_thorough_exam_certificate_no) {
             console.log("next_thorough_exam_certificate_no", item?.next_thorough_exam_certificate_no)
-            htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="aug">${item?.next_thorough_exam != "Not Available" || item?.last_thorough_exam != "Not Applicable" ? formatDateWithHyphen(item?.next_thorough_exam) : item?.next_thorough_exam}</span><span class="aug-certificate-no">${item.next_thorough_exam_certificate_no || "Not Available"}</span>`);
+            htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="mar">${item?.next_thorough_exam == "Not Available" ? "Not Available" : item?.next_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_thorough_exam)}</span><span class="mar-certificate-no">${item.next_thorough_exam_certificate_no || "Not Available"}</span>`);
           } else {
             console.log("next_thorough_exam_certificate_no", item?.next_thorough_exam_certificate_no)
-            htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="aug-css">${item?.next_thorough_exam != "Not Available" || item?.last_thorough_exam != "Not Applicable" ? formatDateWithHyphen(item?.next_thorough_exam) : item?.next_thorough_exam}</span>`);
+            htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="mar-css">${item?.next_thorough_exam == "Not Available" ? "Not Available" : item?.next_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_thorough_exam)}</span>`);
           }
 
           htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description || '');
@@ -279,18 +289,21 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
 
     item?.annexures?.forEach((item: { property: string, property_group: string, remarks: string }) => {
       let height = 0;
-      console.log(item.property_group.length);
-      if (item.property.length > item.property_group.length) {
-        height = item.property.length
+      console.log(item.property_group?.length);
+      if (item.property?.length > item.property_group?.length) {
+        height = item.property?.length
       } else {
-        height = item.property_group.length
+        height = item.property_group?.length
       }
 
-      if (height < item?.remarks.length) {
-        height = item?.remarks.length
+      // Ensure remarks has a fallback value to prevent "undefined" from appearing
+      const remarks = item?.remarks || '';
+      
+      if (height < remarks.length) {
+        height = remarks.length
       }
-      console.log(height, item?.property?.length, item?.property_group?.length, item?.remarks?.length)
-      console.log(height - item?.property?.length, height - item?.property_group?.length, height - item?.remarks?.length);
+      console.log(height, item?.property?.length, item?.property_group?.length, remarks.length)
+      console.log(height - item?.property?.length, height - item?.property_group?.length, height - remarks.length);
 
 
       content += `
@@ -315,13 +328,13 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
                           
                           ">
             
-            ${item?.remarks}<span style="color:white">${'-'?.repeat(height - item?.remarks?.length)}</span>
+            ${remarks}<span style="color:white">${'-'?.repeat(height - remarks.length)}</span>
           </section>
         </div>
       `;
     });
     const data = generateRows(item?.annexures)
-
+    console.log("data",data,item)
     const response = await fetch("/finalbackside/index.html");
     let htmlString = await response.text();
     equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");

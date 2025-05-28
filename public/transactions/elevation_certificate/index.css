@@ -868,13 +868,12 @@ button {
   z-index: 30;
 }
 .main-hoist {
-  padding-left:12px;
-  
+  padding-left: 12px;
+  padding-top: 10px;
   position: absolute;
   width: 77%;
   height: calc(82 * var(--rpx));
   top: calc(49.4296875 * var(--rpx));
-   
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -1083,14 +1082,15 @@ button {
   white-space: nowrap;
   z-index: 50;
 }
-.not-available-certificate-no{
-  display: flex;
+.not-available-certificate-no {
+  display: flex
+;
   align-items: center;
   justify-content: center;
   position: absolute;
   width: calc(193.5029296875 * var(--rpx));
   height: calc(23.778215408325195 * var(--rpx));
-  top: calc(19.369 * var(--rpx));
+  top: calc(22.369 * var(--rpx));
   left: calc(26.31640625 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
@@ -1138,17 +1138,18 @@ button {
   z-index: 49;
 }
 .aug-certificate-no {
-  display: flex;
+  display: flex
+;
   align-items: center;
   justify-content: center;
   position: absolute;
   width: calc(228.212890625 * var(--rpx));
   height: calc(23.778215408325195 * var(--rpx));
-  top: calc(19.369140625 * var(--rpx));
+  top: calc(22.369141 * var(--rpx));
   left: calc(546.927734375 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;
@@ -1174,7 +1175,8 @@ button {
   z-index: 57;
 }
 .aug {
-  display: flex;
+  display: flex
+;
   align-items: center;
   justify-content: center;
   position: absolute;
@@ -1184,7 +1186,7 @@ button {
   left: calc(546.927734375 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;
@@ -1266,17 +1268,18 @@ button {
   z-index: 50;
 }
 .not-available {
-  display: flex;
+  display: flex
+;
   align-items: center;
   justify-content: center;
   position: absolute;
   width: calc(193.5029296875 * var(--rpx));
   height: calc(23.778215408325195 * var(--rpx));
-  top: calc(11.5859375 * var(--rpx));
+  top: calc(6.585938 * var(--rpx));
   left: calc(26.31640625 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: calc(16 * var(--rpx));
+  font-size: calc(14 * var(--rpx));
   font-weight: 600;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;
@@ -2108,10 +2111,11 @@ button {
   z-index: 45;
 }
 .rectangle-46 {
-  display: flex;
+  display: flex
+;
   align-items: center;
   justify-content: left;
-  gap: 167px;
+  gap: 209px;
   position: absolute;
   width: calc(1047.9833984375 * var(--rpx));
   height: calc(49.2890625 * var(--rpx));

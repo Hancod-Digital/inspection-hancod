@@ -383,28 +383,28 @@ export default function EditEquipmentDetailsForm({
   }, [job_order_no])
   // Handle checkboxes to disable date inputs
   useEffect(() => {
-    const selectedEquipment = equipmentNoOptions.find(item => item.id == equipment_no);
-    if (selectedEquipment) {
-      console.log("selectedEquipment", selectedEquipment)
+    console.log("equipment_no", existingData)
+     if (existingData) {
+      console.log("selectedEquipment", existingData)
       // Last Test Exam
-      if (selectedEquipment.last_test_date === "Not Applicable") {
+      if (existingData.last_test_exam === "Not Applicable") {
         setLastTestExamChecked(true);
         setLastTestExamNotAvailable(false);
-      } else if (selectedEquipment.last_test_date === "Not Available") {
-        console.log("last_test_date", selectedEquipment.last_test_date)
+      } else if (existingData.last_test_exam === "Not Available") {
+        console.log("last_test_date", existingData.last_test_exam)
         setLastTestExamNotAvailable(true);
         setLastTestExamChecked(false);
       } else {
-        console.log("last_test_date", selectedEquipment.last_test_date)
+        console.log("last_test_date", existingData.last_test_exam)
         setLastTestExamChecked(false);
         setLastTestExamNotAvailable(false);
       }
       
       // Last Thorough Exam
-      if (selectedEquipment.last_thorough_date === "Not Applicable") {
+      if (existingData.last_thorough_exam === "Not Applicable") {
         setLastThoroughExamChecked(true);
         setLastThoroughExamNotAvailable(false);
-      } else if (selectedEquipment.last_thorough_date === "Not Available") {
+      } else if (existingData.last_thorough_exam === "Not Available") {
         setLastThoroughExamNotAvailable(true);
         setLastThoroughExamChecked(false);
       } else {
@@ -413,10 +413,10 @@ export default function EditEquipmentDetailsForm({
       }
       
       // Next Test Exam
-      if (selectedEquipment.next_test_date === "Not Applicable") {
+      if (existingData.next_test_exam === "Not Applicable") {
         setTestExamChecked(true);
         setTestExamNotAvailable(false);
-      } else if (selectedEquipment.next_test_date === "Not Available") {
+      } else if (existingData.next_test_exam === "Not Available") {
         setTestExamNotAvailable(true);
         setTestExamChecked(false);
       } else {
@@ -425,10 +425,10 @@ export default function EditEquipmentDetailsForm({
       }
       
       // Next Thorough Exam
-      if (selectedEquipment.next_thorough_date === "Not Applicable") {
+      if (existingData.next_thorough_exam === "Not Applicable") {
         setThoroughExamChecked(true);
         setThoroughExamNotAvailable(false);
-      } else if (selectedEquipment.next_thorough_date === "Not Available") {
+      } else if (existingData.next_thorough_exam === "Not Available") {
         setThoroughExamNotAvailable(true);
         setThoroughExamChecked(false);
       } else {

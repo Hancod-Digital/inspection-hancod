@@ -142,6 +142,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
          
         return equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no).serial_no 
       }))
+      htmlString = htmlString.replace(/\{\{coc\}\}/g, item?.test_cert_coc_no);
       
       htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no);
 htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no);
@@ -209,38 +210,38 @@ htmlString = htmlString.replace(/\{\{twelve\}\}/g, formatWeightString(item?.safe
 
 if(item?.last_test_exam_certificate_no != ""){
   console.log("last_test_exam_certificate_no",item?.last_test_exam_certificate_no)
-  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${item?.last_test_exam != "Not Available"|| item?.last_test_exam != "Not Applicable"  ? formatDateWithHyphen(item?.last_test_exam) : item?.last_test_exam}</span><span class="not-available-certificate-no">${item.last_test_exam_certificate_no|| "Not Available"}</span>`);
+  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${item?.last_test_exam == "Not Available" ? "Not Available" : item?.last_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_test_exam)}</span><span class="not-available-certificate-no">${item.last_test_exam_certificate_no|| "Not Available"}</span>`);
   
 }else{
   console.log("last_test_exam_certificate_no",item?.last_test_exam_certificate_no)
-  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available-css">${item?.last_test_exam != "Not Available"|| item?.last_test_exam != "Not Applicable"  ? formatDateWithHyphen(item?.last_test_exam) : item?.last_test_exam}</span>`);
+  htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available-css">${item?.last_test_exam == "Not Available" ? "Not Available" : item?.last_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_test_exam)}</span>`);
 }
 
 if(item?.next_test_exam_certificate_no != "" && item?.next_test_exam_certificate_no){
   console.log("next_test_exam_certificate_no",item?.next_test_exam_certificate_no)
-  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="date-28-mar-2025">${item?.next_test_exam != "Not Available"|| item?.last_test_exam != "Not Applicable"  ? formatDateWithHyphen(item?.next_test_exam) : item?.next_test_exam}</span><span class="date-28-mar-2025-certificate-no">${item.next_test_exam_certificate_no|| "Not Available"}</span>`);
+  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="date-28-mar-2025">${item?.next_test_exam == "Not Available" ? "Not Available" : item?.next_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_test_exam)}</span><span class="date-28-mar-2025-certificate-no">${item.next_test_exam_certificate_no|| "Not Available"}</span>`);
   
 }else{
   console.log("next_test_exam_certificate_no",item?.next_test_exam_certificate_no)
-  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="date-28-mar-2025-css">${item?.next_test_exam != "Not Available"|| item?.last_test_exam != "Not Applicable"  ? formatDateWithHyphen(item?.next_test_exam) : item?.next_test_exam}</span>`);
+  htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="date-28-mar-2025-css">${item?.next_test_exam == "Not Available" ? "Not Available" : item?.next_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_test_exam)}</span>`);
 }
 
 if(item?.last_thorough_exam_certificate_no != ""){
   console.log("last_thorough_exam_certificate_no",item?.last_thorough_exam_certificate_no)
-  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-applicable-1a">${item?.last_thorough_exam != "Not Available"|| item?.last_thorough_exam != "Not Applicable"  ? formatDateWithHyphen(item?.last_thorough_exam) : item?.last_thorough_exam}</span><span class="not-applicable-1a-certificate-no">${item.last_thorough_exam_certificate_no|| "Not Available"}</span>`);
+  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-applicable-1a">${item?.last_thorough_exam == "Not Available" ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span><span class="not-applicable-1a-certificate-no">${item.last_thorough_exam_certificate_no|| "Not Available"}</span>`);
   
 }else{
   console.log("last_thorough_exam_certificate_no",item?.last_thorough_exam_certificate_no)
-  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-applicable-1a-css">${item?.last_thorough_exam != "Not Available"|| item?.last_thorough_exam != "Not Applicable"  ? formatDateWithHyphen(item?.last_thorough_exam) : item?.last_thorough_exam}</span>`);
+  htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-applicable-1a-css">${item?.last_thorough_exam == "Not Available" ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span>`);
 }
 
 if(item?.next_thorough_exam_certificate_no != "" && item?.next_thorough_exam_certificate_no){
   console.log("next_thorough_exam_certificate_no",item?.next_thorough_exam_certificate_no)
-  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="not-applicable">${item?.next_thorough_exam != "Not Available"|| item?.last_thorough_exam != "Not Applicable"  ? formatDateWithHyphen(item?.next_thorough_exam) : item?.next_thorough_exam}</span><span class="not-applicable-certificate-no">${item.next_thorough_exam_certificate_no|| "Not Available"}</span>`);
+  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="not-applicable">${item?.next_thorough_exam == "Not Available" ? "Not Available" : item?.next_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_thorough_exam)}</span><span class="not-applicable-certificate-no">${item.next_thorough_exam_certificate_no|| "Not Available"}</span>`);
   
 }else{
   console.log("next_thorough_exam_certificate_no",item?.next_thorough_exam_certificate_no)
-  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="not-applicable-css">${item?.next_thorough_exam != "Not Available"|| item?.last_thorough_exam != "Not Applicable"  ? formatDateWithHyphen(item?.next_thorough_exam) : item?.next_thorough_exam}</span>`);
+  htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="not-applicable-css">${item?.next_thorough_exam == "Not Available" ? "Not Available" : item?.next_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_thorough_exam)}</span>`);
 }
 
 const cssResponse = await fetch('/equ-certificate/index.css');

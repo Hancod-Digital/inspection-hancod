@@ -18,8 +18,8 @@ import { MasterService } from "@/services/api/masters-service";
 import { PencilIcon, TrashIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 
-export default function Component({ onFunction ,isSubmitted,existingData,setValue,deleteRecord}: { onFunction: () => void ,isSubmitted:boolean,existingData:any[],setValue:any,deleteRecord:any}) {
- 
+export default function Component({ onFunction , equipmentOptions, isSubmitted,existingData,setValue,deleteRecord}: { onFunction: () => void ,equipmentOptions:any,isSubmitted:boolean,existingData:any[],setValue:any,deleteRecord:any}) {
+ console.log("equipmentOptions",existingData)
    
   return (
     <div className="w-full mx-auto py-5">
@@ -42,8 +42,8 @@ export default function Component({ onFunction ,isSubmitted,existingData,setValu
         <TableBody>
           {existingData?.map((item: any, index: number) => (
             <TableRow key={index} className="hover:bg-gray-50">
-              <TableCell className="border-r border-gray-300 p-3">{item.inspection_date}</TableCell>
               <TableCell className="border-r border-gray-300 p-3">{item.equipment_no}</TableCell>
+              <TableCell className="border-r border-gray-300 p-3">{equipmentOptions?.filter((equipment: any) => equipment.id == item.equipment_no)[0]?.equipment_no}</TableCell>
               <TableCell className="border-r border-gray-300 p-3">{item.type_of_exam}</TableCell>
               <TableCell className="border-r border-gray-300 p-3">{item.result}</TableCell>
               <TableCell className="p-3 flex space-x-2">

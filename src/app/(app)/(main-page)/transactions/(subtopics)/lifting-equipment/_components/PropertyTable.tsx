@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/table';
 import { useState, useEffect } from 'react';
 import ColumnModal from './ColumnModal'; // Import ColumnModal
+import { Trash2 } from 'lucide-react';
 
 export default function PropertyTable({ data, setData, item_type }: { data: any; setData: any; item_type: any }) {
   const [open, setOpen] = useState(false);
@@ -66,6 +67,16 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
     console.log(data,"pppppppppppp");
   };
 
+  // Handle deleting a row
+  const handleDeleteRow = (rowIndex: number) => {
+    setData((prevData: any) => {
+      const safeData = Array.isArray(prevData) ? prevData : [];
+      const newData = safeData.filter((_, index) => index !== rowIndex);
+      console.log("Deleting row. Previous length:", safeData.length, "New length:", newData.length);
+      return newData;
+    });
+  };
+
   return (
     <>
       {columns?.length > 0 && (
@@ -86,12 +97,13 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
                     {column}
                   </TableHead>
                 ))}
+                <TableHead className="p-2 text-left w-16">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {data?.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={columns.length || 1} className="p-2 text-center text-gray-500">
+                  <TableCell colSpan={columns.length + 1} className="p-2 text-center text-gray-500">
                     No data to display
                   </TableCell>
                 </TableRow>
@@ -112,6 +124,17 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
                         />
                       </TableCell>
                     ))}
+                    <TableCell className="p-2 w-16">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteRow(rowIndex)}
+                        className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-100"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))
               )}
