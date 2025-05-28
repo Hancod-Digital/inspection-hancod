@@ -381,7 +381,7 @@ export default function EquipmentDetailsEditForm({
                           </Select>
                         )}
                       />
-                      <AddLocationButton onClick={() => setIsLocation(true)} />
+                      <AddLocationButton />
                       {errors.location && (
                         <p className="text-red-500 text-[12px] ">{errors.location.message}</p>
                       )}
@@ -485,7 +485,7 @@ export default function EquipmentDetailsEditForm({
                           </Select>
                         )}
                       />
-                      <AddSiteButton onClick={() => setIsLocation(true)} />
+                      <AddSiteButton />
                       {errors.site && (
                         <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                       )}
@@ -519,7 +519,7 @@ export default function EquipmentDetailsEditForm({
                           </Select>
                         )}
                       />
-                      <AddEquipmentButton onClick={() => setIsEquipment(true)} />
+                      <AddEquipmentButton />
                       {errors.equipment_no && (
                         <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
                       )}
@@ -649,7 +649,7 @@ export default function EquipmentDetailsEditForm({
                           );
                         }}
                       />
-                      <AddStandardButton onClick={() => setIsStandard(true)} />
+                      <AddStandardButton />
                       {errors.standard && (
                         <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                       )}
@@ -967,7 +967,7 @@ export default function EquipmentDetailsEditForm({
                           );
                         }}
                       />
-                      <AddOwnerButton onClick={() => setIsLocation(true)} />
+                      <AddOwnerButton />
                       {errors.owner_name && (
                         <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
                       )}
@@ -1067,7 +1067,7 @@ export default function EquipmentDetailsEditForm({
                           );
                         }}
                       />
-                      <AddManufacturerButton onClick={() => setIsManufacturer(true)} />
+                      <AddManufacturerButton />
                       {errors.manufacturer && (
                         <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                       )}
