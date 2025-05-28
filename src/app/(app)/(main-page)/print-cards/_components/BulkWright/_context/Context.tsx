@@ -121,8 +121,7 @@ export const StepperProvider: React.FC<{ children: ReactNode ,setIsBulk:any}> = 
       // Set raw: false to convert dates and cellDates: true to detect date cells
       const jsonData = XLSX.utils.sheet_to_json(worksheet, {
         raw: false,
-        dateNF: 'yyyy-mm-dd',
-        cellDates: true
+        dateNF: 'yyyy-mm-dd'
       })
       
       // Process dates and handle any special values
