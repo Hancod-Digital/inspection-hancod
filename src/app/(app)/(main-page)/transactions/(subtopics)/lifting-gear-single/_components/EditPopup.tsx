@@ -25,7 +25,7 @@ import { MasterService } from '@/services/api/masters-service';
 import { PlusIcon } from 'lucide-react';
 
 import AddLocationButton from '../../_components/Location/Location';
-import AddSiteButton from '../../_components/Site/Site';
+// import AddSiteButton from '../../_components/Site/Site';
 import AddEquipmentButton from '../../_components/Equipments/Equipments';
 import AddStandardButton from '../../_components/Standard/Standard';
 import AddManufacturerButton from '../../_components/Manufacturer/Manufacturer';
@@ -70,7 +70,8 @@ export default function EquipmentDetailsEditForm({
     if (selectedEquipment) {
       setValue('standard', String(selectedEquipment.standard) || '');
       setValue('manufacturer', String(selectedEquipment.manufacturer) || '');
-      setValue('owner_name', String(selectedEquipment.owner_id) || '');
+      const owner = ownerOptions.find(o => o.id === selectedEquipment.owner_id);
+      setValue('owner_name', owner ? owner.name : '');
       setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
       setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
       setValue('proof_load', String(selectedEquipment.proof_load) || '');
@@ -90,7 +91,7 @@ export default function EquipmentDetailsEditForm({
    // Define schema for validation
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    // site: string().nonempty('Site is required'),
     authority: string().nonempty('Authority is required'),
     standard: string().nonempty('Standard is required'),
     job_order_no: string().nonempty('Job Order No. is required'),
@@ -125,7 +126,7 @@ export default function EquipmentDetailsEditForm({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       inspection_date: existingData?.inspection_date || '',
-      site: String(existingData?.site) || '',
+      // site: String(existingData?.site) || '',
       authority: String(existingData?.authority) || '',
       standard: String(existingData?.standard) || '',
       job_order_no: String(existingData?.job_order_no) || '',
@@ -144,7 +145,7 @@ export default function EquipmentDetailsEditForm({
       surveyor: String(existingData?.surveyor) || '',
       defect_description: existingData?.defect_description || '',
       location: String(existingData?.location) || '5',
-      owner_name: existingData?.owner_name || '',
+      owner_name: String(existingData?.owner_name) || '',
       proof_load: String(existingData?.proof_load) || '',
       description: String(existingData?.description) || '',
       equipment_description: String(existingData?.equipment_description) || '',
@@ -224,8 +225,9 @@ export default function EquipmentDetailsEditForm({
   // Fetch select options on mount
   useEffect(() => {
     const fetchOptions = async () => {
-      const [sites, authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
-        getAllSingleSubtopic("site"),
+      // const [sites, authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
+      const [authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
+        // getAllSingleSubtopic("site"),
         getAllSingleSubtopic("authority"),
         getAllSingleSubtopic("job_orders"),
         getAllSingleSubtopic("equipment"),
@@ -234,7 +236,7 @@ export default function EquipmentDetailsEditForm({
         getAllSingleSubtopic("surveyor"),
         getAllSingleSubtopic("owner")
       ]);
-      setSiteOptions(sites?.filter((item: any) => item.status === "ACTIVE") || []);
+      // setSiteOptions(sites?.filter((item: any) => item.status === "ACTIVE") || []);
       setAuthorityOptions(authorities?.filter((item: any) => item.status === "ACTIVE") || []);
       setJobOrderNoOptions(jobOrders || []);
       setEquipmentNoOptions(equipments?.filter((item: any) => item.status === "ACTIVE") || []);
@@ -464,7 +466,7 @@ export default function EquipmentDetailsEditForm({
                   </div>
 
                   {/* Site */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <div className='relative'>
                       <Controller
@@ -490,7 +492,7 @@ export default function EquipmentDetailsEditForm({
                         <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                       )}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Equipment Information Title */}
@@ -540,7 +542,7 @@ export default function EquipmentDetailsEditForm({
                 <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
-                    <Input
+                    <Input maxLength={119}
                       id="equipment_description"
                       {...register('equipment_description')}
                     />
@@ -1134,7 +1136,7 @@ export default function EquipmentDetailsEditForm({
                   <div className="grid gap-4 grid-cols-1 w-full">
                     <div className="grid grid-cols-[400px_1fr]  gap-4">
                       <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                      <Input  maxLength={50} id="defect_description" className='my-auto' {...register('defect_description')} />
+                      <Input  maxLength={45} id="defect_description" className='my-auto' {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                     )}

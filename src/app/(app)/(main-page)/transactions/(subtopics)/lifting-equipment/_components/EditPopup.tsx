@@ -630,7 +630,7 @@ export default function EditEquipmentDetailsForm({
                   </div>
 
                   {/* Site (with Add) */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <div className="flex items-center gap-2 relative">
                       <Controller
@@ -656,7 +656,7 @@ export default function EditEquipmentDetailsForm({
                     {errors.site && (
                       <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Equipment Information Title */}

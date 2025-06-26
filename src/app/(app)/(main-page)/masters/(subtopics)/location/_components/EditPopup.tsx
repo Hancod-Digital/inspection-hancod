@@ -24,7 +24,7 @@ import { MasterService } from '@/services/api/masters-service';
 // Define the Zod schema for form validation (Area removed)
 const equipmentDetailsSchema = object({
   location: string().nonempty('Location is required'),
-  site: string().nonempty('Site is required'),
+  // site: string().nonempty('Site is required'),
   status: string().nonempty('Status is required'),
 });
 
@@ -33,10 +33,10 @@ type EquipmentDetailsSchemaType = TypeOf<typeof equipmentDetailsSchema>;
 interface EquipmentDetailsFormProps {
   onClose: () => void;
   id: number;
-  setIsSite: (value: boolean) => void;
+  // setIsSite: (value: boolean) => void;
 }
 
-export default function EquipmentDetailsForm({ onClose, id, setIsSite }: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
   const [siteData, setSiteData] = useState<any[]>([]); // State for site dropdown options
   const [locationData, setLocationData] = useState<any>(null); // State for existing record data
@@ -75,7 +75,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       location: '',
-      site: '',
+      // site: '',
       status: '',
     },
   });
@@ -91,7 +91,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
     if (locationData) {
       reset({
         location: locationData.location?.name || '',
-        site: String(locationData.site?.id) || '',
+        // site: String(locationData.site?.id) || '',
         status: locationData.location?.status || '',
       });
     }
@@ -102,18 +102,18 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
  
 
   // Fetch site dropdown options when the component mounts
-  useEffect(() => {
-    const fetchSites = async () => {
-      try {
-        const sites = await getAllSingleSubtopic('site');
-        setSiteData(sites || []);
-      } catch (error) {
-        console.error('Error fetching sites:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchSites = async () => {
+  //     try {
+  //       const sites = await getAllSingleSubtopic('site');
+  //       setSiteData(sites || []);
+  //     } catch (error) {
+  //       console.error('Error fetching sites:', error);
+  //     }
+  //   };
 
-    fetchSites();
-  }, [getAllSingleSubtopic]);
+  //   fetchSites();
+  // }, [getAllSingleSubtopic]);
 
   // Reset the form and close the modal upon successful submission
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
     const updatedData = {
       
       location: values.location,
-      site: Number(values.site),
+      // site: Number(values.site),
       status: values.status,
     };
 
@@ -180,7 +180,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
                   </div>
 
                   {/* Site Dropdown */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site">Site</Label>
                     <div className="relative">
                       <Controller
@@ -213,7 +213,7 @@ export default function EquipmentDetailsForm({ onClose, id, setIsSite }: Equipme
                         <p className="text-red-500 mt-1">{errors.site.message}</p>
                       )}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Status Dropdown */}
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">

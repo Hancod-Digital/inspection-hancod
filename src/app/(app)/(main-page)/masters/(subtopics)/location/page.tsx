@@ -17,7 +17,7 @@ const Location = () => {
     }
     const [changed,setChanged] = useState(false)
    const [isArea,setIsArea] = useState<boolean>(false)
-    const [isSite,setIsSite] = useState<boolean>(false)
+    // const [isSite,setIsSite] = useState<boolean>(false)
     return (
         <motion.div 
             className='w-full bg-[#fafbfb] h-full relative'
@@ -32,8 +32,8 @@ const Location = () => {
                 transition={{ delay: 0.2, duration: 0.5 }}
             >
                {isArea && "Area"}
-               {isSite && "Site"}
-               {!isArea && !isSite && "Location"}
+               {/* {isSite && "Site"} */}
+               {!isArea && "Location"}
             </motion.h2>
             
             <AnimatePresence mode="wait">
@@ -59,7 +59,7 @@ const Location = () => {
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Table  searchValue={searchValue} setIsSite={setIsSite} isSite={isSite} setIsArea={setIsArea} isArea={isArea} setIsChanged={setChanged} isChanged={changed}/>
+                        <Table  searchValue={searchValue} setIsChanged={setChanged} isChanged={changed}/>
                     </motion.div>
                 ) : (
                     <motion.div
@@ -69,8 +69,8 @@ const Location = () => {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
                     > {isArea && (<Area onClose={() => setIsArea(false)} changed={changed} setChanged={setChanged} />)}
-                    {isSite && (<Site onClose={()=>setIsSite(false)} changed={changed} setChanged={setChanged} />)}
-                        {!isArea && !isSite && (<AddForm onClose={handleCloseAdd} setIsSite={setIsSite} setIsArea={setIsArea} setIsChanged={setChanged} isChanged={changed}/>)}
+                    {/* {isSite && (<Site onClose={()=>setIsSite(false)} changed={changed} setChanged={setChanged} />)} */}
+                        {!isArea && (<AddForm onClose={handleCloseAdd} setIsArea={setIsArea} setIsChanged={setChanged} isChanged={changed}/>)}
                     </motion.div>
                 )}
             </AnimatePresence>

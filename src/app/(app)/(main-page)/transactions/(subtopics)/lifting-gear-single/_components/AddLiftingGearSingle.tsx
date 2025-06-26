@@ -24,7 +24,7 @@ import { ToastVariant } from '@/components/ui/use-toast';
 
 
 import AddLocationButton from '../../_components/Location/Location';
-import AddSiteButton from '../../_components/Site/Site';
+// import AddSiteButton from '../../_components/Site/Site';
 import AddEquipmentButton from '../../_components/Equipments/Equipments';
 import AddStandardButton from '../../_components/Standard/Standard';
 import AddManufacturerButton from '../../_components/Manufacturer/Manufacturer';
@@ -62,7 +62,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   // Remove next_test_exam_certificate_no and next_thorough_exam_certificate_no from schema
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    // site: string().nonempty('Site is required'),
     authority: string().nonempty('Authority is required'),
     // standard: string().nonempty('Standard is required'),
     standard: z.union([z.string(), z.number()])
@@ -157,7 +157,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     const fetchSites = async () => {
       const res = locationOptions.filter((item: any) => item.location.id == location);
       if (res.length > 0) {
-        setSiteOptions(res?.map((item: any) => item.site));
+        // setSiteOptions(res?.map((item: any) => item.site));
+        setSiteOptions([])
       }
     };
     fetchSites();
@@ -303,8 +304,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     try {
       if (isAutoFill) {
         // Auto-fill flow - use existing addRecord
+        const { serial_no, ...filteredValues } = values;
         const formData = {
-          ...values,
+          ...filteredValues,
           first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
           six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
           twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
@@ -330,7 +332,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
           manufacturer_name: values.manufacturer,
           owner_name: values.owner_name,
           standard_code: values.standard,
-          surveyor_name: values.surveyor,
+          // surveyor_name: values.surveyor,
           serial_no: values.serial_no,
         };
         console.log("Manual Data being sent to RPC:", manualData); 
@@ -346,8 +348,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
             const newIds = responseData[0]; 
 
             console.log("New IDs:", newIds); 
+            const { serial_no, ...restOfValues } = values;
             const formData = {
-              ...values,
+              ...restOfValues,
               equipment_no: newIds.equipment_id,
               manufacturer: newIds.manufacturer_id,
               owner_name: newIds.owner_id,
@@ -473,7 +476,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
                           <SelectTrigger id="type_of_exam">
-                            <SelectValue placeholder="Select job order no." />
+                            <SelectValue placeholder="Select type of exam" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value={"Test"}>Test</SelectItem>
@@ -482,8 +485,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         </Select>
                       )}
                     />
-                    {errors.job_order_no && (
-                      <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
+                    {errors.type_of_exam && (
+                      <p className="text-red-500 text-[12px] ">{errors.type_of_exam.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -510,7 +513,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
                     )}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <div className='relative'>
                       <Controller
@@ -538,7 +541,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                       )}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 {/* Equipment Information Title */}
                 <div className="flex justify-between items-center mt-6">
@@ -559,6 +562,32 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       setThoroughExamNotAvailable(false);
                       setLastTestExamNotAvailable(false);
                       setLastThoroughExamNotAvailable(false);
+                      // reset({
+                      //   ...watch(),
+                      //   equipment_no: '',
+                      //   serial_no: '',
+                      //   title: '',
+                      //   equipment_description: '',
+                      //   test_cert_coc_no: '',
+                      //   safe_working_load: '',
+                      //   proof_load: '',
+                      //   standard: '',
+                      //   last_test_exam: '',
+                      //   next_test_exam: '',
+                      //   last_thorough_exam: '',
+                      //   next_thorough_exam: '',
+                      //   manufacturer: '',
+                      //   owner_name: '',
+                      //   surveyor: '',
+                      // });
+
+                      const surveyorId = watch('surveyor');
+                      if (surveyorId) {
+                        const surveyor = surveyorOptions.find((s: any) => String(s.id) === String(surveyorId));
+                        if (surveyor) {
+                          setValue('surveyor', surveyor.surveyor);
+                        }
+                      }
                     }}
                   >
                     MANUAL
@@ -634,9 +663,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
                     {isAutoFill ? (
-                      <Input id="equipment_description" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.description} {...register('equipment_description')} />
+                      <Input maxLength={119} id="equipment_description" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.description} {...register('equipment_description')} />
                     ) : (
-                      <Input id="equipment_description" {...register('equipment_description')} />
+                      <Input maxLength={119} id="equipment_description" {...register('equipment_description')} />
                     )}
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
@@ -1117,28 +1146,36 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
-                    {isAutoFill ? (
+                    {/* {isAutoFill ? ( */}
                     <Controller
                       name="surveyor"
                       control={control}
-                      render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger id="surveyor">
-                            <SelectValue placeholder="Select surveyor" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {surveyorOptions?.map((surveyor: any) => (
-                              <SelectItem key={surveyor.id} value={String(surveyor.id)}>
-                                {surveyor.surveyor}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
+                    //   render={({ field }) => (
+                    //     <Select onValueChange={field.onChange} value={field.value}>
+                    //       <SelectTrigger id="surveyor">
+                    //         <SelectValue placeholder="Select surveyor" />
+                    //       </SelectTrigger>
+                    //       <SelectContent>
+                    //         {surveyorOptions?.map((surveyor: any) => (
+                    //           <SelectItem key={surveyor.id} value={String(surveyor.id)}>
+                    //             {surveyor.surveyor}
+                    //           </SelectItem>
+                    //         ))}
+                    //       </SelectContent>
+                    //     </Select>
+                    //   )}
+                    // />
+                    // ) : (
+                    //   <Input id="surveyor" {...register('surveyor')} />
+                    // )}
+                      render={({ field }) => {
+                        const surveyorName =
+                          surveyorOptions.find(
+                            (s: any) => String(s.id) === String(field.value)
+                          )?.surveyor || '';
+                        return <Input id="surveyor" value={surveyorName} disabled />;
+                      }}
                     />
-                    ) : (
-                      <Input id="surveyor" {...register('surveyor')} />
-                    )}
                     {errors.surveyor && (
                       <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                     )}
@@ -1290,7 +1327,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   <div className="grid gap-4 grid-cols-1 w-full">
                     <div className="grid grid-cols-[400px_1fr]  gap-4">
                       <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                      <Input maxLength={50} id="defect_description" className='my-auto' {...register('defect_description')} />
+                      <Input maxLength={45} id="defect_description" className='my-auto' {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                     )}

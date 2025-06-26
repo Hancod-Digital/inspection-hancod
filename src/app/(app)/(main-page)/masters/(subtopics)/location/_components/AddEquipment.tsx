@@ -13,11 +13,11 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import { PlusIcon } from 'lucide-react';
 
 // Define TypeScript interfaces for type safety
-export interface Site {
-  id: number;
-  site: string; // Adjust based on your site object structure
-  area:Area
-}
+// export interface Site {
+//   id: number;
+//   site: string; // Adjust based on your site object structure
+//   area:Area
+// }
 
 export interface Area {
   id: number;
@@ -28,7 +28,7 @@ export interface Area {
 // Define the Zod schema with validation
 const equipmentDetailsSchema = object({
   location: string().nonempty('Location is required'),
-  site: string().nonempty('Site is required'),
+  // site: string().nonempty('Site is required'),
   // area: string().nonempty('Area is required'),
   status: z.string().nonempty('Status is required')
 });
@@ -37,15 +37,15 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
 interface EquipmentDetailsFormProps {
   onClose: () => void;
-  setIsSite: (value: boolean) => void;
+  // setIsSite: (value: boolean) => void;
   setIsArea: (value: boolean) => void;
   setIsChanged:any;
   isChanged:any;
 }
 
-export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,setIsChanged,isChanged}: EquipmentDetailsFormProps) {
+export default function EquipmentDetailsForm({ onClose ,setIsArea,setIsChanged,isChanged}: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false);
-  const [siteOptions, setSiteOptions] = useState<Site[]>([]); // State for site options
+  // const [siteOptions, setSiteOptions] = useState<Site[]>([]); // State for site options
   const [areaOptions, setAreaOptions] = useState<Area[]>([]); // State for area options
   const [isFetchingAreas, setIsFetchingAreas] = useState(false); // Loading state for areas
   const { addRecord, getAllSingleSubtopic } = useSubtopic(); // Ensure getAreasBySite is implemented
@@ -54,7 +54,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       location: '',
-      site: '',
+      // site: '',
       // area: '',
       status: ''
     },
@@ -62,7 +62,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
 
   const { reset, handleSubmit, control, watch, setValue, formState: { isSubmitSuccessful, errors } } = methods;
 
-  const selectedSite = watch('site'); // Watch the 'site' field for changes
+  // const selectedSite = watch('site'); // Watch the 'site' field for changes
    
   // Fetch site options on component mount
   useEffect(() => {
@@ -71,7 +71,8 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
         const data = await getAllSingleSubtopic("site"); // Fetch sites
         if (data) {
         
-          setSiteOptions(data.filter((item:any)=>item.status==="ACTIVE"));
+          // setSiteOptions(data.filter((item:any)=>item.status==="ACTIVE"));
+
           console.log("site fetching dynamically");
           
         }
@@ -83,35 +84,35 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
     fetchSites();
   }, [getAllSingleSubtopic,isChanged]);
 
-  useEffect(() => {
-    const fetchAreas = async () => {
-      if (!selectedSite) {
-        setAreaOptions([]); // Reset areas if no site is selected
-        return;
-      }
-      setIsFetchingAreas(true);
-      try {
-        const data = await getAllSingleSubtopic('area');
+  // useEffect(() => {
+  //   const fetchAreas = async () => {
+  //     if (!selectedSite) {
+  //       setAreaOptions([]); // Reset areas if no site is selected
+  //       return;
+  //     }
+  //     setIsFetchingAreas(true);
+  //     try {
+  //       const data = await getAllSingleSubtopic('area');
   
-        if (data && Array.isArray(data)) {
-          const filteredAreas = data.filter((area: any) => area.status==="ACTIVE").filter((area: any) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
+  //       if (data && Array.isArray(data)) {
+  //         const filteredAreas = data.filter((area: any) => area.status==="ACTIVE").filter((area: any) => area.id === siteOptions.find(item => item.id == Number(selectedSite))?.area);
 
            
-          setAreaOptions(filteredAreas);
-        } else {
-          console.warn(`No areas found for Site ID: ${selectedSite}`);
-          setAreaOptions([]);
-        }
-      } catch (error) {
-        console.error("Error fetching areas:", error);
-        setAreaOptions([]);
-        // Optionally, handle the error (e.g., show a notification)
-      } finally {
-        setIsFetchingAreas(false);
-      }
-    };
-    fetchAreas();
-  }, [getAllSingleSubtopic, selectedSite,siteOptions,isChanged]);
+  //         setAreaOptions(filteredAreas);
+  //       } else {
+  //         console.warn(`No areas found for Site ID: ${selectedSite}`);
+  //         setAreaOptions([]);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching areas:", error);
+  //       setAreaOptions([]);
+  //       // Optionally, handle the error (e.g., show a notification)
+  //     } finally {
+  //       setIsFetchingAreas(false);
+  //     }
+  //   };
+  //   fetchAreas();
+  // }, [getAllSingleSubtopic, selectedSite,siteOptions,isChanged]);
   
 
   
@@ -169,7 +170,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
                   </div>
 
                   {/* Site Field with dynamic dropdown */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <div className="relative">
                       <Controller
@@ -189,7 +190,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
                               {siteOptions.length > 0 ? (
                                 siteOptions.map((site: Site) => (
                                   <SelectItem key={site.id} value={String(site.id)}>
-                                    {site.site} {/* Adjust based on your site object structure */}
+                                    {site.site} 
                                   </SelectItem>
                                 ))
                               ) : (
@@ -213,7 +214,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
                         <p className="text-red-500 mt-1">{errors.site.message}</p>
                       )}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Area Field with dynamic dropdown based on selected site */}
                   {/* <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">

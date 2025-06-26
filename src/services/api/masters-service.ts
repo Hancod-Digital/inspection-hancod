@@ -74,7 +74,7 @@ export class MasterService extends Supabase {
         manufacturer_name: string;
         owner_name: string;
         standard_code: string;
-        surveyor_name: string;
+        // surveyor_name: string;
         serial_no?: string;
     }) {
         await this.ensureAuthenticated();
@@ -87,7 +87,7 @@ export class MasterService extends Supabase {
             _manufacturer_name: data.manufacturer_name,
             _owner_name: data.owner_name,
             _standard_code: data.standard_code,
-            _surveyor_name: data.surveyor_name
+            // _surveyor_name: data.surveyor_name
         });
     }
 

@@ -20,7 +20,7 @@ import usePagination from '@/hooks/usePagination';
 import { useQueryClient } from '@tanstack/react-query';
 import { MasterService } from '@/services/api/masters-service';
 
-export default function EquipmentTable({searchValue, setIsSite, isSite, setIsArea, isArea,setIsChanged,isChanged}:{searchValue:string, setIsSite: (value: boolean) => void, isSite: boolean, setIsArea: (value: boolean) => void, isArea: boolean,setIsChanged:any,isChanged:any}) {
+export default function EquipmentTable({searchValue,setIsChanged,isChanged}:{searchValue:string,setIsChanged:any,isChanged:any}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const { FetchLocationDetails , deleteRecord} = useSubtopic(); // Assuming this is a hook from your context
     const [data, setData] = useState<any>(null);
@@ -60,7 +60,7 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                     <TableRow>
                         <TableHead className="py-4">Sl. No.</TableHead>
                         <TableHead className="py-4">Location</TableHead>
-                        <TableHead className="py-4">Site</TableHead>
+                        {/* <TableHead className="py-4">Site</TableHead> */}
                          
                         <TableHead className="py-4">Status</TableHead>
                         <TableHead className="py-4">Action</TableHead>
@@ -72,7 +72,7 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                             <TableRow>
                                 <TableCell className="py-4">{idx + 1}</TableCell>
                                 <TableCell className="py-4">{item?.location?.name}</TableCell>
-                                <TableCell className="py-4">{item?.site?.name}</TableCell>
+                                {/* <TableCell className="py-4">{item?.site?.name}</TableCell> */}
                              
                                 <TableCell className="py-4">{item?.location?.status}</TableCell>
                                 <TableCell className="py-4">
@@ -86,7 +86,7 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                                     </div>
                                 </TableCell>
                             </TableRow>
-                            <AnimatePresence>
+                            {/* <AnimatePresence>
                                 {editingRow === idx + 1 && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
@@ -102,7 +102,7 @@ export default function EquipmentTable({searchValue, setIsSite, isSite, setIsAre
                                         </TableCell>
                                     </motion.tr>
                                 )}
-                            </AnimatePresence>
+                            </AnimatePresence> */}
                         </React.Fragment>
                     ))}
                 </TableBody>

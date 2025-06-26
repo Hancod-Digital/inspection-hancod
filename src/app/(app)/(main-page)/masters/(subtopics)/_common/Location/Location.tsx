@@ -169,7 +169,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
                   </div>
 
                   {/* Site Field with dynamic dropdown */}
-                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <div className="relative">
                       <Controller
@@ -189,7 +189,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
                               {siteOptions.length > 0 ? (
                                 siteOptions.map((site: Site) => (
                                   <SelectItem key={site.id} value={String(site.id)}>
-                                    {site.site} {/* Adjust based on your site object structure */}
+                                    {site.site}
                                   </SelectItem>
                                 ))
                               ) : (
@@ -213,7 +213,7 @@ export default function EquipmentDetailsForm({ onClose, setIsSite ,setIsArea,set
                         <p className="text-red-500 mt-1">{errors.site.message}</p>
                       )}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Area Field with dynamic dropdown based on selected site */}
                   {/* <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
