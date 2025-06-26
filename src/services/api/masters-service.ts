@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from "axios";
 import { BuildUrl, Supabase } from "./utils";
 import "../interceptor";
 import { Service } from ".";
+import { makeApiCall } from "@/lib/apicaller";
 
 export class MasterService extends Supabase {
     constructor() {
@@ -66,6 +67,29 @@ export class MasterService extends Supabase {
         return data;
     }
 
+    async manualDataEntryFromSingleEquipment(data: {
+        equipment_no: string;
+        title: string;
+        description: string;
+        manufacturer_name: string;
+        owner_name: string;
+        standard_code: string;
+        surveyor_name: string;
+        serial_no?: string;
+    }) {
+        await this.ensureAuthenticated();
+        
+        return this.supabase.rpc('manual_data_entry_from_single_equipment', {
+            _equipment_no: data.equipment_no,
+            _serial_no: data.serial_no ?? null,
+            _title: data.title,
+            _description: data.description,
+            _manufacturer_name: data.manufacturer_name,
+            _owner_name: data.owner_name,
+            _standard_code: data.standard_code,
+            _surveyor_name: data.surveyor_name
+        });
+    }
 
     async getLocationDetails() {
         await this.ensureAuthenticated();

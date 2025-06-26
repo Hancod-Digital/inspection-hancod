@@ -494,8 +494,9 @@ export default function EquipmentDetailsEditForm({
                 </div>
 
                 {/* Equipment Information Title */}
-                <h2 className="text-base font-bold mt-6">Equipment Information</h2>
-
+                <div className="flex justify-between items-center mt-6">
+                  <h2 className="text-base font-bold">Equipment Information</h2>
+                </div>
                 <div className="grid gap-4 grid-cols-2">
                   {/* Equipment No. */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -1102,10 +1103,10 @@ export default function EquipmentDetailsEditForm({
                     <div className="w-full">
                       <Label htmlFor="description">Description</Label>
                       <div>
-                        <Controller
+                    <Controller
                           name="description"
-                          control={control}
-                          render={({ field }) => (
+                      control={control}
+                      render={({ field }) => (
                             <ReactQuill
                               theme="snow"
                               className="mt-3"
@@ -1115,9 +1116,9 @@ export default function EquipmentDetailsEditForm({
                         />
                         {errors.description && (
                           <p className="text-red-500 text-[12px] ">{errors.description.message}</p>
-                        )}
-                      </div>
-                    </div>
+                    )}
+                  </div>
+                  </div>
                   </div>
                 </div>
 
@@ -1136,8 +1137,8 @@ export default function EquipmentDetailsEditForm({
                       <Input  maxLength={50} id="defect_description" className='my-auto' {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
-                      )}
-                    </div>
+                    )}
+                  </div>
                   </div>
                 </div>
                 <div className="flex justify-end gap-4">
@@ -1157,7 +1158,7 @@ export default function EquipmentDetailsEditForm({
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>
-              </div>
+                  </div>
             </form>
           </FormProvider>
         </CardContent>

@@ -48,6 +48,8 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
   const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState<any>(false);
   const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<any>(false);
   const [invoke, setInvoke] = useState(false);
+  const [isAutoFill, setIsAutoFill] = useState(true);
+
 
   // Remove next_test_exam_certificate_no and next_thorough_exam_certificate_no from schema
   const equipmentDetailsSchema = object({
@@ -58,6 +60,7 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
     type_of_exam: string().nonempty('Type of Exam is required'),
     job_order_no: string().nonempty('Job Order No. is required'),
     equipment_no: string().nonempty('Equipment No. is required'),
+    serial_no: string().optional(),
     title: string().nonempty('Title is required'),
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
     safe_working_load: string().nonempty('Safe Working Load is required'),
@@ -150,16 +153,50 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
       manufacturer: manufacturerOptions?.filter((item: any) => item?.id == manufacturer)[0]?.manufacturer,
       result, surveyor, approval_status
     };
-    await makeApiCall(
-      () => new MasterService().addEquipment(datas), {
-      afterSuccess: (data: any) => {
-        setExistingData([...existingData, data])
-        toastWithTimeout(ToastVariant.Success, "Equipment addded")
-        setIsSubmitted(true)
-      }
+
+    const addEquipmentApiCall = async (payload: any) => {
+      await makeApiCall(
+        () => new MasterService().addEquipment(payload), {
+        afterSuccess: (data: any) => {
+          setExistingData([...existingData, data]);
+          toastWithTimeout(ToastVariant.Success, "Equipment addded");
+          setIsSubmitted(true);
+        }
+      });
+    };
+
+    if (!isAutoFill) {
+      const manualData = {
+        equipment_no,
+        title,
+        description: equipment_description,
+        manufacturer_name: manufacturer,
+        owner_name,
+        standard_code: standard,
+        surveyor_name: surveyor,
+      };
+
+      await makeApiCall(
+        () => new MasterService().manualDataEntryFromSingleEquipment(manualData), {
+          afterSuccess: async (resp: any) => {
+            const newIds = resp?.data?.[0] || {};
+            const payload = {
+              ...datas,
+              equipment_no: newIds.equipment_id,
+              manufacturer: newIds.manufacturer_id,
+              owner_name: newIds.owner_id,
+              standard: newIds.standard_id,
+              surveyor: newIds.surveyor_id,
+            };
+            await addEquipmentApiCall(payload);
+          }
+        }
+      );
+    } else {
+      await addEquipmentApiCall(datas);
     }
-    )
   }
+
   useEffect(() => {
     if (equipment_no) {
       const selectedEquipment = equipmentNoOptions.find((item: any) => item.id == equipment_no);
@@ -181,16 +218,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
       }
     }
   }, [equipment_no, equipmentNoOptions, setValue]);
-  const job_order_no = watch('job_order_no');
-  useEffect(() => {
-    if (job_order_no) {
-      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
-      if (job_order) {
-        setValue('surveyor', job_order.surveyor)
-        setValue('location', job_order.location)
-      }
-    }
-  }, [job_order_no])
+
   useEffect(() => {
     const selectedEquipment = equipmentNoOptions?.find((item: any) => item?.id == equipment_no);
     
@@ -348,7 +376,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
     setLoading(true);
 
     try {
-      const formData = {
+      let finalFormData = {
         ...values,
         last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? "" : (values.last_test_exam_certificate_no || ""),
         last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? "" : (values.last_thorough_exam_certificate_no || ""),
@@ -366,7 +394,35 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam
       };
 
-      const data = await addRecord(formData, null, "lifting_gear_multi");
+      if (!isAutoFill) {
+      const manualData = {
+        equipment_no: values.equipment_no,
+        title: values.title,
+        description: values.equipment_description,
+        manufacturer_name: values.manufacturer,
+        owner_name: values.owner_name,
+        standard_code: values.standard,
+        surveyor_name: values.surveyor,
+        serial_no: values.serial_no,
+      };
+      await makeApiCall(
+        () => new MasterService().manualDataEntryFromSingleEquipment(manualData), {
+          afterSuccess: (resp: any) => {
+            const ids = resp?.data?.[0] || {};
+            finalFormData = {
+              ...finalFormData,
+              equipment_no: ids.equipment_id,
+              manufacturer: ids.manufacturer_id,
+              owner_name: ids.owner_id,
+              standard: ids.standard_id,
+              surveyor: ids.surveyor_id,
+            };
+          }
+        }
+      );
+    }
+
+    const data = await addRecord(finalFormData, null, "lifting_gear_multi");
 
       Promise.all(existingData.map((item: any) => {
         return makeApiCall(
@@ -552,19 +608,49 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                 </div>
 
                 {/* Equipment Information Title */}
-                <h2 className="text-base font-bold mt-6">Equipment Information</h2>
-
+                <div className="flex justify-between items-center mt-6">
+                  <h2 className="text-base font-bold">Equipment Information</h2>
+                </div>
+                {/* <h2 className="text-base font-bold mt-6">Equipment Information</h2> */}
+                <div className='flex justify-start gap-2 hover:text-black mb-2'>
+                  <Button
+                    type="button"
+                    variant={!isAutoFill ? "default" : "outline"}
+                    onClick={() => {
+                      setIsAutoFill(false);
+                      setTestExamChecked(false);
+                      setThoroughExamChecked(false);
+                      setLastTestExamChecked(false);
+                      setLastThoroughExamChecked(false);
+                      setTestExamNotAvailable(false);
+                      setThoroughExamNotAvailable(false);
+                      setLastTestExamNotAvailable(false);
+                      setLastThoroughExamNotAvailable(false);
+                    }}
+                  >
+                    MANUAL
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={isAutoFill ? "default" : "outline"}
+                    onClick={() => setIsAutoFill(true)}
+                  >
+                    AUTO FILL
+                  </Button>
+                </div>
                 <div className="grid gap-4 grid-cols-2">
                   {/* Equipment Information Section */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_no" className="mt-3">Equipment No </Label>
                     <div className="relative flex gap-2 items-center">
+                      
+                      {isAutoFill ? (
                       <Controller
                         name="equipment_no"
                         control={control}
                         render={({ field }) => (
                           <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger id="equipment_no">
+                            <SelectTrigger id="equipment_no" className="w-full">
                               <SelectValue placeholder="Select equipment no." />
                             </SelectTrigger>
                             <SelectContent>
@@ -574,15 +660,31 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                 </SelectItem>
                               ))}
                             </SelectContent>
+                            <AddEquipmentButton />
                           </Select>
+                          
                         )}
                       />
-                      <AddEquipmentButton />
+                    ) : (
+                      <Input id="equipment_no" {...register('equipment_no')} />
+                    )}
+                      
                     </div>
                     {errors.equipment_no && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
                     )}
                   </div>
+                  {/* Serial No field - shown only in manual mode */}
+                  {!isAutoFill && (
+                    <div className="grid grid-cols-[200px_1fr] gap-4">
+                      <Label htmlFor="serial_no" className="mt-3">Serial No.</Label>
+                      <Input id="serial_no" {...register('serial_no')} />
+                      {errors.serial_no && (
+                        <p className="text-red-500 text-[12px] ">{errors.serial_no.message}</p>
+                      )}
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">Title</Label>
                     <Input id="title" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.title} {...register('title')} />
@@ -627,6 +729,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       Standard
                     </Label>
                     <div className="relative flex gap-2 items-center">
+                      {isAutoFill ? (
                       <Controller
                         name="standard"
                         control={control}
@@ -690,11 +793,15 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                   </SelectItem>
                                 ))}
                               </SelectContent>
+                              <AddStandardButton />
                             </Select>
                           );
                         }}
                       />
-                      <AddStandardButton />
+                      ) : (
+                        <Input id="standard" {...register('standard')} />
+                      )}
+                      
                     </div>
                     {errors.standard && (
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
@@ -824,8 +931,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   </div>
                 </div>
 
-                <div className="grid gap-4 grid-cols-1 w-[64%]">
-                  <div className="grid grid-cols-[200px_1fr]   items-start gap-4">
+                <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor="next_test_date">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
                       <Controller
@@ -888,7 +995,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   </div> */}
                 </div>
 
-                <div className="grid gap-4 grid-cols-1  w-[64%]">
+                <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                     <div className="flex items-center gap-4">
@@ -974,6 +1081,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       <Label htmlFor="owners" className="mt-3">
                         Owner Name
                       </Label>
+                      {isAutoFill ? (
                       <Controller
                         name="owner_name"
                         control={control}
@@ -1046,6 +1154,9 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                           );
                         }}
                       />
+                      ) : (
+                        <Input id="owner_name" {...register('owner_name')} />
+                      )}
                       {errors.owner_name && (
                         <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
                       )}
@@ -1053,6 +1164,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
 
                     <div className="grid grid-cols-[200px_1fr] gap-4">
                       <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
+                      {isAutoFill ? (
                       <Controller
                         name="surveyor"
                         control={control}
@@ -1071,6 +1183,9 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                           </Select>
                         )}
                       />
+                      ) : (
+                        <Input id="surveyor" {...register('surveyor')} />
+                      )}
                       {errors.surveyor && (
                         <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                       )}
@@ -1081,6 +1196,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         Manufacturer
                       </Label>
                       <div className="relative flex gap-2 items-center">
+                        {isAutoFill ? (
                         <Controller
                           name="manufacturer"
                           control={control}
@@ -1143,16 +1259,24 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                       {manu.manufacturer}
                                     </SelectItem>
                                   ))}
+                                  
                                 </SelectContent>
+                                <AddManufacturerButton />
                               </Select>
+                                // <AddManufacturerButton />
                             );
                           }}
                         />
-                        <AddManufacturerButton />
-                      </div>
+                      
+                      
+                      ) : (
+                        <Input id="manufacturer" {...register('manufacturer')} />
+                      )}
                       {errors.manufacturer && (
                         <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                       )}
+                      
+                    </div>
                     </div>
 
                     <div className="grid grid-cols-[200px_1fr] gap-4">

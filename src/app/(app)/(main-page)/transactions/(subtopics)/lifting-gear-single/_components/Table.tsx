@@ -343,6 +343,7 @@ document.head.removeChild(styleElement);
                 </TableHeader>
                 <TableBody>
                     {currentData?.map((item:any,idx:number) => (
+                      // console.log(item),
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
                                 <TableCell className="py-4 flex-[1]">{idx+1}</TableCell>
