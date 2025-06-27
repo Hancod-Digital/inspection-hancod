@@ -27,8 +27,8 @@ export default function AddLocationButton() {
       <DialogContent className="sm:max-w-[600px]">
         <EquipmentDetailsForm
           onClose={handleClose}
-          setIsSite={setIsSite}
-          setIsArea={setIsArea}
+       //   setIsSite={setIsSite}
+       //   setIsArea={setIsArea}
           setIsChanged={setIsChanged}
           isChanged={isChanged}
         />
