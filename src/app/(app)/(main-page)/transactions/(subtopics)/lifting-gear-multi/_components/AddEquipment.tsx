@@ -275,7 +275,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
     const fetchSites = async () => {
       const res = locationOptions.filter((item: any) => item.location.id == location);
       if (res.length > 0) {
-        setSiteOptions(res?.map((item: any) => item.site));
+        // setSiteOptions(res?.map((item: any) => item.site));
+        setSiteOptions([])
       }
     };
     fetchSites();
@@ -348,6 +349,17 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
     fetchLocations();
 
   }, [getAllSingleSubtopic, invoke]);
+
+  const job_order_no = watch('job_order_no');
+  useEffect(() => {
+    if (job_order_no) {
+      const job_order = jobOrderNoOptions.find((item: any) => item.id == job_order_no);
+      if (job_order) {
+        setValue('surveyor', job_order.surveyor)
+        setValue('location', job_order.location)
+      }
+    }
+  }, [job_order_no])
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -537,7 +549,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value}>
                           <SelectTrigger id="type_of_exam">
-                            <SelectValue placeholder="Select job order no." />
+                            <SelectValue placeholder="Select type of exam" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value={"Test"}>
@@ -550,8 +562,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         </Select>
                       )}
                     />
-                    {errors.job_order_no && (
-                      <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
+                    {errors.type_of_exam && (
+                      <p className="text-red-500 text-[12px] ">{errors.type_of_exam.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -578,7 +590,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       <p className="text-red-500 text-[12px] ">{errors.job_order_no.message}</p>
                     )}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <div className="relative flex gap-2 items-center">
                       <Controller
@@ -604,7 +616,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                     {errors.site && (
                       <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Equipment Information Title */}
@@ -626,6 +638,13 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       setThoroughExamNotAvailable(false);
                       setLastTestExamNotAvailable(false);
                       setLastThoroughExamNotAvailable(false);
+                      const surveyorId = watch('surveyor');
+                      if (surveyorId) {
+                        const surveyor = surveyorOptions.find((s: any) => String(s.id) === String(surveyorId));
+                        if (surveyor) {
+                          setValue('surveyor', surveyor.surveyor);
+                        }
+                      }
                     }}
                   >
                     MANUAL
@@ -696,7 +715,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                 <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
-                    <Input id="equipment_description" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.description} {...register('equipment_description')} />
+                    <Input maxLength={119} id="equipment_description" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.description} {...register('equipment_description')} />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
                     )}
@@ -1164,28 +1183,35 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
 
                     <div className="grid grid-cols-[200px_1fr] gap-4">
                       <Label htmlFor="surveyor" className="mt-3">Surveyor</Label>
-                      {isAutoFill ? (
+                      {/* {isAutoFill ? ( */}
                       <Controller
                         name="surveyor"
                         control={control}
-                        render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger id="surveyor">
-                              <SelectValue placeholder="Select surveyor" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {surveyorOptions?.map((surveyor: any) => (
-                                <SelectItem key={surveyor.id} value={String(surveyor.id)}>
-                                  {surveyor.surveyor}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
+                        // render={({ field }) => (
+                        //   <Select onValueChange={field.onChange} value={field.value}>
+                        //     <SelectTrigger id="surveyor">
+                        //       <SelectValue placeholder="Select surveyor" />
+                        //     </SelectTrigger>
+                        //     <SelectContent>
+                        //       {surveyorOptions?.map((surveyor: any) => (
+                        //         <SelectItem key={surveyor.id} value={String(surveyor.id)}>
+                        //           {surveyor.surveyor}
+                        //         </SelectItem>
+                        //       ))}
+                        //     </SelectContent>
+                        //   </Select>
+                        // )}
+                         render={({ field }) => {
+                                                const surveyorName =
+                                                  surveyorOptions.find(
+                                                    (s: any) => String(s.id) === String(field.value)
+                                                  )?.surveyor || '';
+                                              return <Input id="surveyor" value={surveyorName} disabled />;
+                                              }}
                       />
-                      ) : (
+                      {/* ) : (
                         <Input id="surveyor" {...register('surveyor')} />
-                      )}
+                      )} */}
                       {errors.surveyor && (
                         <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                       )}
@@ -1344,7 +1370,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   <div className="grid gap-4 grid-cols-1 w-full">
                     <div className="grid grid-cols-[400px_1fr]  gap-4">
                       <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                      <Input  maxLength={50} id="defect_description" className='my-auto' {...register('defect_description')} />
+                      <Input  maxLength={45} id="defect_description" className='my-auto' {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                       )}

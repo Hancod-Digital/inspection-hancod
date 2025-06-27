@@ -30,8 +30,8 @@ export default function Component({ onOpen,onSearchChange }:{onOpen: () => void,
         if (data) {
             const worksheet = XLSX.utils.json_to_sheet(data.map((item: any) => ({
                 Location: item.location?.name,
-                Site: item.site?.name,  
-                Area: item.area?.name,
+                // Site: item.site?.name,  
+                // Area: item.area?.name,
                 Status: item.location?.status
             })));
             const workbook = XLSX.utils.book_new();
@@ -51,9 +51,9 @@ export default function Component({ onOpen,onSearchChange }:{onOpen: () => void,
                         onChange={(e) => onSearchChange(e.target.value)}
                     />
                 </div>
-                <Button variant="link" className="flex-[1]  text-primary bg-white">
+                {/* <Button variant="link" className="flex-[1]  text-primary bg-white">
                     Advanced Search
-                </Button>
+                </Button> */}
                 <Button variant="outline" onClick={onOpen} className="flex-[1]  hover:bg-secondary hover:text-primary hover:border-primary border bg-primary text-primary-foreground">
                 <PlusIcon className="h-4 w-4 mr-1" />
   New

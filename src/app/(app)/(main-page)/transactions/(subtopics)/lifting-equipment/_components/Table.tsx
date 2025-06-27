@@ -122,6 +122,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{four\}\}/g, standardOptions.find((standard: any) => standard.id == item.standard)?.standard || '');
           htmlString = htmlString.replace(/\{\{five\}\}/g, locationOptions.find((location: any) => location.id == item.location)?.location || "");
           htmlString = htmlString.replace(/\{\{six\}\}/g, formatDateWithHyphen(item?.inspection_date) || '');
+          
 
          // htmlString = htmlString.replace(/\{\{six1\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer);
          // htmlString = htmlString.replace(/\{\{six12\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.lift_location : item?.year_of_manufacture.split('-')[0]);

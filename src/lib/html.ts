@@ -36,7 +36,8 @@ export const fetchMultiCertificate = (item: any) => {
         </div>
       </div>
       <span class="certificate-of-thorough-examination-4"
-        >CERTIFICATE OF THOROUGH EXAMINATION OF LIFTING GEAR</span
+      // >CERTIFICATE OF THOROUGH EXAMINATION OF LIFTING GEAR</span
+        >CERTIFICATE OF ${item.type_of_exam?.toUpperCase() || 'THOROUGH'} EXAMINATION OF LIFTING GEAR</span
       >
       <div class="flex-row-cf">
         <div class="rectangle">

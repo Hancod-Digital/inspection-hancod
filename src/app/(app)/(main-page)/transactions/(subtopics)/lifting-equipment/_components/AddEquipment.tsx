@@ -553,7 +553,7 @@ console.log("erros", errors)
                   </div>
 
                   {/* Site */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4 relative">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4 relative">
                     <Label htmlFor="site" className="mt-3">
                       Site
                     </Label>
@@ -579,7 +579,7 @@ console.log("erros", errors)
                     {errors.site && (
                       <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Equipment Information Title */}

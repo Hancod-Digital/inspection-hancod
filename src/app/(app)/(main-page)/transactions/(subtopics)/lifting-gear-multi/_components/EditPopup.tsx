@@ -614,7 +614,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     )}
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] gap-4 relative">
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4 relative">
                     <Label htmlFor="site" className="mt-3">Site</Label>
                     <Controller
                       name="site"
@@ -640,7 +640,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     {errors.site && (
                       <p className="text-red-500 text-[12px] ">{errors.site.message}</p>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="authority" className="mt-3">Authority</Label>
@@ -765,7 +765,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                 <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
-                    <Input
+                    <Input maxLength={119}
                       id="equipment_description"
                       {...register('equipment_description')}
                       value={watch('equipment_description')}
@@ -1402,7 +1402,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                   <div className="grid gap-4 grid-cols-1 w-full">
                     <div className="grid grid-cols-[400px_1fr]  gap-4">
                       <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                      <Input  maxLength={50} id="defect_description" className='my-auto' {...register('defect_description')} />
+                      <Input  maxLength={45} id="defect_description" className='my-auto' {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                       )}

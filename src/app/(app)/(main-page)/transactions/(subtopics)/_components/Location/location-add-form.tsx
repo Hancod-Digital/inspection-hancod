@@ -13,22 +13,22 @@ import { useSubtopic } from "@/context/SubtopicContext"
 import { PlusIcon } from "lucide-react"
 
 // Define TypeScript interfaces for type safety
-export interface Site {
-  id: number
-  site: string // Adjust based on your site object structure
-  area: Area
-}
+// export interface Site {
+//   id: number
+//   site: string // Adjust based on your site object structure
+//   area: Area
+// }
 
-export interface Area {
-  id: number
+// export interface Area {
+//   id: number
 
-  thumbnail: string // Adjust based on your area object structure
-}
+//   thumbnail: string // Adjust based on your area object structure
+// }
 
 // Define the Zod schema with validation
 const equipmentDetailsSchema = object({
   location: string().nonempty("Location is required"),
-  site: string().nonempty("Site is required"),
+  // site: string().nonempty("Site is required"),
   // area: string().nonempty('Area is required'),
   status: z.string().nonempty("Status is required"),
 })
@@ -37,30 +37,30 @@ type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>
 
 interface EquipmentDetailsFormProps {
   onClose: () => void
-  setIsSite: (value: boolean) => void
-  setIsArea: (value: boolean) => void
+  // setIsSite: (value: boolean) => void
+  // setIsArea: (value: boolean) => void
   setIsChanged: any
   isChanged: any
 }
 
 export default function EquipmentDetailsForm({
   onClose,
-  setIsSite,
-  setIsArea,
+  // setIsSite,
+  // setIsArea,
   setIsChanged,
   isChanged,
 }: EquipmentDetailsFormProps) {
   const [loading, setLoading] = useState(false)
-  const [siteOptions, setSiteOptions] = useState<Site[]>([]) // State for site options
-  const [areaOptions, setAreaOptions] = useState<Area[]>([]) // State for area options
-  const [isFetchingAreas, setIsFetchingAreas] = useState(false) // Loading state for areas
-  const { addRecord, getAllSingleSubtopic } = useSubtopic() // Ensure getAreasBySite is implemented
+  // const [siteOptions, setSiteOptions] = useState<Site[]>([]) // State for site options
+  // const [areaOptions, setAreaOptions] = useState<Area[]>([]) // State for area options
+  // const [isFetchingAreas, setIsFetchingAreas] = useState(false) // Loading state for areas
+  const { addRecord } = useSubtopic() // Ensure getAreasBySite is implemented
 
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       location: "",
-      site: "",
+      // site: "",
       // area: '',
       status: "",
     },
@@ -70,68 +70,68 @@ export default function EquipmentDetailsForm({
     reset,
     handleSubmit,
     control,
-    watch,
-    setValue,
+    // watch,
+    // setValue,
     formState: { isSubmitSuccessful, errors },
   } = methods
 
-  const selectedSite = watch("site") // Watch the 'site' field for changes
+  // const selectedSite = watch("site") // Watch the 'site' field for changes
 
   // Fetch site options on component mount
-  useEffect(() => {
-    const fetchSites = async () => {
-      try {
-        const data = await getAllSingleSubtopic("site") // Fetch sites
-        if (data) {
-          setSiteOptions(data.filter((item: any) => item.status === "ACTIVE"))
-          console.log("site fetching dynamically")
-        }
-      } catch (error) {
-        console.error("Error fetching sites:", error)
-        // Optionally, handle the error (e.g., show a notification)
-      }
-    }
-    fetchSites()
-  }, [getAllSingleSubtopic, isChanged])
+  // useEffect(() => {
+  //   const fetchSites = async () => {
+  //     try {
+  //       const data = await getAllSingleSubtopic("site") // Fetch sites
+  //       if (data) {
+  //         setSiteOptions(data.filter((item: any) => item.status === "ACTIVE"))
+  //         console.log("site fetching dynamically")
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching sites:", error)
+  //       // Optionally, handle the error (e.g., show a notification)
+  //     }
+  //   }
+  //   fetchSites()
+  // }, [getAllSingleSubtopic, isChanged])
 
-  useEffect(() => {
-    const fetchAreas = async () => {
-      if (!selectedSite) {
-        setAreaOptions([]) // Reset areas if no site is selected
-        return
-      }
-      setIsFetchingAreas(true)
-      try {
-        const data = await getAllSingleSubtopic("area")
+  // useEffect(() => {
+  //   const fetchAreas = async () => {
+  //     if (!selectedSite) {
+  //       setAreaOptions([]) // Reset areas if no site is selected
+  //       return
+  //     }
+  //     setIsFetchingAreas(true)
+  //     try {
+  //       const data = await getAllSingleSubtopic("area")
 
-        if (data && Array.isArray(data)) {
-          const filteredAreas = data
-            .filter((area: any) => area.status === "ACTIVE")
-            .filter((area: any) => area.id === siteOptions.find((item) => item.id == Number(selectedSite))?.area)
+  //       if (data && Array.isArray(data)) {
+  //         const filteredAreas = data
+  //           .filter((area: any) => area.status === "ACTIVE")
+  //           .filter((area: any) => area.id === siteOptions.find((item) => item.id == Number(selectedSite))?.area)
 
-          setAreaOptions(filteredAreas)
-        } else {
-          console.warn(`No areas found for Site ID: ${selectedSite}`)
-          setAreaOptions([])
-        }
-      } catch (error) {
-        console.error("Error fetching areas:", error)
-        setAreaOptions([])
-        // Optionally, handle the error (e.g., show a notification)
-      } finally {
-        setIsFetchingAreas(false)
-      }
-    }
-    fetchAreas()
-  }, [getAllSingleSubtopic, selectedSite, siteOptions, isChanged])
+  //         setAreaOptions(filteredAreas)
+  //       } else {
+  //         console.warn(`No areas found for Site ID: ${selectedSite}`)
+  //         setAreaOptions([])
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching areas:", error)
+  //       setAreaOptions([])
+  //       // Optionally, handle the error (e.g., show a notification)
+  //     } finally {
+  //       setIsFetchingAreas(false)
+  //     }
+  //   }
+  //   fetchAreas()
+  // }, [getAllSingleSubtopic, selectedSite, siteOptions, isChanged])
 
   // Reset form on successful submission
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset()
-      setAreaOptions([]) // Optionally, reset areas after submission
-    }
-  }, [isSubmitSuccessful, reset])
+  // useEffect(() => {
+  //   if (isSubmitSuccessful) {
+  //     reset()
+  //     setAreaOptions([]) // Optionally, reset areas after submission
+  //   }
+  // }, [isSubmitSuccessful, reset])
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true)
@@ -180,9 +180,9 @@ export default function EquipmentDetailsForm({
                       {errors.location && <p className="text-red-500 mt-2 text-[12px]">{errors.location.message}</p>}
                     </div>
                   </div>
-
+                  {/* site in the single gear */}
                   {/* Site Field with dynamic dropdown */}
-                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
+                  {/* <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
                     <Label htmlFor="site" className="mt-3">
                       Site
                     </Label>
@@ -204,7 +204,7 @@ export default function EquipmentDetailsForm({
                               {siteOptions.length > 0 ? (
                                 siteOptions.map((site: Site) => (
                                   <SelectItem key={site.id} value={String(site.id)}>
-                                    {site.site} {/* Adjust based on your site object structure */}
+                                    {site.site}
                                   </SelectItem>
                                 ))
                               ) : (
@@ -216,17 +216,10 @@ export default function EquipmentDetailsForm({
                           </Select>
                         )}
                       />
-                      {/* <Button
-                        size="icon"
-                        variant="outline"
-                        className="absolute bg-primary text-white font-bold right-0 top-0"
-                        onClick={() => setIsSite(true)}
-                      >
-                        <PlusIcon className="h-4 w-4" />
-                      </Button> */}
+
                       {errors.site && <p className="text-red-500 mt-2 text-[12px]">{errors.site.message}</p>}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Status Field */}
                   <div className="grid grid-cols-[200px_1fr] w-full gap-4">

@@ -128,6 +128,7 @@ console.log(formatWeightString(word));
           setSerialNo(data[0]?.serial_no)
           const response = await fetch('/equ-certificate/index.html'); 
           let htmlString = await response.text();
+            htmlString = htmlString.replace(/\{\{exam_type\}\}/g, item.type_of_exam?.toUpperCase() || 'THOROUGH');
           
           htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no);
 htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no);
