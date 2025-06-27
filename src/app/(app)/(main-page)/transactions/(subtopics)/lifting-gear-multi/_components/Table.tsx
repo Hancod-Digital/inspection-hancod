@@ -143,7 +143,8 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
         return equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no).serial_no 
       }))
       htmlString = htmlString.replace(/\{\{coc\}\}/g, item?.test_cert_coc_no);
-      
+      htmlString = htmlString.replace(/\{\{exam_type\}\}/g, item.type_of_exam?.toUpperCase() || 'THOROUGH');
+          
       htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no);
 htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no);
 
