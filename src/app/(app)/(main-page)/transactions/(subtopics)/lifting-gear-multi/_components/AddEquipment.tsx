@@ -119,7 +119,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
   const [isStandardTyping, setIsStandardTyping] = useState(false);
 
   const { watch, setValue } = methods
-  const { equipment_no, inspection_date, type_of_exam, standard, title, equipment_description, test_cert_coc_no, safe_working_load, proof_load, last_test_exam, last_thorough_exam, next_test_exam, next_thorough_exam, owner_name, manufacturer, approval_status, result, surveyor, location } = watch()
+  const { equipment_no, serial_no, inspection_date, type_of_exam, standard, title, equipment_description, test_cert_coc_no, safe_working_load, proof_load, last_test_exam, last_thorough_exam, next_test_exam, next_thorough_exam, owner_name, manufacturer, approval_status, result, surveyor, location } = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [existingData, setExistingData] = useState<any[]>([]);
 
@@ -173,12 +173,19 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
     if (!isAutoFill) {
       const manualData = {
         equipment_no,
+        serial_no,
         title,
         description: equipment_description,
         manufacturer_name: manufacturer,
         owner_name,
         standard_code: standard,
-        // surveyor_name: surveyor,
+        test_certificate_no: test_cert_coc_no,
+        safe_working_load,
+        proof_load,
+        last_test_date: last_test_exam,
+        next_test_date: next_test_exam,
+        last_through_date: last_thorough_exam,
+        next_through_date: next_thorough_exam,
       };
 
       await makeApiCall(
@@ -688,6 +695,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         manufacturer: '',
                         owner_name: '',
                         surveyor: '',
+                        job_order_no: '',
+                        location: '',
                       });
 
                       const surveyorId = watch('surveyor');
@@ -906,7 +915,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                   : lastTestDate || '';
                               })()
                             }
-                            disabled={lastTestExamChecked}
+                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
                             {...field}
                           />
                         )}
@@ -967,7 +976,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                   : lastThoroughDate || '';
                               })()
                             }
-                            disabled={lastThoroughExamChecked}
+                            disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                             {...field}
                           />
                         )}
@@ -1088,7 +1097,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                 ? new Date(nextThoroughDate).toISOString().split('T')[0]
                                 : nextThoroughDate || '';
                             })()
-                          } disabled={thoroughExamChecked} type="date" {...field} />
+                          } disabled={thoroughExamChecked || thoroughExamNotAvailable} type="date" {...field} />
                         )}
                       />
                       <div className="flex items-center gap-2">

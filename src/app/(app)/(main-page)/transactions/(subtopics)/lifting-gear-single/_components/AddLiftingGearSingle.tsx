@@ -332,8 +332,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
           manufacturer_name: values.manufacturer,
           owner_name: values.owner_name,
           standard_code: values.standard,
-          // surveyor_name: values.surveyor,
           serial_no: values.serial_no,
+          test_certificate_no: values.test_cert_coc_no, // map to correct backend key
+          safe_working_load: values.safe_working_load,
+          proof_load: values.proof_load,
+          last_test_date: values.last_test_exam,           // map to correct backend key
+          last_through_date: values.last_thorough_exam,    // map to correct backend key
+          next_test_date: values.next_test_exam,           // map to correct backend key
+          next_through_date: values.next_thorough_exam     // map to correct backend key
         };
         console.log("Manual Data being sent to RPC:", manualData); 
         await makeApiCall(() => new MasterService().manualDataEntryFromSingleEquipment(manualData), {
@@ -807,7 +813,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                 ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
                                 : ''
                             }
-                            disabled={lastTestExamChecked}
+                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
                             {...field}
                             onChange={(e) => {
                               field.onChange(e);
@@ -873,7 +879,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
                               : ''
                           }
-                          disabled={lastThoroughExamChecked}
+                          disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                           {...field}
                           onChange={(e) => {
                             field.onChange(e);
@@ -940,7 +946,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                 : ''
                               // } disabled={testExamChecked} type="date" {...field} />
                             }
-                            disabled={testExamChecked}
+                            disabled={testExamChecked || testExamNotAvailable}
                             type="date"
                             {...field}
                             onChange={(e) => {
@@ -996,7 +1002,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                                 : ''
                               // } disabled={thoroughExamChecked} type="date" {...field} />
                             }
-                            disabled={thoroughExamChecked}
+                            disabled={thoroughExamChecked || thoroughExamNotAvailable}
                             type="date"
                             {...field}
                             onChange={(e) => {

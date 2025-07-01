@@ -74,8 +74,14 @@ export class MasterService extends Supabase {
         manufacturer_name: string;
         owner_name: string;
         standard_code: string;
-        // surveyor_name: string;
         serial_no?: string;
+        test_certificate_no?: string;
+        safe_working_load?: string;
+        proof_load?: string;
+        last_test_date?: string;
+        last_through_date?: string;
+        next_test_date?: string;
+        next_through_date?: string;
     }) {
         await this.ensureAuthenticated();
         
@@ -87,7 +93,13 @@ export class MasterService extends Supabase {
             _manufacturer_name: data.manufacturer_name,
             _owner_name: data.owner_name,
             _standard_code: data.standard_code,
-            // _surveyor_name: data.surveyor_name
+            _test_certificate_no: data.test_certificate_no,
+            _safe_working_load: data.safe_working_load,
+            _proof_load: data.proof_load,
+            _last_test_date: data.last_test_date,
+            _last_through_date: data.last_through_date,
+            _next_test_date: data.next_test_date,
+            _next_through_date: data.next_through_date,
         });
     }
 
@@ -102,6 +114,13 @@ export class MasterService extends Supabase {
         owner_name: string;
         standard_code: string;
         serial_no?: string;
+        test_certificate_no?: string;
+        safe_working_load?: string;
+        proof_load?: string;
+        last_test_date?: string;
+        next_test_date?: string;
+        last_through_date?: string;
+        next_through_date?: string;
     }) {
         await this.ensureAuthenticated();
 
@@ -113,6 +132,13 @@ export class MasterService extends Supabase {
             _manufacturer_name: data.manufacturer_name,
             _owner_name: data.owner_name,
             _standard_code: data.standard_code,
+            _test_certificate_no: data.test_certificate_no,
+            _safe_working_load: data.safe_working_load,
+            _proof_load: data.proof_load,
+            _last_test_date: data.last_test_date,
+            _next_test_date: data.next_test_date,
+            _last_through_date: data.last_through_date,
+            _next_through_date: data.next_through_date,
         });
     }
 
