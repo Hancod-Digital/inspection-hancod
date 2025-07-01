@@ -562,24 +562,24 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       setThoroughExamNotAvailable(false);
                       setLastTestExamNotAvailable(false);
                       setLastThoroughExamNotAvailable(false);
-                      // reset({
-                      //   ...watch(),
-                      //   equipment_no: '',
-                      //   serial_no: '',
-                      //   title: '',
-                      //   equipment_description: '',
-                      //   test_cert_coc_no: '',
-                      //   safe_working_load: '',
-                      //   proof_load: '',
-                      //   standard: '',
-                      //   last_test_exam: '',
-                      //   next_test_exam: '',
-                      //   last_thorough_exam: '',
-                      //   next_thorough_exam: '',
-                      //   manufacturer: '',
-                      //   owner_name: '',
-                      //   surveyor: '',
-                      // });
+                      reset({
+                        ...watch(),
+                        equipment_no: '',
+                        serial_no: '',
+                        title: '',
+                        equipment_description: '',
+                        test_cert_coc_no: '',
+                        safe_working_load: '',
+                        proof_load: '',
+                        standard: '',
+                        last_test_exam: '',
+                        next_test_exam: '',
+                        last_thorough_exam: '',
+                        next_thorough_exam: '',
+                        manufacturer: '',
+                        owner_name: '',
+                        surveyor: '',
+                      });
 
                       const surveyorId = watch('surveyor');
                       if (surveyorId) {

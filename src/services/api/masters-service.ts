@@ -91,6 +91,31 @@ export class MasterService extends Supabase {
         });
     }
 
+    // ------------------------------------------------------------------
+    // Manual data entry for MULTI-gear equipment certificates
+    // Calls the RPC: manual_data_entry_from_multi_equipment
+    async manualDataEntryFromMultiEquipment(data: {
+        equipment_no: string;
+        title: string;
+        description: string;
+        manufacturer_name: string;
+        owner_name: string;
+        standard_code: string;
+        serial_no?: string;
+    }) {
+        await this.ensureAuthenticated();
+
+        return this.supabase.rpc('manual_data_entry_from_multi_equipment', {
+            _equipment_no: data.equipment_no,
+            _serial_no: data.serial_no ?? null,
+            _title: data.title,
+            _description: data.description,
+            _manufacturer_name: data.manufacturer_name,
+            _owner_name: data.owner_name,
+            _standard_code: data.standard_code,
+        });
+    }
+
     async getLocationDetails() {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase

@@ -105,7 +105,9 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
           {
             afterSuccess: (data: any) => {
               resolve(data);
+              console.log("multi data",data)
             },
+       
             afterError: (error: any) => {
               reject(error);
             },
@@ -120,6 +122,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
           {
             afterSuccess: (data: any) => {
               resolve(data);
+              console.log("serial nos",data)
             },
             afterError: (error: any) => {
               reject(error);

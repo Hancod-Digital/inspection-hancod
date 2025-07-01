@@ -40,11 +40,12 @@ export default function Component({ onFunction , equipmentOptions, isSubmitted,e
           </TableRow>
         </TableHeader>
         <TableBody>
-   
+
           {existingData?.map((item: any, index: number) => (
             <TableRow key={index} className="hover:bg-gray-50">
               <TableCell className="border-r border-gray-300 p-3">{item.inspection_date}</TableCell>
               <TableCell className="border-r border-gray-300 p-3">{equipmentOptions?.filter((equipment: any) => equipment.id == item.equipment_no)[0]?.equipment_no}</TableCell>
+
               <TableCell className="border-r border-gray-300 p-3">{item.type_of_exam}</TableCell>
               <TableCell className="border-r border-gray-300 p-3">{item.result}</TableCell>
               <TableCell className="p-3 flex space-x-2">
@@ -56,7 +57,7 @@ export default function Component({ onFunction , equipmentOptions, isSubmitted,e
                                             <DeleteDialogue
                                                 onConfirm={async () => await deleteRecord(item.id)}
                                                 triggerButton={
-                                                  <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                                  <button className="relative w-full text-red-600 hover:cursor-pointer flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                                                   Delete
                                               </button>
                                                 }

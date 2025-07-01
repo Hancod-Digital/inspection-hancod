@@ -62,9 +62,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
   const [invoke, setInvoke] = useState(false);
   const currentData = id ? findRecordById(id) : null;
+  console.log("Current data for edit:", currentData)
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    // site: string().nonempty('Site is required'),
     authority: string().nonempty('Authority is required'),
     type_of_exam: string().nonempty('Type of Exam is required'),
     job_order_no: string().nonempty('Job Order No. is required'),
@@ -102,7 +103,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       inspection_date: String(currentData?.inspection_date) || '',
-      site: String(currentData?.site) || '',
+      // site: String(currentData?.site) || '',
       authority: String(currentData?.authority) || '',
       type_of_exam: currentData?.type_of_exam || '',
       job_order_no: String(currentData?.job_order_no) || '',
@@ -194,12 +195,12 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-
+      console.log("Fetched equipment data for edit:", data)
       if (data) {
         // Populate form fields with existing data
         reset({
           inspection_date: String(data.inspection_date) || '',
-          site: String(data.site) || '',
+          // site: String(data.site) || '',
           authority: String(data.authority) || '',
           type_of_exam: data.type_of_exam || '',
           job_order_no: String(data.job_order_no) || '',
@@ -262,8 +263,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   // Fetch select options on mount
   useEffect(() => {
     const fetchOptions = async () => {
-      const [sites, authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
-        getAllSingleSubtopic("site"),
+      const [authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
+        // getAllSingleSubtopic("site"),
         getAllSingleSubtopic("authority"),
         getAllSingleSubtopic("job_orders"),
         getAllSingleSubtopic("equipment"),
@@ -530,10 +531,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam
       };
 
-
+      console.log("Form data for update:", formData)
       await updateRecord(id, formData);
 
       // Handle updating multi-equipments if any
+      console.log("Existing data for update:", existingData)
 
       if (existingData.length > 0) {
         await Promise.all(existingData.map((item: any) => {
