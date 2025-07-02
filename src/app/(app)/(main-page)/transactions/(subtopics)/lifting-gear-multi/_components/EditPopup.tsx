@@ -140,6 +140,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     watch,
     setValue,
   } = methods;
+  console.log("errors:", errors)
   const equipmentNoChanged = (value: string, field: any) => {
     console.log("Selected equipment no:", value)
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
@@ -196,6 +197,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
       console.log("Fetched equipment data for edit:", data)
+
       if (data) {
         // Populate form fields with existing data
         reset({
@@ -210,7 +212,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           test_cert_coc_no: data.test_cert_coc_no || '',
           safe_working_load: data.safe_working_load || '',
           proof_load: data.proof_load || '',
-          standard: String(data.standard) || '',
+          standard: data.standard || '',
           // last_test_exam: data.last_test_exam || '',
           // next_test_exam: data.next_test_exam || '',
           // last_thorough_exam: data.last_thorough_exam || '',
@@ -223,10 +225,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           // next_thorough_exam_certificate_no: data.next_thorough_exam_certificate_no || '',
           defect_description: data.defect_description || '',
           //test_particulars: data.test_particulars || '',
-          owner_name: String(data.owner_name) || '',
+          owner_name: data.owner_name || '',
           description: data.description || '',
           equipment_description: data.equipment_description || '',
-          manufacturer: String(data.manufacturer) || '',
+          manufacturer: data.manufacturer || '',
           //  tested_standard: data.tested_standard || '',
           approval_status: data.approval_status == 'true' ? 'Approved' : 'Rejected',
         });
@@ -255,17 +257,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         setLastThoroughExamChecked(!data.last_thorough_exam || data.last_thorough_exam === "Not Applicable");
         setLastThoroughExamNotAvailable(data.last_thorough_exam === "Not Available");
         
-
-
-
-        // Ensure standard, manufacturer, and owner_name are set correctly
-        setValue('standard', String(data.standard)); //fetching issue
-        setValue('manufacturer', String(data.manufacturer));
-        setValue('owner_name', String(data.owner_name));
-
-
-
-
       }
     };
 
@@ -297,27 +288,6 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       
       // Once options are loaded, find and set the correct IDs for select fields
       if (currentData && id) {
-
-
-
-
-
-
-        console.log("Setting select field values with:", { //fetching issue
-          standard: currentData.standard,
-          manufacturer: currentData.manufacturer,
-          owner_name: currentData.owner_name
-        });
-        
-        // Directly set values for standard, manufacturer, and owner_name
-        setValue('standard', String(currentData.standard));
-        setValue('manufacturer', String(currentData.manufacturer));
-        setValue('owner_name', String(currentData.owner_name));
-        
-
-
-
-
         // Fallback matching logic if direct setting doesn't work
         // Match standard name to ID
         if (currentData.standard) {
