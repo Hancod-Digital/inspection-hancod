@@ -31,7 +31,7 @@ import AddOwnerButton from '../../_components/Owner/Owner';
 import AddManufacturerButton from '../../_components/Manufacturer/Manufacturer';
 import AddStandardButton from '../../_components/Standard/Standard';
 import AddEquipmentButton from '../../_components/Equipments/Equipments';
-import AddSiteButton from '../../_components/Site/Site';
+// import AddSiteButton from '../../_components/Site/Site';
 import AddLocationButton from '../../_components/Location/Location';
 // Dynamically import ReactQuill to prevent SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -163,7 +163,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     
     field.onChange(value)
   }
-  const [siteOptions, setSiteOptions] = useState<any[]>([]);
+  // const [siteOptions, setSiteOptions] = useState<any[]>([]);
   const [authorityOptions, setAuthorityOptions] = useState<any[]>([]);
   const [jobOrderNoOptions, setJobOrderNoOptions] = useState<any[]>([]);
   const [equipmentNoOptions, setEquipmentNoOptions] = useState<any[]>([]);
@@ -197,8 +197,13 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
       console.log("Fetched equipment data for edit:", data)
+      console.log("Full data object:", JSON.stringify(data));
+      console.log("Standard exists:", data?.hasOwnProperty('standard'), "Value:", data?.standard);
+      console.log("Standard type:", typeof data?.standard, "Value:", data?.standard);
+
 
       if (data) {
+        console.log("standard:", data.standard)
         // Populate form fields with existing data
         reset({
           inspection_date: String(data.inspection_date) || '',
@@ -212,7 +217,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           test_cert_coc_no: data.test_cert_coc_no || '',
           safe_working_load: data.safe_working_load || '',
           proof_load: data.proof_load || '',
-          standard: data.standard || '',
+          standard: String(data.standard) || '',
           // last_test_exam: data.last_test_exam || '',
           // next_test_exam: data.next_test_exam || '',
           // last_thorough_exam: data.last_thorough_exam || '',
@@ -225,10 +230,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           // next_thorough_exam_certificate_no: data.next_thorough_exam_certificate_no || '',
           defect_description: data.defect_description || '',
           //test_particulars: data.test_particulars || '',
-          owner_name: data.owner_name || '',
+          owner_name: String(data.owner_name) || '',
           description: data.description || '',
           equipment_description: data.equipment_description || '',
-          manufacturer: data.manufacturer || '',
+          manufacturer: "115" || '',
           //  tested_standard: data.tested_standard || '',
           approval_status: data.approval_status == 'true' ? 'Approved' : 'Rejected',
         });
@@ -355,19 +360,19 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   // Watch location and update site options accordingly
   const location = watch('location');
 
-  useEffect(() => {
-    const fetchSites = async () => {
-      const res = locationOptions.filter((item: any) => item.location.id == location ? location : currentData?.location);
+  // useEffect(() => {
+  //   const fetchSites = async () => {
+  //     const res = locationOptions.filter((item: any) => item.location.id == location ? location : currentData?.location);
 
-      if (res.length > 0) {
-        console.log("ressss",res)
-        setSiteOptions(res?.filter((item) => item.site !=null)); // Set the area options to the fetched data
-      } else {
-        setSiteOptions([]); // Clear site options if no location is selected
-      }
-    };
-    fetchSites();
-  }, [location, locationOptions]);
+  //     if (res.length > 0) {
+  //       console.log("ressss",res)
+  //       setSiteOptions(res?.filter((item) => item.site !=null)); // Set the area options to the fetched data
+  //     } else {
+  //       setSiteOptions([]); // Clear site options if no location is selected
+  //     }
+  //   };
+  //   fetchSites();
+  // }, [location, locationOptions]);
 
   // Watch equipment_no and update related fields
   const equipment_no = watch('equipment_no');
@@ -450,7 +455,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       [name]: value
     }));
   };
-  console.log(siteOptions)
+  // console.log(siteOptions)
   // Function to handle adding equipment to multi-equipments (AnnexureTable)
   const addEquipmentToMulti = async () => {
     // Validation checks first
