@@ -1273,8 +1273,45 @@ console.log(watch('manufacturer'),"manufacturer")
                       <p className="text-red-500 text-[12px] ">{errors.tested_standard.message}</p>
                     )}
                   </div> */}
-
                   <div className="grid grid-cols-[200px_1fr] gap-4">
+  <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
+  <Controller
+    name="manufacturer"
+    control={control}
+    render={({ field }) => {
+      const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
+      console.log("allManufacturerOptions", allManufacturerOptions);
+      console.log("field.value", field.value);
+      const value = allManufacturerOptions.includes((field.value)) ? (field.value) : "41";
+      
+      return (
+        <div className="flex w-full gap-2 items-center relative">
+          <Select
+            value={field.value}
+            onValueChange={field.onChange}
+          >
+            <SelectTrigger id="manufacturer">
+              <SelectValue placeholder="Select manufacturer" />
+            </SelectTrigger>
+            <SelectContent>
+              {manufacturerOptions?.map((manu: any) => (
+                <SelectItem key={manu.id} value={String(manu.id)}>
+                  {manu.manufacturer}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      );
+    }}
+  />
+  {errors.manufacturer && (
+    <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
+  )}
+</div>
+
+
+                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
                     <Controller
                       name="manufacturer"
@@ -1351,7 +1388,7 @@ console.log(watch('manufacturer'),"manufacturer")
                     {errors.manufacturer && (
                       <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="approval_status" className="mt-3">Approval Status</Label>
