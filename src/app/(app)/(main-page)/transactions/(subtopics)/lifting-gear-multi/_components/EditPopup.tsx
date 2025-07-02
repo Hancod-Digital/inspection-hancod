@@ -1287,7 +1287,7 @@ console.log(watch('manufacturer'),"manufacturer")
                         return (
                           <div className="flex w-full gap-2 items-center relative">
                             <Select
-                              value={value}
+                              value={field.value}
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="manufacturer">
