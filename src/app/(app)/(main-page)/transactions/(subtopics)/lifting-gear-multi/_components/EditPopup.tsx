@@ -949,7 +949,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                      Last Test Certificate No.
+                      Last Proof Load Certificate No.
                     </Label>
                     <Input
                       id="last_test_exam_certificate_no" className='w-96'
@@ -1008,7 +1008,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-                      Last Thorough Certificate No.
+                      Last Examination Certificate No.
                     </Label>
                     <Input
                       id="last_thorough_exam_certificate_no" className='w-96'
