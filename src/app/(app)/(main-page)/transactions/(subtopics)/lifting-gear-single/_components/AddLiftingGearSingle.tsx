@@ -794,8 +794,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     </div>
                   </div>
                 </div>
-                <div className="grid gap-4 grid-cols-2">
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                {/* <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] gap-4"> */}
+                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">
                       Date of last proof load test
                     </Label>
@@ -806,7 +807,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_test_exam"
+                            id="last_test_exam" className="w-96"
                             type="date"
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
@@ -847,13 +848,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
                     )}
                     </div>
-                  </div>
+                    </div>
+                  {/* </div> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
                       Last Test Certificate No.
                     </Label>
                     <Input
-                      id="last_test_exam_certificate_no"
+                      id="last_test_exam_certificate_no" className="w-96"
                       type="text"
                       disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
@@ -872,7 +874,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="last_thorough_exam"
+                          id="last_thorough_exam" className="w-96"
                           type="date"
                           defaultValue={
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
@@ -919,7 +921,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       Last Thorough Certificate No.
                     </Label>
                     <Input
-                      id="last_thorough_exam_certificate_no"
+                      id="last_thorough_exam_certificate_no" className="w-96"
                       type="text"
                       disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
@@ -928,8 +930,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam_certificate_no.message}</p>
                     )}
                   </div>
-                </div>
-                <div className="grid gap-4 grid-cols-2">
+                {/* </div> */}
+                {/* <div className="grid gap-4 grid-cols-2"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor="next_test_date">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
@@ -939,7 +941,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         render={({ field }) => (
                           // <Input id="next_test_date" defaultValue={
                           <Input
-                            id="next_test_date"
+                            id="next_test_date" className="w-96"
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
                                 ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
@@ -983,10 +985,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         </p>
                       )}
                     </div>
-                  </div>
+                  {/* </div> */}
                   </div>
                   {/* Removed Next Test Certificate No. */}
-                  <div className="grid gap-4 grid-cols-2"> {/* new added */}
+                  {/* <div className="grid gap-4 grid-cols-2"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                     <div className="flex items-center gap-4">
@@ -995,7 +997,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id={"next_thorough_exam"}
+                            id={"next_thorough_exam"} className="w-96"
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
                                 ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
@@ -1041,7 +1043,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     </div>
                   </div>
                   {/* Removed Next Thorough Certificate No. */}
-                </div>
+                {/* </div> */}
                 {/* Result Section */}
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">

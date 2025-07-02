@@ -658,6 +658,7 @@ export default function EquipmentDetailsEditForm({
                       )}
                     </div>
                   </div>
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">Date of last proof load test</Label>
@@ -667,7 +668,7 @@ export default function EquipmentDetailsEditForm({
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_test_exam"
+                            id="last_test_exam" className="w-96"
                             type="date"
                             {...field}
                             disabled={lastTestExamChecked || lastTestExamNotAvailable}
@@ -675,6 +676,7 @@ export default function EquipmentDetailsEditForm({
                           />
                         )}
                       />
+                      <div className="flex items-center gap-2">
                       <Checkbox 
                         className='w-6 h-6' 
                         checked={lastTestExamChecked} 
@@ -683,7 +685,7 @@ export default function EquipmentDetailsEditForm({
                           if (checked) setLastTestExamNotAvailable(false);
                         }} 
                       /> 
-                      <span className="text-[13px] w-[15%] ">Not Applicable</span>
+                      <span className="text-[13px] mr-4">Not Applicable</span>
                       <Checkbox 
                         className='w-6 h-6' 
                         checked={lastTestExamNotAvailable} 
@@ -692,7 +694,8 @@ export default function EquipmentDetailsEditForm({
                           if (checked) setLastTestExamChecked(false);
                         }} 
                       /> 
-                      <span className="text-[13px] w-[15%] ">Not Available</span>
+                      <span className="text-[13px] ">Not Available</span>
+                      </div>
                       {errors.last_test_exam && (
                         <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
                       )}
@@ -700,10 +703,10 @@ export default function EquipmentDetailsEditForm({
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                      Certificate No.
+                    Last Test Certificate No.
                     </Label>
                     <Input
-                      id="last_test_exam_certificate_no"
+                      id="last_test_exam_certificate_no" className="w-96"
                       disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
                     />
@@ -717,7 +720,7 @@ export default function EquipmentDetailsEditForm({
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_thorough_exam"
+                            id="last_thorough_exam" className="w-96"
                             type="date"
                             {...field}
                             disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
@@ -750,17 +753,21 @@ export default function EquipmentDetailsEditForm({
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-                      Certificate No.
+                    Last Thorough Certificate No.
                     </Label>
                     <Input
-                      id="last_thorough_exam_certificate_no"
+                      id="last_thorough_exam_certificate_no" className="w-96"
                       disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
                     />
                   </div>
-                </div>
-                <div className="grid gap-4 grid-cols-1 w-full">
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                {/* </div> */}
+                {/* <div className="grid gap-4 grid-cols-1 w-full">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4"> */}
+
+                {/* <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] gap-4"> */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor="next_test_exam">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
                       <Controller
@@ -768,8 +775,7 @@ export default function EquipmentDetailsEditForm({
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="next_test_exam"
-                            className='w-[37%]'
+                            id="next_test_exam" className="w-96"
                             type="date"
                             {...field}
                             disabled={testExamChecked || testExamNotAvailable}
@@ -800,6 +806,7 @@ export default function EquipmentDetailsEditForm({
                       )}
                     </div>
                   </div>
+                  {/* </div> */}
                   {/* REMOVED: Next Test Certificate No. */}
                   {/* 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -814,9 +821,12 @@ export default function EquipmentDetailsEditForm({
                     />
                   </div>
                   */}
-
+{/* 
                   <div className="grid gap-4 grid-cols-1 w-full">
-                    <div className="grid grid-cols-[200px_1fr] gap-4">
+                    <div className="grid grid-cols-[200px_1fr] gap-4"> */}
+                      {/* <div className="grid gap-4 grid-cols-2">
+                        <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4"> */}
+                      <div className="grid grid-cols-[200px_1fr] gap-4">
                       <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                       <div className="flex items-center gap-4">
                         <Controller
@@ -827,12 +837,13 @@ export default function EquipmentDetailsEditForm({
                               id={"next_thorough_exam"}
                               type="date"
                               {...field}
-                              className='w-[37%]'
+                              className='w-96'
                               disabled={thoroughExamChecked || thoroughExamNotAvailable}
                               value={(thoroughExamChecked || thoroughExamNotAvailable) ? "" : field.value || ""}
                             />
                           )}
                         />
+                        <div className="flex items-center gap-2">
                         <Checkbox
                           className={'w-6 h-6'}
                           checked={thoroughExamChecked}
@@ -841,7 +852,7 @@ export default function EquipmentDetailsEditForm({
                             if (checked) setThoroughExamNotAvailable(false);
                           }}
                         />
-                        <span className="text-[13px] w-[15%] ">Not Applicable</span>
+                        <span className="text-[13px] mr-4 ">Not Applicable</span>
                         <Checkbox
                           className={'w-6 h-6'}
                           checked={thoroughExamNotAvailable}
@@ -850,12 +861,13 @@ export default function EquipmentDetailsEditForm({
                             if (checked) setThoroughExamChecked(false);
                           }}
                         />
-                        <span className="text-[13px] w-[15%] ">Not Available</span>
+                        <span className="text-[13px] ">Not Available</span>
+                        </div>
                         {errors.next_thorough_exam && (
-                          <p className="text-red-500 text-[12px] ">{errors.next_thorough_exam.message}</p>
+                          <p className="text-red-500 text-[12px] text-[13px]">{errors.next_thorough_exam.message}</p>
                         )}
                       </div>
-                    </div>
+                    {/* </div> */}
                   </div>
                   {/* REMOVED: Next Thorough Certificate No. */}
                   {/* 
@@ -871,7 +883,7 @@ export default function EquipmentDetailsEditForm({
                     />
                   </div>
                   */}
-                </div>
+                {/* </div> */}
 
                 {/* Result Section */}
                 <div className="grid gap-4 grid-cols-2">

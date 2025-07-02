@@ -42,8 +42,12 @@ export default function Component({ onFunction , equipmentOptions, isSubmitted,e
         <TableBody>
 
           {existingData?.map((item: any, index: number) => (
+            console.log("item i:",item),
+            console.log("item in add to list:",equipmentOptions?.filter((equipment: any) => equipment.id == item.equipment_no)[0]?.equipment_no),
+            console.log("equipmentOptions",equipmentOptions),
             <TableRow key={index} className="hover:bg-gray-50">
               <TableCell className="border-r border-gray-300 p-3">{item.inspection_date}</TableCell>
+             
               <TableCell className="border-r border-gray-300 p-3">{equipmentOptions?.filter((equipment: any) => equipment.id == item.equipment_no)[0]?.equipment_no}</TableCell>
 
               <TableCell className="border-r border-gray-300 p-3">{item.type_of_exam}</TableCell>

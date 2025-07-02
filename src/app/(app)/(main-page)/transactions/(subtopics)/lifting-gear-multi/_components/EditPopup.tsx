@@ -895,6 +895,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                     )}
                   </div>
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">Date of last proof load test</Label>
@@ -904,7 +905,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_test_exam"
+                            id="last_test_exam" className='w-96' 
                             type="date"
                             {...field}
                             disabled={lastTestExamChecked || lastTestExamNotAvailable}
@@ -951,7 +952,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       Last Test Certificate No.
                     </Label>
                     <Input
-                      id="last_test_exam_certificate_no"
+                      id="last_test_exam_certificate_no" className='w-96'
                       disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
                     />
@@ -964,7 +965,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_thorough_exam"
+                            id="last_thorough_exam" className='w-96'
                             type="date"
                             {...field}
                             disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
@@ -1010,15 +1011,16 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       Last Thorough Certificate No.
                     </Label>
                     <Input
-                      id="last_thorough_exam_certificate_no"
+                      id="last_thorough_exam_certificate_no" className='w-96'
                       disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
                     />
                   </div>
-                </div>
+                {/* </div> */}
 
-                <div className="grid gap-4 grid-cols-1 w-[64%]">
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                {/* <div className="grid gap-4 grid-cols-1 w-[64%]">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4"> */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor="next_test_exam">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
                       <Controller
@@ -1026,7 +1028,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="next_test_exam"
+                            id="next_test_exam" className='w-96'
                             type="date"
                             {...field}
                             disabled={testExamChecked  || testExamNotAvailable}
@@ -1066,10 +1068,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         <p className="text-red-500 text-[12px] ">{errors.next_test_exam.message}</p>
                       )}
                     </div>
-                  </div>
+                  {/* </div> */}
                   {/* Next Test Certificate No. REMOVED */}
                 </div>
-                <div className="grid gap-4 grid-cols-1 w-[64%]">
+                {/* <div className="grid gap-4 grid-cols-1 w-[64%]">
+                  <div className="grid grid-cols-[200px_1fr] gap-4"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                     <div className="flex items-center gap-4">
@@ -1078,7 +1081,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id={"next_thorough_exam"}
+                            id={"next_thorough_exam"} className='w-96'
                             type="date"
                             {...field}
                             disabled={thoroughExamChecked || thoroughExamNotAvailable}
@@ -1120,7 +1123,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     </div>
                   </div>
                   {/* Next Thorough Certificate No. REMOVED */}
-                </div>
+                {/* </div> */}
 
                 {/* Result Section */}
                 <div className="grid gap-4 grid-cols-2">

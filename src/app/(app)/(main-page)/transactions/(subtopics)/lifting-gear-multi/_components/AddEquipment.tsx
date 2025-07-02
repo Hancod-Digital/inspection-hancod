@@ -50,6 +50,7 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
   const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<any>(false);
   const [invoke, setInvoke] = useState(false);
   const [isAutoFill, setIsAutoFill] = useState(true);
+  const [equipmentAdded, setEquipmentAdded] = useState(false);
 
 
   // Remove next_test_exam_certificate_no and next_thorough_exam_certificate_no from schema
@@ -166,7 +167,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
           setExistingData([...existingData, data]);
           toastWithTimeout(ToastVariant.Success, "Equipment addded");
           setIsSubmitted(true);
-        }
+          setEquipmentAdded(prev => !prev); // Toggle to trigger re-fetch
+        }  
       });
     };
 
@@ -362,7 +364,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
     };
     fetchLocations();
 
-  }, [getAllSingleSubtopic, invoke]);
+  }, [getAllSingleSubtopic, invoke, equipmentAdded]);
 
   const job_order_no = watch('job_order_no');
   useEffect(() => {
@@ -892,7 +894,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                     )}
                   </div>
-
+                  </div>
+                  {/* <div className="grid gap-4 grid-cols-2"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">
                       Date of last proof load test
@@ -903,7 +906,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_test_exam"
+                            id="last_test_exam" className="w-96"
                             type="date"
                             defaultValue={
                               (() => {
@@ -945,10 +948,10 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                      Certificate No.
+                    Last Test Certificate No.
                     </Label>
                     <Input
-                      id="last_test_exam_certificate_no"
+                      id="last_test_exam_certificate_no" className="w-96"
                       disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
                     />
@@ -964,7 +967,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_thorough_exam"
+                            id="last_thorough_exam" className="w-96"
                             type="date"
                             defaultValue={
                               (() => {
@@ -1009,14 +1012,15 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       Last Thorough Certificate No.
                     </Label>
                     <Input
-                      id="last_thorough_exam_certificate_no"
+                      id="last_thorough_exam_certificate_no" className="w-96"
                       disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
                     />
                   </div>
-                </div>
+                {/* </div> */}
 
-                <div className="grid gap-4 grid-cols-2">
+                {/* <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] gap-4"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor="next_test_date">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
@@ -1024,7 +1028,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         name="next_test_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input id="next_test_date" defaultValue={
+                          <Input id="next_test_date" className="w-96" defaultValue={
                             (() => {
                               const nextTestDate = equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date;
                               try {
@@ -1065,7 +1069,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         </p>
                       )}
                     </div>
-                  </div>
+                  {/* </div> */}
                   {/* Removed Next Test Certificate No. */}
                   {/* <div className="grid grid-cols-[200px_1fr] gap-4 ">
                     <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
@@ -1080,15 +1084,16 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   </div> */}
                 </div>
 
-                <div className="grid gap-4 grid-cols-2">
-                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
+                {/* <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4"> */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name={"next_thorough_exam"}
                         control={control}
                         render={({ field }) => (
-                          <Input id={"next_thorough_exam"} defaultValue={
+                          <Input id={"next_thorough_exam"} className="w-96" defaultValue={
                             (() => {
                               const nextThoroughDate = equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date;
                               return nextThoroughDate && nextThoroughDate !== "" &&
@@ -1124,7 +1129,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         </p>
                       )}
                     </div>
-                  </div>
+                  {/* </div> */}
                   {/* Removed Next Thorough Certificate No. */}
                   {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">
