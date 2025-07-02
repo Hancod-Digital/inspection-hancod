@@ -1174,7 +1174,7 @@ console.log(watch('manufacturer'),"manufacturer")
                         return (
                           <div className="flex w-full gap-2 items-center relative">
                             <Select 
-                              value={allOwnerOptions.includes(value) ? field.value : ""}
+                              value={field.value}
                               onValueChange={(val) => field.onChange(val)}
                             >
                               <SelectTrigger id="owner_id" className="w-full">
