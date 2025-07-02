@@ -121,7 +121,8 @@ export default function EquipmentDetailsEditForm({
   });
 
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
-
+console.log("Existing data for edit:", existingData)
+console.log("Existing data for edit:", existingData?.surveyor)
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -994,6 +995,7 @@ export default function EquipmentDetailsEditForm({
                       name="surveyor"
                       control={control}
                       render={({ field }) => (
+                        console.log("Surveyor field value:", field.value),
                         <Select onValueChange={field.onChange} value={field.value}>
                           <SelectTrigger id="surveyor">
                             <SelectValue placeholder="Select surveyor" />
