@@ -448,7 +448,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       // reset();
     }
   }, [isSubmitSuccessful, reset]);
-
+console.log(watch('manufacturer'),"manufacturer")
   const handleSafetyChecklistChange = (name: string, value: string) => {
     setSafetyChecklistValues(prev => ({
       ...prev,
