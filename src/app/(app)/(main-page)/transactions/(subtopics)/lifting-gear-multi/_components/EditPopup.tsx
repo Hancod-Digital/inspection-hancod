@@ -233,7 +233,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           owner_name: String(data.owner_name) || '',
           description: data.description || '',
           equipment_description: data.equipment_description || '',
-          manufacturer: "115" || '',
+          manufacturer: data.manufacturer || '' ,
           //  tested_standard: data.tested_standard || '',
           approval_status: data.approval_status == 'true' ? 'Approved' : 'Rejected',
         });
@@ -845,9 +845,9 @@ console.log(watch('manufacturer'),"manufacturer")
                               <SelectTrigger id="standard">
                                 <SelectValue
                                   placeholder="Select or type standard"
-                                  {...(allStandardOptions.includes(field.value)
-                                    ? {}
-                                    : { children: field.value ? field.value : undefined })}
+                                  // {...(allStandardOptions.includes(field.value)
+                                  //   ? {}
+                                  //   : { children: field.value ? field.value : undefined })}
                                 />
                               </SelectTrigger>
                               <SelectContent>
@@ -1180,9 +1180,9 @@ console.log(watch('manufacturer'),"manufacturer")
                               <SelectTrigger id="owner_id" className="w-full">
                                 <SelectValue
                                   placeholder="Select or type owner"
-                                  {...(allOwnerOptions.includes(value)
-                                    ? {}
-                                    : { children: value ? value : undefined })}
+                                  // {...(allOwnerOptions.includes(value)
+                                  //   ? {}
+                                  //   : { children: value ? value : undefined })}
                                 />
                               </SelectTrigger>
                               <SelectContent>
@@ -1281,6 +1281,8 @@ console.log(watch('manufacturer'),"manufacturer")
                       control={control}
                       render={({ field }) => {
                         const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
+                        console.log("allManufacturerOptions",allManufacturerOptions)
+                        console.log("field.value",field.value)
                         const value = allManufacturerOptions.includes(field.value) ? field.value : "41";
                         return (
                           <div className="flex w-full gap-2 items-center relative">
@@ -1291,9 +1293,9 @@ console.log(watch('manufacturer'),"manufacturer")
                               <SelectTrigger id="manufacturer">
                                 <SelectValue
                                   placeholder="Select or type manufacturer"
-                                  {...(allManufacturerOptions.includes(field.value)
-                                    ? {}
-                                    : { children: field.value ? field.value : undefined })}
+                                  // {...(allManufacturerOptions.includes(field.value)
+                                  //   ? {}
+                                  //   : { children: field.value ? field.value : undefined })}
                                 />
                               </SelectTrigger>
                               <SelectContent>
