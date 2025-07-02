@@ -1283,11 +1283,11 @@ console.log(watch('manufacturer'),"manufacturer")
                         const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
                         console.log("allManufacturerOptions",allManufacturerOptions)
                         console.log("field.value",field.value)
-                        const value = allManufacturerOptions.includes(field.value) ? field.value : "41";
+                        const value = allManufacturerOptions.includes (String(field.value)) ? String(field.value) : "41";
                         return (
                           <div className="flex w-full gap-2 items-center relative">
                             <Select
-                            //  value={value}
+                              value={value}
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="manufacturer">
