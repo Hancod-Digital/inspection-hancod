@@ -233,7 +233,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           owner_name: String(data.owner_name) || '',
           description: data.description || '',
           equipment_description: data.equipment_description || '',
-          manufacturer: data.manufacturer || '' ,
+          manufacturer: String(data.manufacturer) || '' ,
           //  tested_standard: data.tested_standard || '',
           approval_status: data.approval_status == 'true' ? 'Approved' : 'Rejected',
         });
