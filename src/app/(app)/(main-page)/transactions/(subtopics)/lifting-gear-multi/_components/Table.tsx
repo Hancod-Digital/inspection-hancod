@@ -359,7 +359,7 @@ const htmlElement = document.createElement('div');
             
                         <TableHead className="py-4 flex-[2]">Title</TableHead> 
                         <TableHead className="py-4 flex-[1]">Inspection Date</TableHead>
-                        <TableHead className="py-4 flex-[1]">Next Test Exam</TableHead>
+                        <TableHead className="py-4 flex-[1]">Next Exam Date</TableHead>
                         <TableHead className="py-4 flex-[1]">Result</TableHead>
                         <TableHead className="py-4 flex-[1]"></TableHead>
                         <TableHead className="py-4 flex-[1]"></TableHead>

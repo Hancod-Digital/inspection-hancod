@@ -77,9 +77,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     title: string().nonempty('Title is required'),
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
     safe_working_load: string().nonempty('Safe Working Load is required'),
-    last_test_exam:  string().nonempty('Last Test Exam is required'),
+    last_test_exam:  string().optional(),
     next_test_exam: testExamChecked ? string().optional() : string().nonempty('Next Test Exam is required'),
-    last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+    last_thorough_exam: string().optional(),
     next_thorough_exam: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam is required'),
     result: string().nonempty('Result is required'),
     type_of_exam: string().nonempty('Type of Exam is required'),
@@ -336,10 +336,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
           test_certificate_no: values.test_cert_coc_no, // map to correct backend key
           safe_working_load: values.safe_working_load,
           proof_load: values.proof_load,
-          last_test_date: values.last_test_exam,           // map to correct backend key
-          last_through_date: values.last_thorough_exam,    // map to correct backend key
-          next_test_date: values.next_test_exam,           // map to correct backend key
-          next_through_date: values.next_thorough_exam     // map to correct backend key
+          last_test_date: lastTestExamChecked ? "Not Applicable" : lastTestExamNotAvailable ? "Not Available" : values.last_test_exam,           // map to correct backend key
+          last_through_date: lastThoroughExamChecked ? "Not Applicable" : lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam,    // map to correct backend key
+          next_test_date: testExamChecked ? "Not Applicable" : testExamNotAvailable ? "Not Available" : values.next_test_exam,           // map to correct backend key
+          next_through_date: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam     // map to correct backend key
         };
         console.log("Manual Data being sent to RPC:", manualData); 
         await makeApiCall(() => new MasterService().manualDataEntryFromSingleEquipment(manualData), {
@@ -585,6 +585,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         manufacturer: '',
                         owner_name: '',
                         surveyor: '',
+                        job_order_no: '',
+                        location: '',
                       });
 
                       const surveyorId = watch('surveyor');
@@ -852,7 +854,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   {/* </div> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                      Last Test Certificate No.
+                      Last Proof Load Certificate No.
                     </Label>
                     <Input
                       id="last_test_exam_certificate_no" className="w-96"
@@ -918,7 +920,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-                      Last Thorough Certificate No.
+                      Last Examination Certificate No.
                     </Label>
                     <Input
                       id="last_thorough_exam_certificate_no" className="w-96"

@@ -184,10 +184,10 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
         test_certificate_no: test_cert_coc_no,
         safe_working_load,
         proof_load,
-        last_test_date: last_test_exam,
-        next_test_date: next_test_exam,
-        last_through_date: last_thorough_exam,
-        next_through_date: next_thorough_exam,
+        last_test_date: lastTestExamChecked ? "Not Applicable" : lastTestExamNotAvailable ? "Not Available" : last_test_exam,
+        next_test_date: testExamChecked ? "Not Applicable" : testExamNotAvailable ? "Not Available" : next_test_exam,
+        last_through_date: lastThoroughExamChecked ? "Not Applicable" : lastThoroughExamNotAvailable ? "Not Available" : last_thorough_exam,
+        next_through_date: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : next_thorough_exam,
       };
 
       await makeApiCall(
@@ -948,7 +948,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                    Last Test Certificate No.
+                    Last Proof Load Certificate No.
                     </Label>
                     <Input
                       id="last_test_exam_certificate_no" className="w-96"
@@ -1009,7 +1009,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-                      Last Thorough Certificate No.
+                      Last Examination Certificate No.
                     </Label>
                     <Input
                       id="last_thorough_exam_certificate_no" className="w-96"
