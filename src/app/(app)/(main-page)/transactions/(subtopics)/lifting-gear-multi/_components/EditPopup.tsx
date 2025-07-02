@@ -1281,7 +1281,7 @@ console.log(watch('manufacturer'),"manufacturer")
                       control={control}
                       render={({ field }) => {
                         const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
-                        const value = allManufacturerOptions.includes(field.value) ? field.value : "";
+                        const value = allManufacturerOptions.includes(field.value) ? field.value : "41";
                         return (
                           <div className="flex w-full gap-2 items-center relative">
                             <Select
