@@ -254,6 +254,18 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         
         setLastThoroughExamChecked(!data.last_thorough_exam || data.last_thorough_exam === "Not Applicable");
         setLastThoroughExamNotAvailable(data.last_thorough_exam === "Not Available");
+        
+
+
+
+        // Ensure standard, manufacturer, and owner_name are set correctly
+        setValue('standard', String(data.standard)); //fetching issue
+        setValue('manufacturer', String(data.manufacturer));
+        setValue('owner_name', String(data.owner_name));
+
+
+
+
       }
     };
 
@@ -285,6 +297,28 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       
       // Once options are loaded, find and set the correct IDs for select fields
       if (currentData && id) {
+
+
+
+
+
+
+        console.log("Setting select field values with:", { //fetching issue
+          standard: currentData.standard,
+          manufacturer: currentData.manufacturer,
+          owner_name: currentData.owner_name
+        });
+        
+        // Directly set values for standard, manufacturer, and owner_name
+        setValue('standard', String(currentData.standard));
+        setValue('manufacturer', String(currentData.manufacturer));
+        setValue('owner_name', String(currentData.owner_name));
+        
+
+
+
+
+        // Fallback matching logic if direct setting doesn't work
         // Match standard name to ID
         if (currentData.standard) {
           const standardObj = standards?.find((s: any) => 
