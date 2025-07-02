@@ -361,7 +361,6 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               manufacturer: newIds.manufacturer_id,
               owner_name: newIds.owner_id,
               standard: newIds.standard_id,
-              surveyor: newIds.surveyor_id,
               first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
               six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
               twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
