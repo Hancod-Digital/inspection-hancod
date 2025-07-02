@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf } from 'zod';
+import { object, string, TypeOf, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,7 @@ import AddStandardButton from '../../_components/Standard/Standard';
 import AddEquipmentButton from '../../_components/Equipments/Equipments';
 import AddSiteButton from '../../_components/Site/Site';
 import AddLocationButton from '../../_components/Location/Location';
+
 interface AddEquipmentProps {
   onClose: () => void;
   setIsLocation: (value: boolean) => void;
@@ -49,12 +50,13 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
   const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState<any>(false);
   const [invoke, setInvoke] = useState(false);
   const [isAutoFill, setIsAutoFill] = useState(true);
+  const [equipmentAdded, setEquipmentAdded] = useState(false);
 
 
   // Remove next_test_exam_certificate_no and next_thorough_exam_certificate_no from schema
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    // site: string().nonempty('Site is required'),
     authority: string().nonempty('Authority is required'),  
     standard: string().nonempty('Standard is required'),
     type_of_exam: string().nonempty('Type of Exam is required'),
@@ -73,7 +75,10 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
     // next_test_exam_certificate_no: testExamChecked ? string().optional() : string().nonempty('Next Test Exam Certificate No. is required'),
     last_thorough_exam_certificate_no: string().optional(),
     // next_thorough_exam_certificate_no: thoroughExamChecked ? string().optional() : string().nonempty('Next Thorough Exam Certificate No. is required'),
-    surveyor: string().nonempty('Surveyor is required'),
+    // surveyor: string().nonempty('Surveyor is required'),
+    surveyor: z.union([z.string(), z.number()])
+    .transform(val => val?.toString())
+    .refine(val => val !== '', { message: 'Surveyor is required' }),
     defect_description: string().nonempty('Defect Description is required'),
     owner_name: string().nonempty('Owner Name is required'),
     proof_load: string().nonempty('Proof Load is required'),
@@ -99,6 +104,7 @@ export default function AddEquipment({ onClose, setIsLocation, setIsEquipment, s
   }
 
   const { reset, handleSubmit, control, register, formState: { isSubmitSuccessful, errors } } = methods;
+  console.log("errors",errors)
   const [siteOptions, setSiteOptions] = useState<any>([]);
   const [authorityOptions, setAuthorityOptions] = useState<any>([]);
   const [jobOrderNoOptions, setJobOrderNoOptions] = useState<any>([]);
@@ -114,7 +120,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
   const [isStandardTyping, setIsStandardTyping] = useState(false);
 
   const { watch, setValue } = methods
-  const { equipment_no, inspection_date, type_of_exam, standard, title, equipment_description, test_cert_coc_no, safe_working_load, proof_load, last_test_exam, last_thorough_exam, next_test_exam, next_thorough_exam, owner_name, manufacturer, approval_status, result, surveyor, location } = watch()
+  const { equipment_no, serial_no, inspection_date, type_of_exam, standard, title, equipment_description, test_cert_coc_no, safe_working_load, proof_load, last_test_exam, last_thorough_exam, next_test_exam, next_thorough_exam, owner_name, manufacturer, approval_status, result, surveyor, location } = watch()
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [existingData, setExistingData] = useState<any[]>([]);
 
@@ -161,23 +167,31 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
           setExistingData([...existingData, data]);
           toastWithTimeout(ToastVariant.Success, "Equipment addded");
           setIsSubmitted(true);
-        }
+          setEquipmentAdded(prev => !prev); // Toggle to trigger re-fetch
+        }  
       });
     };
 
     if (!isAutoFill) {
       const manualData = {
         equipment_no,
+        serial_no,
         title,
         description: equipment_description,
         manufacturer_name: manufacturer,
         owner_name,
         standard_code: standard,
-        surveyor_name: surveyor,
+        test_certificate_no: test_cert_coc_no,
+        safe_working_load,
+        proof_load,
+        last_test_date: last_test_exam,
+        next_test_date: next_test_exam,
+        last_through_date: last_thorough_exam,
+        next_through_date: next_thorough_exam,
       };
 
       await makeApiCall(
-        () => new MasterService().manualDataEntryFromSingleEquipment(manualData), {
+        () => new MasterService().manualDataEntryFromMultiEquipment(manualData), {
           afterSuccess: async (resp: any) => {
             const newIds = resp?.data?.[0] || {};
             const payload = {
@@ -186,13 +200,15 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
               manufacturer: newIds.manufacturer_id,
               owner_name: newIds.owner_id,
               standard: newIds.standard_id,
-              surveyor: newIds.surveyor_id,
+              // surveyor: newIds.surveyor_id,
             };
+            console.log("Payload for add equipment:", payload)
             await addEquipmentApiCall(payload);
           }
         }
       );
     } else {
+      console.log("Payload for add equipment:", datas)
       await addEquipmentApiCall(datas);
     }
   }
@@ -348,7 +364,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
     };
     fetchLocations();
 
-  }, [getAllSingleSubtopic, invoke]);
+  }, [getAllSingleSubtopic, invoke, equipmentAdded]);
 
   const job_order_no = watch('job_order_no');
   useEffect(() => {
@@ -385,6 +401,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
   };
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
+    console.log("Submit handler called", values)
+
     setLoading(true);
 
     try {
@@ -406,7 +424,24 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam
       };
 
+      // Previously, we invoked manualDataEntryFromMultiEquipment here, but that caused duplicate inserts
+      // because the RPC was already called in addEquipmentToMulti. Instead, reuse the IDs from the first
+      // equipment that was added during this session.
       if (!isAutoFill) {
+        const firstItem = existingData[0];
+        if (firstItem) {
+          finalFormData = {
+            ...finalFormData,
+            equipment_no: firstItem.equipment_no,
+            manufacturer: firstItem.manufacturer,
+            owner_name: firstItem.owner_name,
+            standard: firstItem.standard,
+            surveyor: firstItem.surveyor,
+          };
+        }
+      }
+      /*
+      // Old logic kept for reference
       const manualData = {
         equipment_no: values.equipment_no,
         title: values.title,
@@ -418,7 +453,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
         serial_no: values.serial_no,
       };
       await makeApiCall(
-        () => new MasterService().manualDataEntryFromSingleEquipment(manualData), {
+        () => new MasterService().manualDataEntryFromMultiEquipment(manualData), {
           afterSuccess: (resp: any) => {
             const ids = resp?.data?.[0] || {};
             finalFormData = {
@@ -432,9 +467,11 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
           }
         }
       );
-    }
+      */
 
-    const data = await addRecord(finalFormData, null, "lifting_gear_multi");
+    // Remove serial_no as it's not a column in lifting_gear_multi
+      const { serial_no, ...payloadWithoutSerial } = finalFormData;
+      const data = await addRecord(payloadWithoutSerial, null, "lifting_gear_multi");
 
       Promise.all(existingData.map((item: any) => {
         return makeApiCall(
@@ -448,8 +485,13 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
           console.error('Error updating records:', error);
         });
 
-      onClose()
+      onClose() 
     } catch (error) {
+      if (error instanceof Error) {
+        toastWithTimeout(ToastVariant.Error, 'Form submission error: ' + error.message);
+      } else {
+        toastWithTimeout(ToastVariant.Error, 'Form submission error: Unknown error');
+      }
       console.error('Form submission error:', error);
     } finally {
       setLoading(false);
@@ -638,6 +680,27 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       setThoroughExamNotAvailable(false);
                       setLastTestExamNotAvailable(false);
                       setLastThoroughExamNotAvailable(false);
+                      reset({
+                        ...watch(),
+                        equipment_no: '',
+                        serial_no: '',
+                        title: '',
+                        equipment_description: '',
+                        test_cert_coc_no: '',
+                        safe_working_load: '',
+                        proof_load: '',
+                        standard: '',
+                        last_test_exam: '',
+                        next_test_exam: '',
+                        last_thorough_exam: '',
+                        next_thorough_exam: '',
+                        manufacturer: '',
+                        owner_name: '',
+                        surveyor: '',
+                        job_order_no: '',
+                        location: '',
+                      });
+
                       const surveyorId = watch('surveyor');
                       if (surveyorId) {
                         const surveyor = surveyorOptions.find((s: any) => String(s.id) === String(surveyorId));
@@ -706,7 +769,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">Title</Label>
-                    <Input id="title" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.title} {...register('title')} />
+                    {/* <Input id="title" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.title} {...register('title')} /> */}
+                    <Input id="title" {...register('title')} />
                     {errors.title && (
                       <p className="text-red-500 text-[12px] ">{errors.title.message}</p>
                     )}
@@ -715,7 +779,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                 <section className='grid gap-4 grid-cols-1'>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
-                    <Input maxLength={119} id="equipment_description" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.description} {...register('equipment_description')} />
+                    {/* <Input maxLength={119} id="equipment_description" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.description} {...register('equipment_description')} /> */}
+                    <Input maxLength={119} id="equipment_description" {...register('equipment_description')} />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
                     )}
@@ -724,21 +789,24 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="test_cert_coc_no" className="mt-3">Test Cert/COC No.</Label>
-                    <Input id="test_cert_coc_no" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.test_certificate_no} {...register('test_cert_coc_no')} />
+                    {/* <Input id="test_cert_coc_no" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.test_certificate_no} {...register('test_cert_coc_no')} /> */}
+                    <Input id="test_cert_coc_no" {...register('test_cert_coc_no')} />
                     {errors.test_cert_coc_no && (
                       <p className="text-red-500 text-[12px] ">{errors.test_cert_coc_no.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="safe_working_load" className="mt-3">Safe Working Load</Label>
-                    <Input id="safe_working_load" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.safe_working_load} {...register('safe_working_load')} />
+                    {/* <Input id="safe_working_load" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.safe_working_load} {...register('safe_working_load')} /> */}
+                    <Input id="safe_working_load" {...register('safe_working_load')} />
                     {errors.safe_working_load && (
                       <p className="text-red-500 text-[12px] ">{errors.safe_working_load.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="proof_load" className="mt-3">Proof Load:</Label>
-                    <Input id="proof_load" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.proof_load} {...register('proof_load')} />
+                    {/* <Input id="proof_load" value={equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.proof_load} {...register('proof_load')} /> */}
+                    <Input id="proof_load" {...register('proof_load')} />
                     {errors.proof_load && (
                       <p className="text-red-500 text-[12px] ">{errors.proof_load.message}</p>
                     )}
@@ -826,7 +894,8 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                     )}
                   </div>
-
+                  </div>
+                  {/* <div className="grid gap-4 grid-cols-2"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">
                       Date of last proof load test
@@ -837,7 +906,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_test_exam"
+                            id="last_test_exam" className="w-96"
                             type="date"
                             defaultValue={
                               (() => {
@@ -849,7 +918,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                   : lastTestDate || '';
                               })()
                             }
-                            disabled={lastTestExamChecked}
+                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
                             {...field}
                           />
                         )}
@@ -879,10 +948,10 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   </div>
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                      Certificate No.
+                    Last Test Certificate No.
                     </Label>
                     <Input
-                      id="last_test_exam_certificate_no"
+                      id="last_test_exam_certificate_no" className="w-96"
                       disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
                     />
@@ -898,7 +967,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_thorough_exam"
+                            id="last_thorough_exam" className="w-96"
                             type="date"
                             defaultValue={
                               (() => {
@@ -910,7 +979,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                   : lastThoroughDate || '';
                               })()
                             }
-                            disabled={lastThoroughExamChecked}
+                            disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                             {...field}
                           />
                         )}
@@ -943,14 +1012,15 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       Last Thorough Certificate No.
                     </Label>
                     <Input
-                      id="last_thorough_exam_certificate_no"
+                      id="last_thorough_exam_certificate_no" className="w-96"
                       disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
                     />
                   </div>
-                </div>
+                {/* </div> */}
 
-                <div className="grid gap-4 grid-cols-2">
+                {/* <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] gap-4"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor="next_test_date">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
@@ -958,7 +1028,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         name="next_test_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input id="next_test_date" defaultValue={
+                          <Input id="next_test_date" className="w-96" defaultValue={
                             (() => {
                               const nextTestDate = equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date;
                               try {
@@ -999,7 +1069,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         </p>
                       )}
                     </div>
-                  </div>
+                  {/* </div> */}
                   {/* Removed Next Test Certificate No. */}
                   {/* <div className="grid grid-cols-[200px_1fr] gap-4 ">
                     <Label htmlFor="next_test_exam_certificate_no" className="mt-3">
@@ -1014,15 +1084,16 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                   </div> */}
                 </div>
 
-                <div className="grid gap-4 grid-cols-2">
-                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4">
+                {/* <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] w-full items-start gap-4"> */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name={"next_thorough_exam"}
                         control={control}
                         render={({ field }) => (
-                          <Input id={"next_thorough_exam"} defaultValue={
+                          <Input id={"next_thorough_exam"} className="w-96" defaultValue={
                             (() => {
                               const nextThoroughDate = equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date;
                               return nextThoroughDate && nextThoroughDate !== "" &&
@@ -1031,7 +1102,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                 ? new Date(nextThoroughDate).toISOString().split('T')[0]
                                 : nextThoroughDate || '';
                             })()
-                          } disabled={thoroughExamChecked} type="date" {...field} />
+                          } disabled={thoroughExamChecked || thoroughExamNotAvailable} type="date" {...field} />
                         )}
                       />
                       <div className="flex items-center gap-2">
@@ -1058,7 +1129,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         </p>
                       )}
                     </div>
-                  </div>
+                  {/* </div> */}
                   {/* Removed Next Thorough Certificate No. */}
                   {/* <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="next_thorough_exam_certificate_no" className="mt-3">

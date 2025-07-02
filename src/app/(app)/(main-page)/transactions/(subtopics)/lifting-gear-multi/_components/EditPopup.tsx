@@ -62,9 +62,10 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
   const [invoke, setInvoke] = useState(false);
   const currentData = id ? findRecordById(id) : null;
+  console.log("Current data for edit:", currentData)
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    // site: string().nonempty('Site is required'),
     authority: string().nonempty('Authority is required'),
     type_of_exam: string().nonempty('Type of Exam is required'),
     job_order_no: string().nonempty('Job Order No. is required'),
@@ -102,7 +103,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
       inspection_date: String(currentData?.inspection_date) || '',
-      site: String(currentData?.site) || '',
+      // site: String(currentData?.site) || '',
       authority: String(currentData?.authority) || '',
       type_of_exam: currentData?.type_of_exam || '',
       job_order_no: String(currentData?.job_order_no) || '',
@@ -194,12 +195,12 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-
+      console.log("Fetched equipment data for edit:", data)
       if (data) {
         // Populate form fields with existing data
         reset({
           inspection_date: String(data.inspection_date) || '',
-          site: String(data.site) || '',
+          // site: String(data.site) || '',
           authority: String(data.authority) || '',
           type_of_exam: data.type_of_exam || '',
           job_order_no: String(data.job_order_no) || '',
@@ -262,8 +263,8 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   // Fetch select options on mount
   useEffect(() => {
     const fetchOptions = async () => {
-      const [sites, authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
-        getAllSingleSubtopic("site"),
+      const [authorities, jobOrders, equipments, standards, manufacturers, surveyors, owners] = await Promise.all([
+        // getAllSingleSubtopic("site"),
         getAllSingleSubtopic("authority"),
         getAllSingleSubtopic("job_orders"),
         getAllSingleSubtopic("equipment"),
@@ -530,10 +531,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam
       };
 
-
+      console.log("Form data for update:", formData)
       await updateRecord(id, formData);
 
       // Handle updating multi-equipments if any
+      console.log("Existing data for update:", existingData)
 
       if (existingData.length > 0) {
         await Promise.all(existingData.map((item: any) => {
@@ -893,6 +895,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
                     )}
                   </div>
+                  </div>
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">Date of last proof load test</Label>
@@ -902,7 +905,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_test_exam"
+                            id="last_test_exam" className='w-96' 
                             type="date"
                             {...field}
                             disabled={lastTestExamChecked || lastTestExamNotAvailable}
@@ -949,7 +952,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       Last Test Certificate No.
                     </Label>
                     <Input
-                      id="last_test_exam_certificate_no"
+                      id="last_test_exam_certificate_no" className='w-96'
                       disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
                     />
@@ -962,7 +965,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_thorough_exam"
+                            id="last_thorough_exam" className='w-96'
                             type="date"
                             {...field}
                             disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
@@ -1008,15 +1011,16 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                       Last Thorough Certificate No.
                     </Label>
                     <Input
-                      id="last_thorough_exam_certificate_no"
+                      id="last_thorough_exam_certificate_no" className='w-96'
                       disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
                     />
                   </div>
-                </div>
+                {/* </div> */}
 
-                <div className="grid gap-4 grid-cols-1 w-[64%]">
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                {/* <div className="grid gap-4 grid-cols-1 w-[64%]">
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4"> */}
+                  <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor="next_test_exam">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
                       <Controller
@@ -1024,7 +1028,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="next_test_exam"
+                            id="next_test_exam" className='w-96'
                             type="date"
                             {...field}
                             disabled={testExamChecked  || testExamNotAvailable}
@@ -1064,10 +1068,11 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         <p className="text-red-500 text-[12px] ">{errors.next_test_exam.message}</p>
                       )}
                     </div>
-                  </div>
+                  {/* </div> */}
                   {/* Next Test Certificate No. REMOVED */}
                 </div>
-                <div className="grid gap-4 grid-cols-1 w-[64%]">
+                {/* <div className="grid gap-4 grid-cols-1 w-[64%]">
+                  <div className="grid grid-cols-[200px_1fr] gap-4"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                     <div className="flex items-center gap-4">
@@ -1076,7 +1081,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id={"next_thorough_exam"}
+                            id={"next_thorough_exam"} className='w-96'
                             type="date"
                             {...field}
                             disabled={thoroughExamChecked || thoroughExamNotAvailable}
@@ -1118,7 +1123,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
                     </div>
                   </div>
                   {/* Next Thorough Certificate No. REMOVED */}
-                </div>
+                {/* </div> */}
 
                 {/* Result Section */}
                 <div className="grid gap-4 grid-cols-2">

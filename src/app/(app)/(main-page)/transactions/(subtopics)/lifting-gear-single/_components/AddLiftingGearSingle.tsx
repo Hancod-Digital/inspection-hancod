@@ -332,8 +332,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
           manufacturer_name: values.manufacturer,
           owner_name: values.owner_name,
           standard_code: values.standard,
-          // surveyor_name: values.surveyor,
           serial_no: values.serial_no,
+          test_certificate_no: values.test_cert_coc_no, // map to correct backend key
+          safe_working_load: values.safe_working_load,
+          proof_load: values.proof_load,
+          last_test_date: values.last_test_exam,           // map to correct backend key
+          last_through_date: values.last_thorough_exam,    // map to correct backend key
+          next_test_date: values.next_test_exam,           // map to correct backend key
+          next_through_date: values.next_thorough_exam     // map to correct backend key
         };
         console.log("Manual Data being sent to RPC:", manualData); 
         await makeApiCall(() => new MasterService().manualDataEntryFromSingleEquipment(manualData), {
@@ -562,24 +568,24 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       setThoroughExamNotAvailable(false);
                       setLastTestExamNotAvailable(false);
                       setLastThoroughExamNotAvailable(false);
-                      // reset({
-                      //   ...watch(),
-                      //   equipment_no: '',
-                      //   serial_no: '',
-                      //   title: '',
-                      //   equipment_description: '',
-                      //   test_cert_coc_no: '',
-                      //   safe_working_load: '',
-                      //   proof_load: '',
-                      //   standard: '',
-                      //   last_test_exam: '',
-                      //   next_test_exam: '',
-                      //   last_thorough_exam: '',
-                      //   next_thorough_exam: '',
-                      //   manufacturer: '',
-                      //   owner_name: '',
-                      //   surveyor: '',
-                      // });
+                      reset({
+                        ...watch(),
+                        equipment_no: '',
+                        serial_no: '',
+                        title: '',
+                        equipment_description: '',
+                        test_cert_coc_no: '',
+                        safe_working_load: '',
+                        proof_load: '',
+                        standard: '',
+                        last_test_exam: '',
+                        next_test_exam: '',
+                        last_thorough_exam: '',
+                        next_thorough_exam: '',
+                        manufacturer: '',
+                        owner_name: '',
+                        surveyor: '',
+                      });
 
                       const surveyorId = watch('surveyor');
                       if (surveyorId) {
@@ -788,8 +794,9 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     </div>
                   </div>
                 </div>
-                <div className="grid gap-4 grid-cols-2">
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
+                {/* <div className="grid gap-4 grid-cols-2">
+                  <div className="grid grid-cols-[200px_1fr] gap-4"> */}
+                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam" className="mt-3">
                       Date of last proof load test
                     </Label>
@@ -800,14 +807,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id="last_test_exam"
+                            id="last_test_exam" className="w-96"
                             type="date"
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
                                 ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_test_date
                                 : ''
                             }
-                            disabled={lastTestExamChecked}
+                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
                             {...field}
                             onChange={(e) => {
                               field.onChange(e);
@@ -841,13 +848,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.last_test_exam.message}</p>
                     )}
                     </div>
-                  </div>
+                    </div>
+                  {/* </div> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
                       Last Test Certificate No.
                     </Label>
                     <Input
-                      id="last_test_exam_certificate_no"
+                      id="last_test_exam_certificate_no" className="w-96"
                       type="text"
                       disabled={lastTestExamChecked || lastTestExamNotAvailable}
                       {...register('last_test_exam_certificate_no')}
@@ -866,14 +874,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       control={control}
                       render={({ field }) => (
                         <Input
-                          id="last_thorough_exam"
+                          id="last_thorough_exam" className="w-96"
                           type="date"
                           defaultValue={
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
                               ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.last_thorough_date
                               : ''
                           }
-                          disabled={lastThoroughExamChecked}
+                          disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                           {...field}
                           onChange={(e) => {
                             field.onChange(e);
@@ -913,7 +921,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       Last Thorough Certificate No.
                     </Label>
                     <Input
-                      id="last_thorough_exam_certificate_no"
+                      id="last_thorough_exam_certificate_no" className="w-96"
                       type="text"
                       disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
                       {...register('last_thorough_exam_certificate_no')}
@@ -922,8 +930,8 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       <p className="text-red-500 text-[12px] ">{errors.last_thorough_exam_certificate_no.message}</p>
                     )}
                   </div>
-                </div>
-                <div className="grid gap-4 grid-cols-2">
+                {/* </div> */}
+                {/* <div className="grid gap-4 grid-cols-2"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor="next_test_date">Date of next proof load test</Label>
                     <div className="flex items-center gap-4">
@@ -933,14 +941,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         render={({ field }) => (
                           // <Input id="next_test_date" defaultValue={
                           <Input
-                            id="next_test_date"
+                            id="next_test_date" className="w-96"
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
                                 ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_test_date
                                 : ''
                               // } disabled={testExamChecked} type="date" {...field} />
                             }
-                            disabled={testExamChecked}
+                            disabled={testExamChecked || testExamNotAvailable}
                             type="date"
                             {...field}
                             onChange={(e) => {
@@ -977,10 +985,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         </p>
                       )}
                     </div>
-                  </div>
+                  {/* </div> */}
                   </div>
                   {/* Removed Next Test Certificate No. */}
-                  <div className="grid gap-4 grid-cols-2"> {/* new added */}
+                  {/* <div className="grid gap-4 grid-cols-2"> */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label className='mt-3' htmlFor={"next_thorough_exam"}>Date of next examination</Label>
                     <div className="flex items-center gap-4">
@@ -989,14 +997,14 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                         control={control}
                         render={({ field }) => (
                           <Input
-                            id={"next_thorough_exam"}
+                            id={"next_thorough_exam"} className="w-96"
                             defaultValue={
                               equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
                                 ? equipmentNoOptions?.find((item: any) => item?.id == equipment_no)?.next_thorough_date
                                 : ''
                               // } disabled={thoroughExamChecked} type="date" {...field} />
                             }
-                            disabled={thoroughExamChecked}
+                            disabled={thoroughExamChecked || thoroughExamNotAvailable}
                             type="date"
                             {...field}
                             onChange={(e) => {
@@ -1035,7 +1043,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                     </div>
                   </div>
                   {/* Removed Next Thorough Certificate No. */}
-                </div>
+                {/* </div> */}
                 {/* Result Section */}
                 <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
