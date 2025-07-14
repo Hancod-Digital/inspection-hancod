@@ -98,10 +98,19 @@ export default function OwnerTable({searchValue}:{searchValue:string}   ) {
                         ))}
                     </TableBody>
                 </Table>
-                <div className='absolute bottom-0 right-0'>
-                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+                {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
 
-                </div>
+                {currentData && currentData.length > 0 && (
+  <div className='absolute bottom-0 right-0'>
+    <PaginationDemo
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPreviousPage={handlePreviousPage}
+      onNextPage={handleNextPage}
+      onPageChange={setCurrentPage}
+    />
+  </div>
+) }
                 </>
             )}
         </div>

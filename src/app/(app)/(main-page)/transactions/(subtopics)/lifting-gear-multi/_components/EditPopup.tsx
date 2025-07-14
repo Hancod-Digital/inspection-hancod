@@ -238,15 +238,28 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
           approval_status: data.approval_status == 'true' ? 'Approved' : 'Rejected',
         });
 
+
+        // helper to convert nullable boolean to checklist value
+        const mapChecklist = (val: boolean | null | undefined): string => {
+          if (val === null || val === undefined) return ""; // leave both checkboxes unticked
+          return val ? "yes" : "no";
+        };
         // Set safety checklist values
         setSafetyChecklistValues({
-          firstExamination: data.first_examination ? 'yes' : 'no',
-          sixMonthInterval: data.six_month_interval ? 'yes' : 'no',
-          twelveMonthInterval: data.twelve_month_interval ? 'yes' : 'no',
-          correctInstallation: data.correct_installation ? 'yes' : 'no',
-          examinationScheme: data.examination_scheme ? 'yes' : 'no',
-          exceptionalCircumstances: data.exceptional_circumstances ? 'yes' : 'no',
-          safeToUse: data.safe_to_use ? 'yes' : 'no',
+          // firstExamination: data.first_examination ? 'yes' : 'no',
+          // sixMonthInterval: data.six_month_interval ? 'yes' : 'no',
+          // twelveMonthInterval: data.twelve_month_interval ? 'yes' : 'no',
+          // correctInstallation: data.correct_installation ? 'yes' : 'no',
+          // examinationScheme: data.examination_scheme ? 'yes' : 'no',
+          // exceptionalCircumstances: data.exceptional_circumstances ? 'yes' : 'no',
+          // safeToUse: data.safe_to_use ? 'yes' : 'no',
+          firstExamination: mapChecklist(data.first_examination),
+          sixMonthInterval: mapChecklist(data.six_month_interval),
+          twelveMonthInterval: mapChecklist(data.twelve_month_interval),
+          correctInstallation: mapChecklist(data.correct_installation),
+          examinationScheme: mapChecklist(data.examination_scheme),
+          exceptionalCircumstances: mapChecklist(data.exceptional_circumstances),
+          safeToUse: mapChecklist(data.safe_to_use),
         });
 
         // Handle "Not Applicable" and "Not Available" checkboxes
