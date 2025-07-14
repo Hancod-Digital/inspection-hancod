@@ -39,7 +39,8 @@ export default function SurveyForm({ onClose,setIsState,isState }: SurveyFormPro
   const [equipmentOptions, setEquipmentOptions] = useState<any[]>([]);
 
   const { addJobOrder, getAllSingleSubtopic } = useSubtopic();
-
+ 
+  console.log("surveyorOptions:",surveyorOptions)
   const methods = useForm<FormInput>({
     resolver: zodResolver(formSchema),
   });
@@ -154,11 +155,12 @@ export default function SurveyForm({ onClose,setIsState,isState }: SurveyFormPro
                             <SelectValue placeholder="Select surveyor" />
                           </SelectTrigger>
                           <SelectContent>
-                            {surveyorOptions.map((surveyor:any) => (
-                              <SelectItem key={surveyor.id} value={String(surveyor.id)}>
-                                {surveyor.surveyor}
-                              </SelectItem>
-                            ))}
+                          {/* {surveyorOptions.map((surveyor:any) => ( */}
+                            {surveyorOptions.filter((surveyor:any) => surveyor.status !== 'INACTIVE').map((surveyor:any) => (
+  <SelectItem key={surveyor.id} value={String(surveyor.id)}>
+    {surveyor.surveyor}
+  </SelectItem>
+))}
                           </SelectContent>
                         </Select>
                       )}

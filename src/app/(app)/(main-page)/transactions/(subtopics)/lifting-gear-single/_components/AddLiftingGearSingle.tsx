@@ -283,13 +283,13 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   }, [isSubmitSuccessful, reset]);
 
   const [safetyChecklistValues, setSafetyChecklistValues] = useState({
-    firstExamination: 'no',
-    sixMonthInterval: 'no',
-    twelveMonthInterval: 'no',
-    correctInstallation: 'no',
-    examinationScheme: 'no',
-    exceptionalCircumstances: 'no',
-    safeToUse: 'no'
+    firstExamination: '',
+    sixMonthInterval: '',
+    twelveMonthInterval: '',
+    correctInstallation: '',
+    examinationScheme: '',
+    exceptionalCircumstances: '',
+    safeToUse: ''
   });
 
   const handleSafetyChecklistChange = (name: string, value: string) => {
@@ -307,13 +307,20 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
         const { serial_no, ...filteredValues } = values;
         const formData = {
           ...filteredValues,
-          first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
-          six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
-          twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
-          correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
-          examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
-          exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
-          safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+          // first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
+          first_examination:safetyChecklistValues.firstExamination === "yes"? true:safetyChecklistValues.firstExamination === "no"? false:null,
+          // six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
+          six_month_interval:safetyChecklistValues.sixMonthInterval === "yes"? true:safetyChecklistValues.sixMonthInterval === "no"? false:null,
+          // twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
+          twelve_month_interval:safetyChecklistValues.twelveMonthInterval === "yes"? true:safetyChecklistValues.twelveMonthInterval === "no"? false:null,
+          // correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
+          correct_installation:safetyChecklistValues.correctInstallation === "yes"? true:safetyChecklistValues.correctInstallation === "no"? false:null,
+          // examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
+          examination_scheme:safetyChecklistValues.examinationScheme === "yes"? true:safetyChecklistValues.examinationScheme === "no"? false:null,
+          // exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
+          exceptional_circumstances:safetyChecklistValues.exceptionalCircumstances === "yes"? true:safetyChecklistValues.exceptionalCircumstances === "no"? false:null,
+          // safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+          safe_to_use:safetyChecklistValues.safeToUse === "yes"? true:safetyChecklistValues.safeToUse === "no"? false:null,
           approval_status: values.approval_status === "Approved" ? true : false,
           last_test_exam: lastTestExamChecked ? "Not Applicable" : lastTestExamNotAvailable ? "Not Available" : values.last_test_exam,
           last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam,

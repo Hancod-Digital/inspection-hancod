@@ -193,9 +193,18 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                  
                 
             </Table>
-            <div className='absolute bottom-0 right-0'>
-                <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
+            {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
+            {currentData && currentData.length > 0 && (
+                <div className='absolute bottom-0 right-0'>
+                  <PaginationDemo
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPreviousPage={handlePreviousPage}
+                    onNextPage={handleNextPage}
+                    onPageChange={setCurrentPage}
+                  />
                 </div>
+              )}
             {/* Pagination Controls */}
            
         </div>

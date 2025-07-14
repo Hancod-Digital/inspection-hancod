@@ -98,9 +98,18 @@ export default function SurveyorTable({searchValue}:{searchValue:string}) {
                         ))}
                     </TableBody>
                 </Table>
-                <div className='absolute bottom-0 right-0'>
-                    <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
-                </div>
+                {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
+                {currentData && currentData.length > 0 && (
+  <div className='absolute bottom-0 right-0'>
+    <PaginationDemo
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPreviousPage={handlePreviousPage}
+      onNextPage={handleNextPage}
+      onPageChange={setCurrentPage}
+    />
+  </div>
+) }
                 </>
             )}
         </div>

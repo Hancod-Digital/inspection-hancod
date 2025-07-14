@@ -50,6 +50,8 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
     const [standardOptions,setStandardOptions] = useState<any>([])
     const [equipmentOptions,setEquipmentOptions] = useState<any>([])
     const [locationOptions,setLocationOptions] = useState<any>([])
+    const [authorityOptions,setAuthorityOptions] = useState<any>([])
+    const [surveyorOptions,setSurveyorOptions] = useState<any>([])
     useEffect(()=>{
         const fetchJobOrderNos = async () => {
             const data = await getAllSingleSubtopic("job_orders"); // Fetch the areas
@@ -96,6 +98,20 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
             }
           };
           fetchLocations();
+          const fetchAuthorities = async () => {
+            const data = await getAllSingleSubtopic("authority"); // Fetch the areas
+            if (data) {
+              setAuthorityOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
+            }
+          };
+          fetchAuthorities();
+          const fetchSurveyors = async () => {
+            const data = await getAllSingleSubtopic("surveyor"); // Fetch the areas
+            if (data) {
+              setSurveyorOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
+            }
+          };
+          fetchSurveyors();
     },[data])
     const [state, setState] = useState<any[]>([]);
     const fetchEquipments = (id: string) => {
@@ -260,23 +276,50 @@ if(item?.next_thorough_exam_certificate_no != "" && item?.next_thorough_exam_cer
 const cssResponse = await fetch('/equ-certificate/index.css');
   let cssText = await cssResponse.text();
  
-cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination ? " 36%" :" 43.79%");
+// cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination ? " 36%" :" 43.79%");
 
-cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval ? " 89%" :" 96%");
+// cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval ? " 89%" :" 96%");
 
-cssText = cssText.replace(/\{\{nineteen\}\}/g,  item?.twelve_month_interval ? " 89.17%;" : "  96.47%;");
+// cssText = cssText.replace(/\{\{nineteen\}\}/g,  item?.twelve_month_interval ? " 89.17%;" : "  96.47%;");
 
-cssText = cssText.replace(/\{\{twenty\}\}/g,  item?.correct_installation ? "36%" : "43.79%;");
+// cssText = cssText.replace(/\{\{twenty\}\}/g,  item?.correct_installation ? "36%" : "43.79%;");
 
-cssText = cssText.replace(/\{\{twentyone\}\}/g,  item?.examination_scheme ? "89.17%;" : "96.47%;");
+// cssText = cssText.replace(/\{\{twentyone\}\}/g,  item?.examination_scheme ? "89.17%;" : "96.47%;");
 
-cssText = cssText.replace(/\{\{twentytwo\}\}/g,  !item?.exceptional_circumstances ? "96.47%;" : "89.47%;");
+// cssText = cssText.replace(/\{\{twentytwo\}\}/g,  !item?.exceptional_circumstances ? "96.47%;" : "89.47%;");
+
+// htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description);
+
+// htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars);
+
+// cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use ?" 89.28%":"96%"); 
+
+cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination === true ? " 36%" : item?.first_examination === false ? " 43.79%" : "");
+
+cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval === true ? " 89%" : item?.six_month_interval === false ? " 96%" : "");
+
+cssText = cssText.replace(/\{\{nineteen\}\}/g,  item?.twelve_month_interval === true ? " 89.17%;" : item?.twelve_month_interval === false ? "  96.47%;" : "");
+
+cssText = cssText.replace(/\{\{twenty\}\}/g,  item?.correct_installation === true ? "36%" : item?.correct_installation === false ? "43.79%;" : "");
+
+cssText = cssText.replace(/\{\{twentyone\}\}/g,  item?.examination_scheme === true ? "89.17%;" : item?.examination_scheme === false ? "  96.47%;" : "");
+
+cssText = cssText.replace(/\{\{twentytwo\}\}/g,  item?.exceptional_circumstances === true ? " 89.47%;" : item?.exceptional_circumstances === false ? "96.47%;" : "");
 
 htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description);
 
 htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars);
 
-cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use ?" 89.28%":"96%"); 
+htmlString = htmlString.replace(/\{\{twentyfive\}\}/g, surveyorOptions.find((surveyor: any) => surveyor.id == item.surveyor)?.surveyor);
+
+htmlString = htmlString.replace(/\{\{twentysix\}\}/g, authorityOptions.find((authority: any) => authority.id == item.authority)?.authority);
+console.log("surveyorOptions",surveyorOptions)
+console.log("authorityOptions",authorityOptions)
+console.log("item?.surveyor",surveyorOptions.find((surveyor: any) => surveyor.id == item.surveyor)?.surveyor)
+console.log("item?.authority",authorityOptions.find((authority: any) => authority.id == item.authority)?.authority)
+
+
+cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use === true ? " 89.28%" : item?.safe_to_use === false ? "96%" : ""); 
 
 
 
@@ -357,7 +400,8 @@ const htmlElement = document.createElement('div');
                     <TableRow className='flex justify-start'>
                         <TableHead className="py-4 flex-[1]">Sl. No.</TableHead>
             
-                        <TableHead className="py-4 flex-[2]">Title</TableHead> 
+                        {/* <TableHead className="py-4 flex-[2]">Title</TableHead>  */}
+                        <TableHead className="py-4 flex-[2] max-w-[180px] truncate" title="Title">Title</TableHead>
                         <TableHead className="py-4 flex-[1]">Inspection Date</TableHead>
                         <TableHead className="py-4 flex-[1]">Next Exam Date</TableHead>
                         <TableHead className="py-4 flex-[1]">Result</TableHead>
@@ -369,9 +413,11 @@ const htmlElement = document.createElement('div');
                     {currentData?.map((item:any,idx:number) => (
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
-                                <TableCell className="py-4 flex-[1]">{idx+1}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{(currentPage - 1) * pageSize + idx + 1}</TableCell>
                                
-                                <TableCell className="py-4 flex-[2]">{item?.title}</TableCell> 
+                                {/* <TableCell className="py-4 flex-[2]">{item?.title}</TableCell>  */}
+                                <TableCell className="py-4 flex-[2] max-w-[180px] truncate" title={item?.title}>{item?.title}</TableCell>
+                              
                                 <TableCell className="py-4 flex-[1]">{item?.inspection_date}</TableCell>
                                 
                                 <TableCell className="py-4 flex-[1]">{item?.next_thorough_exam}</TableCell>
@@ -420,9 +466,19 @@ const htmlElement = document.createElement('div');
                     ))}
                 </TableBody>
             </Table>
-            <div className='absolute bottom-0 right-0'>
-              <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
-            </div>
+            {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
+            {currentData && currentData.length > 0 && (
+                <div className='absolute bottom-0 right-0 '>
+                  <PaginationDemo
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPreviousPage={handlePreviousPage}
+                    onNextPage={handleNextPage}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>  
+              )}
+            
         </div>
     );
 }
