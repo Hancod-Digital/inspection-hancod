@@ -73,7 +73,7 @@ export default function EquipmentDetailsForm({ onClose ,setIsArea,setIsChanged,i
         
           // setSiteOptions(data.filter((item:any)=>item.status==="ACTIVE"));
 
-          console.log("site fetching dynamically");
+          // console.log("site fetching dynamically");
           
         }
       } catch (error) {

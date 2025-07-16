@@ -136,9 +136,9 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
 }
 
 let word = "45KG (PLATFORM )                   136(EXTENSION)";
-console.log(formatWeightString(word));
+// console.log(formatWeightString(word));
   const printCertificate = async(item: any) => { 
-    console.log("item",item)
+
        makeApiCall(()=>new MasterService().fetchEquipmentDetails(item?.equipment_no),{
         afterSuccess:async(data:any)=>{
       
@@ -169,45 +169,32 @@ htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);
 htmlString = htmlString.replace(/\{\{coc\}\}/g, item?.test_cert_coc_no);
 
 htmlString = htmlString.replace(/\{\{eleven\}\}/g, item?.proof_load);
-console.log(item?.safe_working_load,formatWeightString(item?.safe_working_load));
 
 
 
 htmlString = htmlString.replace(/\{\{twelve\}\}/g, formatWeightString(item?.safe_working_load) == "" ? item?.safe_working_load : formatWeightString(item?.safe_working_load));
 
 if(item?.last_thorough_exam_certificate_no != ""){
-  console.log("last_thorough_exam_certificate_no",item?.last_thorough_exam_certificate_no)
   htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${item?.last_thorough_exam == "Not Available" ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span><span class="not-available-certificate-no">${item.last_thorough_exam_certificate_no|| "Not Available"}</span>`);
-  
 }else{
-  console.log("last_thorough_exam_certificate_no",item?.last_thorough_exam_certificate_no)
   htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available-css">${item?.last_thorough_exam == "Not Available" ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span>`);
 }
 
 if(item?.next_thorough_exam_certificate_no != "" && item?.next_thorough_exam_certificate_no){
-  console.log("next_thorough_exam_certificate_no",item?.next_thorough_exam_certificate_no)
   htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="date-28-mar-2025">${item?.next_thorough_exam == "Not Available" ? "Not Available" : item?.next_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_thorough_exam)}</span><span class="date-28-mar-2025-certificate-no">${item.next_thorough_exam_certificate_no|| "Not Available"}</span>`);
-  
 }else{
-  console.log("next_thorough_exam_certificate_no",item?.next_thorough_exam_certificate_no)
   htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="date-28-mar-2025-css">${item?.next_thorough_exam == "Not Available" ? "Not Available" : item?.next_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_thorough_exam)}</span>`);
 }
 
 if(item?.last_test_exam_certificate_no != ""){
-  console.log("last_test_exam_certificate_no",item?.last_test_exam_certificate_no)
   htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-applicable-1a">${item?.last_test_exam == "Not Available" ? "Not Available" : item?.last_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_test_exam)}</span><span class="not-applicable-1a-certificate-no">${item.last_test_exam_certificate_no|| "Not Available"}</span>`);
-  
 }else{
-  console.log("last_test_exam_certificate_no",item?.last_test_exam_certificate_no)
   htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-applicable-1a-css">${item?.last_test_exam == "Not Available" ? "Not Available" : item?.last_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_test_exam)}</span>`);
 }
 
 if(item?.next_test_exam_certificate_no != "" && item?.next_test_exam_certificate_no){
-  console.log("next_test_exam_certificate_no",item?.next_test_exam_certificate_no)
   htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="not-applicable">${item?.next_test_exam == "Not Available" ? "Not Available" : item?.next_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_test_exam)}</span><span class="not-applicable-certificate-no">${item.next_test_exam_certificate_no|| "Not Available"}</span>`);
-  
 }else{
-  console.log("next_test_exam_certificate_no",item?.next_test_exam_certificate_no)
   htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="not-applicable-css">${item?.next_test_exam == "Not Available" ? "Not Available" : item?.next_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_test_exam)}</span>`);
 }
 
@@ -218,17 +205,96 @@ if(item?.next_test_exam_certificate_no != "" && item?.next_test_exam_certificate
 const cssResponse = await fetch('/equ-certificate/index.css');
 let cssText = await cssResponse.text();
 
-cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination === true ? " 36%" : item?.first_examination === false ? " 43.79%" : "");
+// cssText = cssText.replace(/\{\{seventeen\}\}/g, item?.first_examination === true ? " 36%" : item?.first_examination === false ? " 43.79%" : "");
+// offset (tick position)
+cssText = cssText.replace(/\{\{seventeen\}\}/g,
+  item?.first_examination === true  ? '36%' :
+  item?.first_examination === false ? '43.79%' :
+  '-9999px'                   // push off-canvas when null
+);
+console.log("item?.first_examination",item?.first_examination);
 
-cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval === true ? " 89%" : item?.six_month_interval === false ? " 96%" : "");
+// background / visibility
+cssText = cssText.replace(/\{\{bg_seventeen\}\}/g,
+  item?.first_examination != null
+    ? 'url(/assets/images/2ba15c98-813c-43ef-bdeb-a4d2d1ab035b.png)'
+    : 'none'
+);
 
-cssText = cssText.replace(/\{\{nineteen\}\}/g,  item?.twelve_month_interval === true ? " 89.17%;" : item?.twelve_month_interval === false ? "  96.47%;" : "");
+// cssText = cssText.replace(/\{\{eighteen\}\}/g, item?.six_month_interval === true ? " 89%" : item?.six_month_interval === false ? " 96%" : "");
 
-cssText = cssText.replace(/\{\{twenty\}\}/g,  item?.correct_installation === true ? "36%" : item?.correct_installation === false ? "43.79%;" : "");
+cssText = cssText.replace(/\{\{eighteen\}\}/g,
+  item?.six_month_interval === true  ? '89%' :
+  item?.six_month_interval === false ? '96%' :
+  '-9999px'                   // push off-canvas when null
+);
 
-cssText = cssText.replace(/\{\{twentyone\}\}/g,  item?.examination_scheme === true ? "89.17%;" : item?.examination_scheme === false ? "  96.47%;" : "");
+cssText = cssText.replace(/\{\{bg_eighteen\}\}/g,
+  item?.six_month_interval != null
+    ? 'url(/assets/images/2ba15c98-813c-43ef-bdeb-a4d2d1ab035b.png)'
+    : 'none'
+);
 
-cssText = cssText.replace(/\{\{twentytwo\}\}/g,  item?.exceptional_circumstances === true ? " 89.47%;" : item?.exceptional_circumstances === false ? "96.47%;" : "");
+// cssText = cssText.replace(/\{\{nineteen\}\}/g,  item?.twelve_month_interval === true ? " 89.17%;" : item?.twelve_month_interval === false ? "  96.47%;" : "");
+
+cssText = cssText.replace(/\{\{nineteen\}\}/g,
+  item?.twelve_month_interval === true  ? '89.17%' :
+  item?.twelve_month_interval === false ? '96.47%' :
+  '-9999px'                   // push off-canvas when null
+);
+
+cssText = cssText.replace(/\{\{bg_nineteen\}\}/g,
+  item?.twelve_month_interval != null
+    ? 'url(/assets/images/2ba15c98-813c-43ef-bdeb-a4d2d1ab035b.png)'
+    : 'none'
+);
+
+
+// cssText = cssText.replace(/\{\{twenty\}\}/g,  item?.correct_installation === true ? "36%" : item?.correct_installation === false ? "43.79%;" : "");
+
+cssText = cssText.replace(/\{\{twenty\}\}/g,
+  item?.correct_installation === true  ? '36%' :
+  item?.correct_installation === false ? '43.79%' :
+  '-9999px'                   // push off-canvas when null
+);
+
+// background / visibility
+cssText = cssText.replace(/\{\{bg_twenty\}\}/g,
+  item?.correct_installation != null
+    ? 'url(/assets/images/2ba15c98-813c-43ef-bdeb-a4d2d1ab035b.png)'
+    : 'none'
+);
+
+// cssText = cssText.replace(/\{\{twentyone\}\}/g,  item?.examination_scheme === true ? "89.17%;" : item?.examination_scheme === false ? "  96.47%;" : "");
+// offset
+cssText = cssText.replace(/\{\{twentyone\}\}/g,
+  item?.examination_scheme === true  ? '89.17%' :
+  item?.examination_scheme === false ? '96.47%' :
+  '-9999px'         // push it off-canvas (or leave empty)
+);
+
+// background / visibility
+cssText = cssText.replace(/\{\{bg_twentyone\}\}/g,
+  item?.examination_scheme != null
+    ? 'url(/assets/images/2ba15c98-813c-43ef-bdeb-a4d2d1ab035b.png)'
+    : 'none'        // hides the image
+);
+
+
+// cssText = cssText.replace(/\{\{twentytwo\}\}/g,  item?.exceptional_circumstances === true ? " 89.47%;" : item?.exceptional_circumstances === false ? "96.47%;" : "");
+// offset (tick position)
+cssText = cssText.replace(/\{\{twentytwo\}\}/g,
+  item?.exceptional_circumstances === true  ? '89.47%' :
+  item?.exceptional_circumstances === false ? '96.47%' :
+  '-9999px'                   // push off-canvas when null
+);
+
+// background / visibility
+cssText = cssText.replace(/\{\{bg_twentytwo\}\}/g,
+  item?.exceptional_circumstances != null
+    ? 'url(/assets/images/a44fe311-7c8b-486c-87a8-4c9d50124d4c.png)'
+    : 'none'
+);
 
 htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description);
 
@@ -237,12 +303,21 @@ htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars);
 htmlString = htmlString.replace(/\{\{twentyfive\}\}/g, surveyorOptions.find((surveyor: any) => surveyor.id == item.surveyor)?.surveyor);
 
 htmlString = htmlString.replace(/\{\{twentysix\}\}/g, authorityOptions.find((authority: any) => authority.id == item.authority)?.authority);
-console.log("surveyorOptions",surveyorOptions)
-console.log("authorityOptions",authorityOptions)
-console.log("item?.surveyor",surveyorOptions.find((surveyor: any) => surveyor.id == item.surveyor)?.surveyor)
-console.log("item?.authority",authorityOptions.find((authority: any) => authority.id == item.authority)?.authority)
 
-cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use === true ? " 89.28%" : item?.safe_to_use === false ? "96%" : ""); 
+// cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use === true ? " 89.28%" : item?.safe_to_use === false ? "96%" : ""); 
+// offset (tick position)
+cssText = cssText.replace(/\{\{jacob\}\}/g,
+  item?.safe_to_use === true  ? '89.28%' :
+  item?.safe_to_use === false ? '96%'    :
+  '-9999px'                   // push off-canvas when null
+);
+
+// background / visibility
+cssText = cssText.replace(/\{\{bg_jacob\}\}/g,
+  item?.safe_to_use != null
+    ? 'url(/assets/images/a44fe311-7c8b-486c-87a8-4c9d50124d4c.png)'
+    : 'none'
+);
 
 
 
@@ -273,7 +348,7 @@ printWindow?.document.write(`
   <head>
    <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Generated by Codia AI</title>
+<title>Generated by QUBE</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BentonSans+Black:wght@400&display=swap" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
 <link rel="stylesheet" href="index.css" />
@@ -370,7 +445,15 @@ document.head.removeChild(styleElement);
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {currentData?.map((item:any,idx:number) => (
+                    {
+                        currentData && currentData.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={9}>
+                              <div className="text-center text-gray-400 py-8">NO DATA AVAILABLE</div>
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                        currentData?.map((item:any,idx:number) => (
                       // console.log(item),
                         <React.Fragment key={idx}>
                             <TableRow className='flex'>
@@ -432,11 +515,12 @@ document.head.removeChild(styleElement);
                                 )}
                             </AnimatePresence>
                         </React.Fragment>
-                    ))}
+                    ))
+                    )}
                 </TableBody>
             </Table>
             {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-            {currentData && currentData.length > 0 && (
+            {currentData && currentData.length > 6 && (
                 <div className='absolute bottom-0 right-0 '>
                   <PaginationDemo
                     currentPage={currentPage}

@@ -83,7 +83,15 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {currentData?.map((item: any, idx: number) => {
+                    {
+                    currentData && currentData.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={9}>
+              <div className="text-center text-gray-400 py-8">NO DATA AVAILABLE</div>
+            </TableCell>
+          </TableRow>
+        ) : (
+                    currentData?.map((item: any, idx: number) => {
                         const actualIndex = startIndex + idx + 1; // Adjusted index based on pagination
                         return (
                             <React.Fragment key={actualIndex}>
@@ -188,13 +196,14 @@ export default function Component({searchValue,isManufacturer,isStandard,isLocat
                                 </AnimatePresence>
                             </React.Fragment>
                         );
-                    })}
+                    })
+                    )}
                 </TableBody>
                  
                 
             </Table>
             {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-            {currentData && currentData.length > 0 && (
+            {currentData && currentData.length > 6 && (
                 <div className='absolute bottom-0 right-0'>
                   <PaginationDemo
                     currentPage={currentPage}

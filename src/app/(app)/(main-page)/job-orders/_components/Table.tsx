@@ -56,7 +56,7 @@ export default function JobTable({isState,setIsState,search,setSearch}:{isState:
   const handleCloseEdit = () => {
     setEditingRow(null);
   };
-const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage,currentData}=usePagination(jobOrders.filter((item:any)=>item.job_no.toLowerCase().includes(search.toLowerCase())))
+const {currentPage,totalPages,pageSize,handlePreviousPage,handleNextPage,setCurrentPage,currentData}=usePagination(jobOrders.filter((item:any)=>item.job_no.toLowerCase().includes(search.toLowerCase())))
   return (
     <div className="px-8 py-3 bg-white w-[98%] mx-auto">
       <Table className="w-full">
@@ -73,10 +73,17 @@ const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage,c
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentData?.map((item: any, idx: number) => (
+          {currentData && currentData.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={8}>
+              <div className="text-center text-gray-400 py-8">NO DATA AVAILABLE</div>
+            </TableCell>
+          </TableRow>
+        ) : (
+          currentData?.map((item: any, idx: number) => (
             <React.Fragment key={idx}>
               <TableRow className="flex">
-                <TableCell className="py-4 flex-[1]">{idx + 1}</TableCell>
+                <TableCell className="py-4 flex-[1]">{(currentPage - 1) * pageSize + idx + 1}</TableCell>
                 <TableCell className="py-4 flex-[1]">{item?.job_no}</TableCell>
                 <TableCell className="py-4 flex-[1]">{item?.client_name}</TableCell>
                 <TableCell className="py-4 flex-[2]">{item?.contact_number}</TableCell>
@@ -114,11 +121,12 @@ const {currentPage,totalPages,handlePreviousPage,handleNextPage,setCurrentPage,c
                 </TableRow>
               )}
             </React.Fragment>
-          ))}
+          ))
+          )}
         </TableBody>
       </Table>
       {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-      {currentData && currentData.length > 0 && (
+      {currentData && currentData.length > 6 && (
         <div className='absolute bottom-0 right-0 '>
           <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
         </div>

@@ -62,7 +62,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
 
   const [invoke, setInvoke] = useState(false);
   const currentData = id ? findRecordById(id) : null;
-  console.log("Current data for edit:", currentData)
+  // console.log("Current data for edit:", currentData)
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
     // site: string().nonempty('Site is required'),
@@ -142,7 +142,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   } = methods;
   console.log("errors:", errors)
   const equipmentNoChanged = (value: string, field: any) => {
-    console.log("Selected equipment no:", value)
+    // console.log("Selected equipment no:", value)
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
 
       if (selectedEquipment) {
@@ -196,14 +196,14 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
   useEffect(() => {
     const fetchEquipmentData = async () => {
       const data = await findRecordById(id);
-      console.log("Fetched equipment data for edit:", data)
-      console.log("Full data object:", JSON.stringify(data));
-      console.log("Standard exists:", data?.hasOwnProperty('standard'), "Value:", data?.standard);
-      console.log("Standard type:", typeof data?.standard, "Value:", data?.standard);
+      // console.log("Fetched equipment data for edit:", data)
+      // console.log("Full data object:", JSON.stringify(data));
+      // console.log("Standard exists:", data?.hasOwnProperty('standard'), "Value:", data?.standard);
+      // console.log("Standard type:", typeof data?.standard, "Value:", data?.standard);
 
 
       if (data) {
-        console.log("standard:", data.standard)
+        // console.log("standard:", data.standard)
         // Populate form fields with existing data
         reset({
           inspection_date: String(data.inspection_date) || '',
@@ -461,7 +461,7 @@ export default function EquipmentDetailsEditForm({ onClose, id }: EquipmentDetai
       // reset();
     }
   }, [isSubmitSuccessful, reset]);
-console.log(watch('manufacturer'),"manufacturer")
+// console.log(watch('manufacturer'),"manufacturer")
   const handleSafetyChecklistChange = (name: string, value: string) => {
     setSafetyChecklistValues(prev => ({
       ...prev,
@@ -536,13 +536,20 @@ console.log(watch('manufacturer'),"manufacturer")
     try {
       const formData = {
         ...values,
-        first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
-        six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
-        twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
-        correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
-        examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
-        exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
-        safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+        // first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
+        first_examination:safetyChecklistValues.firstExamination === "yes"? true:safetyChecklistValues.firstExamination === "no"? false:null,
+        // six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
+        six_month_interval:safetyChecklistValues.sixMonthInterval === "yes"? true:safetyChecklistValues.sixMonthInterval === "no"? false:null,
+        // twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
+        twelve_month_interval:safetyChecklistValues.twelveMonthInterval === "yes"? true:safetyChecklistValues.twelveMonthInterval === "no"? false:null,
+        // correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
+        correct_installation:safetyChecklistValues.correctInstallation === "yes"? true:safetyChecklistValues.correctInstallation === "no"? false:null,
+        // examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
+        examination_scheme:safetyChecklistValues.examinationScheme === "yes"? true:safetyChecklistValues.examinationScheme === "no"? false:null,
+        // exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
+        exceptional_circumstances:safetyChecklistValues.exceptionalCircumstances === "yes"? true:safetyChecklistValues.exceptionalCircumstances === "no"? false:null,
+        // safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+        safe_to_use:safetyChecklistValues.safeToUse === "yes"? true:safetyChecklistValues.safeToUse === "no"? false:null,
         approval_status: values.approval_status === "Approved" ? true : false,
         // Set certificate numbers to empty string when dates are Not Applicable or Not Available
         last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? '' : values.last_test_exam_certificate_no,
@@ -553,11 +560,11 @@ console.log(watch('manufacturer'),"manufacturer")
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam
       };
 
-      console.log("Form data for update:", formData)
+      // console.log("Form data for update:", formData)
       await updateRecord(id, formData);
 
       // Handle updating multi-equipments if any
-      console.log("Existing data for update:", existingData)
+      // console.log("Existing data for update:", existingData)
 
       if (existingData.length > 0) {
         await Promise.all(existingData.map((item: any) => {
@@ -565,7 +572,7 @@ console.log(watch('manufacturer'),"manufacturer")
             () => new MasterService().updateSubtopicDetails('lifting_gear_multi_equipments', item.id, { lifting_gear_multi_id: id }), {}
           );
         }));
-        console.log('All updates completed successfully');
+        // console.log('All updates completed successfully');
 
       }
 
@@ -1293,8 +1300,8 @@ console.log(watch('manufacturer'),"manufacturer")
     control={control}
     render={({ field }) => {
       const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
-      console.log("allManufacturerOptions", allManufacturerOptions);
-      console.log("field.value", field.value);
+      // console.log("allManufacturerOptions", allManufacturerOptions);
+      // console.log("field.value", field.value);
       const value = allManufacturerOptions.includes((field.value)) ? (field.value) : "41";
       
       return (
@@ -1323,85 +1330,6 @@ console.log(watch('manufacturer'),"manufacturer")
   )}
 </div>
 
-
-                  {/* <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="manufacturer" className="mt-3">Manufacturer</Label>
-                    <Controller
-                      name="manufacturer"
-                      control={control}
-                      render={({ field }) => {
-                        const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
-                        console.log("allManufacturerOptions",allManufacturerOptions)
-                        console.log("field.value",field.value)
-                        const value = allManufacturerOptions.includes((field.value)) ? (field.value) : "41";
-                        return (
-                          <div className="flex w-full gap-2 items-center relative">
-                            <Select
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger id="manufacturer">
-                                <SelectValue
-                                  placeholder="Select or type manufacturer"
-                                  // {...(allManufacturerOptions.includes(field.value)
-                                  //   ? {}
-                                  //   : { children: field.value ? field.value : undefined })}
-                                />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <div className="px-2 py-1 relative">
-                                  <Input
-                                    className="mt-2"
-                                    placeholder="Type manufacturer name"
-                                    value={!isManufacturerTyping ? field.value : ""}
-                                    onChange={e => {
-                                      setIsManufacturerTyping(true);
-                                      field.onChange(e.target.value);
-                                    }}
-                                  />
-                                  <Button
-                                    size="icon"
-                                    variant="outline"
-                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
-                                    onClick={async () => {
-                                      setIsManufacturerTyping(false);
-                                      if (!field.value) return;
-                                      await makeApiCall(
-                                        () => new MasterService().addManufacturer({ manufacturer: field.value }),
-                                        {
-                                          afterSuccess: (data: any) => {
-                                            setInvoke((prev) => !prev);
-                                            toastWithTimeout(ToastVariant.Success, "Manufacturer added successfully");
-                                            if (data && data.id) {
-                                              field.onChange(String(data.id));
-                                            } else {
-                                              field.onChange("");
-                                            }
-                                          }
-                                        }
-                                      );
-                                    }}
-                                    type="button"
-                                  >
-                                    Add
-                                  </Button>
-                                </div>
-                                {manufacturerOptions?.map((manu: any) => (
-                                  <SelectItem key={manu.id} value={String(manu.id)}>
-                                    {manu.manufacturer}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <AddManufacturerButton />
-                          </div>
-                        );
-                      }}
-                    />
-                    {errors.manufacturer && (
-                      <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
-                    )}
-                  </div> */}
 
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="approval_status" className="mt-3">Approval Status</Label>

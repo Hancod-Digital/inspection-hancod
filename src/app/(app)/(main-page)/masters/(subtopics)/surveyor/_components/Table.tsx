@@ -53,10 +53,18 @@ export default function SurveyorTable({searchValue}:{searchValue:string}) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {currentData?.map((item:any, idx:any) => (
+                        {
+                        currentData && currentData.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={9}>
+              <div className="text-center text-gray-400 py-8">NO DATA AVAILABLE</div>
+            </TableCell>
+          </TableRow>
+        ) : (
+                        currentData?.map((item:any, idx:any) => (
                             <React.Fragment key={idx + 1}>
                                 <TableRow>
-                                    <TableCell className="py-4">{idx + 1}</TableCell>
+                                    <TableCell className="py-4">{(currentPage - 1) * pageSize + idx + 1}</TableCell>
                                     <TableCell className="py-4">{item.surveyor}</TableCell>
                                     <TableCell className="py-4">{item.qualification}</TableCell>
                                     <TableCell className="py-4">{item.code}</TableCell>
@@ -95,11 +103,12 @@ export default function SurveyorTable({searchValue}:{searchValue:string}) {
                                     )}
                                 </AnimatePresence>
                             </React.Fragment>
-                        ))}
+                        ))
+                        )}
                     </TableBody>
                 </Table>
                 {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-                {currentData && currentData.length > 0 && (
+                {currentData && currentData.length > 6 && (
   <div className='absolute bottom-0 right-0'>
     <PaginationDemo
       currentPage={currentPage}

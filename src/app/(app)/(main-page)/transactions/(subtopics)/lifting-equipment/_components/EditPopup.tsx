@@ -252,7 +252,7 @@ export default function EditEquipmentDetailsForm({
     formState: { isSubmitSuccessful, errors },
   } = methods;
   const equipmentNoChanged = (value: string, field: any) => {
-    console.log("Selected equipment no:", value)
+    // console.log("Selected equipment no:", value)
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
 
     setItem_type(selectedEquipment?.property_table_type);
@@ -373,19 +373,19 @@ export default function EditEquipmentDetailsForm({
   }, [job_order_no])
   // Handle checkboxes to disable date inputs
   useEffect(() => {
-    console.log("equipment_no", existingData)
+    // console.log("equipment_no", existingData)
      if (existingData) {
-      console.log("selectedEquipment", existingData)
+      // console.log("selectedEquipment", existingData)
       // Last Test Exam
       if (existingData.last_test_exam === "Not Applicable") {
         setLastTestExamChecked(true);
         setLastTestExamNotAvailable(false);
       } else if (existingData.last_test_exam === "Not Available") {
-        console.log("last_test_date", existingData.last_test_exam)
+        // console.log("last_test_date", existingData.last_test_exam)
         setLastTestExamNotAvailable(true);
         setLastTestExamChecked(false);
       } else {
-        console.log("last_test_date", existingData.last_test_exam)
+        // console.log("last_test_date", existingData.last_test_exam)
         setLastTestExamChecked(false);
         setLastTestExamNotAvailable(false);
       }
@@ -467,9 +467,9 @@ export default function EditEquipmentDetailsForm({
         annexures: annexureList,
       };
 
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-      console.log({ ...formData, properties: data, annexures: propertyList })
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      // console.log({ ...formData, properties: data, annexures: propertyList }) 
+      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
       await updateRecord(id, { ...formData, properties: data, annexures: propertyList });
     } catch (error) {
       console.error('Error updating record:', error);

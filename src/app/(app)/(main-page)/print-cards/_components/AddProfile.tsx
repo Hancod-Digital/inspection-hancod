@@ -171,7 +171,7 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
   useEffect(() => {
     const fetchCompanies = async () => {
       const companies = await new StudentService().getAllCompanies();
-      console.log(companies);
+      // console.log(companies);
       setCompanies(companies);
     };
     fetchCompanies();

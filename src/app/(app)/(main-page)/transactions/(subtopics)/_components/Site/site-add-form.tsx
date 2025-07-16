@@ -65,7 +65,7 @@ export default function EquipmentDetailsForm({ onClose, setIsArea, setIsChanged,
       const data = await masterservice.getAllSubtopicDetails("area");
       if (data) {
         setAreaOptions(data.filter((item:any)=>item.status==="ACTIVE")); // Set the area options to the fetched data
-        console.log("area fetching dynamically");
+        // console.log("area fetching dynamically");
       }
     };
     fetchAreas();

@@ -21,19 +21,19 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
   useEffect(() => {
     const safeData = Array.isArray(data) ? data : [];
     setInternalData(safeData);
-    console.log("Data prop changed, new length:", safeData.length);
+    // console.log("Data prop changed, new length:", safeData.length);
   }, [data]);
 
   // Set initial columns based on item_type
   useEffect(() => {
     if (item_type === "CRANE CERTIFICATE") {
-      console.log("CRANE CERTIFICATE");
+      // console.log("CRANE CERTIFICATE");
       setColumns(["CONDITION", "BOOM LENGTH", "RADIUS", "TEST LOAD", "SWL"]);
     } else if (item_type === "MEWP AND FORKLIFT" || item_type === "ELEVATOR CERTIFICATE") {
-      console.log("MEWP AND FORKLIFT");
+      // console.log("MEWP AND FORKLIFT");
       setColumns(["TEST LOAD", "SWL"]);
     } else {
-      console.log("ELSE", item_type);
+      // console.log("ELSE", item_type);
       setColumns([]);
     }
   }, [item_type]);
@@ -110,7 +110,7 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
     // Update internal state first
     setInternalData((prevData) => {
       const newData = [...prevData, newRow];
-      console.log("Adding new row to internal state. New length:", newData.length);
+      // console.log("Adding new row to internal state. New length:", newData.length);
       return newData;
     });
     
@@ -118,7 +118,7 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
     setData((prevData: any) => {
       const safeData = Array.isArray(prevData) ? prevData : [];
       const newData = [...safeData, newRow];
-      console.log("Adding new row to parent state. Previous length:", safeData.length, "New length:", newData.length);
+      // console.log("Adding new row to parent state. Previous length:", safeData.length, "New length:", newData.length);
       return newData;
     });
   };
@@ -128,7 +128,7 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
     // Update internal state first
     setInternalData((prevData) => {
       const newData = prevData.filter((_, index) => index !== rowIndex);
-      console.log("Deleting row from internal state. New length:", newData.length);
+      // console.log("Deleting row from internal state. New length:", newData.length);
       return newData;
     });
     
@@ -136,7 +136,7 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
     setData((prevData: any) => {
       const safeData = Array.isArray(prevData) ? prevData : [];
       const newData = safeData.filter((_, index) => index !== rowIndex);
-      console.log("Deleting row from parent state. Previous length:", safeData.length, "New length:", newData.length);
+      // console.log("Deleting row from parent state. Previous length:", safeData.length, "New length:", newData.length);
       return newData;
     });
   };
@@ -171,8 +171,8 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
     });
   };
 
-  console.log("Rendering with internal data:", internalData.length, "items");
-  console.log("Rendering with props data:", Array.isArray(data) ? data.length : 'Not an array');
+  // console.log("Rendering with internal data:", internalData.length, "items");
+  // console.log("Rendering with props data:", Array.isArray(data) ? data.length : 'Not an array');
 
   return (
     <>
