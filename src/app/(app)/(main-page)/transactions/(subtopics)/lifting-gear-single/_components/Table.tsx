@@ -102,6 +102,7 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
           const fetchSurveyors = async () => {
             const data = await getAllSingleSubtopic("surveyor"); // Fetch the areas
             if (data) {
+             
               setSurveyorOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
             }
           };
@@ -302,7 +303,13 @@ htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars);
 
 htmlString = htmlString.replace(/\{\{twentyfive\}\}/g, surveyorOptions.find((surveyor: any) => surveyor.id == item.surveyor)?.surveyor);
 
+htmlString = htmlString.replace(/\{\{twentyfive_qualification\}\}/g, surveyorOptions.find((surveyor: any) => surveyor.id == item.surveyor)?.qualification || 'Not Available');
+console.log("htmlString",item.qualification)
+
 htmlString = htmlString.replace(/\{\{twentysix\}\}/g, authorityOptions.find((authority: any) => authority.id == item.authority)?.authority);
+
+
+
 
 // cssText = cssText.replace(/\{\{jacob\}\}/g, item?.safe_to_use === true ? " 89.28%" : item?.safe_to_use === false ? "96%" : ""); 
 // offset (tick position)

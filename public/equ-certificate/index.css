@@ -1953,6 +1953,20 @@ z-index: 71;
   text-align: left;
   z-index: 44;
 }
+.surveyor-qualification {
+  position: absolute;
+  left: 31.298px;
+  top:  1013px;  
+  width: 476.587px;
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 15px;
+  font-weight: 550;
+  line-height: 20px;
+  text-align: left;
+  z-index: 45;
+}
+
 .person-authenticating-report {
   display: flex;
   align-items: center;
