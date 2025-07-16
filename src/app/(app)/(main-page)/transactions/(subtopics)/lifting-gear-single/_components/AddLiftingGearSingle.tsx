@@ -104,6 +104,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
     last_test_exam_certificate_no: string().optional(),
     last_thorough_exam_certificate_no: string().optional(),
   });
+ 
    
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
@@ -123,10 +124,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const [ownerOptions, setOwnerOptions] = useState<any>([]);
   const [locationOptions, setLocationOptions] = useState<any>([]);
   const { watch, setValue } = methods;
+
+
   const { equipment_no, standard, owner_name } = watch();
 
-
-
+// console.log("watch",watch())
 
 
 
@@ -152,6 +154,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       }
     }
   }, [equipment_no, equipmentNoOptions, setValue]);
+
   const { location } = watch();
   useEffect(() => {
     const fetchSites = async () => {
@@ -300,6 +303,11 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   };
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
+    console.log('last_test_exam:', values.last_test_exam);
+    console.log('next_test_exam:', values.next_test_exam);
+    console.log('last_thorough_exam:', values.last_thorough_exam);
+    console.log('next_thorough_exam:', values.next_thorough_exam);
+
     setLoading(true);
     try {
       if (isAutoFill) {
@@ -329,8 +337,19 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
           last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? "" : values.last_test_exam_certificate_no,
           last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? "" : values.last_thorough_exam_certificate_no
         };
-        console.log("Form Data for the auto fill:", formData); 
+
+        if (
+          !formData.last_test_exam || !formData.next_test_exam ||
+          !formData.last_thorough_exam || !formData.next_thorough_exam
+        ) {
+          toastWithTimeout(ToastVariant.Error, `All exam fields are required or should be marked as N/A`);
+          return;
+        }
+        
+
+        console.log("Form Data being sent to RPC:", formData); 
         await addRecord(formData, null, "lifting_gear_single");
+        onClose();
       } else {
         const manualData = {
           equipment_no: values.equipment_no,
@@ -348,10 +367,10 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
           next_test_date: testExamChecked ? "Not Applicable" : testExamNotAvailable ? "Not Available" : values.next_test_exam,           // map to correct backend key
           next_through_date: thoroughExamChecked ? "Not Applicable" : thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam     // map to correct backend key
         };
-        console.log("Manual Data being sent to RPC:", manualData); 
+        // console.log("Manual Data being sent to RPC:", manualData); 
         await makeApiCall(() => new MasterService().manualDataEntryFromSingleEquipment(manualData), {
           afterSuccess: async (data: any) => {
-            console.log("Manual Data RPC Response:", data); 
+            // console.log("Manual Data RPC Response:", data); 
             const responseData = data.data;
             if (!responseData || responseData.length === 0) {
               console.error("RPC call did not return the expected data.", responseData);
@@ -360,7 +379,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
 
             const newIds = responseData[0]; 
 
-            console.log("New IDs:", newIds); 
+            // console.log("New IDs:", newIds); 
             const { serial_no, ...restOfValues } = values;
             const formData = {
               ...restOfValues,
@@ -368,13 +387,20 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               manufacturer: newIds.manufacturer_id,
               owner_name: newIds.owner_id,
               standard: newIds.standard_id,
-              first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
-              six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
-              twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
-              correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
-              examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
-              exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
-              safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+              // first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
+              first_examination:safetyChecklistValues.firstExamination === "yes"? true:safetyChecklistValues.firstExamination === "no"? false:null,
+              // six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
+              six_month_interval:safetyChecklistValues.sixMonthInterval === "yes"? true:safetyChecklistValues.sixMonthInterval === "no"? false:null,
+              // twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
+              twelve_month_interval:safetyChecklistValues.twelveMonthInterval === "yes"? true:safetyChecklistValues.twelveMonthInterval === "no"? false:null,
+              // correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
+              correct_installation:safetyChecklistValues.correctInstallation === "yes"? true:safetyChecklistValues.correctInstallation === "no"? false:null,
+              // examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
+              examination_scheme:safetyChecklistValues.examinationScheme === "yes"? true:safetyChecklistValues.examinationScheme === "no"? false:null,
+              // exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
+              exceptional_circumstances:safetyChecklistValues.exceptionalCircumstances === "yes"? true:safetyChecklistValues.exceptionalCircumstances === "no"? false:null,
+              // safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+              safe_to_use:safetyChecklistValues.safeToUse === "yes"? true:safetyChecklistValues.safeToUse === "no"? false:null,
               approval_status: values.approval_status === "Approved" ? true : false,
               last_test_exam: lastTestExamChecked ? "Not Applicable" : lastTestExamNotAvailable ? "Not Available" : values.last_test_exam,
               last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam,
@@ -383,8 +409,26 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
               last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? "" : values.last_test_exam_certificate_no,
               last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? "" : values.last_thorough_exam_certificate_no
             };
+
+            const missingFields: string[] = [];
+          if (!formData.last_test_exam) missingFields.push('Date of last proof load test');
+          if (!formData.last_thorough_exam) missingFields.push('Date of last examination');
+          if (!formData.next_test_exam) missingFields.push('Date of next proof load test');
+          if (!formData.next_thorough_exam) missingFields.push('Date of next examination');
+          if (missingFields.length > 0) {
+            toastWithTimeout(
+              ToastVariant.Default,
+              `Missing: ${missingFields.join(', ')}`
+              // <>
+              //   <span style={{ color: 'red', fontWeight: 600 }}>Missing:</span> {missingFields.join(', ')}
+              // </>
+            );
+            return;
+          }
+            
             console.log("Form Data being sent to RPC:", formData); 
             await addRecord(formData, null, "lifting_gear_single");
+            onClose();
           }
         });
         // await addRecord(values, null, "lifting_gear_single");
@@ -393,7 +437,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
       console.error('Form submission error:', error);
     } finally {
       setLoading(false);
-      onClose();
+      // onClose();
     }
   };
 

@@ -25,6 +25,9 @@ const LiftingEquipment = () => {
     const handleOpenAdd = () => {
         setIsAdd(true)
     }
+
+    console.log("isAdd:",isAdd)
+    
     const handleSearchChange = (value: string) => {
         setSearchValue(value);
     };
@@ -148,10 +151,7 @@ const LiftingEquipment = () => {
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
                     >
-                        {/* {isLocation && <Location  onClose={()=>setIsLocation(false)} setIsSite={setIsSite} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={isChanged}/>}
-                        {isEquipment && <Equipment  changed={changed} onClose={()=>setIsEquipment(false)} setIsManufacturer={setIsManufacturer} setIsStandard={setIsStandard} setIsLocation={setIsLocation} isManufacturer={isManufacturer} isStandard={isStandard} isLocation={isLocation} minorCategoryOptions={minorCategoryOptions} supplierOptions={supplierOptions} standardOptions={standardOptions} annexureOptions={annexureOptions} locationOptions={locationOptions} ownerOptions={ownerOptions} />}
-                        {isStandard && <Standard onClose={()=>setIsStandard(false)} />}
-                        {isManufacturer && <Manufacturer onClose={()=>setIsManufacturer(false)} />} */}
+
                         {!isLocation && !isEquipment && !isStandard && !isManufacturer && (
                         <AddForm onClose={handleCloseAdd} setIsLocation={setIsLocation} setIsEquipment={setIsEquipment} setIsStandard={setIsStandard} setIsManufacturer={setIsManufacturer} />
                     )}

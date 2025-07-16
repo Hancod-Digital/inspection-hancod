@@ -65,7 +65,7 @@ export default function EquipmentDetailsEditForm({
 
   const existingData = id ? findRecordById(id) : null;
   const equipmentNoChanged = (value: string, field: any) => {
-    console.log("Selected equipment no:", value)
+    // console.log("Selected equipment no:", value)
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
     if (selectedEquipment) {
       setValue('standard', String(selectedEquipment.standard) || '');
@@ -121,8 +121,8 @@ export default function EquipmentDetailsEditForm({
   });
 
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
-console.log("Existing data for edit:", existingData)
-console.log("Existing data for edit:", existingData?.surveyor)
+// console.log("Existing data for edit:", existingData)
+// console.log("Existing data for edit:", existingData?.surveyor)
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
     defaultValues: {
@@ -217,7 +217,7 @@ console.log("Existing data for edit:", existingData?.surveyor)
         setValue('last_thorough_exam', data.last_thorough_exam || '');
         setValue('next_test_exam', data.next_test_exam || '');
         setValue('next_thorough_exam', data.next_thorough_exam || '');
-        console.log("data",data)
+        // console.log("data",data)
         // Now set the checkboxes based on those values
         setTestExamChecked(data.next_test_exam === "Not Applicable");
         setThoroughExamChecked(data.next_thorough_exam === "Not Applicable");
@@ -314,22 +314,29 @@ console.log("Existing data for edit:", existingData?.surveyor)
         // next_test_exam_certificate_no: testExamChecked ? "" : values.next_test_exam_certificate_no, // REMOVED
         last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? "" : values.last_thorough_exam_certificate_no,
         // next_thorough_exam_certificate_no: thoroughExamChecked ? "" : values.next_thorough_exam_certificate_no, // REMOVED
-        first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
-        six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
-        twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
-        correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
-        examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
-        exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
-        safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+        // first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
+        first_examination:safetyChecklistValues.firstExamination === "yes"? true:safetyChecklistValues.firstExamination === "no"? false:null,
+        // six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
+        six_month_interval:safetyChecklistValues.sixMonthInterval === "yes"? true:safetyChecklistValues.sixMonthInterval === "no"? false:null,
+        // twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
+        twelve_month_interval:safetyChecklistValues.twelveMonthInterval === "yes"? true:safetyChecklistValues.twelveMonthInterval === "no"? false:null,
+        // correct_installation: safetyChecklistValues.correctInstallation === "no" ? false : true,
+        correct_installation:safetyChecklistValues.correctInstallation === "yes"? true:safetyChecklistValues.correctInstallation === "no"? false:null,
+        // examination_scheme: safetyChecklistValues.examinationScheme === "no" ? false : true,
+        examination_scheme:safetyChecklistValues.examinationScheme === "yes"? true:safetyChecklistValues.examinationScheme === "no"? false:null,
+        // exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === "no" ? false : true,
+        exceptional_circumstances:safetyChecklistValues.exceptionalCircumstances === "yes"? true:safetyChecklistValues.exceptionalCircumstances === "no"? false:null,
+        // safe_to_use: safetyChecklistValues.safeToUse === "no" ? false : true,
+        safe_to_use:safetyChecklistValues.safeToUse === "yes"? true:safetyChecklistValues.safeToUse === "no"? false:null,
         approval_status: values.approval_status === "Approved" ? true : false,
         last_test_exam: lastTestExamChecked ? "Not Applicable" : (lastTestExamNotAvailable ? "Not Available" : values.last_test_exam),
         last_thorough_exam: lastThoroughExamChecked ? "Not Applicable" : (lastThoroughExamNotAvailable ? "Not Available" : values.last_thorough_exam),
         next_test_exam: testExamChecked ? "Not Applicable" : (testExamNotAvailable ? "Not Available" : values.next_test_exam),
         next_thorough_exam: thoroughExamChecked ? "Not Applicable" : (thoroughExamNotAvailable ? "Not Available" : values.next_thorough_exam)
       };
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-      console.log(formData)
-      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+      console.log("Edit form data:",formData)
+      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
       await updateRecord(id, formData);
 
       toastWithTimeout(ToastVariant.Success, 'Equipment details updated successfully');
@@ -1007,7 +1014,7 @@ console.log("Existing data for edit:", existingData?.surveyor)
                       name="surveyor"
                       control={control}
                       render={({ field }) => (
-                        console.log("Surveyor field value:", field.value),
+                        // console.log("Surveyor field value:", field.value),
                         <Select onValueChange={field.onChange} value={field.value}>
                           <SelectTrigger id="surveyor">
                             <SelectValue placeholder="Select surveyor" />

@@ -124,6 +124,9 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [existingData, setExistingData] = useState<any[]>([]);
 
+
+  
+
   const addEquipmentToMulti = async () => {
     if (!result) {
       toastWithTimeout(ToastVariant.Default, "Result is required")
@@ -202,13 +205,13 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
               standard: newIds.standard_id,
               // surveyor: newIds.surveyor_id,
             };
-            console.log("Payload for add equipment:", payload)
+            // console.log("Payload for add equipment:", payload)
             await addEquipmentApiCall(payload);
           }
         }
       );
     } else {
-      console.log("Payload for add equipment:", datas)
+      // console.log("Payload for add equipment:", datas)
       await addEquipmentApiCall(datas);
     }
   }
@@ -401,7 +404,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
   };
 
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
-    console.log("Submit handler called", values)
+    // console.log("Submit handler called", values)
 
     setLoading(true);
 
@@ -478,6 +481,31 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
 
     // Remove serial_no as it's not a column in lifting_gear_multi
       const { serial_no, ...payloadWithoutSerial } = finalFormData;
+      
+      // if (
+      //   !payloadWithoutSerial.last_test_exam || !payloadWithoutSerial.next_test_exam ||
+      //   !payloadWithoutSerial.last_thorough_exam || !payloadWithoutSerial.next_thorough_exam
+      // ) {
+      //   toastWithTimeout(ToastVariant.Error, `All exam fields are required or should be marked as N/A`);
+      //   return;
+      //         }
+
+                  const missingFields: string[] = [];
+                if (!payloadWithoutSerial.last_test_exam) missingFields.push('Date of last proof load test');
+                if (!payloadWithoutSerial.last_thorough_exam) missingFields.push('Date of last examination');
+                if (!payloadWithoutSerial.next_test_exam) missingFields.push('Date of next proof load test');
+                if (!payloadWithoutSerial.next_thorough_exam) missingFields.push('Date of next examination');
+                if (missingFields.length > 0) {
+                  toastWithTimeout(
+                    ToastVariant.Default,
+                    `Missing: ${missingFields.join(', ')}`
+                    // <>
+                    //   <span style={{ color: 'red', fontWeight: 600 }}>Missing:</span> {missingFields.join(', ')}
+                    // </>
+                  );
+                  return;
+                }
+              
       const data = await addRecord(payloadWithoutSerial, null, "lifting_gear_multi");
 
       Promise.all(existingData.map((item: any) => {

@@ -64,7 +64,7 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
       newRow[col] = '';
     });
     setData((prevData: any) => [...prevData, newRow]);
-    console.log(data,"pppppppppppp");
+    // console.log(data,"pppppppppppp");
   };
 
   // Handle deleting a row
@@ -72,7 +72,7 @@ export default function PropertyTable({ data, setData, item_type }: { data: any;
     setData((prevData: any) => {
       const safeData = Array.isArray(prevData) ? prevData : [];
       const newData = safeData.filter((_, index) => index !== rowIndex);
-      console.log("Deleting row. Previous length:", safeData.length, "New length:", newData.length);
+      // console.log("Deleting row. Previous length:", safeData.length, "New length:", newData.length);
       return newData;
     });
   };

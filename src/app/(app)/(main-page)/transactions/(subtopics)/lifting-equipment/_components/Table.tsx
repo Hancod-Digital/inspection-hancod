@@ -105,8 +105,8 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           setSerialNo(data[0]?.serial_no);
 
           // Fetch the HTML template
-          console.log("----------------------------------------------")
-          console.log(equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT" ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html")
+          // console.log("----------------------------------------------")
+          // console.log(equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT" ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html")
           const response = await fetch(`${equipment.property_table_type == "CRANE CERTIFICATE" ? "/transactions/crane_certificate/index.html" : equipment.property_table_type == "MEWP AND FORKLIFT" ? "/transactions/mewp_and_forklift/index.html" : equipment.property_table_type == "ELEVATOR CERTIFICATE" ? "/transactions/elevation_certificate/index.html" : "/transactions/earth_moving/index.html"}`);
           let htmlString = await response.text();
 
@@ -210,34 +210,34 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
               
               */}
           if (item?.last_test_exam_certificate_no != "") {
-            console.log("last_test_exam_certificate_no", item?.last_test_exam_certificate_no)
+            // console.log("last_test_exam_certificate_no", item?.last_test_exam_certificate_no)
             htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="aug">${item?.last_test_exam == "Not Available" ? "Not Available" : item?.last_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_test_exam)}</span><span class="aug-certificate-no">${item.last_test_exam_certificate_no || "Not Available"}</span>`);
           } else {
-            console.log("last_test_exam_certificate_no")
+            // console.log("last_test_exam_certificate_no")
             htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="aug-css">${item?.last_test_exam == "Not Available" ? "Not Available" : item?.last_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_test_exam)}</span>`);
           }
 
           if (item?.next_test_exam_certificate_no != "" && item?.next_test_exam_certificate_no) {
-            console.log("next_test_exam_certificate_no", item?.next_test_exam_certificate_no)
+            // console.log("next_test_exam_certificate_no", item?.next_test_exam_certificate_no)
             htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="aug-30">${item?.next_test_exam == "Not Available" ? "Not Available" : item?.next_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_test_exam)}</span><span class="aug-30-certificate-no">${item.next_test_exam_certificate_no || "Not Available"}</span>`);
           } else {
-            console.log("next_test_exam_certificate_no", item?.next_test_exam_certificate_no)
+            // console.log("next_test_exam_certificate_no", item?.next_test_exam_certificate_no)
             htmlString = htmlString.replace(/\{\{not-available\}\}/g, `<span class="aug-30-css">${item?.next_test_exam == "Not Available" ? "Not Available" : item?.next_test_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_test_exam)}</span>`);
           }
 
           if (item?.last_thorough_exam_certificate_no != "") {
-            console.log("last_thorough_exam_certificate_no", item?.last_thorough_exam_certificate_no)
+            // console.log("last_thorough_exam_certificate_no", item?.last_thorough_exam_certificate_no)
             htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-available">${item?.last_thorough_exam == "Not Available"  ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span><span class="not-available-certificate-no">${item.last_thorough_exam_certificate_no || "Not Available"}</span>`);
           } else {
-            console.log("last_thorough_exam_certificate_no", item?.last_thorough_exam_certificate_no)
+            // console.log("last_thorough_exam_certificate_no", item?.last_thorough_exam_certificate_no)
             htmlString = htmlString.replace(/\{\{not-applicable-1a\}\}/g, `<span class="not-available-css">${item?.last_thorough_exam == "Not Available" ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span>`);
           }
 
           if (item?.next_thorough_exam_certificate_no != "" && item?.next_thorough_exam_certificate_no) {
-            console.log("next_thorough_exam_certificate_no", item?.next_thorough_exam_certificate_no)
+            // console.log("next_thorough_exam_certificate_no", item?.next_thorough_exam_certificate_no)
             htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="mar">${item?.next_thorough_exam == "Not Available" ? "Not Available" : item?.next_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_thorough_exam)}</span><span class="mar-certificate-no">${item.next_thorough_exam_certificate_no || "Not Available"}</span>`);
           } else {
-            console.log("next_thorough_exam_certificate_no", item?.next_thorough_exam_certificate_no)
+            // console.log("next_thorough_exam_certificate_no", item?.next_thorough_exam_certificate_no)
             htmlString = htmlString.replace(/\{\{not-applicable\}\}/g, `<span class="mar-css">${item?.next_thorough_exam == "Not Available" ? "Not Available" : item?.next_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.next_thorough_exam)}</span>`);
           }
 
@@ -290,7 +290,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
 
     item?.annexures?.forEach((item: { property: string, property_group: string, remarks: string }) => {
       let height = 0;
-      console.log(item.property_group?.length);
+      // console.log(item.property_group?.length);
       if (item.property?.length > item.property_group?.length) {
         height = item.property?.length
       } else {
@@ -303,8 +303,8 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
       if (height < remarks.length) {
         height = remarks.length
       }
-      console.log(height, item?.property?.length, item?.property_group?.length, remarks.length)
-      console.log(height - item?.property?.length, height - item?.property_group?.length, height - remarks.length);
+      // console.log(height, item?.property?.length, item?.property_group?.length, remarks.length)
+      // console.log(height - item?.property?.length, height - item?.property_group?.length, height - remarks.length);
 
 
       content += `
@@ -335,7 +335,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
       `;
     });
     const data = generateRows(item?.annexures)
-    console.log("data",data,item)
+    // console.log("data",data,item)
     const response = await fetch("/finalbackside/index.html");
     let htmlString = await response.text();
     equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
@@ -1021,7 +1021,7 @@ position: absolute;
             currentData?.map((item: any, idx: number) => (
               <React.Fragment key={item.id}>
                 <TableRow>
-                  <TableCell className="py-4">{idx + 1}</TableCell>
+                  <TableCell className="py-4">{currentPage * pageSize + idx + 1}</TableCell>
                   <TableCell className="py-4">{item?.title}</TableCell>
                   <TableCell className="py-4">{equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
 
@@ -1094,7 +1094,7 @@ position: absolute;
         </TableBody>
       </Table>
       {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-{currentData && currentData.length > 0 && (
+{currentData && currentData.length > 6 && (
     <div className='absolute bottom-0 right-0 '>
       <PaginationDemo
         currentPage={currentPage}

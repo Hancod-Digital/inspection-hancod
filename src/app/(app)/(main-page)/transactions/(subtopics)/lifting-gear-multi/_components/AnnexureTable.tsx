@@ -19,7 +19,7 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 
 export default function Component({ onFunction , equipmentOptions, isSubmitted,existingData,setValue,deleteRecord}: { onFunction: () => void ,equipmentOptions:any,isSubmitted:boolean,existingData:any[],setValue:any,deleteRecord:any}) {
- console.log("equipmentOptions",existingData)
+//  console.log("equipmentOptions",existingData)
    
   return (
     <div className="w-full mx-auto py-5">
@@ -42,9 +42,9 @@ export default function Component({ onFunction , equipmentOptions, isSubmitted,e
         <TableBody>
 
           {existingData?.map((item: any, index: number) => (
-            console.log("item i:",item),
-            console.log("item in add to list:",equipmentOptions?.filter((equipment: any) => equipment.id == item.equipment_no)[0]?.equipment_no),
-            console.log("equipmentOptions",equipmentOptions),
+            // console.log("item i:",item),
+            // console.log("item in add to list:",equipmentOptions?.filter((equipment: any) => equipment.id == item.equipment_no)[0]?.equipment_no),
+            // console.log("equipmentOptions",equipmentOptions),
             <TableRow key={index} className="hover:bg-gray-50">
               <TableCell className="border-r border-gray-300 p-3">{item.inspection_date}</TableCell>
              
