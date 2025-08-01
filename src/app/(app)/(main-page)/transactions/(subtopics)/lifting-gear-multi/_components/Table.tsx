@@ -64,7 +64,9 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
           const fetchEquipments = async () => {
             const data = await getAllSingleSubtopic("equipment"); // Fetch the areas
             if (data) {
+
               setEquipmentOptions(data?.filter((item:any)=>item.status==="ACTIVE")); 
+              console.log("data equipment",data)
             }
           };
           fetchEquipments();
@@ -155,11 +157,14 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
        
       const equipments:any = await fetchEquipments(item?.id);
   
-      const serialNo = await Promise.all(equipments.map(async (item:any)=>{
-         
-        
-         
-        return equipmentOptions.find((equipment: any) => equipment.id == item.equipment_no).serial_no 
+      // Map equipment IDs to equipment_no values
+      const equipmentNumbers = await Promise.all(equipments.map(async (equipment:any)=>{
+
+        // Find the equipment in equipmentOptions by matching the id
+        const equipmentData = equipmentOptions.find((eq: any) => eq.id == equipment.equipment_no);
+
+        // Use equipment_no from equipmentOptions if found, otherwise fallback to equipment.equipment_no or id
+        return equipmentData?.equipment_no || equipment.equipment_no || equipment.id;
       }))
       htmlString = htmlString.replace(/\{\{coc\}\}/g, item?.test_cert_coc_no);
       htmlString = htmlString.replace(/\{\{exam_type\}\}/g, item.type_of_exam?.toUpperCase() || 'THOROUGH');
@@ -179,8 +184,8 @@ htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);
  
 htmlString = htmlString.replace(
   /\{\{eight\}\}/g,
-  serialNo
-    .map((serial: any) => `${serial}<br />`) // Optional chaining and nullish coalescing
+  equipmentNumbers
+    .map((equipmentNo: any) => `${equipmentNo}<br />`) // Optional chaining and nullish coalescing
     .join("")
 );
 
@@ -369,6 +374,8 @@ htmlString = htmlString.replace(/\{\{twentythree\}\}/g, item?.defect_description
 htmlString = htmlString.replace(/\{\{twentyfour\}\}/g, item?.test_particulars);
 
 htmlString = htmlString.replace(/\{\{twentyfive\}\}/g, surveyorOptions.find((surveyor: any) => surveyor.id == item.surveyor)?.surveyor);
+
+htmlString = htmlString.replace(/\{\{twentyfive_qualification\}\}/g, surveyorOptions.find((surveyor: any) => surveyor.id == item.surveyor)?.qualification || 'Not Available');
 
 htmlString = htmlString.replace(/\{\{twentysix\}\}/g, authorityOptions.find((authority: any) => authority.id == item.authority)?.authority);
 

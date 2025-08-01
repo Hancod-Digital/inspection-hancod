@@ -53,6 +53,7 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
     const [equipmentOptions,setEquipmentOptions] = useState<any>([])
     const [authorityOptions,setAuthorityOptions] = useState<any>([])
     const [surveyorOptions,setSurveyorOptions] = useState<any>([])
+    const [equipmentNo,setEquipmentNo] = useState<any>([])
     useEffect(()=>{
         const fetchJobOrderNos = async () => {
             const data = await getAllSingleSubtopic("job_orders"); // Fetch the areas
@@ -142,7 +143,9 @@ let word = "45KG (PLATFORM )                   136(EXTENSION)";
 
        makeApiCall(()=>new MasterService().fetchEquipmentDetails(item?.equipment_no),{
         afterSuccess:async(data:any)=>{
-      
+          console.log("data",data)
+          console.log("data[0]?.equipment_no",data[0]?.equipment_no),
+          setEquipmentNo(data[0]?.equipment_no)
           setSerialNo(data[0]?.serial_no)
           const response = await fetch('/equ-certificate/index.html'); 
           let htmlString = await response.text();
@@ -162,8 +165,8 @@ htmlString = htmlString.replace(/\{\{six\}\}/g,  formatDateWithHyphen(item?.insp
 
 htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);
  
-htmlString = htmlString.replace(/\{\{eight\}\}/g,data[0]?.serial_no);
-
+// htmlString = htmlString.replace(/\{\{eight\}\}/g,data[0]?.serial_no);
+htmlString = htmlString.replace(/\{\{eight\}\}/g,equipmentNo);
 htmlString = htmlString.replace(/\{\{nine\}\}/g, `01`);
 
 htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);

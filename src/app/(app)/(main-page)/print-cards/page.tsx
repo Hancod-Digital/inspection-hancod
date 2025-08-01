@@ -18,6 +18,9 @@ const LiftingGearMulti = () => {
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [isBulk, setIsBulk] = useState(false);
+
+  const [searchParams, setSearchParams] = useState({ value: "", type: "name" }); //for sorted search
+
   const handleCloseAdd = () => {
     setIsAdd(false);
   };
@@ -33,11 +36,40 @@ const LiftingGearMulti = () => {
     });
   }, [changed, activeTab,isBulk]);
 
-  const rearrangedData  = data
-    ? data.filter((item: any) =>
-        item.name.toLowerCase().includes(searchValue.toLowerCase())
-      )
-    : [];
+  const rearrangedData = data
+  ? data.filter((item: any) => {
+      const search = searchParams.value.toLowerCase();
+
+      if (!search) return true; // if search is empty, show all
+
+      if (searchParams.type === "name") {
+        // Search by Name
+        return item.name?.toLowerCase().includes(search);
+      } else if (searchParams.type === "card") {
+        // Search by Card/Model Level (across multiple fields)
+        const combinedFields = [
+          item.id_no,    // ID No
+          item.card_no,   // Card No
+          item.model_level, // Model/Level
+          item.company    // Company
+        ]
+          .filter(Boolean)        // remove undefined/null
+          .join(" ")              // combine fields into one string
+          .toLowerCase();         // make it case insensitive
+
+        return combinedFields.includes(search);
+      }
+
+      return false;
+    })
+  : [];
+
+
+  // const rearrangedData  = data
+  //   ? data.filter((item: any) =>
+  //       item.name.toLowerCase().includes(searchValue.toLowerCase())
+  //     )
+  //   : [];
 
 
 
@@ -109,7 +141,13 @@ const LiftingGearMulti = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <Header onOpen={handleOpenAdd} setIsBulk={setIsBulk} onSearchChange={setSearchValue} />
+            <Header 
+            onOpen={handleOpenAdd} 
+            setIsBulk={setIsBulk} 
+            onSearchChange={(value: string, type: string) => setSearchParams({ value, type })} 
+          /> 
+          {/* //for sorted search */}
+            {/* <Header onOpen={handleOpenAdd} setIsBulk={setIsBulk} onSearchChange={setSearchValue} /> */}
           </motion.div>
         )}
       </AnimatePresence>

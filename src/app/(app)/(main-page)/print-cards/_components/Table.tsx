@@ -29,9 +29,12 @@ import TableSpinner from '@/components/animated/TableSpinner';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
 import AvatarWithTooltip from './AvatarQr';
+import DeletePopup from '@/components/ui/delete-popup';
 
 export default function EquipmentTable({ data, setChanged, changed }: { data: any, setChanged: any, changed: boolean }) {
     const [editingRow, setEditingRow] = useState<any>(null);
+    const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<any>(null);
 
 
 
@@ -138,6 +141,24 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
             }
         )
     }
+
+    const handleDeleteClick = (item: any) => {
+        setItemToDelete(item);
+        setDeletePopupOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (itemToDelete) {
+            await deleteRecord(itemToDelete.id);
+            setDeletePopupOpen(false);
+            setItemToDelete(null);
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setDeletePopupOpen(false);
+        setItemToDelete(null);
+    };
     const uploadImage = async (imageBlob: string | Blob) => {
         if (!imageBlob) return null;
 
@@ -235,7 +256,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                             Edit
                                         </button>
                                         <button
-                                            onClick={async () => await deleteRecord(item.id)}
+                                            onClick={() => handleDeleteClick(item)}
                                             className="bg-white p-1 px-2 flex rounded-md  border-primary border text-primary"
                                         >
                                               Delete
@@ -296,6 +317,14 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     onPageChange={goToPage} 
                 />
             </div>
+            
+            <DeletePopup
+                isOpen={deletePopupOpen}
+                onClose={handleDeleteCancel}
+                title="Delete"
+                description={`Are you sure you want to delete this card? This action cannot be undone.`}
+                onConfirm={handleDeleteConfirm}
+            />
         </div>
     );
 }
