@@ -64,7 +64,7 @@ button {
   width: 236px;
   height: 22px;
   top: 3.998px;
-  left: 818.045px;
+  left: 802.045px;
   font-family: BentonSans Black, var(--default-font-family);
   font-size: 16px;
   font-weight: 400;
@@ -78,7 +78,7 @@ button {
   position: relative;
   color: #000000;
   font-family: BentonSans Black, var(--default-font-family);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 400;
   line-height: 22.4px;
   text-align: right;
@@ -88,7 +88,7 @@ button {
   position: relative;
   color: #8d1b3d;
   font-family: BentonSans Black, var(--default-font-family);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 400;
   line-height: 22.4px;
   text-align: right;
@@ -114,9 +114,10 @@ button {
   height: 19px;
   top: 25.998px;
   left: 648.395px;
+
   color: #8d1b3d;
   font-family: Inter, var(--default-font-family);
-  font-size: 12px;
+  font-size: 15.3px;
   font-weight: 700;
   line-height: 14.523px;
   text-align: right;
@@ -142,7 +143,8 @@ button {
   position: relative;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: 12px;
+  /* font-size: 12px; */
+  font-size: 10.7px;
   font-weight: 400;
   line-height: 14.523px;
   text-align: right;
@@ -204,6 +206,8 @@ button {
   white-space: nowrap;
   z-index: 107;
 }
+
+
 .examination-details {
   display: flex;
   align-items: center;
@@ -211,13 +215,15 @@ button {
   position: relative;
   width: 1031.755px;
   height: 103.846px;
-  margin: -6.5px 0 0 16.229px;
+  /* margin: -6.5px 0 0 16.229px; */
+  margin: -12.5px 0 0 6.229px;
   color: #000000;
   font-family: Inter, var(--default-font-family);
   font-size: 10px;
   font-weight: 400;
   line-height: 12.102px;
-  text-align: left;
+  /* text-align: left; */
+  text-align: justify;
   z-index: 106;
 }
 .certificate-authenticity {
@@ -723,13 +729,15 @@ p{
   position: absolute;
   width: 520.011px;
   /* height: 170.761px; */
-  top: 18.539px;
+  /* top: 18.539px; */
+  top: 6.539px;
   left: 260.344px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  line-height: 28.32px;
+  /* line-height: 28.32px; */
+  line-height: 19.32px;
   text-align: left;
   text-overflow: initial;
   z-index: 72;

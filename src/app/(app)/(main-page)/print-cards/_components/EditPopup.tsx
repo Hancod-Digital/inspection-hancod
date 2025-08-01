@@ -105,6 +105,18 @@ const { data: userDetails, isLoading, isError } = useQuery({
     }
   });
 
+  // Debug logging for form initialization
+  // console.log('EditPopup - Form defaultValues:', {
+  //   issued_on: userData.issued_on,
+  //   valid_untill: userData.valid_untill,
+  //   company: userData.company,
+  //   card_no: userData.card_no,
+  //   model_level: userData.model_level,
+  //   id_no: userData.id_no,
+  //   designation: userData.designation,
+  //   course_duration: userData.course_duration
+  // });
+
   const {
     reset,
     handleSubmit,
@@ -118,7 +130,11 @@ const { data: userDetails, isLoading, isError } = useQuery({
   // Watch issued_on and update valid_untill accordingly
   useEffect(() => {
     const issuedOn = watch('issued_on');
-    if (issuedOn) {
+    const currentValidUntil = watch('valid_untill');
+
+    
+    // Only auto-calculate expiry when no expiry date is preset (i.e., when adding a new card)
+    if (issuedOn && !currentValidUntil) {
       const issuedDate = new Date(issuedOn);
       const validUntilDate = new Date(issuedDate);
       validUntilDate.setFullYear(validUntilDate.getFullYear() + 1);
@@ -126,6 +142,7 @@ const { data: userDetails, isLoading, isError } = useQuery({
       // Format the date to YYYY-MM-DD
      try{
       const formattedValidUntil = validUntilDate.toISOString().split('T')[0];
+ 
 
       setValue('valid_untill', formattedValidUntil, {
         shouldValidate: true,
