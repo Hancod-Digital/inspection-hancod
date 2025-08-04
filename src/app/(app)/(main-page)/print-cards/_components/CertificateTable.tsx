@@ -88,7 +88,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                         aspect-ratio: 0.94;
                         object-fit: contain;
                         object-position: center;
-                        width: 94px;
+                        width: 113px;
                         border-radius: 15px;
                     }
                     .certificate-intro {
@@ -301,7 +301,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                         aspect-ratio: 0.94;
                         object-fit: contain;
                         object-position: center;
-                        width: 94px;
+                        width: 113px;
                         border-radius: 15px;
                     }
                     .certificate-intro {
