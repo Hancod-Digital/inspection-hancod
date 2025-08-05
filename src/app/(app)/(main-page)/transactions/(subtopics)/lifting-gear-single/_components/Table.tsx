@@ -166,7 +166,7 @@ htmlString = htmlString.replace(/\{\{six\}\}/g,  formatDateWithHyphen(item?.insp
 htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description);
  
 // htmlString = htmlString.replace(/\{\{eight\}\}/g,data[0]?.serial_no);
-htmlString = htmlString.replace(/\{\{eight\}\}/g,equipmentNo);
+htmlString = htmlString.replace(/\{\{eight\}\}/g,data[0]?.equipment_no);
 htmlString = htmlString.replace(/\{\{nine\}\}/g, `01`);
 
 htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);
