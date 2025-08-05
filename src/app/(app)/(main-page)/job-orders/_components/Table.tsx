@@ -126,7 +126,7 @@ const {currentPage,totalPages,pageSize,handlePreviousPage,handleNextPage,setCurr
         </TableBody>
       </Table>
       {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-      {currentData && currentData.length > 6 && (
+      {jobOrders && jobOrders.length > 6 && (
         <div className='absolute bottom-0 right-0 '>
           <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} />
         </div>

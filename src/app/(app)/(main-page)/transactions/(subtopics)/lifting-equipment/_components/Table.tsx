@@ -32,7 +32,7 @@ import usePagination from '@/hooks/usePagination';
 export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, setIsEquipment, setIsStandard, setIsOwner, setIsManufacturer, isLocation, isEquipment, isStandard, isOwner, isManufacturer, searchValue }: any) {
   const [editingRow, setEditingRow] = useState<number | null>(null);
   const { data, isLoading, error, getAllSingleSubtopic, deleteRecord } = useSubtopic();
-
+  console.log(data);
   const [jobOrderNoOptions, setJobOrderNoOptions] = useState<any>([]);
   const [siteOptions, setSiteOptions] = useState<any>([]);
   const [ownerOptions, setOwnerOptions] = useState<any>([]);
@@ -1094,7 +1094,7 @@ position: absolute;
         </TableBody>
       </Table>
       {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-{currentData && currentData.length > 6 && (
+{data && data.length > 6 && (
     <div className='absolute bottom-0 right-0 '>
       <PaginationDemo
         currentPage={currentPage}

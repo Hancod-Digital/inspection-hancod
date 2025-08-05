@@ -120,7 +120,7 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                         </TableBody>
                     </Table>
                     {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-                            {currentData && currentData.length > 6 && (
+                            {subtopics && subtopics.length > 6 && (
                                 <div className='absolute bottom-0 right-0'>
                                   <PaginationDemo
                                     currentPage={currentPage}

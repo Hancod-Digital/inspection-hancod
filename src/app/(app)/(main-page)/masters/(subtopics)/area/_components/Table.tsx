@@ -35,8 +35,9 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
         item.thumbnail.toLowerCase().includes(searchValue.toLowerCase())
       )
     : [];
-    
+
     const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
+
     return (
         <div className="px-8 py-3 bg-white  w-[98%] mx-auto  ">
             <Table className="w-full overflow-auto">
@@ -104,17 +105,18 @@ export default function EquipmentTable({searchValue}:{searchValue:string}) {
                 </TableBody>
             </Table>
             {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-            {currentData && currentData.length > 6 && (
-  <div className='absolute bottom-0 right-0'>
-    <PaginationDemo
-      currentPage={currentPage}
-      totalPages={totalPages}
-      onPreviousPage={handlePreviousPage}
-      onNextPage={handleNextPage}
-      onPageChange={setCurrentPage}
-    />
-  </div>
-) }
+            {data && data.length > 6 && (
+            <div className='absolute bottom-0 right-0'>
+                <PaginationDemo
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPreviousPage={handlePreviousPage}
+                onNextPage={handleNextPage}
+                onPageChange={setCurrentPage}
+                />
+            </div>
+            ) }
         </div>
     );
+
 }
