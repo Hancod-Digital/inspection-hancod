@@ -28,6 +28,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea,setIsChan
         async function fetchSubtopics() {
             try {
                 const site = await getMergedData(siteDataRange, 'site');
+                console.log(site);
                 setSubtopics(site);
             } catch (error) {
                 console.error("Error fetching subtopics:", error);
@@ -128,7 +129,7 @@ export default function EquipmentTable({searchValue, setIsArea, isArea,setIsChan
                     </TableBody>
                 </Table>
                 {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-                {currentData && currentData.length > 6 && (
+                {subtopics && subtopics.length > 6 && (
 
                     <div className='absolute bottom-0 right-0 '>
                       <PaginationDemo

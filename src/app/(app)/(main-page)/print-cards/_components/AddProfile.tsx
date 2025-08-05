@@ -73,6 +73,7 @@ const userFormSchema = object({
   contact_number: getPhoneValidationSchema(countryCode).optional(),
   address: string().optional(),
   gender: string().optional(),
+  // gender: string().optional().nullable().transform(val => val === null ? undefined : val),
   company: string().nonempty('Company is required'),
   id_no: string().nonempty('ID Number is required'),
   designation: string().max(49).nonempty('Designation is required'),

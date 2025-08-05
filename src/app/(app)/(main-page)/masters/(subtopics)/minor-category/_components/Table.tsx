@@ -29,7 +29,7 @@ export default function MinorCategory({searchValue}:{searchValue:string}) {
         async function fetchMinorCategories() {
             try {
                 const data = await getMergedData(minorCategoryDataRange, 'minor_category');
-              
+
                 setMinorCategories(data);
             } catch (error) {
                 console.error("Error fetching minor categories:", error);
@@ -144,7 +144,7 @@ export default function MinorCategory({searchValue}:{searchValue:string}) {
                     </TableBody>
                 </Table>
                 {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
-                {currentData && currentData.length > 6 && (
+                {minorCategories && minorCategories.length > 6 && (
                     <div className='absolute bottom-0 right-0'>
                       <PaginationDemo
                         currentPage={currentPage}
