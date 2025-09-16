@@ -186,7 +186,7 @@ htmlString = htmlString.replace(/\{\{nine\}\}/g, `01`);
 htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);
 htmlString = htmlString.replace(/\{\{coc\}\}/g, item?.test_cert_coc_no);
 
-htmlString = htmlString.replace(/\{\{eleven\}\}/g, item?.proof_load);
+htmlString = htmlString.replace(/\{\{eleven\}\}/g, formatWeightString(item?.proof_load) == "" ? item?.proof_load : formatWeightString(item?.proof_load));
 
 
 
