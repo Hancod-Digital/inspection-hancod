@@ -407,8 +407,7 @@ export default function EquipmentDetailsForm({
     } finally {
       setLoading(false);
     }
-  };
-console.log("erros", errors)
+  }; 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

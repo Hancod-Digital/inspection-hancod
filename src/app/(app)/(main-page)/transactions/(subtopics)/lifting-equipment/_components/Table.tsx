@@ -138,57 +138,40 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
           htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
 
-          const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
+          function splitIntoChunks(text: string, chunkSize: number = 6): string {
+            const chunks = [];
+            for (let i = 0; i < text.length; i += chunkSize) {
+                chunks.push(text.substring(i, i + chunkSize));
+            }
+            return chunks.join('<br>');
+        }
+        
+        const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
             .filter((v: any) => v != null)
-            .map((condition: string) => {
-              // If length exceeds 10 characters, break it into two lines
-              if (condition.length > 6) {
-                return `<li>${condition.substring(0, 6)}<br>${condition.substring(6)}</li>`;
-              } else {
-                return `<li>${condition}</li>`;
-              }
-            });
-
-          // Repeat similar logic for boomLengths, radii, testLoads, and swls
-          const boomLengths = (item?.properties?.map((p: any) => p["BOOM LENGTH"]) || [])
+            .map((condition: string) => `<li>${splitIntoChunks(condition)}</li>`);
+        
+        const boomLengths = (item?.properties?.map((p: any) => p["BOOM LENGTH"]) || [])
             .filter((v: any) => v != null)
-            .map((boomLength: string) => {
-              if (boomLength.length > 6) {
-                return `<li>${boomLength.substring(0, 6)}<br>${boomLength.substring(6)}</li>`;
-              } else {
-                return `<li>${boomLength}</li>`;
-              }
-            });
-
-          const radii = (item?.properties?.map((p: any) => p.RADIUS) || [])
+            .map((boomLength: string) => `<li>${splitIntoChunks(boomLength)}</li>`);
+        
+        const radii = (item?.properties?.map((p: any) => p.RADIUS) || [])
             .filter((v: any) => v != null)
-            .map((radius: string) => {
-              if (radius.length > 6) {
-                return `<li>${radius.substring(0, 6)}<br>${radius.substring(6)}</li>`;
-              } else {
-                return `<li>${radius}</li>`;
-              }
-            });
-
-          const testLoads = (item?.properties?.map((p: any) => p["TEST LOAD"]) || [])
+            .map((radius: string) => `<li>${splitIntoChunks(radius)}</li>`);
+        
+        const testLoads = (item?.properties?.map((p: any) => p["TEST LOAD"]) || [])
             .filter((v: any) => v != null)
-            .map((testLoad: string) => {
-              if (testLoad.length > 6) {
-                return `<li>${testLoad.substring(0, 6)}<br>${testLoad.substring(6)}</li>`;
-              } else {
-                return `<li>${testLoad}</li>`;
-              }
-            });
-
-          const swls = (item?.properties?.map((p: any) => p.SWL) || [])
+            .map((testLoad: string) => `<li>${splitIntoChunks(testLoad)}</li>`);
+        
+            const swls = (item?.properties?.map((p: any) => p.SWL) || [])
             .filter((v: any) => v != null)
             .map((swl: string) => {
-              if (swl.length > 6) {
-                return `<li>${swl.substring(0, 6)}<br>${swl.substring(6)}</li>`;
-              } else {
-                return `<li>${swl}</li>`;
-              }
+                const chunks = [];
+                for (let i = 0; i < swl.length; i += 6) {
+                    chunks.push(swl.substring(i, i + 6));
+                }
+                return `<li>${chunks.join('<br>')}</li>`;
             });
+        
             htmlString = htmlString.replace(/\{\{coc\}\}/g, item?.test_cert_coc_no);
           htmlString = htmlString.replace(/\{\{nine\}\}/g, conditions.length ? `<ul>${conditions.join('')}</ul>` : '');
           htmlString = htmlString.replace(/\{\{ten\}\}/g, boomLengths.length ? `<ul>${boomLengths.join('')}</ul>` : '');

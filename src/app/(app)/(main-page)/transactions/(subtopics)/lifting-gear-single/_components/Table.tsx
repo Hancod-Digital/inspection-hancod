@@ -124,11 +124,24 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
         let unit = matches[2].trim();
         let description = matches[3].trim();
         
-        // Calculate total length
         let totalLength = weight.length + unit.length + description.length;
 
-        if (totalLength > 10) {
-            result += `<p>${weight} ${unit}</p><p>(${description})</p>`;
+        if (totalLength > 8) {
+            // First line
+            result += `<p>${weight} ${unit}</p>`;
+            
+            // Split second line if it exceeds 12 characters
+            if (description.length > 10) {
+                const chunks = [];
+                for (let i = 0; i < description.length; i += 10) {
+                    chunks.push(description.substring(i, i + 10));
+                }
+                chunks.forEach(chunk => {
+                    result += `<p>(${chunk})</p>`;
+                });
+            } else {
+                result += `<p>(${description})</p>`;
+            }
         } else {
             result += `<p>${weight} ${unit} (${description})</p>`;
         }
@@ -136,6 +149,7 @@ export default function EquipmentTable({searchValue,setIsLocation,setIsEquipment
 
     return result;
 }
+
 
 let word = "45KG (PLATFORM )                   136(EXTENSION)";
 // console.log(formatWeightString(word));

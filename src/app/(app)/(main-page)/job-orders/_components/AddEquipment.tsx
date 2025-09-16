@@ -39,8 +39,7 @@ export default function SurveyForm({ onClose,setIsState,isState }: SurveyFormPro
   const [equipmentOptions, setEquipmentOptions] = useState<any[]>([]);
 
   const { addJobOrder, getAllSingleSubtopic } = useSubtopic();
- 
-  // console.log("surveyorOptions:",surveyorOptions)
+  
   const methods = useForm<FormInput>({
     resolver: zodResolver(formSchema),
   });
