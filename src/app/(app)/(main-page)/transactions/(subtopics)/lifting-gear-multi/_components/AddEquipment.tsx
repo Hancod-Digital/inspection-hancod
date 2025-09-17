@@ -468,6 +468,10 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
       // because the RPC was already called in addEquipmentToMulti. Instead, reuse the IDs from the first
       // equipment that was added during this session.
       if (!isAutoFill) {
+        if (existingData.length === 0) {
+          toastWithTimeout(ToastVariant.Default, 'Please add at least one equipment to the list before submitting');
+          return;
+        }
         const firstItem = existingData[0];
         if (firstItem) {
           finalFormData = {
@@ -891,7 +895,6 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                           return (
                             <Select
                               value={value}
-                              disabled
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger id="standard">
@@ -1241,7 +1244,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                       <Controller
                         name="owner_name"
                         control={control}
-                        disabled
+                        
                         render={({ field }) => {
                           const currentOwner = String(
                             equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
@@ -1344,7 +1347,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                                                   surveyorOptions.find(
                                                     (s: any) => String(s.id) === String(field.value)
                                                   )?.surveyor || '';
-                                              return <Input id="surveyor" value={surveyorName} disabled />;
+                                              return <Input id="surveyor" value={surveyorName}  />;
                                               }}
                       />
                       {/* ) : (
@@ -1363,7 +1366,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
                         {isAutoFill ? (
                         <Controller
                           name="manufacturer"
-                          disabled
+                      
                           control={control}
                           render={({ field }) => {
                             const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
