@@ -763,24 +763,23 @@ p{
       text-overflow: initial;
       z-index: 42;
       overflow: hidden;
-}
-.nil {
-  display: flex;
+}.nil {
+  display: flex
+;
   align-items: center;
   flex-direction: column;
   justify-content: center;
   position: absolute;
-  width: 136.907px;
+  width: 102.907px;
   height: 24.179px;
-  top: 112.129px;
-  left: 788.283px;
+  top: 87.129px;
+  left: 801.283px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: 16px;
   font-weight: 600;
   line-height: 22.4px;
   text-align: center;
-  
   z-index: 70;
 }
 .number-04 {
@@ -799,25 +798,24 @@ p{
   text-align: left;
   white-space: nowrap;
   z-index: 73;
-}
-.straight-lift {
-     /* display: flex
+}.straight-lift {
+  /* display: flex
 ; */
-align-items: center;
-justify-content: center;
-position: absolute;
-width: 136.907px;
-height: 24.179px;
-top: 388px;
-left: 935.242px;
-color: #0f1422;
-font-family: Inter, var(--default-font-family);
-font-size: 16px;
-font-weight: 600;
-line-height: 22.4px;
-text-align: center;
-white-space: nowrap;
-z-index: 71;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 105.907px;
+  height: 24.179px;
+  top: 326px;
+  left: 940.242px;
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: center;
+  /* white-space: nowrap; */
+  z-index: 71;
 }
 .rectangle-17 {
   position: absolute;

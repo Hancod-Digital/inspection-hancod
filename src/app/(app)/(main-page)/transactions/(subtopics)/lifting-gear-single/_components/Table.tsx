@@ -226,11 +226,11 @@ htmlString = htmlString.replace(/\{\{nine\}\}/g, `01`);
 htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);
 htmlString = htmlString.replace(/\{\{coc\}\}/g, item?.test_cert_coc_no);
 
-htmlString = htmlString.replace(/\{\{eleven\}\}/g, formatWeightString(item?.proof_load) == "" ? item?.proof_load : formatWeightString(item?.proof_load));
+htmlString = htmlString.replace(/\{\{eleven\}\}/g, `<p>${item?.proof_load}</p>`);
 
 
 
-htmlString = htmlString.replace(/\{\{twelve\}\}/g, formatWeightString(item?.safe_working_load) == "" ? item?.safe_working_load : formatWeightString(item?.safe_working_load));
+htmlString = htmlString.replace(/\{\{twelve\}\}/g, `<p>${item?.safe_working_load}</p>`);
 
 if(item?.last_thorough_exam_certificate_no != ""){
   htmlString = htmlString.replace(/\{\{date-28-mar-2025\}\}/g, `<span class="not-available">${item?.last_thorough_exam == "Not Available" ? "Not Available" : item?.last_thorough_exam == "Not Applicable" ? "Not Applicable" : formatDateWithHyphen(item?.last_thorough_exam)}</span><span class="not-available-certificate-no">${item.last_thorough_exam_certificate_no|| "Not Available"}</span>`);
