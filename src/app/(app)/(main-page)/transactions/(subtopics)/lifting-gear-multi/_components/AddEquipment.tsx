@@ -467,7 +467,10 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
       // Previously, we invoked manualDataEntryFromMultiEquipment here, but that caused duplicate inserts
       // because the RPC was already called in addEquipmentToMulti. Instead, reuse the IDs from the first
       // equipment that was added during this session.
-      
+      if (existingData.length === 0) {
+        toastWithTimeout(ToastVariant.Default, 'Please add at least one equipment to the list before submitting');
+        return;
+      }
       if (!isAutoFill) {
        
         const firstItem = existingData[0];
@@ -481,12 +484,7 @@ const [isManufacturerTyping, setIsManufacturerTyping] = useState(false);
             surveyor: firstItem.surveyor,
           };
         }
-      }else{
-        if (existingData.length === 0) {
-          toastWithTimeout(ToastVariant.Default, 'Please add at least one equipment to the list before submitting');
-          return;
-        }
-      }
+      } 
       /*
       // Old logic kept for reference
       const manualData = {
