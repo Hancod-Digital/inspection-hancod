@@ -195,39 +195,80 @@ htmlString = htmlString.replace(/\{\{ten\}\}/g, item?.description);
 
 htmlString = htmlString.replace(/\{\{eleven\}\}/g, item?.proof_load);
 function formatWeightString(input: string): string {
-  const regex = /(\d+(?:\.\d+)?)(\D*?)\s*\(([^)]+)\)/g;
-  let result = "";
-
-  input = input.replace(/\s+/g, ' '); // Normalize spaces
-
-  let matches;
-  while ((matches = regex.exec(input)) !== null) {
-      const weight = matches[1].trim();
-      const unit = matches[2].trim();
-      const description = matches[3].trim();
+  if (!input || !input.trim()) return '';
+  
+  // Remove existing p tags and replace br tags with spaces
+  let cleanInput = input.replace(/<\/?p>/g, '').replace(/<br\s*\/?>/g, ' ').trim();
+  
+  if (!cleanInput) return '';
+  
+  // Extract weight-unit and description parts
+  const regex = /(\d+)([a-zA-Z]*)\s*\(([^)]+)\)/g;
+  let result = [];
+  
+  let match;
+  while ((match = regex.exec(cleanInput)) !== null) {
+      const weight = match[1];
+      const unit = match[2] || '';
+      const description = match[3].trim();
       
-      const totalLength = weight.length + unit.length + description.length;
-
-      if (totalLength > 10) {
-          result += `<p>${weight} ${unit}</p><p>(${description})</p>`;
-      } else {
-          result += `<p>${weight} ${unit} (${description})</p>`;
+      if (!description) continue;
+      
+      // Combine everything into one string to process
+      const fullString = `${weight}${unit}(${description})`;
+      
+      // Break into chunks with minimum 9 characters per line
+      const chunks = [];
+      let currentChunk = '';
+      
+      for (let i = 0; i < fullString.length; i++) {
+          currentChunk += fullString[i];
+          
+          // If we have at least 9 characters, we can break at the next space or suitable position
+          if (currentChunk.length >= 9) {
+              // Look ahead to find a good breaking point
+              let breakPoint = -1;
+              
+              // Check if we're at a space or can find one nearby
+              for (let j = i + 1; j < Math.min(i + 5, fullString.length); j++) {
+                  if (fullString[j] === ' ') {
+                      breakPoint = j;
+                      break;
+                  }
+              }
+              
+              // If we found a space within 4 characters, break there
+              if (breakPoint !== -1) {
+                  currentChunk += fullString.substring(i + 1, breakPoint);
+                  chunks.push(currentChunk.trim());
+                  currentChunk = '';
+                  i = breakPoint; // Skip the space
+              }
+              // Otherwise, if we're at a space now, break here
+              else if (fullString[i] === ' ') {
+                  chunks.push(currentChunk.trim());
+                  currentChunk = '';
+              }
+              // If next character would make it too long and we have 9+ chars, break here
+              else if (currentChunk.length >= 9 && i < fullString.length - 1) {
+                  chunks.push(currentChunk);
+                  currentChunk = '';
+              }
+          }
+      }
+      
+      // Add remaining characters
+      if (currentChunk.trim()) {
+          chunks.push(currentChunk.trim());
+      }
+      
+      // Join chunks with <br/> and add to result
+      if (chunks.length > 0) {
+          result.push(chunks.join('<br/>'));
       }
   }
-
-  if (result === "") {
-      const fallbackRegex = /^(\d+(?:\.\d+)?)(\D*)$/;
-      const fallbackMatch = input.match(fallbackRegex);
-      if (fallbackMatch) {
-          const weight = fallbackMatch[1].trim();
-          const unit = fallbackMatch[2].trim();
-          result = `<p>${weight}${unit ? ' ' + unit : ''}</p>`;
-      } else {
-          result = `<p>${input}</p>`;
-      }
-  }
-
-  return result;
+  
+  return result.length > 0 ? `<p>${result.join('<br/>')}</p>` : '';
 }
 htmlString = htmlString.replace(/\{\{twelve\}\}/g, formatWeightString(item?.safe_working_load));
 
