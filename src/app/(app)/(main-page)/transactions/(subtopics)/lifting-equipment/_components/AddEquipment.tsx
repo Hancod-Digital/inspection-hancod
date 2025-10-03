@@ -1441,7 +1441,7 @@ export default function EquipmentDetailsForm({
                         Identification of any part found to have a defect which is or could become a danger to
                         persons and a description of the defect:
                       </Label>
-                      <Input  maxLength={50} id="defect_description" className="my-auto" {...register('defect_description')} />
+                      <Input  maxLength={40} id="defect_description" className="my-auto" {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                       )}

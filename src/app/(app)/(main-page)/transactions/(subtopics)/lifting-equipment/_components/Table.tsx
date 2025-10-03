@@ -178,6 +178,8 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{eleven\}\}/g, radii.length ? `<ul>${radii.join('')}</ul>` : '');
           htmlString = htmlString.replace(/\{\{twelve\}\}/g, testLoads.length ? `<ul>${testLoads.join('')}</ul>` : '');
           htmlString = htmlString.replace(/\{\{twelve1\}\}/g, swls.length ? `<ul>${swls.join('')}</ul>` : '');
+          // New: Equipment Details body content (Parameter Description)
+          htmlString = htmlString.replace(/\{\{parameter_description\}\}/g, (item?.description || ''));
 
           htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
 
@@ -1004,7 +1006,7 @@ position: absolute;
             currentData?.map((item: any, idx: number) => (
               <React.Fragment key={item.id}>
                 <TableRow>
-                  <TableCell className="py-4">{currentPage * pageSize + idx + 1}</TableCell>
+                  <TableCell className="py-4">{(currentPage - 1) * pageSize + idx + 1}</TableCell>
                   <TableCell className="py-4">{item?.title}</TableCell>
                   <TableCell className="py-4">{equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
 
