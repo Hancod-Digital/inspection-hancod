@@ -483,10 +483,8 @@ export default function EditEquipmentDetailsForm({
         annexures: annexureList,
       };
 
-      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-      // console.log({ ...formData, properties: data, annexures: propertyList }) 
-      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-      await updateRecord(id, { ...formData, properties: data, annexures: propertyList });
+      // Use annexureList (the actual state) instead of propertyList
+      await updateRecord(id, { ...formData, properties: data, annexures: annexureList });
     } catch (error) {
       console.error('Error updating record:', error);
       toastWithTimeout(ToastVariant.Error, "Failed to update equipment details.");
@@ -720,7 +718,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Equipment Description */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
-                    <Input id="equipment_description" {...register('equipment_description')} />
+                    <Input maxLength={119} id="equipment_description" {...register('equipment_description')} />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
                     )}
