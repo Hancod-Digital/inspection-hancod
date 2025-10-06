@@ -1017,111 +1017,55 @@ export default function EditEquipmentDetailsForm({
                       <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                     )}
                   </div>
-                  {/* Last Test Exam */}
+                  {/* Move last/last certificate fields out; they will be rendered below to match Add form layout */}
+                </div>
+
+                {/* Last test/thorough dates and certificates - aligned like Add form */}
+                <div className="grid gap-4 grid-cols-1 w-[64%]">
+                  {/* Date of last proof load test */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                    <Label className="mt-3" htmlFor="last_test_exam">
-                      Date of last proof load test
-                    </Label>
+                    <Label className="mt-3" htmlFor="last_test_exam">Date of last proof load test</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name="last_test_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input
-                            id="last_test_exam"
-                            type="date"
-                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
-                            {...field}
-                          />
+                          <Input id="last_test_exam" type="date" disabled={lastTestExamChecked || lastTestExamNotAvailable} {...field} />
                         )}
                       />
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={lastTestExamChecked}
-                        onCheckedChange={(checked: boolean) => {
-                          setLastTestExamChecked(checked);
-                          if (checked) setLastTestExamNotAvailable(false);
-                        }}
-                      />
+                      <Checkbox className="w-6 h-6" checked={lastTestExamChecked} onCheckedChange={(checked: boolean) => { setLastTestExamChecked(checked); if (checked) setLastTestExamNotAvailable(false); }} />
                       <span className="text-[13px] w-[15%]">Not Applicable</span>
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={lastTestExamNotAvailable}
-                        onCheckedChange={(checked: boolean) => {
-                          setLastTestExamNotAvailable(checked);
-                          if (checked) setLastTestExamChecked(false);
-                        }}
-                      />
+                      <Checkbox className="w-6 h-6" checked={lastTestExamNotAvailable} onCheckedChange={(checked: boolean) => { setLastTestExamNotAvailable(checked); if (checked) setLastTestExamChecked(false); }} />
                       <span className="text-[13px] w-[15%]">Not Available</span>
                     </div>
-                    {errors.last_test_exam && (
-                      <p className="text-red-500 text-[12px]">
-                        {errors.last_test_exam.message}
-                      </p>
-                    )}
+                    {errors.last_test_exam && (<p className="text-red-500 text-[12px]">{errors.last_test_exam.message}</p>)}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                      Last Test Certificate No.
-                    </Label>
-                    <Input
-                      disabled={lastTestExamChecked || lastTestExamNotAvailable}
-                      id="last_test_exam_certificate_no"
-                      {...register('last_test_exam_certificate_no')}
-                    />
+                  <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+                    <Label htmlFor="last_test_exam_certificate_no" className="mt-3">Last Test Certificate No.</Label>
+                    <Input disabled={lastTestExamChecked || lastTestExamNotAvailable} id="last_test_exam_certificate_no" {...register('last_test_exam_certificate_no')} />
                   </div>
-                  {/* Last Thorough Exam */}
+
+                  {/* Date of last examination */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                    <Label className="mt-3" htmlFor="last_thorough_exam">
-                      Date of last examination
-                    </Label>
+                    <Label className="mt-3" htmlFor="last_thorough_exam">Date of last examination</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name="last_thorough_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input
-                            id="last_thorough_exam"
-                            type="date"
-                            disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
-                            {...field}
-                          />
+                          <Input id="last_thorough_exam" type="date" disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable} {...field} />
                         )}
                       />
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={lastThoroughExamChecked}
-                        onCheckedChange={(checked: boolean) => {
-                          setLastThoroughExamChecked(checked);
-                          if (checked) setLastThoroughExamNotAvailable(false);
-                        }}
-                      />
+                      <Checkbox className="w-6 h-6" checked={lastThoroughExamChecked} onCheckedChange={(checked: boolean) => { setLastThoroughExamChecked(checked); if (checked) setLastThoroughExamNotAvailable(false); }} />
                       <span className="text-[13px] w-[15%]">Not Applicable</span>
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={lastThoroughExamNotAvailable}
-                        onCheckedChange={(checked: boolean) => {
-                          setLastThoroughExamNotAvailable(checked);
-                          if (checked) setLastThoroughExamChecked(false);
-                        }}
-                      />
+                      <Checkbox className="w-6 h-6" checked={lastThoroughExamNotAvailable} onCheckedChange={(checked: boolean) => { setLastThoroughExamNotAvailable(checked); if (checked) setLastThoroughExamChecked(false); }} />
                       <span className="text-[13px] w-[15%]">Not Available</span>
                     </div>
-                    {errors.last_thorough_exam && (
-                      <p className="text-red-500 text-[12px]">
-                        {errors.last_thorough_exam.message}
-                      </p>
-                    )}
+                    {errors.last_thorough_exam && (<p className="text-red-500 text-[12px]">{errors.last_thorough_exam.message}</p>)}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-                      Last Thorough Certificate No.
-                    </Label>
-                    <Input
-                      disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
-                      id="last_thorough_exam_certificate_no"
-                      {...register('last_thorough_exam_certificate_no')}
-                    />
+                  <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+                    <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">Last Thorough Certificate No.</Label>
+                    <Input disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable} id="last_thorough_exam_certificate_no" {...register('last_thorough_exam_certificate_no')} />
                   </div>
                 </div>
                 {/* Next Test Exam, Next Thorough Exam, Elevator Certificate, etc. */}
