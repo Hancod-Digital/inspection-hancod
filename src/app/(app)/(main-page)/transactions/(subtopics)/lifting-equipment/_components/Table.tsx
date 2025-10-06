@@ -127,9 +127,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           const surveyorName = surveyor?.surveyor || '';
           const surveyorQualification = surveyor?.qualification || 'Not Available';
           const authorityName = authorityOptions.find((a: any) => a.id == item.authority)?.authority || '';
-          console.log("surveyorName", surveyorName)
-          console.log("surveyorQualification", surveyorQualification)
-          console.log("authorityName", authorityName)
+          htmlString = htmlString.replace(/\{\{type_exam\}\}/g, item?.type_of_exam || '');
           htmlString = htmlString.replace(/\{\{seven\}\}/g, surveyorName);
           htmlString = htmlString.replace(/\{\{seven_qualification\}\}/g, surveyorQualification);
           htmlString = htmlString.replace(/\{\{eight\}\}/g, authorityName);
@@ -153,6 +151,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{six5\}\}/g, item?.owner_name || '');
           htmlString = htmlString.replace(/\{\{six6\}\}/g, item?.serial_no || '');
           htmlString = htmlString.replace(/\{\{six7\}\}/g, item?.lift_location || '');
+          htmlString = htmlString.replace(/\{\{twentyfive\}\}/g, item?.equipment_description);
 
 
           function splitIntoChunks(text: string, chunkSize: number = 6): string {
@@ -1012,8 +1011,8 @@ position: absolute;
             <TableHead className="py-4">Title</TableHead>
             <TableHead className="py-4">Equipment ID</TableHead>
             <TableHead className="py-4">Inspection Date</TableHead>
-            <TableHead className="py-4">Next examination date</TableHead>
-            <TableHead className="py-4">Last examination date</TableHead>
+            <TableHead className="py-4">Next Exam Date</TableHead>
+            <TableHead className="py-4">Last Exam Date</TableHead>
             <TableHead className="py-4">Status</TableHead>
             <TableHead className="py-4"></TableHead>
             <TableHead className="py-4"></TableHead>
@@ -1030,7 +1029,7 @@ position: absolute;
 
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
                   <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
-                  <TableCell className="py-4">{item?.inspection_date}</TableCell>
+                  <TableCell className="py-4">{item?.last_thorough_exam}</TableCell>
                   <TableCell className="py-4">{item?.result}</TableCell>
                   <TableCell
                     className={`py-4 ${item.approval_status == 'true'
