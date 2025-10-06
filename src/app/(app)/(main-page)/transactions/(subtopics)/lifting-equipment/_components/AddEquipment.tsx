@@ -348,6 +348,7 @@ export default function EquipmentDetailsForm({
   useEffect(() => {
     if (isSubmitSuccessful) {
       // reset();
+
     }
   }, [isSubmitSuccessful, reset]);
 
@@ -397,6 +398,9 @@ export default function EquipmentDetailsForm({
         null,
         'lifting_equipment'
       );
+
+      // Success toast
+      toastWithTimeout(ToastVariant.Success, 'Equipment details saved successfully.');
 
       // Optionally remove data from localStorage, close form, etc.
       onClose();

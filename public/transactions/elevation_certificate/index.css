@@ -2078,6 +2078,19 @@ button {
   text-align: left;
   z-index: 33;
 }
+.surveyor-qualification {
+  position: absolute;
+  left: calc(31.2978515625 * var(--rpx));
+  top:  calc(1079  * var(--rpx));
+  width: calc(476.5869140625 * var(--rpx));
+  color: #0f1422;
+  font-family: Inter, var(--default-font-family);
+  font-size: calc(15 * var(--rpx));
+  font-weight: 550;
+  line-height: calc(20 * var(--rpx));
+  text-align: left;
+  z-index: 45;
+}
 .name-authenticating {
   display: flex;
   align-items: center;
