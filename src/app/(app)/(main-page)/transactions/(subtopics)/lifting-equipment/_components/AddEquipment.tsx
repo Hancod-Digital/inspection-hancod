@@ -386,7 +386,7 @@ export default function EquipmentDetailsForm({
         last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? '' : values.last_thorough_exam_certificate_no,
         // next_test_exam_certificate_no and next_thorough_exam_certificate_no are not included
       };
-      console.log(formData);
+      // console.log(formData);
       // Add the property & annexures to the record
       await addRecord(
         {
