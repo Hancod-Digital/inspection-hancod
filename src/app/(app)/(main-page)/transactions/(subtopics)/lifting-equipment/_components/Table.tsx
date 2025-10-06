@@ -994,8 +994,8 @@ position: absolute;
             <TableHead className="py-4">Title</TableHead>
             <TableHead className="py-4">Equipment ID</TableHead>
             <TableHead className="py-4">Inspection Date</TableHead>
-            <TableHead className="py-4">Next Thorough Date</TableHead>
-            <TableHead className="py-4">Inspection Date</TableHead>
+            <TableHead className="py-4">Next examination date</TableHead>
+            <TableHead className="py-4">Last examination date</TableHead>
             <TableHead className="py-4">Status</TableHead>
             <TableHead className="py-4"></TableHead>
             <TableHead className="py-4"></TableHead>

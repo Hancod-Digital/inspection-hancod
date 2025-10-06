@@ -106,7 +106,7 @@ export default function EditEquipmentDetailsForm({
   // Remove next_test_exam_certificate_no and next_thorough_exam_certificate_no from schema
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    site: string().optional(),
     year_of_manufacture: string().nonempty('Year of Manufacture is required'),
     authority: string().nonempty('Authority is required'),
     standard: string().nonempty('Standard is required'),
@@ -446,6 +446,8 @@ export default function EditEquipmentDetailsForm({
     try {
       const formData = {
         ...values,
+        // Normalize 'site' to a number or null to avoid sending the string "null" to a bigint column
+        site: values.site && values.site !== 'null' ? Number(values.site) : null,
         first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
         six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
         twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
