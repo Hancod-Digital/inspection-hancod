@@ -251,6 +251,20 @@ export default function EditEquipmentDetailsForm({
     setValue,
     formState: { isSubmitSuccessful, errors },
   } = methods;
+
+  // Sync saved boolean flags into SafetyChecklist's yes/no model on edit
+  useEffect(() => {
+    if (!existingData) return;
+    setSafetyChecklistValues({
+      firstExamination: existingData.first_examination ? 'yes' : 'no',
+      sixMonthInterval: existingData.six_month_interval ? 'yes' : 'no',
+      twelveMonthInterval: existingData.twelve_month_interval ? 'yes' : 'no',
+      correctInstallation: existingData.correct_installation ? 'yes' : 'no',
+      examinationScheme: existingData.examination_scheme ? 'yes' : 'no',
+      exceptionalCircumstances: existingData.exceptional_circumstances ? 'yes' : 'no',
+      safeToUse: existingData.safe_to_use ? 'yes' : 'no',
+    });
+  }, [existingData]);
   const equipmentNoChanged = (value: string, field: any) => {
     // console.log("Selected equipment no:", value)
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
