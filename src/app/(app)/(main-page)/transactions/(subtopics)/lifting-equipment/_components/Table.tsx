@@ -39,6 +39,8 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
   const [standardOptions, setStandardOptions] = useState<any>([]);
   const [equipmentOptions, setEquipmentOptions] = useState<any>([]);
   const [serialNo, setSerialNo] = useState<any>([]);
+  const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
+  const [authorityOptions, setAuthorityOptions] = useState<any>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,12 +49,16 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
       const sites = await getAllSingleSubtopic('site');
       const owners = await getAllSingleSubtopic('owner');
       const standards = await getAllSingleSubtopic('standard');
+      const surveyors = await getAllSingleSubtopic('surveyor');
+      const authorities = await getAllSingleSubtopic('authority');
 
       if (jobOrders) setJobOrderNoOptions(jobOrders);
       if (equipments) setEquipmentOptions(equipments?.filter((item: any) => item.status === "ACTIVE"));
       if (sites) setSiteOptions(sites?.filter((item: any) => item.status === "ACTIVE"));
       if (owners) setOwnerOptions(owners?.filter((item: any) => item.status === "ACTIVE"));
       if (standards) setStandardOptions(standards?.filter((item: any) => item.status === "ACTIVE"));
+      if (surveyors) setSurveyorOptions(surveyors);
+      if (authorities) setAuthorityOptions(authorities?.filter((item: any) => item.status === "ACTIVE"));
     };
     fetchData();
   }, [getAllSingleSubtopic]);
@@ -115,7 +121,18 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           let cssText = await cssResponse.text();
 
           // Replace placeholders in HTML:
-          // Adjust these replacements to match your actual placeholders and data
+          // {{seven}}: Surveyor name with qualification (like multi-gear implementation)
+          // {{eight}}: Authority name
+          const surveyor = surveyorOptions.find((s: any) => s.id == item.surveyor);
+          const surveyorName = surveyor?.surveyor || '';
+          const surveyorQualification = surveyor?.qualification || 'Not Available';
+          const authorityName = authorityOptions.find((a: any) => a.id == item.authority)?.authority || '';
+          console.log("surveyorName", surveyorName)
+          console.log("surveyorQualification", surveyorQualification)
+          console.log("authorityName", authorityName)
+          htmlString = htmlString.replace(/\{\{seven\}\}/g, surveyorName);
+          htmlString = htmlString.replace(/\{\{seven_qualification\}\}/g, surveyorQualification);
+          htmlString = htmlString.replace(/\{\{eight\}\}/g, authorityName);
           htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no || '');
           htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
           htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_id)?.owner || '');
@@ -134,9 +151,6 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer : data[0]?.serial_no || '');
           htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
           htmlString = htmlString.replace(/\{\{six5\}\}/g, item?.owner_name || '');
-
-          htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
-          htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
 
           function splitIntoChunks(text: string, chunkSize: number = 6): string {
             const chunks = [];
