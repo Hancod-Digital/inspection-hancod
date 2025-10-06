@@ -151,6 +151,9 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer : data[0]?.serial_no || '');
           htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
           htmlString = htmlString.replace(/\{\{six5\}\}/g, item?.owner_name || '');
+          htmlString = htmlString.replace(/\{\{six6\}\}/g, item?.serial_no || '');
+          htmlString = htmlString.replace(/\{\{six7\}\}/g, item?.lift_location || '');
+
 
           function splitIntoChunks(text: string, chunkSize: number = 6): string {
             const chunks = [];
@@ -334,7 +337,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
       `;
     });
     const data = generateRows(item?.annexures)
-    // console.log("data",data,item)
+    console.log("data",data,item)
     const response = await fetch("/finalbackside/index.html");
     let htmlString = await response.text();
     equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
@@ -342,6 +345,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
     htmlString = htmlString.replace(/\{\{html\}\}/g, data.rowsHtml);
     //  htmlString = htmlString.replace(/\{\{css\}\}/g, data.rowsCss);
     htmlString = htmlString.replace(/\{\{four\}\}/g, item?.version);
+    htmlString = htmlString.replace(/\{\{six\}\}/g, item?.type_of_exam);
     //  htmlString = htmlString.replace(/\{\{five\}\}/g, item?.revision_date);
     htmlString = htmlString.replace(/\{\{datas\}\}/g, content)
     htmlString = htmlString.replace(/\{\{one\}\}/g, formatDateWithHyphen(item?.inspection_date));
