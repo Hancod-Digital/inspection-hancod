@@ -63,7 +63,7 @@ export default function EquipmentDetailsForm({
    */
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    site: string().optional(),
     authority: string().nonempty('Authority is required'),
     standard: string().nonempty('Standard is required'),
     type_of_exam: string().nonempty('Type of Exam is required'),
@@ -386,7 +386,7 @@ export default function EquipmentDetailsForm({
         last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? '' : values.last_thorough_exam_certificate_no,
         // next_test_exam_certificate_no and next_thorough_exam_certificate_no are not included
       };
-
+      console.log(formData);
       // Add the property & annexures to the record
       await addRecord(
         {
