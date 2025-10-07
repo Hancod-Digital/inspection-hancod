@@ -96,7 +96,7 @@ export default function EditEquipmentDetailsForm({
   const existingData = findRecordById(id);
 
   const [data, setData] = useState<{ [key: string]: string }[]>(existingData.properties); // For Property Table
-  const [annexureList, setAnnexureList] = useState<any[]>([]); // For Annexures Table
+  const [annexureList, setAnnexureList] = useState<any[]>(existingData.annexures || []); // For Annexures Table
 
   // For re-fetching after add
   const [invoke, setInvoke] = useState(false);

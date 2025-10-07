@@ -21,6 +21,7 @@ import { MasterService } from '@/services/api/masters-service';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { formatDateWithHyphen, generateRows } from '@/lib/utils';
+import { toastWithTimeout, ToastVariant } from '@/components/ui/use-toast';
 // import Manufacturer from '../../../../masters/(subtopics)/manufacturer/_components/AddEquipment'
 // import Location from '../../../../masters/(subtopics)/location/_components/AddEquipment'
 // import Equipment from '../../../../masters/(subtopics)/equipment/_components/AddEquipment'
@@ -1049,7 +1050,10 @@ position: absolute;
                       <DropdownMenuContent>
                         <DropdownMenuItem onClick={() => handleEditClick(item.id)}>Edit</DropdownMenuItem>
                         <DeleteDialogue
-                          onConfirm={async () => await deleteRecord(item.id)}
+                          onConfirm={async () => {
+                            await deleteRecord(item.id);
+                            toastWithTimeout(ToastVariant.Success, "Equipment deleted successfully.");
+                          }}
                           triggerButton={
                             <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                               Delete
