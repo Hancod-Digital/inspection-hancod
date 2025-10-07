@@ -199,6 +199,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{parameter_description\}\}/g, (item?.description || ''));
 
           htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
+          htmlString = htmlString.replace(/\{\{four2\}\}/g, item?.updated_at ? formatDateWithHyphen(item.updated_at) : '');
 
           // htmlString = htmlString.replace(/\{\{thirteen\}\}/g, formatDateWithHyphen(item?.last_test_exam) || '');
           // htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam) || '');
@@ -345,6 +346,7 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
     htmlString = htmlString.replace(/\{\{html\}\}/g, data.rowsHtml);
     //  htmlString = htmlString.replace(/\{\{css\}\}/g, data.rowsCss);
     htmlString = htmlString.replace(/\{\{four\}\}/g, item?.version);
+    htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.updated_at ? formatDateWithHyphen(item.updated_at) : '');
     htmlString = htmlString.replace(/\{\{six\}\}/g, item?.type_of_exam);
     //  htmlString = htmlString.replace(/\{\{five\}\}/g, item?.revision_date);
     htmlString = htmlString.replace(/\{\{datas\}\}/g, content)
@@ -1029,7 +1031,7 @@ position: absolute;
                   <TableCell className="py-4">{equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
 
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
-                  <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
+                  <TableCell className="py-4">{item?.next_thorough_exam || 'Not Applicable'}</TableCell>
                   <TableCell className="py-4">{item?.last_thorough_exam}</TableCell>
                   <TableCell className="py-4">{item?.result}</TableCell>
                   <TableCell
