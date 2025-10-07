@@ -126,10 +126,10 @@ export default function EditEquipmentDetailsForm({
     title: string().nonempty('Title is required'),
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
     safe_working_load: string().nonempty('Safe Working Load is required'),
-    last_test_exam: string().nonempty('Last Test Exam is required'),
-    next_test_exam: string().nonempty('Next Test Exam is required'),
-    last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-    next_thorough_exam: string().nonempty('Next Thorough Exam is required'),
+    last_test_exam: string().optional(),
+    next_test_exam: string().optional(),
+    last_thorough_exam: string().optional(),
+    next_thorough_exam: string().optional(),
     model_no: string().nonempty('Model No. is required'),
     registration_no: string().nonempty('Registration No. is required'),
     result: string().nonempty('Result is required'),
@@ -458,6 +458,28 @@ export default function EditEquipmentDetailsForm({
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
+      // Custom validation for date fields
+      if (!lastTestExamChecked && !lastTestExamNotAvailable && !values.last_test_exam) {
+        toastWithTimeout(ToastVariant.Error, 'Last Test Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!lastThoroughExamChecked && !lastThoroughExamNotAvailable && !values.last_thorough_exam) {
+        toastWithTimeout(ToastVariant.Error, 'Last Thorough Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!testExamChecked && !testExamNotAvailable && !values.next_test_exam) {
+        toastWithTimeout(ToastVariant.Error, 'Next Test Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!thoroughExamChecked && !thoroughExamNotAvailable && !values.next_thorough_exam) {
+        toastWithTimeout(ToastVariant.Error, 'Next Thorough Exam is required');
+        setLoading(false);
+        return;
+      }
+
       const formData = {
         ...values,
         // Normalize 'site' to a number or null to avoid sending the string "null" to a bigint column
@@ -1299,7 +1321,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Annexures Table */}
                   <div className="grid gap-4 grid-cols-1">
                     <AnnexuresTable
-                      propertyList={existingData?.annexures}
+                      propertyList={annexureList}
                       setPropertyList={setAnnexureList}
                       id={equipment_no}
                     />
