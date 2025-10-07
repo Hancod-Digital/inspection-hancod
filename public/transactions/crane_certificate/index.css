@@ -1044,7 +1044,7 @@ ul {
   left: calc(672.4921875 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: calc(16 * var(--rpx));
+  font-size: 16px;
   font-weight: 400;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: left;
@@ -1136,6 +1136,7 @@ ul {
   position: absolute;
   top: 14.904px;
   left: 427.793px;
+  color: #AAAAAA;
 }
 .last-examination {
   display: flex;
@@ -2357,4 +2358,16 @@ p {
     no-repeat center;
   background-size: cover;
   z-index: 8;
+}
+
+/* Print styles to fix font size issues when saving as PDF */
+@media print {
+  :root {
+    --rpx: 1px;
+  }
+  
+  .main-container {
+    width: 1133px;
+    height: 1603.3372802734375px;
+  }
 }
