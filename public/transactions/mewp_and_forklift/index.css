@@ -1336,6 +1336,7 @@ button {
   justify-content: flex-start;
   flex-shrink: 0;
   position: relative;
+  left: 7px;
   width: calc(606 * var(--rpx));
   height: calc(49 * var(--rpx));
   color: #0f1422;
@@ -1966,7 +1967,7 @@ p {
   display: block;
   position: absolute;
   /* Occupy the first column area until TEST LOAD starts */
-  left: calc(36.700439453125 * var(--rpx));
+  left: 19px;
   top: calc(64.4296875 * var(--rpx));
   width: calc(760 * var(--rpx));
   color: #0f1422;
