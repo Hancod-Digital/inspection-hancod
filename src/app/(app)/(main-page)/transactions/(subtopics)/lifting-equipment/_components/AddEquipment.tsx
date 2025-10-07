@@ -74,9 +74,9 @@ export default function EquipmentDetailsForm({
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
     safe_working_load: string().nonempty('Safe Working Load is required'),
     last_test_exam: string().nonempty('Last Test Exam is required'),
-    next_test_exam: string().optional(),
+    next_test_exam: string().nonempty('Next Test Exam is required'),
     last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-    next_thorough_exam: string().optional(),
+    next_thorough_exam: string().nonempty('Next Thorough Exam is required'),
     last_test_exam_certificate_no: string().optional(),
     last_thorough_exam_certificate_no: string().optional(),
     // next_test_exam_certificate_no: REMOVED
@@ -199,20 +199,20 @@ export default function EquipmentDetailsForm({
         setValue('manufacturer', '');
       }
 
-      setValue('year_of_manufacture', String(selected.year_of_manufacture) || '');
-      setValue('test_cert_coc_no', String(selected.test_certificate_no) || '');
-      setValue('safe_working_load', String(selected.safe_working_load) || '');
-      setValue('equipment_description', String(selected.description) || '');
-      setValue('title', String(selected.title) || '');
-      setValue('registration_no', String(selected.registration_no) || '');
-      setValue('last_test_exam', String(selected.last_test_date) || '');
+      setValue('year_of_manufacture', selected.year_of_manufacture ? String(selected.year_of_manufacture) : '');
+      setValue('test_cert_coc_no', selected.test_certificate_no ? String(selected.test_certificate_no) : '');
+      setValue('safe_working_load', selected.safe_working_load ? String(selected.safe_working_load) : '');
+      setValue('equipment_description', selected.description ? String(selected.description) : '');
+      setValue('title', selected.title ? String(selected.title) : '');
+      setValue('registration_no', selected.registration_no ? String(selected.registration_no) : '');
+      setValue('last_test_exam', selected.last_test_date ? String(selected.last_test_date) : '');
       setValue('last_test_exam_certificate_no', selected?.last_test_exam_certificate_no ? String(selected?.last_test_exam_certificate_no) : '');
-      setValue('next_test_exam', String(selected.next_test_date) || '');
-      setValue('last_thorough_exam', String(selected.last_thorough_date) || '');
+      setValue('next_test_exam', selected.next_test_date ? String(selected.next_test_date) : '');
+      setValue('last_thorough_exam', selected.last_thorough_date ? String(selected.last_thorough_date) : '');
       setValue('last_thorough_exam_certificate_no', selected?.last_thorough_exam_certificate_no ? String(selected?.last_thorough_exam_certificate_no) : '');
-      setValue('next_thorough_exam', String(selected.next_thorough_date) || '');
-      setValue('serial_no', String(selected.serial_no) || '');
-      setValue('model_no', String(selected.model_no) || '');
+      setValue('next_thorough_exam', selected.next_thorough_date ? String(selected.next_thorough_date) : '');
+      setValue('serial_no', selected.serial_no ? String(selected.serial_no) : '');
+      setValue('model_no', selected.model_no ? String(selected.model_no) : '');
 
       // Set Owner
       if (selected.owner_id) {

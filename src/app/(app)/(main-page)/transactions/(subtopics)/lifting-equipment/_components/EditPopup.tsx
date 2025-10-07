@@ -127,9 +127,9 @@ export default function EditEquipmentDetailsForm({
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
     safe_working_load: string().nonempty('Safe Working Load is required'),
     last_test_exam: string().nonempty('Last Test Exam is required'),
-    next_test_exam: string().optional(),
+    next_test_exam: string().nonempty('Next Test Exam is required'),
     last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
-    next_thorough_exam: string().optional(),
+    next_thorough_exam: string().nonempty('Next Thorough Exam is required'),
     model_no: string().nonempty('Model No. is required'),
     registration_no: string().nonempty('Registration No. is required'),
     result: string().nonempty('Result is required'),
@@ -284,12 +284,12 @@ export default function EditEquipmentDetailsForm({
         const found = manufacturerOptions.find((m: any) => String(m.id) === manuId);
         setValue('manufacturer', found ? manuId : selectedEquipment.manufacturer);
       }
-      setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || '');
-      setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
-      setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
+      setValue('year_of_manufacture', selectedEquipment.year_of_manufacture ? String(selectedEquipment.year_of_manufacture) : '');
+      setValue('test_cert_coc_no', selectedEquipment.test_certificate_no ? String(selectedEquipment.test_certificate_no) : '');
+      setValue('safe_working_load', selectedEquipment.safe_working_load ? String(selectedEquipment.safe_working_load) : '');
 
-      setValue('equipment_description', String(selectedEquipment.description) || '');
-      setValue('title', String(selectedEquipment.title) || '');
+      setValue('equipment_description', selectedEquipment.description ? String(selectedEquipment.description) : '');
+      setValue('title', selectedEquipment.title ? String(selectedEquipment.title) : '');
       setValue('last_test_exam_certificate_no', selectedEquipment.last_test_exam_certificate_no ? String(selectedEquipment.last_test_exam_certificate_no) : '');
       setValue('last_thorough_exam_certificate_no', selectedEquipment.last_thorough_exam_certificate_no ? String(selectedEquipment.last_thorough_exam_certificate_no) : '');
 
@@ -301,13 +301,13 @@ export default function EditEquipmentDetailsForm({
         setValue('owner_name', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
       }
 
-      setValue('registration_no', String(selectedEquipment.registration_no) || '');
-      setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
-      setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
-      setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
-      setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
-      setValue('serial_no', String(selectedEquipment.serial_no) || '');
-      setValue('model_no', String(selectedEquipment.model_no) || '');
+      setValue('registration_no', selectedEquipment.registration_no ? String(selectedEquipment.registration_no) : '');
+      setValue('last_test_exam', selectedEquipment.last_test_date ? String(selectedEquipment.last_test_date) : '');
+      setValue('next_test_exam', selectedEquipment.next_test_date ? String(selectedEquipment.next_test_date) : '');
+      setValue('last_thorough_exam', selectedEquipment.last_thorough_date ? String(selectedEquipment.last_thorough_date) : '');
+      setValue('next_thorough_exam', selectedEquipment.next_thorough_date ? String(selectedEquipment.next_thorough_date) : '');
+      setValue('serial_no', selectedEquipment.serial_no ? String(selectedEquipment.serial_no) : '');
+      setValue('model_no', selectedEquipment.model_no ? String(selectedEquipment.model_no) : '');
     }
     field.onChange(value)
   }

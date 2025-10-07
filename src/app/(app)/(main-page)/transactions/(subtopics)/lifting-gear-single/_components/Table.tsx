@@ -531,7 +531,7 @@ document.head.removeChild(styleElement);
 </TableCell>
                                 <TableCell className="py-4 flex-[1]">{item?.inspection_date}</TableCell>
                                 
-                                <TableCell className="py-4 flex-[1]">{item?.next_test_exam}</TableCell>
+                                <TableCell className="py-4 flex-[1]">{item?.next_thorough_exam}</TableCell>
                                 <TableCell className="py-4 flex-[1]  ">{item?.result}</TableCell>
                                 
                                 <TableCell className={`py-4 flex-[1] ${!item?.approval_status   ? 'text-orange-500' : 'text-green-500'}`}>
