@@ -362,9 +362,6 @@ export default function EquipmentDetailsForm({
 
   // OnSubmit Handler (updated: do not send next_test_exam_certificate_no and next_thorough_exam_certificate_no)
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
-    console.log('=== FORM SUBMIT TRIGGERED ===');
-    console.log('Form values:', values);
-    console.log('Form errors:', errors);
     setLoading(true);
     try {
       const formData = {
@@ -436,7 +433,7 @@ export default function EquipmentDetailsForm({
       <Card className="w-full border-0 p-0 hover:bg-white">
         <CardContent>
           <FormProvider {...methods}>
-            <form className="space-y-4" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmitHandler, onInvalidSubmit)}>
+            <form className="space-y-4" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmitHandler)}>
               <div className="space-y-4 pt-10">
 
                 {/* CERTIFICATE Title */}

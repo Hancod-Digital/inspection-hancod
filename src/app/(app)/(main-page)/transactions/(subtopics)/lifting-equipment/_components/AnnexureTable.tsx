@@ -44,7 +44,8 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
   }, [equipmentDetails])
 
   useEffect(() => {
-    if (equipmentDetails[0]?.annexure) {
+    // Only fetch and set property list if propertyList is empty or doesn't have existing data
+    if (equipmentDetails[0]?.annexure && (!propertyList || propertyList.length === 0)) {
       makeApiCall(()=>new MasterService().getPropertyList(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
     
         setPropertyList(data)
