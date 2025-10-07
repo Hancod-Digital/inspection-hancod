@@ -164,23 +164,23 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
         }
         
         const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((condition: string) => `<li>${splitIntoChunks(condition)}</li>`);
         
         const boomLengths = (item?.properties?.map((p: any) => p["BOOM LENGTH"]) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((boomLength: string) => `<li>${splitIntoChunks(boomLength)}</li>`);
         
         const radii = (item?.properties?.map((p: any) => p.RADIUS) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((radius: string) => `<li>${splitIntoChunks(radius)}</li>`);
         
         const testLoads = (item?.properties?.map((p: any) => p["TEST LOAD"]) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((testLoad: string) => `<li>${splitIntoChunks(testLoad)}</li>`);
         
             const swls = (item?.properties?.map((p: any) => p.SWL) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((swl: string) => {
                 const chunks = [];
                 for (let i = 0; i < swl.length; i += 6) {
