@@ -25,8 +25,9 @@ interface EquipmentDetail {
 
 export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:string,propertyList:any,setPropertyList:any}) {
   const [equipmentDetails, setEquipmentDetails] = useState<EquipmentDetail[]>([])
- 
+  const [previousId, setPreviousId] = useState<string>('')
   const [annexureData, setAnnexureData] = useState<Annexure[]>([])
+  const [initialLoad, setInitialLoad] = useState(true)
  
   useEffect(() => {
     makeApiCall(()=>new MasterService().fetchEquipmentDetails(id),{afterSuccess:(data: EquipmentDetail[])=>{
@@ -44,14 +45,29 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
   }, [equipmentDetails])
 
   useEffect(() => {
-    // Only fetch and set property list if propertyList is empty or doesn't have existing data
-    if (equipmentDetails[0]?.annexure && (!propertyList || propertyList.length === 0)) {
-      makeApiCall(()=>new MasterService().getPropertyList(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
+    // Only fetch if:
+    // 1. Equipment ID has changed (user selected different equipment)
+    // 2. OR propertyList is empty (initial load for add form)
+    const hasEquipmentChanged = id !== previousId && previousId !== '';
+    const shouldFetch = equipmentDetails[0]?.annexure && (
+      (!propertyList || propertyList.length === 0) || 
+      hasEquipmentChanged
+    );
     
+    if (shouldFetch) {
+      makeApiCall(()=>new MasterService().getPropertyList(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
         setPropertyList(data)
       }})
     }
-  }, [equipmentDetails])
+    
+    if (id !== previousId) {
+      setPreviousId(id);
+    }
+    
+    if (initialLoad && propertyList && propertyList.length > 0) {
+      setInitialLoad(false);
+    }
+  }, [equipmentDetails, id])
 
   const handleReset = () => {
     setPropertyList(propertyList.map((item:any) => ({
@@ -129,7 +145,7 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
                     type="text"
                     className="w-full bg-gray-50 border-0 focus:outline-none rounded p-1"
                     placeholder="Enter remarks"
-                    value={item.remarks}
+                    value={item.remarks || ''}
                     onChange={(e) => handleRemarksChange(item.id, e.target.value)}
                   />
                 </TableCell>
