@@ -1323,7 +1323,7 @@ export default function EditEquipmentDetailsForm({
                     <AnnexuresTable
                       propertyList={annexureList}
                       setPropertyList={setAnnexureList}
-                      id={equipment_no}
+                      property_table_type={equipmentNoOptions.find((item) => item.id == existingData?.equipment_no)?.property_table_type}
                     />
                   </div>
                 </div>

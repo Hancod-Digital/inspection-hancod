@@ -408,6 +408,13 @@ export class MasterService extends Supabase {
         return data;
     }
 
+    async getAnnexureByPropertyTableType(property_table_type: string) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.from('annexure').select('*').eq('property_table_type', property_table_type);
+        if (error) throw error;
+        return data;
+    }
+
     async getPropertyList(id: string) {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase.from('property_list').select('*').eq('annexure_id', id);
@@ -418,6 +425,51 @@ export class MasterService extends Supabase {
     async deleteProperty(id: number) {
         await this.ensureAuthenticated();
         const { data, error } = await this.supabase.from('property_list').delete().eq('id', id);
+        if (error) throw error;
+        return data;
+    }
+
+    async manualDataEntryForLiftingEquipment(params: {
+        manufacturer_name: string;
+        owner_name: string;
+        standard_code: string;
+        equipment_no: string;
+        serial_no: string;
+        title: string;
+        description: string;
+        test_certificate_no: string;
+        safe_working_load: string;
+        model_no: string;
+        year_of_manufacture: string;
+        registration_no: string;
+        property_table_type: string;
+        annexure_id: number;
+        last_test_date?: string;
+        next_test_date?: string;
+        last_thorough_date?: string;
+        next_thorough_date?: string;
+    }) {
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase.rpc('manual_data_entry_for_lifting_equipment', {
+            _manufacturer_name: params.manufacturer_name,
+            _owner_name: params.owner_name,
+            _standard_code: params.standard_code,
+            _equipment_no: params.equipment_no,
+            _serial_no: params.serial_no,
+            _title: params.title,
+            _description: params.description,
+            _test_certificate_no: params.test_certificate_no,
+            _safe_working_load: params.safe_working_load,
+            _model_no: params.model_no,
+            _year_of_manufacture: params.year_of_manufacture,
+            _registration_no: params.registration_no,
+            _property_table_type: params.property_table_type,
+            _annexure_id: params.annexure_id,
+            _last_test_date: params.last_test_date || null,
+            _next_test_date: params.next_test_date || null,
+            _last_thorough_date: params.last_thorough_date || null,
+            _next_thorough_date: params.next_thorough_date || null,
+        });
         if (error) throw error;
         return data;
     }

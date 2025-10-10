@@ -23,51 +23,33 @@ interface EquipmentDetail {
   annexure: string
 }
 
-export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:string,propertyList:any,setPropertyList:any}) {
-  const [equipmentDetails, setEquipmentDetails] = useState<EquipmentDetail[]>([])
-  const [previousId, setPreviousId] = useState<string>('')
+export default function AnnexuresTable({property_table_type,propertyList,setPropertyList}:{property_table_type:string,propertyList:any,setPropertyList:any}) {
   const [annexureData, setAnnexureData] = useState<Annexure[]>([])
+  const [previousPropertyTableType, setPreviousPropertyTableType] = useState<string>('')
   const [initialLoad, setInitialLoad] = useState(true)
  
+  // Fetch annexure based on property_table_type
   useEffect(() => {
-    makeApiCall(()=>new MasterService().fetchEquipmentDetails(id),{afterSuccess:(data: EquipmentDetail[])=>{
-      setEquipmentDetails(data)
-    }})
-  }, [id])
-
-  useEffect(() => {
-    if (equipmentDetails[0]?.annexure) {
-      makeApiCall(()=>new MasterService().getAnnexures(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
-       
-        setAnnexureData(data)
+    if (property_table_type) {
+      makeApiCall(()=>new MasterService().getAnnexureByPropertyTableType(property_table_type),{afterSuccess:(data: any)=>{
+        if (data && data.length > 0) {
+          setAnnexureData(data)
+          
+          // Fetch property list for this annexure
+          const hasPropertyTableTypeChanged = property_table_type !== previousPropertyTableType && previousPropertyTableType !== '';
+          const shouldFetch = (!propertyList || propertyList.length === 0) || hasPropertyTableTypeChanged;
+          
+          if (shouldFetch) {
+            makeApiCall(()=>new MasterService().getPropertyList(data[0].id),{afterSuccess:(propertyData: Annexure[])=>{
+              setPropertyList(propertyData)
+            }})
+          }
+        }
       }})
+      
+      setPreviousPropertyTableType(property_table_type);
     }
-  }, [equipmentDetails])
-
-  useEffect(() => {
-    // Only fetch if:
-    // 1. Equipment ID has changed (user selected different equipment)
-    // 2. OR propertyList is empty (initial load for add form)
-    const hasEquipmentChanged = id !== previousId && previousId !== '';
-    const shouldFetch = equipmentDetails[0]?.annexure && (
-      (!propertyList || propertyList.length === 0) || 
-      hasEquipmentChanged
-    );
-    
-    if (shouldFetch) {
-      makeApiCall(()=>new MasterService().getPropertyList(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
-        setPropertyList(data)
-      }})
-    }
-    
-    if (id !== previousId) {
-      setPreviousId(id);
-    }
-    
-    if (initialLoad && propertyList && propertyList.length > 0) {
-      setInitialLoad(false);
-    }
-  }, [equipmentDetails, id])
+  }, [property_table_type])
 
   const handleReset = () => {
     setPropertyList(propertyList.map((item:any) => ({

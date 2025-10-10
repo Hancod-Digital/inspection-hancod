@@ -1100,8 +1100,8 @@ position: absolute;
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={9} className="p-2 text-center text-gray-500">
-                No data to display
+              <TableCell colSpan={9}>
+                <div className="text-center text-gray-400 py-8">NO DATA AVAILABLE</div>
               </TableCell>
             </TableRow>
           )}
