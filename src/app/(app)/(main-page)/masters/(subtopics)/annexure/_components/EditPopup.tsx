@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, array, number } from 'zod';
+import { object, string, TypeOf, array, number, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -15,9 +15,9 @@ import FormTable from './FormTable'; // Ensure the correct import path
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 
-// Define the property schema
+// Define the property schema (id optional for newly added rows)
 const propertySchema = object({
-  id: string().or(number()),
+  id: string().or(number()).optional(),
   property: string().nonempty('Property is required'),
   property_group: string().optional(),
   condition: string().optional(),
@@ -28,7 +28,10 @@ const equipmentDetailsSchema = object({
   annexure: string().nonempty('Annexure is required'),
   status: string().nonempty('Status is required'),
   property_table_type: string().nonempty('Property Table Type is required'),
-    properties: array(propertySchema).min(1, 'At least one property is required'),
+    properties: z.preprocess(
+      (val) => (Array.isArray(val) ? (val as any[]).filter(Boolean) : []),
+      array(propertySchema).min(1, 'At least one property is required')
+    ),
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema> & { id?: number };
