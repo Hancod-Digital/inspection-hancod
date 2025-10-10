@@ -1255,7 +1255,7 @@ export default function EditEquipmentDetailsForm({
                   <div className="space-y-4">
                     <div className="grid gap-4 grid-cols-1">
                       <div className="w-full">
-                        <Label htmlFor="description_of_test">description of Test</Label>
+                        <Label htmlFor="description_of_test">Description of Test</Label>
                         <div>
                           <Controller
                             name="description_of_test"

@@ -291,48 +291,54 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
   const printAnnexure = async (item: any) => {
     let content: string = ""
 
-    item?.annexures?.forEach((item: { property: string, property_group: string, remarks: string }) => {
+    item?.annexures?.forEach((annexureItem: { property: string, property_group: string, remarks: string }, index: number) => {
       let height = 0;
-      // console.log(item.property_group?.length);
-      if (item.property?.length > item.property_group?.length) {
-        height = item.property?.length
+      // console.log(annexureItem.property_group?.length);
+      if (annexureItem.property?.length > annexureItem.property_group?.length) {
+        height = annexureItem.property?.length
       } else {
-        height = item.property_group?.length
+        height = annexureItem.property_group?.length
       }
 
       // Ensure remarks has a fallback value to prevent "undefined" from appearing
-      const remarks = item?.remarks || '';
+      const remarks = annexureItem?.remarks || '';
       
       if (height < remarks.length) {
         height = remarks.length
       }
-      // console.log(height, item?.property?.length, item?.property_group?.length, remarks.length)
-      // console.log(height - item?.property?.length, height - item?.property_group?.length, height - remarks.length);
+      // console.log(height, annexureItem?.property?.length, annexureItem?.property_group?.length, remarks.length)
+      // console.log(height - annexureItem?.property?.length, height - annexureItem?.property_group?.length, height - remarks.length);
 
 
       content += `
-        <div style="display: flex;  width:100%; border-bottom: 1px solid black;"> 
-          <section style="width: 32.5%;  
-                          height: fit-content; padding-left: 15px; 
-                          padding-top: 7.5px; padding-bottom: 7.5px; color: black;
+        <div style="display: flex; align-items: stretch; width:100%; border-bottom: 1px solid black; box-sizing: border-box;"> 
+          <section style="width: 10%;  
+                          padding: 7.5px 15px; color: black;
                           border-right: 1px solid black;
-                          ">
-           ${item?.property}<span style="color:white">${'-'?.repeat(height - item?.property?.length)}</span>
+                          text-align: center;
+                          word-break: break-word; overflow-wrap: anywhere;
+                          box-sizing: border-box;">
+           ${index + 1}
           </section>
-          <section style="width: 28.80%;  
-                          height: fit-content; padding-left: 15px; 
-                          padding-top: 7.5px; padding-bottom: 7.5px; color: black;
+          <section style="width: 35%;  
+                          padding: 7.5px 15px; color: black;
                           border-right: 1px solid black;
-                          ">
-           ${item?.property_group}<span style="color:white">${'-'?.repeat(height - item?.property_group?.length)}</span>
+                          word-break: break-word; overflow-wrap: anywhere;
+                          box-sizing: border-box;">
+           ${annexureItem?.property}
           </section>
-          <section style="width: 38.734%;  
-                          height: fit-content; padding-left: 15px; 
-                          padding-top: 7.5px; padding-bottom: 7.5px; color: black;
-                          
-                          ">
-            
-            ${remarks}<span style="color:white">${'-'?.repeat(height - remarks.length)}</span>
+          <section style="width: 27.5%;  
+                          padding: 7.5px 15px; color: black;
+                          border-right: 1px solid black;
+                          word-break: break-word; overflow-wrap: anywhere;
+                          box-sizing: border-box;">
+           ${annexureItem?.property_group}
+          </section>
+          <section style="width: 27.5%;  
+                          padding: 7.5px 15px; color: black;
+                          word-break: break-word; overflow-wrap: anywhere;
+                          box-sizing: border-box;">
+            ${remarks}
           </section>
         </div>
       `;
