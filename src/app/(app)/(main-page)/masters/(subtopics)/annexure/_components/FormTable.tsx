@@ -139,7 +139,12 @@ export default function Component({ onFunction, properties, setProperties }: Com
               </TableCell>
               <TableCell className="p-2 h-12 text-center">
                 <button
-                  onClick={() => handleDelete(index)}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDelete(index);
+                  }}
                   className="flex items-center justify-center p-1"
                   aria-label="Delete Property"
                 >

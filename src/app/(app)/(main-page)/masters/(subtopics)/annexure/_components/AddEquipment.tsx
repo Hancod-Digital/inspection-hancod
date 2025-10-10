@@ -15,8 +15,8 @@ import FormTable from './FormTable';
 const propertySchema = object({
 
   property: string().nonempty('Property is required'),
-  property_group: string().nonempty('Property Group is required'),
-  condition: string().nonempty('Condition is required'),
+  property_group: string().optional(),
+  condition: string().optional(),
 });
 
 const equipmentDetailsSchema = object({

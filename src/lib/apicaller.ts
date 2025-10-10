@@ -1,51 +1,50 @@
 import { ToastFunction } from "@/components/ui/use-toast";
-import { IResponse } from "@/services/api/utils";
  
 
-export async function makeApiCall(
-    serverCall: Function,
-    {   toastContent,
-        toast,
-        afterSuccess,
-        afterError,
-        forceShutdown = false
-    }: { toastContent?:string, toast?: ToastFunction; afterSuccess?: Function; afterError?: Function,forceShutdown?:boolean }
-) {
-    try {
-        const response: IResponse = await serverCall();
- 
+export async function makeApiCall<T = any>(
+  serverCall: () => Promise<T> | T,
+  {
+    toastContent,
+    toast,
+    afterSuccess,
+    afterError,
+    forceShutdown = false,
+  }: {
+    toastContent?: string;
+    toast?: ToastFunction;
+    afterSuccess?: (data: T) => void;
+    afterError?: (error: Error) => void;
+    forceShutdown?: boolean;
+  }
+): Promise<T> {
+  try {
+    const response = await serverCall();
 
-
-        if (afterSuccess) afterSuccess(response);
-        if (toast) {
-            const currentToast = toast({
-                description: toastContent,
-            });
-            setTimeout(() => {
-                currentToast.dismiss()
-            }, 2000);
-         return response
-        } else {
-            console.log("response");
-        }
-    } catch (error:any) {
-        
-        
- 
-        
-        if (afterError) afterError(error instanceof Error);
-        if (toast && !forceShutdown) {
-            const currentToast = toast({
-                variant: "destructive",
-                description: error.message ? error.message as string :"An Error Occured",
-            });
-            setTimeout(() => {
-                currentToast.dismiss()
-            }, 3000);
-            
-        } else {
-            console.log(error);
-        }
-       
+    if (afterSuccess) afterSuccess(response as T);
+    if (toast) {
+      const currentToast = toast({
+        description: toastContent,
+      });
+      setTimeout(() => {
+        currentToast.dismiss();
+      }, 2000);
     }
+    // Always return the response regardless of toast
+    return response as T;
+  } catch (error: any) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    if (afterError) afterError(err);
+    if (toast && !forceShutdown) {
+      const currentToast = toast({
+        variant: "destructive",
+        description: err.message ? (err.message as string) : "An Error Occured",
+      });
+      setTimeout(() => {
+        currentToast.dismiss();
+      }, 3000);
+    } else {
+      console.log(err);
+    }
+    throw err;
+  }
 }

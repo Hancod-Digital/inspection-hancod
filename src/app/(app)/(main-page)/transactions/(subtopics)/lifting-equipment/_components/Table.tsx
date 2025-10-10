@@ -146,10 +146,10 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
          htmlString = htmlString.replace(/\{\{six1\}\}/g,  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer);
          htmlString = htmlString.replace(/\{\{six12\}\}/g,  item?.year_of_manufacture.split('-')[0]);
 
-         htmlString = htmlString.replace(/\{\{six2\}\}/g,  equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.owner_name : equipment?.registration_no || '');
+         htmlString = htmlString.replace(/\{\{six2\}\}/g,  equipment.property_table_type == "ELEVATOR CERTIFICATE" ? (ownerOptions.find((owner: any) => owner.id == item.owner_id)?.code || '') : (equipment?.registration_no || ''));
           htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer : data[0]?.serial_no || '');
           htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
-          htmlString = htmlString.replace(/\{\{six5\}\}/g, item?.owner_name || '');
+          htmlString = htmlString.replace(/\{\{six5\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_id)?.code || '');
           htmlString = htmlString.replace(/\{\{six6\}\}/g, item?.serial_no || '');
           htmlString = htmlString.replace(/\{\{six7\}\}/g, item?.lift_location || '');
           htmlString = htmlString.replace(/\{\{twentyfive\}\}/g, item?.equipment_description);
@@ -1100,8 +1100,8 @@ position: absolute;
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={9} className="p-2 text-center text-gray-500">
-                No data to display
+              <TableCell colSpan={9}>
+                <div className="text-center text-gray-400 py-8">NO DATA AVAILABLE</div>
               </TableCell>
             </TableRow>
           )}
