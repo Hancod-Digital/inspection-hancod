@@ -280,22 +280,22 @@ export default function EquipmentDetailsForm({
     try {
       // Custom validation for date fields
       if (!lastTestExamChecked && !lastTestExamNotAvailable && !values.last_test_exam) {
-        toastWithTimeout(ToastVariant.Error, 'Last Test Exam is required');
+        toastWithTimeout(ToastVariant.Default, 'Last Test Exam is required');
         setLoading(false);
         return;
       }
       if (!lastThoroughExamChecked && !lastThoroughExamNotAvailable && !values.last_thorough_exam) {
-        toastWithTimeout(ToastVariant.Error, 'Last Thorough Exam is required');
+        toastWithTimeout(ToastVariant.Default, 'Last Thorough Exam is required');
         setLoading(false);
         return;
       }
       if (!testExamChecked && !testExamNotAvailable && !values.next_test_exam) {
-        toastWithTimeout(ToastVariant.Error, 'Next Test Exam is required');
+        toastWithTimeout(ToastVariant.Default, 'Next Test Exam is required');
         setLoading(false);
         return;
       }
       if (!thoroughExamChecked && !thoroughExamNotAvailable && !values.next_thorough_exam) {
-        toastWithTimeout(ToastVariant.Error, 'Next Thorough Exam is required');
+        toastWithTimeout(ToastVariant.Default, 'Next Thorough Exam is required');
         setLoading(false);
         return;
       }
@@ -323,7 +323,7 @@ export default function EquipmentDetailsForm({
 
       // Hard guard: do not proceed if annexureId is missing
       if (!annexureId) {
-        toastWithTimeout(ToastVariant.Error, 'Annexure not found for the selected Property Table Type');
+        toastWithTimeout(ToastVariant.Default, 'Annexure not found for the selected Property Table Type');
         setLoading(false);
         return;
       }
@@ -710,6 +710,7 @@ export default function EquipmentDetailsForm({
                     </Label>
                     <Input
                       id="equipment_description"
+                      maxLength={107}
                       {...register('equipment_description')}
                       value={
                         equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
@@ -850,31 +851,7 @@ export default function EquipmentDetailsForm({
                     </div>
                   </div>
 
-                  {/* Serial No. */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="serial_no" className="mt-3">
-                      Serial No.
-                    </Label>
-                    <Input id="serial_no" {...register('serial_no')} />
-                    {errors.serial_no && (
-                      <p className="text-red-500 text-[12px] ">
-                        {errors.serial_no.message}
-                      </p>
-                    )}
-                  </div>
 
-                  {/* Model No. */}
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="model_no" className="mt-3">
-                      Model No.
-                    </Label>
-                    <Input id="model_no" {...register('model_no')} />
-                    {errors.model_no && (
-                      <p className="text-red-500 text-[12px] ">
-                        {errors.model_no.message}
-                      </p>
-                    )}
-                  </div>
 
                   {/* Safe Working Load */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
