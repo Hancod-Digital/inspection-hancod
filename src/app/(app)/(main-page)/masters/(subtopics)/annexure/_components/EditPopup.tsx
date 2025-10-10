@@ -27,6 +27,7 @@ const propertySchema = object({
 const equipmentDetailsSchema = object({
   annexure: string().nonempty('Annexure is required'),
   status: string().nonempty('Status is required'),
+  property_table_type: string().nonempty('Property Table Type is required'),
     // properties: array(propertySchema).min(1, 'At least one property is required').optional(),
 });
 
@@ -61,6 +62,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     defaultValues: {
       annexure: existingData?.annexure || '',
       status: existingData?.status || '',
+      property_table_type: existingData?.property_table_type || '',
        
     },
   });
@@ -102,6 +104,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
         const response:any =  await updateRecord(id, {
           annexure: values.annexure,
           status: values.status,
+          property_table_type: values.property_table_type,
           
         });
     
@@ -189,6 +192,37 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                       />
                       {errors.status && (
                         <p className="text-red-500 mt-1 text-[13px]">{errors.status.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Property Table Type Field */}
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
+                    <Label htmlFor="property_table_type" className='mt-3'>Property Table Type</Label>
+                    <div>
+                      <Controller
+                        name="property_table_type"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="property_table_type">
+                              <SelectValue placeholder="Select property table type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value={"CRANE CERTIFICATE"}>CRANE CERTIFICATE</SelectItem>
+                              <SelectItem value={"ELEVATOR CERTIFICATE"}>ELEVATOR CERTIFICATE</SelectItem>
+                              <SelectItem value={"MEWP AND FORKLIFT"}>
+                                MEWP AND FORKLIFT
+                              </SelectItem>
+                              <SelectItem value={"EARTH MOVING EQUIPMENTS"}>
+                                EARTH MOVING EQUIPMENTS
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.property_table_type && (
+                        <p className="text-red-500 mt-1 text-[13px]">{errors.property_table_type.message}</p>
                       )}
                     </div>
                   </div>

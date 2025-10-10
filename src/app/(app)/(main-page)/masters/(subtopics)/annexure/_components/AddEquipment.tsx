@@ -13,7 +13,7 @@ import { useSubtopic } from '@/context/SubtopicContext';
 import FormTable from './FormTable';
 
 const propertySchema = object({
- 
+
   property: string().nonempty('Property is required'),
   property_group: string().nonempty('Property Group is required'),
   condition: string().nonempty('Condition is required'),
@@ -22,8 +22,9 @@ const propertySchema = object({
 const equipmentDetailsSchema = object({
   annexure: string().nonempty('Annexure is required'),
   status: string().nonempty('Status is required'),
+  property_table_type: string().nonempty('Property Table Type is required'),
   properties: array(propertySchema).min(1, 'At least one property is required')
-}); 
+});
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
 
@@ -37,28 +38,29 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
   const methods = useForm<EquipmentDetailsInput>({
     resolver: zodResolver(equipmentDetailsSchema),
   });
-  
+
   const { reset, handleSubmit, control, formState: { isSubmitSuccessful, errors } } = methods;
- 
+
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async(values) => {
+  const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     const dataToSubmit = {
       annexure: values.annexure,
-      status: values.status
+      status: values.status,
+      property_table_type: values.property_table_type
     };
-    
-   const response:any = await addRecord(dataToSubmit,null,"annexure")
-  
+
+    const response: any = await addRecord(dataToSubmit, null, "annexure")
+
     const d = values.properties.map(property => ({
       ...property,
       annexure_id: response[0].id
-    })) 
+    }))
     await addProperty(d)
     setLoading(false);
     onClose()
@@ -99,19 +101,19 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
             >
               <div className="space-y-4 pt-10">
                 <div className="grid gap-4 grid-cols-1">
-                  
+
                   <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
-                    <Label htmlFor="annexure"  className='mt-3'>Annexure</Label>
+                    <Label htmlFor="annexure" className='mt-3'>Annexure</Label>
                     <div>
                       <Input id="annexure" {...methods.register('annexure')} />
                       {errors.annexure && (
                         <p className="text-red-500 mt-1 text-[13px]">{errors.annexure.message}</p>
                       )}
-                      </div>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-[200px_1fr]  w-1/2 gap-4">
-                    <Label htmlFor="status"  className='mt-3'>Status</Label>
+                    <Label htmlFor="status" className='mt-3'>Status</Label>
                     <div>
                       <Controller
                         name="status"
@@ -122,7 +124,7 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                               <SelectValue placeholder="Select status" />
                             </SelectTrigger>
                             <SelectContent>
-                            <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                              <SelectItem value="ACTIVE">ACTIVE</SelectItem>
 
                               <SelectItem value="INACTIVE">INACTIVE</SelectItem>
                             </SelectContent>
@@ -134,14 +136,51 @@ export default function EquipmentDetailsForm({ onClose }: EquipmentDetailsFormPr
                       )}
                     </div>
                   </div>
-                  <FormTable onFunction={()=>{}} properties={properties} setProperties={handlePropertiesChange} />
+
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 items-start gap-4">
+                    <Label className="mt-3" htmlFor="property_table_type">
+                      Property Table Type*
+                    </Label>
+                    <div>
+                      <Controller
+                        name="property_table_type"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <SelectTrigger id="property_table_type">
+                              <SelectValue placeholder="Select Property Table Type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value={"CRANE CERTIFICATE"}>CRANE CERTIFICATE</SelectItem>
+                              <SelectItem value={"ELEVATOR CERTIFICATE"}>ELEVATOR CERTIFICATE</SelectItem>
+                              <SelectItem value={"MEWP AND FORKLIFT"}>
+                                MEWP AND FORKLIFT
+                              </SelectItem>
+                              <SelectItem value={"EARTH MOVING EQUIPMENTS"}>
+                                EARTH MOVING EQUIPMENTS
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.property_table_type && (
+                        <p className="text-red-500 mt-1 text-[13px]">
+                          {errors.property_table_type.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <FormTable onFunction={() => { }} properties={properties} setProperties={handlePropertiesChange} />
                 </div>
-           
                 <div className="flex justify-end gap-4">
                   <Button type="reset" className="px-10" onClick={onClose} variant="outline">
                     Cancel
                   </Button>
-                  <Button  className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
+                  <Button className="px-10 hover:bg-secondary hover:text-primary hover:border-primary border " type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save'}
                   </Button>
                 </div>
