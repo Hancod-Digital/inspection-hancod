@@ -86,6 +86,7 @@ export default function EquipmentDetailsForm({
     surveyor: string().nonempty('Surveyor is required'),
     result_description: string().nonempty('Test Particulars is required'),
     owner_name: string().nonempty('Owner Name is required'),
+    owner_code: string().optional(), // Owner No/ID (code) - used for RPC
     description: string().nonempty('Description Date is required').optional(),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
@@ -96,7 +97,7 @@ export default function EquipmentDetailsForm({
     lift_location: string().optional(),
     model_no: string().nonempty('Model_no is required'),
     year_of_manufacture: string().nonempty('Year of Manufacture is required'),
-    owner_id: string().optional(), // Populated from RPC response
+    owner_id: string().optional(), // Populated from RPC response (actual database ID)
     defect_description: string().nonempty('Defect Description is required'),
   }).superRefine((data, ctx) => {
     if (
@@ -332,6 +333,7 @@ export default function EquipmentDetailsForm({
       const rpcParams = {
         manufacturer_name: values.manufacturer,
         owner_name: values.owner_name,
+        owner_code: values.owner_code || '',  // Owner No/ID (code) from the form
         standard_code: values.standard,
         equipment_no: values.equipment_no,
         serial_no: values.serial_no,
@@ -349,16 +351,16 @@ export default function EquipmentDetailsForm({
         last_thorough_date: lastThoroughExamChecked ? 'Not Applicable' : (lastThoroughExamNotAvailable ? 'Not Available' : values.last_thorough_exam),
         next_thorough_date: thoroughExamChecked ? 'Not Applicable' : (thoroughExamNotAvailable ? 'Not Available' : values.next_thorough_exam),
       };
-      // console.log('RPC Parameters:', rpcParams);
+      console.log('RPC Parameters:', rpcParams);
 
       const rpcResult = await makeApiCall(
         () => new MasterService().manualDataEntryForLiftingEquipment(rpcParams),
         {
           afterSuccess: (data: any) => {
-            // console.log('✅ RPC Result:', data);
+            console.log('✅ RPC Result:', data);
           },
           afterError: (error: any) => {
-            // console.error('❌ RPC Error:', error);
+            console.error('❌ RPC Error:', error);
           }
         }
       );
@@ -763,19 +765,19 @@ export default function EquipmentDetailsForm({
 
                   {/* Owner No/ID */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_name" className="mt-3">
+                    <Label htmlFor="owner_code" className="mt-3">
                       Owner No/ID
                     </Label>
-                    <Input id="owner_name" {...register('owner_name')} />
-                    {errors.owner_name && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
+                    <Input id="owner_code" {...register('owner_code')} />
+                    {errors.owner_code && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_code.message}</p>
                     )}
                   </div>
 
                   {/* Model_no */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="model_no" className="mt-3">
-                      Model_no
+                      Model No
                     </Label>
                     <Input id="model_no" {...register('model_no')} />
                     {errors.model_no && (

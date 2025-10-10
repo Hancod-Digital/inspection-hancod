@@ -136,6 +136,7 @@ export default function EditEquipmentDetailsForm({
     surveyor: string().nonempty('Surveyor is required'),
     result_description: string().optional(),
     owner_name: string().nonempty('Owner Name is required'),
+    owner_code: string().nonempty('Owner Code is required'),
     description: string().nonempty('Description is required').optional(),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
@@ -230,6 +231,7 @@ export default function EditEquipmentDetailsForm({
       surveyor: String(existingData.surveyor) || '',
       result_description: existingData.result_description || '',
       owner_name: existingData.owner_name || '',
+      owner_code: existingData.owner_name || '',
       defect_description: existingData.defect_description || '',
       description: existingData.description || '',
       equipment_description: existingData.equipment_description || '',
@@ -293,12 +295,12 @@ export default function EditEquipmentDetailsForm({
       setValue('last_test_exam_certificate_no', selectedEquipment.last_test_exam_certificate_no ? String(selectedEquipment.last_test_exam_certificate_no) : '');
       setValue('last_thorough_exam_certificate_no', selectedEquipment.last_thorough_exam_certificate_no ? String(selectedEquipment.last_thorough_exam_certificate_no) : '');
 
-      // Set owner_name and owner_id if available in options
+      // Set owner_id and owner_code if available in options
       if (selectedEquipment.owner_id) {
         const ownerId = String(selectedEquipment.owner_id);
         const found = ownerOptions.find((o: any) => String(o.id) === ownerId);
         setValue('owner_id', found ? ownerId : selectedEquipment.owner_id);
-        setValue('owner_name', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
+        setValue('owner_code', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
       }
 
       setValue('registration_no', selectedEquipment.registration_no ? String(selectedEquipment.registration_no) : '');
@@ -330,11 +332,14 @@ export default function EditEquipmentDetailsForm({
       if (found) setValue('manufacturer', manuId);
     }
 
-    // Set owner_id
+    // Set owner_id and owner_code
     if (existingData.owner_id) {
       const ownerId = String(existingData.owner_id);
       const found = ownerOptions.find((o: any) => String(o.id) === ownerId);
-      if (found) setValue('owner_id', ownerId);
+      if (found) {
+        setValue('owner_id', ownerId);
+        setValue('owner_code', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
+      }
     }
     // eslint-disable-next-line
   }, [optionsLoaded, existingData, setValue, standardOptions, manufacturerOptions, ownerOptions]);
@@ -350,6 +355,7 @@ export default function EditEquipmentDetailsForm({
   // Watch equipment_no to set related fields
   const equipment_no = watch('equipment_no');
   const job_order_no = watch('job_order_no');
+  const owner_id_value = watch('owner_id');
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -385,6 +391,14 @@ export default function EditEquipmentDetailsForm({
     }
     // eslint-disable-next-line
   }, [job_order_no])
+
+  // Keep owner_code in sync with selected owner_id
+  useEffect(() => {
+    if (!owner_id_value) return;
+    const found = ownerOptions.find((o: any) => String(o.id) === String(owner_id_value));
+    setValue('owner_code', found?.code ? String(found.code) : '');
+    // eslint-disable-next-line
+  }, [owner_id_value, ownerOptions]);
   // Handle checkboxes to disable date inputs
   useEffect(() => {
     // console.log("equipment_no", existingData)
@@ -480,6 +494,33 @@ export default function EditEquipmentDetailsForm({
         return;
       }
 
+      // Require Owner No/ID (owner_code) when the selected owner has no code.
+      if (values.owner_id) {
+        const selectedOwner = ownerOptions.find((o: any) => String(o.id) === String(values.owner_id));
+        const ownerHasCode = !!selectedOwner?.code && String(selectedOwner.code).trim() !== '';
+        if (!ownerHasCode) {
+          // Owner in master has no code; user must provide one
+          const ownerCode = values.owner_code?.trim();
+          if (!ownerCode) {
+            toastWithTimeout(ToastVariant.Error, 'Owner No/ID is required for the selected Owner. Please enter it.');
+            setLoading(false);
+            return;
+          }
+          // Persist the provided owner_code to the owner table before proceeding
+          await makeApiCall(
+            () => new MasterService().updateOwnerCode(Number(values.owner_id), ownerCode),
+            {
+              afterSuccess: () => {
+                // Update local ownerOptions cache so UI reflects the new code immediately
+                setOwnerOptions((prev: any[]) => prev.map((o: any) => (
+                  String(o.id) === String(values.owner_id) ? { ...o, code: ownerCode } : o
+                )));
+              }
+            }
+          );
+        }
+      }
+
       const formData = {
         ...values,
         // Normalize 'site' to a number or null to avoid sending the string "null" to a bigint column
@@ -505,8 +546,11 @@ export default function EditEquipmentDetailsForm({
         annexures: annexureList,
       };
 
+      // Exclude fields not belonging to lifting_equipment table (e.g., owner_code)
+      const { owner_code, ...updates } = formData as any;
+
       // Use annexureList (the actual state) instead of propertyList
-      await updateRecord(id, { ...formData, properties: data, annexures: annexureList });
+      await updateRecord(id, { ...updates, properties: data, annexures: annexureList });
     } catch (error) {
       console.error('Error updating record:', error);
       toastWithTimeout(ToastVariant.Error, "Failed to update equipment details.");
@@ -763,10 +807,10 @@ export default function EditEquipmentDetailsForm({
                   </div>
                   {/* Owner No/ID */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_name" className="mt-3">Owner No/ID</Label>
-                    <Input id="owner_name" {...register('owner_name')} />
-                    {errors.owner_name && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
+                    <Label htmlFor="owner_code" className="mt-3">Owner No/ID</Label>
+                    <Input id="owner_code" {...register('owner_code')} />
+                    {errors.owner_code && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_code.message}</p>
                     )}
                   </div>
                   {/* Model */}

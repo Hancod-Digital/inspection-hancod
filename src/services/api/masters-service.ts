@@ -164,6 +164,16 @@ export class MasterService extends Supabase {
         if(error) throw error;
         return data[0];
     }
+    async updateOwnerCode(ownerId: number, code: string){
+        await this.ensureAuthenticated();
+        const { data, error } = await this.supabase
+            .from('owner')
+            .update({ code })
+            .eq('id', ownerId)
+            .select();
+        if (error) throw error;
+        return data?.[0];
+    }
     async addManufacturer(result:any){
         const {data,error} = await this.supabase
                              .from('manufacturer').insert(result).select()
@@ -432,6 +442,7 @@ export class MasterService extends Supabase {
     async manualDataEntryForLiftingEquipment(params: {
         manufacturer_name: string;
         owner_name: string;
+        owner_code: string;  // NEW: Owner No/ID
         standard_code: string;
         equipment_no: string;
         serial_no: string;
@@ -453,6 +464,7 @@ export class MasterService extends Supabase {
         const { data, error } = await this.supabase.rpc('manual_data_entry_for_lifting_equipment', {
             _manufacturer_name: params.manufacturer_name,
             _owner_name: params.owner_name,
+            _owner_code: params.owner_code,  // NEW: Pass owner code
             _standard_code: params.standard_code,
             _equipment_no: params.equipment_no,
             _serial_no: params.serial_no,
