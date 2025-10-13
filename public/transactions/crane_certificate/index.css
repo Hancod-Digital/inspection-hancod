@@ -1299,10 +1299,10 @@ ul {
   width: calc(193.5029296875 * var(--rpx));
   height: calc(23.778215408325195 * var(--rpx));
   top: calc(19.369 * var(--rpx));
-  left: calc(26.31640625 * var(--rpx));
+  left: 22px;
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: calc(13 * var(--rpx));
+  font-size: 11.5px;
   font-weight: 600;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;
@@ -1356,7 +1356,7 @@ ul {
   left: calc(546.927734375 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 600;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;

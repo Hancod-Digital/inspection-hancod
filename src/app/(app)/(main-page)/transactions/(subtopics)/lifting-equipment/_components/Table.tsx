@@ -803,9 +803,9 @@ position: absolute;
   top: 165px;
   left: 43.563px;
   font-family: Inter, var(--default-font-family);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  line-height: 22.4px;
+  line-height: 20.4px;
   text-align: left;
   z-index: 25;
 }

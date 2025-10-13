@@ -33,7 +33,7 @@
   width: calc(420.21484375 * var(--rpx));
   /* height: calc(82 * var(--rpx)); */
   top: calc(64.4296875 * var(--rpx));
-  left: calc(939.4921875 * var(--rpx));
+  left: calc(930 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
   font-size: calc(16 * var(--rpx));
@@ -1115,7 +1115,7 @@ button {
   left: calc(26.31640625 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: calc(13 * var(--rpx));
+  font-size: 10.5px;
   font-weight: 600;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;
@@ -1170,7 +1170,7 @@ button {
   left: calc(546.927734375 * var(--rpx));
   color: #0f1422;
   font-family: Inter, var(--default-font-family);
-  font-size: 15px;
+  font-size: 11px;
   font-weight: 600;
   line-height: calc(22.399999618530273 * var(--rpx));
   text-align: center;

@@ -234,6 +234,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                     onFunction={() => { /* You can define additional functions if needed */ }}
                     properties={properties}
                     setProperties={handlePropertiesChange}
+                    confirmDelete
                   />
                 </div>
 
