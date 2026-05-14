@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf, array, number } from 'zod';
+import { object, string, TypeOf, array, number, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -15,19 +15,23 @@ import FormTable from './FormTable'; // Ensure the correct import path
 import { makeApiCall } from '@/lib/apicaller';
 import { MasterService } from '@/services/api/masters-service';
 
-// Define the property schema
+// Define the property schema (id optional for newly added rows)
 const propertySchema = object({
-  id: string().or(number()),
+  id: string().or(number()).optional(),
   property: string().nonempty('Property is required'),
-  property_group: string().nonempty('Property Group is required'),
-  condition: string().nonempty('Condition is required'),
+  property_group: string().optional(),
+  condition: string().optional(),
 });
 
 // Extend the equipment details schema to include properties
 const equipmentDetailsSchema = object({
   annexure: string().nonempty('Annexure is required'),
   status: string().nonempty('Status is required'),
-    // properties: array(propertySchema).min(1, 'At least one property is required').optional(),
+  property_table_type: string().nonempty('Property Table Type is required'),
+    properties: z.preprocess(
+      (val) => (Array.isArray(val) ? (val as any[]).filter(Boolean) : []),
+      array(propertySchema).min(1, 'At least one property is required')
+    ),
 });
 
 type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema> & { id?: number };
@@ -61,7 +65,8 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     defaultValues: {
       annexure: existingData?.annexure || '',
       status: existingData?.status || '',
-       
+      property_table_type: existingData?.property_table_type || '',
+      properties: existingData?.properties || [],       
     },
   });
 
@@ -82,14 +87,14 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     }
   }, [isSubmitSuccessful, reset]);
 
-  // useEffect(() => {
-  //   register('properties');
-  //   setValue('properties', properties);
-  // }, [register, setValue, properties]);
+  // Keep RHF form value in sync with local `properties` state (covers initial fetch with no user edits)
+  useEffect(() => {
+    setValue('properties', properties, { shouldValidate: true });
+  }, [properties, setValue]);
 
   const handlePropertiesChange = (newProperties: any) => {
     setProperties(newProperties);
-    // setValue('properties', newProperties, { shouldValidate: true });
+    setValue('properties', newProperties, { shouldValidate: true });
   };
   console.log(errors);
   
@@ -98,11 +103,11 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
     setLoading(true);
     try {
       if (id) {
-        // Edit mode
+        // Edit mode: update only annexure columns; do NOT send `properties` here (it's a separate table)
         const response:any =  await updateRecord(id, {
           annexure: values.annexure,
           status: values.status,
-          
+          property_table_type: values.property_table_type,
         });
     
      
@@ -193,11 +198,43 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
                     </div>
                   </div>
 
+                  {/* Property Table Type Field */}
+                  <div className="grid grid-cols-[200px_1fr] w-1/2 gap-4">
+                    <Label htmlFor="property_table_type" className='mt-3'>Property Table Type</Label>
+                    <div>
+                      <Controller
+                        name="property_table_type"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger id="property_table_type">
+                              <SelectValue placeholder="Select property table type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value={"CRANE CERTIFICATE"}>CRANE CERTIFICATE</SelectItem>
+                              <SelectItem value={"ELEVATOR CERTIFICATE"}>ELEVATOR CERTIFICATE</SelectItem>
+                              <SelectItem value={"MEWP AND FORKLIFT"}>
+                                MEWP AND FORKLIFT
+                              </SelectItem>
+                              <SelectItem value={"EARTH MOVING EQUIPMENTS"}>
+                                EARTH MOVING EQUIPMENTS
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.property_table_type && (
+                        <p className="text-red-500 mt-1 text-[13px]">{errors.property_table_type.message}</p>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Properties Table */}
                   <FormTable
                     onFunction={() => { /* You can define additional functions if needed */ }}
                     properties={properties}
                     setProperties={handlePropertiesChange}
+                    confirmDelete
                   />
                 </div>
 

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useForm, SubmitHandler, FormProvider, Controller } from 'react-hook-form';
-import { object, string, TypeOf } from 'zod';
+import { object, string, TypeOf, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -57,25 +57,33 @@ export default function EquipmentDetailsForm({
   // "Not Available" checkboxes for next test/thorough
   const [testExamNotAvailable, setTestExamNotAvailable] = useState(false);
   const [thoroughExamNotAvailable, setThoroughExamNotAvailable] = useState(false);
+  // "Not Applicable" checkboxes for last test/thorough
+  const [lastTestExamChecked, setLastTestExamChecked] = useState(false);
+  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState(false);
+  // "Not Available" checkboxes for last test/thorough
+  const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState(false);
+  const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState(false);
 
   /**
-   * Zod Schema (updated: removed next_test_exam_certificate_no and next_thorough_exam_certificate_no)
+   * Zod Schema with conditional validation for date fields
+   * Shows "Required" error when neither date nor checkbox is filled
    */
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    site: string().optional(),
     authority: string().nonempty('Authority is required'),
     standard: string().nonempty('Standard is required'),
     type_of_exam: string().nonempty('Type of Exam is required'),
     description_of_test: string().nonempty('Description of Test is required').optional(),
     job_order_no: string().nonempty('Job Order No. is required'),
     equipment_no: string().nonempty('Equipment No. is required'),
+    property_table_type: string().nonempty('Property Table Type is required'),
     title: string().nonempty('Title is required'),
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
     safe_working_load: string().nonempty('Safe Working Load is required'),
-    last_test_exam: string().nonempty('Last Test Exam is required'),
+    last_test_exam: string().optional(),
     next_test_exam: string().optional(),
-    last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+    last_thorough_exam: string().optional(),
     next_thorough_exam: string().optional(),
     last_test_exam_certificate_no: string().optional(),
     last_thorough_exam_certificate_no: string().optional(),
@@ -85,6 +93,7 @@ export default function EquipmentDetailsForm({
     surveyor: string().nonempty('Surveyor is required'),
     result_description: string().nonempty('Test Particulars is required'),
     owner_name: string().nonempty('Owner Name is required'),
+    owner_code: string().optional(), // Owner No/ID (code) - used for RPC
     description: string().nonempty('Description Date is required').optional(),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
@@ -92,20 +101,62 @@ export default function EquipmentDetailsForm({
     location: string().nonempty('Location is required'),
     serial_no: string().nonempty('Serial No. is required'),
     registration_no: string().nonempty('Registration No. is required'),
-    lift_location: string().nonempty('Lift Location is required').optional(),
+    lift_location: string().optional(),
     model_no: string().nonempty('Model_no is required'),
     year_of_manufacture: string().nonempty('Year of Manufacture is required'),
-    owner_id: string().nonempty('Owner ID is required'),
+    owner_id: string().optional(), // Populated from RPC response (actual database ID)
     defect_description: string().nonempty('Defect Description is required'),
+  }).superRefine((data, ctx) => {
+    // Lift Location validation
+    if (
+      data.property_table_type === 'ELEVATOR CERTIFICATE' &&
+      (!data.lift_location || data.lift_location.trim() === '')
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Lift Location is required',
+        path: ['lift_location'],
+      });
+    }
+
+    // Last Test Exam validation - require if no checkbox is checked
+    if (!lastTestExamChecked && !lastTestExamNotAvailable && (!data.last_test_exam || data.last_test_exam.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Required',
+        path: ['last_test_exam'],
+      });
+    }
+
+    // Next Test Exam validation - require if no checkbox is checked
+    if (!testExamChecked && !testExamNotAvailable && (!data.next_test_exam || data.next_test_exam.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Required',
+        path: ['next_test_exam'],
+      });
+    }
+
+    // Last Thorough Exam validation - require if no checkbox is checked
+    if (!lastThoroughExamChecked && !lastThoroughExamNotAvailable && (!data.last_thorough_exam || data.last_thorough_exam.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Required',
+        path: ['last_thorough_exam'],
+      });
+    }
+
+    // Next Thorough Exam validation - require if no checkbox is checked
+    if (!thoroughExamChecked && !thoroughExamNotAvailable && (!data.next_thorough_exam || data.next_thorough_exam.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Required',
+        path: ['next_thorough_exam'],
+      });
+    }
   });
 
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
-  // "Not Applicable" checkboxes for last test/thorough
-  const [lastTestExamChecked, setLastTestExamChecked] = useState(false);
-  const [lastThoroughExamChecked, setLastThoroughExamChecked] = useState(false);
-  // "Not Available" checkboxes for last test/thorough
-  const [lastTestExamNotAvailable, setLastTestExamNotAvailable] = useState(false);
-  const [lastThoroughExamNotAvailable, setLastThoroughExamNotAvailable] = useState(false);
 
   const { getAllSingleSubtopic, addRecord } = useSubtopic();
 
@@ -155,6 +206,7 @@ export default function EquipmentDetailsForm({
   // Watch values for select fields
   const equipment_no = watch('equipment_no');
   const location = watch('location');
+  const property_table_type = watch('property_table_type');
 
   // Update "surveyor" when "job_order_no" changes
   const job_order_no = watch('job_order_no');
@@ -168,117 +220,10 @@ export default function EquipmentDetailsForm({
     }
   }, [job_order_no, jobOrderNoOptions, setValue]);
 
-  // Auto-populate fields when equipment_no changes
+  // Store selected equipment for reference only (no auto-fill)
   useEffect(() => {
     const selected = equipmentNoOptions.find((item: any) => String(item.id) === String(equipment_no));
     setSelectedEquipment(selected);
-
-    if (selected) {
-      // Set Standard
-      if (selected.standard) {
-        // Try to find the standard in the options by id or name
-        const foundStandard = standardOptions.find(
-          (std: any) =>
-            String(std.id) === String(selected.standard) ||
-            std.standard === selected.standard
-        );
-        setValue('standard', foundStandard ? String(foundStandard.id) : String(selected.standard));
-      } else {
-        setValue('standard', '');
-      }
-
-      // Set Manufacturer
-      if (selected.manufacturer) {
-        const foundManufacturer = manufacturerOptions.find(
-          (manu: any) =>
-            String(manu.id) === String(selected.manufacturer) ||
-            manu.manufacturer === selected.manufacturer
-        );
-        setValue('manufacturer', foundManufacturer ? String(foundManufacturer.id) : String(selected.manufacturer));
-      } else {
-        setValue('manufacturer', '');
-      }
-
-      setValue('year_of_manufacture', String(selected.year_of_manufacture) || '');
-      setValue('test_cert_coc_no', String(selected.test_certificate_no) || '');
-      setValue('safe_working_load', String(selected.safe_working_load) || '');
-      setValue('equipment_description', String(selected.description) || '');
-      setValue('title', String(selected.title) || '');
-      setValue('registration_no', String(selected.registration_no) || '');
-      setValue('last_test_exam', String(selected.last_test_date) || '');
-      setValue('last_test_exam_certificate_no', selected?.last_test_exam_certificate_no ? String(selected?.last_test_exam_certificate_no) : '');
-      setValue('next_test_exam', String(selected.next_test_date) || '');
-      setValue('last_thorough_exam', String(selected.last_thorough_date) || '');
-      setValue('last_thorough_exam_certificate_no', selected?.last_thorough_exam_certificate_no ? String(selected?.last_thorough_exam_certificate_no) : '');
-      setValue('next_thorough_exam', String(selected.next_thorough_date) || '');
-      setValue('serial_no', String(selected.serial_no) || '');
-      setValue('model_no', String(selected.model_no) || '');
-
-      // Set Owner
-      if (selected.owner_id) {
-        const foundOwner = ownerOptions.find(
-          (o: any) =>
-            String(o.id) === String(selected.owner_id) ||
-            o.owner === selected.owner_id ||
-            o.code === selected.owner_id
-        );
-        setValue('owner_id', foundOwner ? String(foundOwner.id) : String(selected.owner_id));
-        setValue('owner_name', foundOwner?.code || '');
-      } else {
-        setValue('owner_id', '');
-        setValue('owner_name', '');
-      }
-    }
-  }, [equipment_no, equipmentNoOptions, setValue, ownerOptions, standardOptions, manufacturerOptions]);
-
-  // Check if next_test_date/next_thorough_date is null -> set checkboxes
-  useEffect(() => {
-    const selected = equipmentNoOptions?.find((item: any) => String(item?.id) === String(equipment_no));
-    if (selected) {
-      if (selected.last_test_date === 'Not Applicable') {
-        setLastTestExamChecked(true);
-        setLastTestExamNotAvailable(false);
-      } else if (selected.last_test_date === 'Not Available') {
-        setLastTestExamNotAvailable(true);
-        setLastTestExamChecked(false);
-      } else {
-        setLastTestExamChecked(false);
-        setLastTestExamNotAvailable(false);
-      }
-      
-      if (selected.last_thorough_date === 'Not Applicable') {
-        setLastThoroughExamChecked(true);
-        setLastThoroughExamNotAvailable(false);
-      } else if (selected.last_thorough_date === 'Not Available') {
-        setLastThoroughExamNotAvailable(true);
-        setLastThoroughExamChecked(false);
-      } else {
-        setLastThoroughExamChecked(false);
-        setLastThoroughExamNotAvailable(false);
-      }
-      
-      if (selected.next_test_date === 'Not Applicable') {
-        setTestExamChecked(true);
-        setTestExamNotAvailable(false);
-      } else if (selected.next_test_date === 'Not Available') {
-        setTestExamNotAvailable(true);
-        setTestExamChecked(false);
-      } else {
-        setTestExamChecked(false);
-        setTestExamNotAvailable(false);
-      }
-      
-      if (selected.next_thorough_date === 'Not Applicable') {
-        setThoroughExamChecked(true);
-        setThoroughExamNotAvailable(false);
-      } else if (selected.next_thorough_date === 'Not Available') {
-        setThoroughExamNotAvailable(true);
-        setThoroughExamChecked(false);
-      } else {
-        setThoroughExamChecked(false);
-        setThoroughExamNotAvailable(false);
-      }
-    }
   }, [equipment_no, equipmentNoOptions]);
 
   // Fetch Sites based on Location
@@ -348,6 +293,7 @@ export default function EquipmentDetailsForm({
   useEffect(() => {
     if (isSubmitSuccessful) {
       // reset();
+
     }
   }, [isSubmitSuccessful, reset]);
 
@@ -359,12 +305,142 @@ export default function EquipmentDetailsForm({
     }));
   };
 
+  // Error handler to debug validation failures
+  const onErrorHandler = (errors: any) => {
+    console.log('Validation errors:', errors);
+    toastWithTimeout(ToastVariant.Default, 'Please fill in all required fields');
+  };
+
   // OnSubmit Handler (updated: do not send next_test_exam_certificate_no and next_thorough_exam_certificate_no)
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
+    // console.log('Form values:', values);
+    
     setLoading(true);
     try {
+      // Custom validation for date fields
+      if (!lastTestExamChecked && !lastTestExamNotAvailable && !values.last_test_exam) {
+        toastWithTimeout(ToastVariant.Default, 'Last Test Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!lastThoroughExamChecked && !lastThoroughExamNotAvailable && !values.last_thorough_exam) {
+        toastWithTimeout(ToastVariant.Default, 'Last Thorough Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!testExamChecked && !testExamNotAvailable && !values.next_test_exam) {
+        toastWithTimeout(ToastVariant.Default, 'Next Test Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!thoroughExamChecked && !thoroughExamNotAvailable && !values.next_thorough_exam) {
+        toastWithTimeout(ToastVariant.Default, 'Next Thorough Exam is required');
+        setLoading(false);
+        return;
+      }
+
+      // Step 1: Get annexure_id from property_table_type
+      let annexureId: number | null = null;
+      if (values.property_table_type) {
+        const annexureResponse = await makeApiCall(
+          () => new MasterService().getAnnexureByPropertyTableType(values.property_table_type),
+          {
+            afterSuccess: (data: any) => {
+              // console.log('Annexure data received:', data);
+            },
+          }
+        );
+        
+        // Extract annexure ID from response array
+        if (annexureResponse && Array.isArray(annexureResponse) && annexureResponse.length > 0) {
+          annexureId = annexureResponse[0].id;
+          // console.log('✅ Annexure ID:', annexureId);
+        } else {
+          // console.warn('⚠️ No annexure found for property_table_type:', values.property_table_type);
+        }
+      }
+
+      // Hard guard: do not proceed if annexureId is missing
+      if (!annexureId) {
+        toastWithTimeout(ToastVariant.Default, 'Annexure not found for the selected Property Table Type');
+        setLoading(false);
+        return;
+      }
+
+      // Step 2: Call RPC to create equipment and master records
+      const rpcParams = {
+        manufacturer_name: values.manufacturer,
+        owner_name: values.owner_name,
+        owner_code: values.owner_code || '',  // Owner No/ID (code) from the form
+        standard_code: values.standard,
+        equipment_no: values.equipment_no,
+        serial_no: values.serial_no,
+        title: values.title,
+        description: values.equipment_description,
+        test_certificate_no: values.test_cert_coc_no,
+        safe_working_load: values.safe_working_load,
+        model_no: values.model_no,
+        year_of_manufacture: values.year_of_manufacture,
+        registration_no: values.registration_no,
+        property_table_type: values.property_table_type,
+        annexure_id: Number(annexureId),
+        last_test_date: lastTestExamChecked ? 'Not Applicable' : (lastTestExamNotAvailable ? 'Not Available' : values.last_test_exam),
+        next_test_date: testExamChecked ? 'Not Applicable' : (testExamNotAvailable ? 'Not Available' : values.next_test_exam),
+        last_thorough_date: lastThoroughExamChecked ? 'Not Applicable' : (lastThoroughExamNotAvailable ? 'Not Available' : values.last_thorough_exam),
+        next_thorough_date: thoroughExamChecked ? 'Not Applicable' : (thoroughExamNotAvailable ? 'Not Available' : values.next_thorough_exam),
+      };
+      console.log('RPC Parameters:', rpcParams);
+
+      const rpcResult = await makeApiCall(
+        () => new MasterService().manualDataEntryForLiftingEquipment(rpcParams),
+        {
+          afterSuccess: (data: any) => {
+            console.log('✅ RPC Result:', data);
+          },
+          afterError: (error: any) => {
+            console.error('❌ RPC Error:', error);
+          }
+        }
+      );
+
+      // Extract IDs from RPC result (array returned by Supabase RPC)
+      // console.log('Step 3: Extracting IDs from RPC result');
+      const equipmentId = rpcResult?.[0]?.equipment_id;
+      const manufacturerId = rpcResult?.[0]?.manufacturer_id;
+      const ownerId = rpcResult?.[0]?.owner_id;
+      const standardId = rpcResult?.[0]?.standard_id;
+
+      // Step 3: Prepare lifting_equipment payload with IDs from RPC
       const formData = {
-        ...values,
+        inspection_date: values.inspection_date,
+        site: values.site,
+        authority: values.authority,
+        standard: standardId,
+        type_of_exam: values.type_of_exam,
+        description_of_test: values.description_of_test,
+        job_order_no: values.job_order_no,
+        equipment_no: equipmentId,  // Use equipment ID from RPC
+        title: values.title,
+        test_cert_coc_no: values.test_cert_coc_no,
+        safe_working_load: values.safe_working_load,
+        result: values.result,
+        surveyor: values.surveyor,
+        result_description: values.result_description,
+        owner_name: values.owner_name,
+        description: values.description,
+        equipment_description: values.equipment_description,
+        manufacturer: manufacturerId,  // Use manufacturer ID from RPC
+        approval_status: values.approval_status === 'Approved' ? true : false,
+        location: values.location,
+        serial_no: values.serial_no,
+        registration_no: values.registration_no,
+        lift_location: values.lift_location,
+        model_no: values.model_no,
+        year_of_manufacture: values.year_of_manufacture,
+        owner_id: ownerId,  // Use owner ID from RPC
+        defect_description: values.defect_description,
+
+        // Safety checklist
         first_examination: safetyChecklistValues.firstExamination === 'no' ? false : true,
         six_month_interval: safetyChecklistValues.sixMonthInterval === 'no' ? false : true,
         twelve_month_interval: safetyChecklistValues.twelveMonthInterval === 'no' ? false : true,
@@ -372,22 +448,26 @@ export default function EquipmentDetailsForm({
         examination_scheme: safetyChecklistValues.examinationScheme === 'no' ? false : true,
         exceptional_circumstances: safetyChecklistValues.exceptionalCircumstances === 'no' ? false : true,
         safe_to_use: safetyChecklistValues.safeToUse === 'no' ? false : true,
-        approval_status: values.approval_status === 'Approved' ? true : false,
 
         // Handle "Not Applicable" and "Not Available" logic
         next_test_exam: testExamChecked ? 'Not Applicable' : (testExamNotAvailable ? 'Not Available' : values.next_test_exam),
         next_thorough_exam: thoroughExamChecked ? 'Not Applicable' : (thoroughExamNotAvailable ? 'Not Available' : values.next_thorough_exam),
-
-        // For last test/thorough
         last_test_exam: lastTestExamChecked ? 'Not Applicable' : (lastTestExamNotAvailable ? 'Not Available' : values.last_test_exam),
         last_thorough_exam: lastThoroughExamChecked ? 'Not Applicable' : (lastThoroughExamNotAvailable ? 'Not Available' : values.last_thorough_exam),
+        
         // Set certificate numbers to empty string when dates are Not Applicable or Not Available
         last_test_exam_certificate_no: lastTestExamChecked || lastTestExamNotAvailable ? '' : values.last_test_exam_certificate_no,
         last_thorough_exam_certificate_no: lastThoroughExamChecked || lastThoroughExamNotAvailable ? '' : values.last_thorough_exam_certificate_no,
-        // next_test_exam_certificate_no and next_thorough_exam_certificate_no are not included
       };
 
-      // Add the property & annexures to the record
+      // Step 4: Add the lifting_equipment record with properties & annexures
+      // console.log('Step 4: Submitting lifting_equipment record');
+      console.log('Final payload:', {
+        ...formData,
+        properties: data,
+        annexures: propertyList,
+      });
+
       await addRecord(
         {
           ...formData,
@@ -398,16 +478,21 @@ export default function EquipmentDetailsForm({
         'lifting_equipment'
       );
 
+
+      // Success toast
+      toastWithTimeout(ToastVariant.Success, 'Equipment details saved successfully.');
+
       // Optionally remove data from localStorage, close form, etc.
       onClose();
       localStorage.removeItem('equipmentData');
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       toastWithTimeout(ToastVariant.Error, 'Failed to save equipment details.');
     } finally {
       setLoading(false);
     }
-  }; 
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -418,7 +503,7 @@ export default function EquipmentDetailsForm({
       <Card className="w-full border-0 p-0 hover:bg-white">
         <CardContent>
           <FormProvider {...methods}>
-            <form className="space-y-4" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmitHandler)}>
+            <form className="space-y-4" noValidate autoComplete="off" onSubmit={handleSubmit(onSubmitHandler, onErrorHandler)}>
               <div className="space-y-4 pt-10">
 
                 {/* CERTIFICATE Title */}
@@ -591,33 +676,56 @@ export default function EquipmentDetailsForm({
                     <Label htmlFor="equipment_no" className="mt-3">
                       Equipment No.
                     </Label>
-                    <div className="relative">
-                      <Controller
-                        name="equipment_no"
-                        control={control}
-                        render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger id="equipment_no">
-                              <SelectValue placeholder="Select equipment no." />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {equipmentNoOptions?.map((eq: any) => (
-                                <SelectItem key={eq.id} value={String(eq.id)}>
-                                  {eq.equipment_no}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
+                    <div>
+                      <Input
+                        id="equipment_no"
+                        {...register('equipment_no')}
+                        placeholder="Enter equipment number"
                       />
-                      <AddEquipmentButton />
                       {errors.equipment_no && (
-                        <p className="text-red-500 text-[12px] ">{errors.equipment_no.message}</p>
+                        <p className="text-red-500 text-[12px] mt-1">{errors.equipment_no.message}</p>
                       )}
                     </div>
                   </div>
 
-                  {/* Title */}
+                  {/* Property Table Type */}
+
+                  <div className='grid grid-cols-[200px_1fr] gap-4'>
+                    <Label htmlFor="property_table_type" className="mt-3">
+                      Property Table Type
+                    </Label>
+                    <Controller
+                      name="property_table_type"
+                      control={control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger id="property_table_type">
+                            <SelectValue placeholder="Select Property Table Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={"CRANE CERTIFICATE"}>CRANE CERTIFICATE</SelectItem>
+                            <SelectItem value={"ELEVATOR CERTIFICATE"}>ELEVATOR CERTIFICATE</SelectItem>
+                            <SelectItem value={"MEWP AND FORKLIFT"}>
+                              MEWP AND FORKLIFT
+                            </SelectItem>
+                            <SelectItem value={"EARTH MOVING EQUIPMENTS"}>
+                              EARTH MOVING EQUIPMENTS
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.property_table_type && (
+                      <p className="text-red-500 mt-1 text-[13px]">
+                        {errors.property_table_type.message}
+                      </p>
+                    )}
+                  </div>
+
+                </div>
+
+                {/* Single-row: Equipment Description */}
+                <div className="grid gap-4 grid-cols-2">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="title" className="mt-3">
                       Title
@@ -635,16 +743,14 @@ export default function EquipmentDetailsForm({
                       <p className="text-red-500 text-[12px] ">{errors.title.message}</p>
                     )}
                   </div>
-                </div>
 
-                {/* Single-row: Equipment Description */}
-                <section className="grid gap-4 grid-cols-1">
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">
                       Equipment Description
                     </Label>
                     <Input
                       id="equipment_description"
+                      maxLength={107}
                       {...register('equipment_description')}
                       value={
                         equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
@@ -658,7 +764,8 @@ export default function EquipmentDetailsForm({
                       </p>
                     )}
                   </div>
-                </section>
+                </div>
+                {/* </section> */}
 
                 {/* Third row of fields */}
                 <div className="grid gap-4 grid-cols-2">
@@ -696,19 +803,19 @@ export default function EquipmentDetailsForm({
 
                   {/* Owner No/ID */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_name" className="mt-3">
+                    <Label htmlFor="owner_code" className="mt-3">
                       Owner No/ID
                     </Label>
-                    <Input id="owner_name" {...register('owner_name')} />
-                    {errors.owner_name && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
+                    <Input id="owner_code" {...register('owner_code')} />
+                    {errors.owner_code && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_code.message}</p>
                     )}
                   </div>
 
                   {/* Model_no */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="model_no" className="mt-3">
-                      Model_no
+                      Model No
                     </Label>
                     <Input id="model_no" {...register('model_no')} />
                     {errors.model_no && (
@@ -721,77 +828,14 @@ export default function EquipmentDetailsForm({
                     <Label htmlFor="manufacturer" className="mt-3">
                       Manufacturer
                     </Label>
-                    <div className="relative">
-                      <Controller
-                        name="manufacturer"
-                        control={control}
-                        render={({ field }) => {
-                          const allManufacturerOptions = manufacturerOptions?.map((manu: any) => String(manu.id)) || [];
-                          const value = allManufacturerOptions.includes(field.value) ? field.value : "";
-                          return (
-                            <Select
-                              value={value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger id="manufacturer">
-                                <SelectValue
-                                  placeholder="Select or type manufacturer"
-                                  {...(allManufacturerOptions.includes(field.value)
-                                    ? {}
-                                    : { children: field.value ? field.value : undefined })}
-                                />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <div className="px-2 py-1 relative">
-                                  <Input
-                                    className="mt-2"
-                                    placeholder="Type manufacturer name"
-                                    value={!isManufacturerTyping ? field.value : ""}
-                                    onChange={e => {
-                                      setIsManufacturerTyping(true);
-                                      field.onChange(e.target.value);
-                                    }}
-                                  />
-                                  <Button
-                                    size="icon"
-                                    variant="outline"
-                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
-                                    onClick={async () => {
-                                      setIsManufacturerTyping(false);
-                                      if (!field.value) return;
-                                      await makeApiCall(
-                                        () => new MasterService().addManufacturer({ manufacturer: field.value }),
-                                        {
-                                          afterSuccess: (data: any) => {
-                                            setInvoke((prev) => !prev);
-                                            toastWithTimeout(ToastVariant.Success, "Manufacturer added successfully");
-                                            if (data && data.id) {
-                                              field.onChange(String(data.id));
-                                            } else {
-                                              field.onChange("");
-                                            }
-                                          }
-                                        }
-                                      );
-                                    }}
-                                    type="button"
-                                  >
-                                    Add
-                                  </Button>
-                                </div>
-                                {manufacturerOptions?.map((manu: any) => (
-                                  <SelectItem key={manu.id} value={String(manu.id)}>
-                                    {manu.manufacturer}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          );
-                        }}
+                    <div>
+                      <Input
+                        id="manufacturer"
+                        {...register('manufacturer')}
+                        placeholder="Enter manufacturer name"
                       />
-                      <AddManufacturerButton />
                       {errors.manufacturer && (
-                        <p className="text-red-500 text-[12px] ">{errors.manufacturer.message}</p>
+                        <p className="text-red-500 text-[12px] mt-1">{errors.manufacturer.message}</p>
                       )}
                     </div>
                   </div>
@@ -835,80 +879,19 @@ export default function EquipmentDetailsForm({
                     <Label htmlFor="standard" className="mt-3">
                       Standard
                     </Label>
-                    <div className="relative">
-                      <Controller
-                        name="standard"
-                        control={control}
-                        render={({ field }) => {
-                          const allStandardOptions = standardOptions?.map((std: any) => String(std.id)) || [];
-                          const value = allStandardOptions.includes(field.value) ? field.value : "";
-                          return (
-                            <Select
-                              value={value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger id="standard">
-                                <SelectValue
-                                  placeholder="Select or type standard"
-                                  {...(allStandardOptions.includes(field.value)
-                                    ? {}
-                                    : { children: field.value ? field.value : undefined })}
-                                />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <div className="px-2 py-1 relative">
-                                  <Input
-                                    className="mt-2"
-                                    placeholder="Type standard name"
-                                    value={!isStandardTyping ? field.value : ""}
-                                    onChange={e => {
-                                      setIsStandardTyping(true);
-                                      field.onChange(e.target.value);
-                                    }}
-                                  />
-                                  <Button
-                                    size="icon"
-                                    variant="outline"
-                                    className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
-                                    onClick={async () => {
-                                      setIsStandardTyping(false);
-                                      if (!field.value) return;
-                                      await makeApiCall(
-                                        () => new MasterService().addStandard({ standard: field.value }),
-                                        {
-                                          afterSuccess: (data: any) => {
-                                            setInvoke((prev) => !prev);
-                                            toastWithTimeout(ToastVariant.Success, "Standard added successfully");
-                                            if (data && data.id) {
-                                              field.onChange(String(data.id));
-                                            } else {
-                                              field.onChange("");
-                                            }
-                                          }
-                                        }
-                                      );
-                                    }}
-                                    type="button"
-                                  >
-                                    Add
-                                  </Button>
-                                </div>
-                                {standardOptions?.map((std: any) => (
-                                  <SelectItem key={std.id} value={String(std.id)}>
-                                    {std.standard}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          );
-                        }}
+                    <div>
+                      <Input
+                        id="standard"
+                        {...register('standard')}
+                        placeholder="Enter standard"
                       />
-                      <AddStandardButton />
                       {errors.standard && (
-                        <p className="text-red-500 text-[12px] ">{errors.standard.message}</p>
+                        <p className="text-red-500 text-[12px] mt-1">{errors.standard.message}</p>
                       )}
                     </div>
                   </div>
+
+
 
                   {/* Safe Working Load */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
@@ -925,85 +908,17 @@ export default function EquipmentDetailsForm({
 
                   {/* Owner Name */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_id" className="mt-3">
+                    <Label htmlFor="owner_name" className="mt-3">
                       Owner Name
                     </Label>
-                    <div className="relative">
-                      <Controller
-                        name="owner_id"
-                        control={control}
-                        render={({ field }) => {
-                          const currentOwner = String(
-                            equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                              ?.owner_id ?? ""
-                          );
-                          const allOwnerOptions = ownerOptions?.map((owner: any) => String(owner.id)) || [];
-                          const value = currentOwner || field.value || "";
-
-                          return (
-                            <div className="flex w-full gap-2 items-center">
-                              <Select
-                                value={allOwnerOptions.includes(value) ? value : ""}
-                                onValueChange={(val) => field.onChange(val)}
-                              >
-                                <SelectTrigger id="owner_id" className="w-full">
-                                  <SelectValue
-                                    placeholder="Select or type owner"
-                                    // Show typed value if not in options
-                                    {...(allOwnerOptions.includes(value)
-                                      ? {}
-                                      : { children: value ? value : undefined })}
-                                  />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <div className="px-2 py-1 relative">
-                                    <>
-                                      <Input
-                                        className="mt-2"
-                                        placeholder="Type owner name"
-                                        value={!isOwnerTyping ? field.value : ""}
-                                        onChange={e => {
-                                          setIsOwnerTyping(true);
-                                          field.onChange(e.target.value);
-                                        }}
-                                      />
-                                      <Button
-                                        size="icon"
-                                        variant="outline"
-                                        className="absolute bg-primary text-white font-bold right-2 top-3 px-2 py-1"
-                                        onClick={() => {
-                                          setIsOwnerTyping(false);
-                                          makeApiCall(
-                                            () => new MasterService().addOwner({ owner: field.value }),
-                                            {
-                                              afterSuccess: () => {
-                                                setInvoke(!invoke);
-                                                toastWithTimeout(ToastVariant.Success, "Owner added successfully");
-                                                field.onChange("");
-                                              }
-                                            }
-                                          );
-                                        }}
-                                        type="button"
-                                      >
-                                        Add
-                                      </Button>
-                                    </>
-                                  </div>
-                                  {ownerOptions?.map((owner: any) => (
-                                    <SelectItem key={owner.id} value={String(owner.id)}>
-                                      {owner.owner}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          );
-                        }}
+                    <div>
+                      <Input
+                        id="owner_name"
+                        {...register('owner_name')}
+                        placeholder="Enter owner name"
                       />
-                      <AddOwnerButton />
-                      {errors.owner_id && (
-                        <p className="text-red-500 text-[12px] ">{errors.owner_id.message}</p>
+                      {errors.owner_name && (
+                        <p className="text-red-500 text-[12px] mt-1">{errors.owner_name.message}</p>
                       )}
                     </div>
                   </div>
@@ -1087,7 +1002,12 @@ export default function EquipmentDetailsForm({
                         checked={lastTestExamChecked}
                         onCheckedChange={(checked: any) => {
                           setLastTestExamChecked(checked);
-                          if (checked) setLastTestExamNotAvailable(false);
+                          if (checked) {
+                            setLastTestExamNotAvailable(false);
+                            setValue('last_test_exam', 'Not Applicable');
+                          } else {
+                            setValue('last_test_exam', '');
+                          }
                         }}
                       />
                       <span className="text-[13px] w-[15%]">Not Applicable</span>
@@ -1096,7 +1016,12 @@ export default function EquipmentDetailsForm({
                         checked={lastTestExamNotAvailable}
                         onCheckedChange={(checked: any) => {
                           setLastTestExamNotAvailable(checked);
-                          if (checked) setLastTestExamChecked(false);
+                          if (checked) {
+                            setLastTestExamChecked(false);
+                            setValue('last_test_exam', 'Not Available');
+                          } else {
+                            setValue('last_test_exam', '');
+                          }
                         }}
                       />
                       <span className="text-[13px] w-[15%]">Not Available</span>
@@ -1147,7 +1072,12 @@ export default function EquipmentDetailsForm({
                         checked={lastThoroughExamChecked}
                         onCheckedChange={(checked: any) => {
                           setLastThoroughExamChecked(checked);
-                          if (checked) setLastThoroughExamNotAvailable(false);
+                          if (checked) {
+                            setLastThoroughExamNotAvailable(false);
+                            setValue('last_thorough_exam', 'Not Applicable');
+                          } else {
+                            setValue('last_thorough_exam', '');
+                          }
                         }}
                       />
                       <span className="text-[13px] w-[15%]">Not Applicable</span>
@@ -1156,7 +1086,12 @@ export default function EquipmentDetailsForm({
                         checked={lastThoroughExamNotAvailable}
                         onCheckedChange={(checked: any) => {
                           setLastThoroughExamNotAvailable(checked);
-                          if (checked) setLastThoroughExamChecked(false);
+                          if (checked) {
+                            setLastThoroughExamChecked(false);
+                            setValue('last_thorough_exam', 'Not Available');
+                          } else {
+                            setValue('last_thorough_exam', '');
+                          }
                         }}
                       />
                       <span className="text-[13px] w-[15%]">Not Available</span>
@@ -1213,7 +1148,12 @@ export default function EquipmentDetailsForm({
                         checked={testExamChecked}
                         onCheckedChange={(checked: any) => {
                           setTestExamChecked(checked);
-                          if (checked) setTestExamNotAvailable(false);
+                          if (checked) {
+                            setTestExamNotAvailable(false);
+                            setValue('next_test_exam', 'Not Applicable');
+                          } else {
+                            setValue('next_test_exam', '');
+                          }
                         }}
                       />
                       <span className="text-[13px] w-[15%]">Not Applicable</span>
@@ -1222,7 +1162,12 @@ export default function EquipmentDetailsForm({
                         checked={testExamNotAvailable}
                         onCheckedChange={(checked: any) => {
                           setTestExamNotAvailable(checked);
-                          if (checked) setTestExamChecked(false);
+                          if (checked) {
+                            setTestExamChecked(false);
+                            setValue('next_test_exam', 'Not Available');
+                          } else {
+                            setValue('next_test_exam', '');
+                          }
                         }}
                       />
                       <span className="text-[13px] w-[15%]">Not Available</span>
@@ -1282,7 +1227,12 @@ export default function EquipmentDetailsForm({
                         checked={thoroughExamChecked}
                         onCheckedChange={(checked: any) => {
                           setThoroughExamChecked(checked);
-                          if (checked) setThoroughExamNotAvailable(false);
+                          if (checked) {
+                            setThoroughExamNotAvailable(false);
+                            setValue('next_thorough_exam', 'Not Applicable');
+                          } else {
+                            setValue('next_thorough_exam', '');
+                          }
                         }}
                       />
                       <span className="text-[13px] w-[15%]">Not Applicable</span>
@@ -1291,7 +1241,12 @@ export default function EquipmentDetailsForm({
                         checked={thoroughExamNotAvailable}
                         onCheckedChange={(checked: any) => {
                           setThoroughExamNotAvailable(checked);
-                          if (checked) setThoroughExamChecked(false);
+                          if (checked) {
+                            setThoroughExamChecked(false);
+                            setValue('next_thorough_exam', 'Not Available');
+                          } else {
+                            setValue('next_thorough_exam', '');
+                          }
                         }}
                       />
                       <span className="text-[13px] w-[15%]">Not Available</span>
@@ -1318,8 +1273,7 @@ export default function EquipmentDetailsForm({
                   */}
 
                   {/* Lift Location conditionally shown */}
-                  {equipmentNoOptions?.find((item: any) => item?.id == equipment_no)
-                    ?.property_table_type === 'ELEVATOR CERTIFICATE' && (
+                  {property_table_type === 'ELEVATOR CERTIFICATE' && (
                       <div className="grid grid-cols-[200px_1fr] gap-4">
                         <Label htmlFor="lift_location" className="mt-3">
                           Lift Location
@@ -1390,10 +1344,10 @@ export default function EquipmentDetailsForm({
                 </div>
 
                 {/* Property Table if item_type !== 'Lifting Accessories' */}
-                {selectedEquipment?.item_type !== 'Lifting Accessories' && (
+                {selectedEquipment?.item_type !== 'Lifting Accessories' && property_table_type && (
                   <div className="space-y-4">
                     <div className="grid gap-4 grid-cols-1">
-                      <Table data={data} setData={setData} item_type={selectedEquipment?.property_table_type} />
+                      <Table data={data} setData={setData} item_type={property_table_type} />
                     </div>
                   </div>
                 )}
@@ -1416,15 +1370,17 @@ export default function EquipmentDetailsForm({
                 </div>
 
                 {/* Annexures Table */}
-                <section className="space-y-4">
-                  <section className="grid gap-4 grid-cols-1">
-                    <AnnexuresTable
-                      propertyList={propertyList}
-                      setPropertyList={setPropertyList}
-                      id={equipment_no}
-                    />
+                {property_table_type && (
+                  <section className="space-y-4">
+                    <section className="grid gap-4 grid-cols-1">
+                      <AnnexuresTable
+                        propertyList={propertyList}
+                        setPropertyList={setPropertyList}
+                        property_table_type={property_table_type}
+                      />
+                    </section>
                   </section>
-                </section>
+                )}
 
                 {/* Safety Checklist */}
                 <div className="space-y-4">
@@ -1441,7 +1397,7 @@ export default function EquipmentDetailsForm({
                         Identification of any part found to have a defect which is or could become a danger to
                         persons and a description of the defect:
                       </Label>
-                      <Input  maxLength={50} id="defect_description" className="my-auto" {...register('defect_description')} />
+                      <Input maxLength={40} id="defect_description" className="my-auto" {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                       )}

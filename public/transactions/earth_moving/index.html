@@ -31,7 +31,7 @@
         </div>
       </div>
       <span class="certificate-of-thorough-examination-4"
-        >CERTIFICATE OF THOROUGH EXAMINATION OF LIFTING EQUIPMENT</span
+        >CERTIFICATE OF {{type_exam}} EXAMINATION OF LIFTING EQUIPMENT</span
       >
       <div class="flex-row-ba">
         <div class="rectangle">
@@ -70,7 +70,7 @@
         <div class="whatsapp-image-7"></div>
         <span class="iso-iec-company">An ISO/IEC 17020:2012 Company</span>
         <div class="line-8"></div>
-        <span class="footer-text">Rev: {{four1}}  </span>
+        <span class="footer-text">Rev: {{four1}} &nbsp;&nbsp;&nbsp;&nbsp; Date: {{four2}}</span>
       </div>
       <div class="line-9"></div>
      
@@ -127,7 +127,7 @@
             <span class="equipment-description-1b"
               >EQUIPMENT DESCRIPTION:<br /></span
             ><span class="double-ply-flat-polyester"
-              >{{seven}}</span
+              >{{twentyfive}}</span
             >
           </div>
         </div>
@@ -135,6 +135,7 @@
           <div class="rectangle-1d">
             <span class="equipment-details">EQUIPMENT DETAILS</span>
           </div>
+          <div class="equipment-details-body">{{parameter_description}}</div>
           <!-- <span class="main-hoist-max-rated"
             >{{eight}}
             <p><strong style="margin-right: 3px;">COC No:</strong>{{coc}}</p>
@@ -228,11 +229,10 @@
           <div class="vector-44"></div>
         </div>
         <span class="name-qualifications"
-          >Name & Qualifications of person making this report: MUNSHEER
-          P.C.P</span
-        ><span class="authenticating-report"
-          >Name of person authenticating this report:<br />SANOOF MOHAMMED
-          (Technical Manager)</span
+          >Name & Qualifications of person making this report: <br />{{seven}}</span>
+          <p class="surveyor-qualification">{{seven_qualification}}</p>
+        <span class="authenticating-report"
+          >Name of person authenticating this report:<br />{{eight}}</span
         ><span class="signature">Signature:</span
         ><span class="signature-45">Signature:</span>
       </div>

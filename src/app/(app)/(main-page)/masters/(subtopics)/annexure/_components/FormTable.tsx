@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TrashIcon } from "@heroicons/react/solid";
+import DeleteDialogue from '@/components/ui/delete-dialog';
 import { useFormContext } from "react-hook-form";
 import { makeApiCall } from "@/lib/apicaller";
 import { MasterService } from "@/services/api/masters-service";
@@ -17,9 +18,10 @@ interface ComponentProps {
   onFunction: () => void;
   properties: Property[];
   setProperties: (value: Property[]) => void;
+  confirmDelete?: boolean;
 }
 
-export default function Component({ onFunction, properties, setProperties }: ComponentProps) {
+export default function Component({ onFunction, properties, setProperties, confirmDelete = false }: ComponentProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const { formState } = useFormContext();
   const { errors }: any = formState;
@@ -38,7 +40,6 @@ export default function Component({ onFunction, properties, setProperties }: Com
 
   const handleDelete = async (index: number) => {
     const property = properties[index];
-   
     if (property.id) {
       try {
         await makeApiCall(() => new MasterService().deleteProperty(property.id!), {
@@ -138,13 +139,29 @@ export default function Component({ onFunction, properties, setProperties }: Com
               
               </TableCell>
               <TableCell className="p-2 h-12 text-center">
-                <button
-                  onClick={() => handleDelete(index)}
-                  className="flex items-center justify-center p-1"
-                  aria-label="Delete Property"
-                >
-                  <TrashIcon className="h-5 w-5 text-red-600" />
-                </button>
+                {confirmDelete ? (
+                  <DeleteDialogue
+                    onConfirm={() => handleDelete(index)}
+                    triggerButton={
+                      <button
+                        type="button"
+                        className="flex items-center justify-center p-1"
+                        aria-label="Delete Property"
+                      >
+                        <TrashIcon className="h-5 w-5 text-red-600" />
+                      </button>
+                    }
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(index)}
+                    className="flex items-center justify-center p-1"
+                    aria-label="Delete Property"
+                  >
+                    <TrashIcon className="h-5 w-5 text-red-600" />
+                  </button>
+                )}
               </TableCell>
             </TableRow>
           ))}

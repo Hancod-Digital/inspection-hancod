@@ -96,7 +96,7 @@ export default function EditEquipmentDetailsForm({
   const existingData = findRecordById(id);
 
   const [data, setData] = useState<{ [key: string]: string }[]>(existingData.properties); // For Property Table
-  const [annexureList, setAnnexureList] = useState<any[]>([]); // For Annexures Table
+  const [annexureList, setAnnexureList] = useState<any[]>(existingData.annexures || []); // For Annexures Table
 
   // For re-fetching after add
   const [invoke, setInvoke] = useState(false);
@@ -106,7 +106,7 @@ export default function EditEquipmentDetailsForm({
   // Remove next_test_exam_certificate_no and next_thorough_exam_certificate_no from schema
   const equipmentDetailsSchema = object({
     inspection_date: string().nonempty('Inspection Date is required'),
-    site: string().nonempty('Site is required'),
+    site: string().optional(),
     year_of_manufacture: string().nonempty('Year of Manufacture is required'),
     authority: string().nonempty('Authority is required'),
     standard: string().nonempty('Standard is required'),
@@ -126,9 +126,9 @@ export default function EditEquipmentDetailsForm({
     title: string().nonempty('Title is required'),
     test_cert_coc_no: string().nonempty('Test Cert/COC No. is required'),
     safe_working_load: string().nonempty('Safe Working Load is required'),
-    last_test_exam: string().nonempty('Last Test Exam is required'),
+    last_test_exam: string().optional(),
     next_test_exam: string().optional(),
-    last_thorough_exam: string().nonempty('Last Thorough Exam is required'),
+    last_thorough_exam: string().optional(),
     next_thorough_exam: string().optional(),
     model_no: string().nonempty('Model No. is required'),
     registration_no: string().nonempty('Registration No. is required'),
@@ -136,6 +136,7 @@ export default function EditEquipmentDetailsForm({
     surveyor: string().nonempty('Surveyor is required'),
     result_description: string().optional(),
     owner_name: string().nonempty('Owner Name is required'),
+    owner_code: string().nonempty('Owner Code is required'),
     description: string().nonempty('Description is required').optional(),
     equipment_description: string().nonempty('Equipment Description is required'),
     manufacturer: string().nonempty('Manufacturer is required'),
@@ -144,6 +145,42 @@ export default function EditEquipmentDetailsForm({
     location: string().nonempty('Location is required'),
     serial_no: string().nonempty('Serial No. is required'),
     owner_id: string().nonempty('Owner ID is required')
+  }).superRefine((data, ctx) => {
+    // Last Test Exam validation - require if no checkbox is checked
+    if (!lastTestExamChecked && !lastTestExamNotAvailable && (!data.last_test_exam || data.last_test_exam.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Required',
+        path: ['last_test_exam'],
+      });
+    }
+
+    // Next Test Exam validation - require if no checkbox is checked
+    if (!testExamChecked && !testExamNotAvailable && (!data.next_test_exam || data.next_test_exam.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Required',
+        path: ['next_test_exam'],
+      });
+    }
+
+    // Last Thorough Exam validation - require if no checkbox is checked
+    if (!lastThoroughExamChecked && !lastThoroughExamNotAvailable && (!data.last_thorough_exam || data.last_thorough_exam.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Required',
+        path: ['last_thorough_exam'],
+      });
+    }
+
+    // Next Thorough Exam validation - require if no checkbox is checked
+    if (!thoroughExamChecked && !thoroughExamNotAvailable && (!data.next_thorough_exam || data.next_thorough_exam.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Required',
+        path: ['next_thorough_exam'],
+      });
+    }
   });
 
   type EquipmentDetailsInput = TypeOf<typeof equipmentDetailsSchema>;
@@ -230,6 +267,7 @@ export default function EditEquipmentDetailsForm({
       surveyor: String(existingData.surveyor) || '',
       result_description: existingData.result_description || '',
       owner_name: existingData.owner_name || '',
+      owner_code: existingData.owner_name || '',
       defect_description: existingData.defect_description || '',
       description: existingData.description || '',
       equipment_description: existingData.equipment_description || '',
@@ -251,6 +289,20 @@ export default function EditEquipmentDetailsForm({
     setValue,
     formState: { isSubmitSuccessful, errors },
   } = methods;
+
+  // Sync saved boolean flags into SafetyChecklist's yes/no model on edit
+  useEffect(() => {
+    if (!existingData) return;
+    setSafetyChecklistValues({
+      firstExamination: existingData.first_examination ? 'yes' : 'no',
+      sixMonthInterval: existingData.six_month_interval ? 'yes' : 'no',
+      twelveMonthInterval: existingData.twelve_month_interval ? 'yes' : 'no',
+      correctInstallation: existingData.correct_installation ? 'yes' : 'no',
+      examinationScheme: existingData.examination_scheme ? 'yes' : 'no',
+      exceptionalCircumstances: existingData.exceptional_circumstances ? 'yes' : 'no',
+      safeToUse: existingData.safe_to_use ? 'yes' : 'no',
+    });
+  }, [existingData]);
   const equipmentNoChanged = (value: string, field: any) => {
     // console.log("Selected equipment no:", value)
     const selectedEquipment = equipmentNoOptions.find((item) => item.id == value);
@@ -270,30 +322,30 @@ export default function EditEquipmentDetailsForm({
         const found = manufacturerOptions.find((m: any) => String(m.id) === manuId);
         setValue('manufacturer', found ? manuId : selectedEquipment.manufacturer);
       }
-      setValue('year_of_manufacture', String(selectedEquipment.year_of_manufacture) || '');
-      setValue('test_cert_coc_no', String(selectedEquipment.test_certificate_no) || '');
-      setValue('safe_working_load', String(selectedEquipment.safe_working_load) || '');
+      setValue('year_of_manufacture', selectedEquipment.year_of_manufacture ? String(selectedEquipment.year_of_manufacture) : '');
+      setValue('test_cert_coc_no', selectedEquipment.test_certificate_no ? String(selectedEquipment.test_certificate_no) : '');
+      setValue('safe_working_load', selectedEquipment.safe_working_load ? String(selectedEquipment.safe_working_load) : '');
 
-      setValue('equipment_description', String(selectedEquipment.description) || '');
-      setValue('title', String(selectedEquipment.title) || '');
+      setValue('equipment_description', selectedEquipment.description ? String(selectedEquipment.description) : '');
+      setValue('title', selectedEquipment.title ? String(selectedEquipment.title) : '');
       setValue('last_test_exam_certificate_no', selectedEquipment.last_test_exam_certificate_no ? String(selectedEquipment.last_test_exam_certificate_no) : '');
       setValue('last_thorough_exam_certificate_no', selectedEquipment.last_thorough_exam_certificate_no ? String(selectedEquipment.last_thorough_exam_certificate_no) : '');
 
-      // Set owner_name and owner_id if available in options
+      // Set owner_id and owner_code if available in options
       if (selectedEquipment.owner_id) {
         const ownerId = String(selectedEquipment.owner_id);
         const found = ownerOptions.find((o: any) => String(o.id) === ownerId);
         setValue('owner_id', found ? ownerId : selectedEquipment.owner_id);
-        setValue('owner_name', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
+        setValue('owner_code', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
       }
 
-      setValue('registration_no', String(selectedEquipment.registration_no) || '');
-      setValue('last_test_exam', String(selectedEquipment.last_test_date) || '');
-      setValue('next_test_exam', String(selectedEquipment.next_test_date) || '');
-      setValue('last_thorough_exam', String(selectedEquipment.last_thorough_date) || '');
-      setValue('next_thorough_exam', String(selectedEquipment.next_thorough_date) || '');
-      setValue('serial_no', String(selectedEquipment.serial_no) || '');
-      setValue('model_no', String(selectedEquipment.model_no) || '');
+      setValue('registration_no', selectedEquipment.registration_no ? String(selectedEquipment.registration_no) : '');
+      setValue('last_test_exam', selectedEquipment.last_test_date ? String(selectedEquipment.last_test_date) : '');
+      setValue('next_test_exam', selectedEquipment.next_test_date ? String(selectedEquipment.next_test_date) : '');
+      setValue('last_thorough_exam', selectedEquipment.last_thorough_date ? String(selectedEquipment.last_thorough_date) : '');
+      setValue('next_thorough_exam', selectedEquipment.next_thorough_date ? String(selectedEquipment.next_thorough_date) : '');
+      setValue('serial_no', selectedEquipment.serial_no ? String(selectedEquipment.serial_no) : '');
+      setValue('model_no', selectedEquipment.model_no ? String(selectedEquipment.model_no) : '');
     }
     field.onChange(value)
   }
@@ -316,11 +368,14 @@ export default function EditEquipmentDetailsForm({
       if (found) setValue('manufacturer', manuId);
     }
 
-    // Set owner_id
+    // Set owner_id and owner_code
     if (existingData.owner_id) {
       const ownerId = String(existingData.owner_id);
       const found = ownerOptions.find((o: any) => String(o.id) === ownerId);
-      if (found) setValue('owner_id', ownerId);
+      if (found) {
+        setValue('owner_id', ownerId);
+        setValue('owner_code', String(ownerOptions.find((item: any) => String(item.id) === ownerId)?.code) || '');
+      }
     }
     // eslint-disable-next-line
   }, [optionsLoaded, existingData, setValue, standardOptions, manufacturerOptions, ownerOptions]);
@@ -336,6 +391,7 @@ export default function EditEquipmentDetailsForm({
   // Watch equipment_no to set related fields
   const equipment_no = watch('equipment_no');
   const job_order_no = watch('job_order_no');
+  const owner_id_value = watch('owner_id');
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -371,6 +427,14 @@ export default function EditEquipmentDetailsForm({
     }
     // eslint-disable-next-line
   }, [job_order_no])
+
+  // Keep owner_code in sync with selected owner_id
+  useEffect(() => {
+    if (!owner_id_value) return;
+    const found = ownerOptions.find((o: any) => String(o.id) === String(owner_id_value));
+    setValue('owner_code', found?.code ? String(found.code) : '');
+    // eslint-disable-next-line
+  }, [owner_id_value, ownerOptions]);
   // Handle checkboxes to disable date inputs
   useEffect(() => {
     // console.log("equipment_no", existingData)
@@ -444,8 +508,59 @@ export default function EditEquipmentDetailsForm({
   const onSubmitHandler: SubmitHandler<EquipmentDetailsInput> = async (values) => {
     setLoading(true);
     try {
+      // Custom validation for date fields
+      if (!lastTestExamChecked && !lastTestExamNotAvailable && !values.last_test_exam) {
+        toastWithTimeout(ToastVariant.Error, 'Last Test Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!lastThoroughExamChecked && !lastThoroughExamNotAvailable && !values.last_thorough_exam) {
+        toastWithTimeout(ToastVariant.Error, 'Last Thorough Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!testExamChecked && !testExamNotAvailable && !values.next_test_exam) {
+        toastWithTimeout(ToastVariant.Error, 'Next Test Exam is required');
+        setLoading(false);
+        return;
+      }
+      if (!thoroughExamChecked && !thoroughExamNotAvailable && !values.next_thorough_exam) {
+        toastWithTimeout(ToastVariant.Error, 'Next Thorough Exam is required');
+        setLoading(false);
+        return;
+      }
+
+      // Require Owner No/ID (owner_code) when the selected owner has no code.
+      if (values.owner_id) {
+        const selectedOwner = ownerOptions.find((o: any) => String(o.id) === String(values.owner_id));
+        const ownerHasCode = !!selectedOwner?.code && String(selectedOwner.code).trim() !== '';
+        if (!ownerHasCode) {
+          // Owner in master has no code; user must provide one
+          const ownerCode = values.owner_code?.trim();
+          if (!ownerCode) {
+            toastWithTimeout(ToastVariant.Error, 'Owner No/ID is required for the selected Owner. Please enter it.');
+            setLoading(false);
+            return;
+          }
+          // Persist the provided owner_code to the owner table before proceeding
+          await makeApiCall(
+            () => new MasterService().updateOwnerCode(Number(values.owner_id), ownerCode),
+            {
+              afterSuccess: () => {
+                // Update local ownerOptions cache so UI reflects the new code immediately
+                setOwnerOptions((prev: any[]) => prev.map((o: any) => (
+                  String(o.id) === String(values.owner_id) ? { ...o, code: ownerCode } : o
+                )));
+              }
+            }
+          );
+        }
+      }
+
       const formData = {
         ...values,
+        // Normalize 'site' to a number or null to avoid sending the string "null" to a bigint column
+        site: values.site && values.site !== 'null' ? Number(values.site) : null,
         first_examination: safetyChecklistValues.firstExamination === "no" ? false : true,
         six_month_interval: safetyChecklistValues.sixMonthInterval === "no" ? false : true,
         twelve_month_interval: safetyChecklistValues.twelveMonthInterval === "no" ? false : true,
@@ -467,10 +582,11 @@ export default function EditEquipmentDetailsForm({
         annexures: annexureList,
       };
 
-      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-      // console.log({ ...formData, properties: data, annexures: propertyList }) 
-      // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-      await updateRecord(id, { ...formData, properties: data, annexures: propertyList });
+      // Exclude fields not belonging to lifting_equipment table (e.g., owner_code)
+      const { owner_code, ...updates } = formData as any;
+
+      // Use annexureList (the actual state) instead of propertyList
+      await updateRecord(id, { ...updates, properties: data, annexures: annexureList });
     } catch (error) {
       console.error('Error updating record:', error);
       toastWithTimeout(ToastVariant.Error, "Failed to update equipment details.");
@@ -704,7 +820,7 @@ export default function EditEquipmentDetailsForm({
                   {/* Equipment Description */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
                     <Label htmlFor="equipment_description" className="mt-3">Equipment Description</Label>
-                    <Input id="equipment_description" {...register('equipment_description')} />
+                    <Input maxLength={119} id="equipment_description" {...register('equipment_description')} />
                     {errors.equipment_description && (
                       <p className="text-red-500 text-[12px] ">{errors.equipment_description.message}</p>
                     )}
@@ -727,10 +843,10 @@ export default function EditEquipmentDetailsForm({
                   </div>
                   {/* Owner No/ID */}
                   <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="owner_name" className="mt-3">Owner No/ID</Label>
-                    <Input id="owner_name" {...register('owner_name')} />
-                    {errors.owner_name && (
-                      <p className="text-red-500 text-[12px] ">{errors.owner_name.message}</p>
+                    <Label htmlFor="owner_code" className="mt-3">Owner No/ID</Label>
+                    <Input id="owner_code" {...register('owner_code')} />
+                    {errors.owner_code && (
+                      <p className="text-red-500 text-[12px] ">{errors.owner_code.message}</p>
                     )}
                   </div>
                   {/* Model */}
@@ -1017,111 +1133,55 @@ export default function EditEquipmentDetailsForm({
                       <p className="text-red-500 text-[12px] ">{errors.surveyor.message}</p>
                     )}
                   </div>
-                  {/* Last Test Exam */}
+                  {/* Move last/last certificate fields out; they will be rendered below to match Add form layout */}
+                </div>
+
+                {/* Last test/thorough dates and certificates - aligned like Add form */}
+                <div className="grid gap-4 grid-cols-1 w-[64%]">
+                  {/* Date of last proof load test */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                    <Label className="mt-3" htmlFor="last_test_exam">
-                      Date of last proof load test
-                    </Label>
+                    <Label className="mt-3" htmlFor="last_test_exam">Date of last proof load test</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name="last_test_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input
-                            id="last_test_exam"
-                            type="date"
-                            disabled={lastTestExamChecked || lastTestExamNotAvailable}
-                            {...field}
-                          />
+                          <Input id="last_test_exam" type="date" disabled={lastTestExamChecked || lastTestExamNotAvailable} {...field} />
                         )}
                       />
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={lastTestExamChecked}
-                        onCheckedChange={(checked: boolean) => {
-                          setLastTestExamChecked(checked);
-                          if (checked) setLastTestExamNotAvailable(false);
-                        }}
-                      />
+                      <Checkbox className="w-6 h-6" checked={lastTestExamChecked} onCheckedChange={(checked: boolean) => { setLastTestExamChecked(checked); if (checked) { setLastTestExamNotAvailable(false); setValue('last_test_exam', 'Not Applicable'); } else { setValue('last_test_exam', ''); } }} />
                       <span className="text-[13px] w-[15%]">Not Applicable</span>
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={lastTestExamNotAvailable}
-                        onCheckedChange={(checked: boolean) => {
-                          setLastTestExamNotAvailable(checked);
-                          if (checked) setLastTestExamChecked(false);
-                        }}
-                      />
+                      <Checkbox className="w-6 h-6" checked={lastTestExamNotAvailable} onCheckedChange={(checked: boolean) => { setLastTestExamNotAvailable(checked); if (checked) { setLastTestExamChecked(false); setValue('last_test_exam', 'Not Available'); } else { setValue('last_test_exam', ''); } }} />
                       <span className="text-[13px] w-[15%]">Not Available</span>
                     </div>
-                    {errors.last_test_exam && (
-                      <p className="text-red-500 text-[12px]">
-                        {errors.last_test_exam.message}
-                      </p>
-                    )}
+                    {errors.last_test_exam && (<p className="text-red-500 text-[12px]">{errors.last_test_exam.message}</p>)}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_test_exam_certificate_no" className="mt-3">
-                      Last Test Certificate No.
-                    </Label>
-                    <Input
-                      disabled={lastTestExamChecked || lastTestExamNotAvailable}
-                      id="last_test_exam_certificate_no"
-                      {...register('last_test_exam_certificate_no')}
-                    />
+                  <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+                    <Label htmlFor="last_test_exam_certificate_no" className="mt-3">Last Test Certificate No.</Label>
+                    <Input disabled={lastTestExamChecked || lastTestExamNotAvailable} id="last_test_exam_certificate_no" {...register('last_test_exam_certificate_no')} />
                   </div>
-                  {/* Last Thorough Exam */}
+
+                  {/* Date of last examination */}
                   <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                    <Label className="mt-3" htmlFor="last_thorough_exam">
-                      Date of last examination
-                    </Label>
+                    <Label className="mt-3" htmlFor="last_thorough_exam">Date of last examination</Label>
                     <div className="flex items-center gap-4">
                       <Controller
                         name="last_thorough_exam"
                         control={control}
                         render={({ field }) => (
-                          <Input
-                            id="last_thorough_exam"
-                            type="date"
-                            disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
-                            {...field}
-                          />
+                          <Input id="last_thorough_exam" type="date" disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable} {...field} />
                         )}
                       />
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={lastThoroughExamChecked}
-                        onCheckedChange={(checked: boolean) => {
-                          setLastThoroughExamChecked(checked);
-                          if (checked) setLastThoroughExamNotAvailable(false);
-                        }}
-                      />
+                      <Checkbox className="w-6 h-6" checked={lastThoroughExamChecked} onCheckedChange={(checked: boolean) => { setLastThoroughExamChecked(checked); if (checked) { setLastThoroughExamNotAvailable(false); setValue('last_thorough_exam', 'Not Applicable'); } else { setValue('last_thorough_exam', ''); } }} />
                       <span className="text-[13px] w-[15%]">Not Applicable</span>
-                      <Checkbox
-                        className="w-6 h-6"
-                        checked={lastThoroughExamNotAvailable}
-                        onCheckedChange={(checked: boolean) => {
-                          setLastThoroughExamNotAvailable(checked);
-                          if (checked) setLastThoroughExamChecked(false);
-                        }}
-                      />
+                      <Checkbox className="w-6 h-6" checked={lastThoroughExamNotAvailable} onCheckedChange={(checked: boolean) => { setLastThoroughExamNotAvailable(checked); if (checked) { setLastThoroughExamChecked(false); setValue('last_thorough_exam', 'Not Available'); } else { setValue('last_thorough_exam', ''); } }} />
                       <span className="text-[13px] w-[15%]">Not Available</span>
                     </div>
-                    {errors.last_thorough_exam && (
-                      <p className="text-red-500 text-[12px]">
-                        {errors.last_thorough_exam.message}
-                      </p>
-                    )}
+                    {errors.last_thorough_exam && (<p className="text-red-500 text-[12px]">{errors.last_thorough_exam.message}</p>)}
                   </div>
-                  <div className="grid grid-cols-[200px_1fr] gap-4">
-                    <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">
-                      Last Thorough Certificate No.
-                    </Label>
-                    <Input
-                      disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable}
-                      id="last_thorough_exam_certificate_no"
-                      {...register('last_thorough_exam_certificate_no')}
-                    />
+                  <div className="grid grid-cols-[200px_1fr] gap-4 w-[77%]">
+                    <Label htmlFor="last_thorough_exam_certificate_no" className="mt-3">Last Thorough Certificate No.</Label>
+                    <Input disabled={lastThoroughExamChecked || lastThoroughExamNotAvailable} id="last_thorough_exam_certificate_no" {...register('last_thorough_exam_certificate_no')} />
                   </div>
                 </div>
                 {/* Next Test Exam, Next Thorough Exam, Elevator Certificate, etc. */}
@@ -1146,7 +1206,12 @@ export default function EditEquipmentDetailsForm({
                         checked={testExamChecked} 
                         onCheckedChange={(checked: boolean) => {
                           setTestExamChecked(checked);
-                          if (checked) setTestExamNotAvailable(false);
+                          if (checked) {
+                            setTestExamNotAvailable(false);
+                            setValue('next_test_exam', 'Not Applicable');
+                          } else {
+                            setValue('next_test_exam', '');
+                          }
                         }} 
                       /> 
                       <span className="text-[13px] w-[15%] ">Not Applicable</span>
@@ -1155,7 +1220,12 @@ export default function EditEquipmentDetailsForm({
                         checked={testExamNotAvailable} 
                         onCheckedChange={(checked: boolean) => {
                           setTestExamNotAvailable(checked);
-                          if (checked) setTestExamChecked(false);
+                          if (checked) {
+                            setTestExamChecked(false);
+                            setValue('next_test_exam', 'Not Available');
+                          } else {
+                            setValue('next_test_exam', '');
+                          }
                         }} 
                       /> 
                       <span className="text-[13px] w-[15%] ">Not Available</span>
@@ -1198,7 +1268,12 @@ export default function EditEquipmentDetailsForm({
                         checked={thoroughExamChecked} 
                         onCheckedChange={(checked: boolean) => {
                           setThoroughExamChecked(checked);
-                          if (checked) setThoroughExamNotAvailable(false);
+                          if (checked) {
+                            setThoroughExamNotAvailable(false);
+                            setValue('next_thorough_exam', 'Not Applicable');
+                          } else {
+                            setValue('next_thorough_exam', '');
+                          }
                         }} 
                       /> 
                       <span className="text-[13px] w-[15%] ">Not Applicable</span>
@@ -1207,7 +1282,12 @@ export default function EditEquipmentDetailsForm({
                         checked={thoroughExamNotAvailable} 
                         onCheckedChange={(checked: boolean) => {
                           setThoroughExamNotAvailable(checked);
-                          if (checked) setThoroughExamChecked(false);
+                          if (checked) {
+                            setThoroughExamChecked(false);
+                            setValue('next_thorough_exam', 'Not Available');
+                          } else {
+                            setValue('next_thorough_exam', '');
+                          }
                         }} 
                       /> 
                       <span className="text-[13px] w-[15%] ">Not Available</span>
@@ -1275,7 +1355,7 @@ export default function EditEquipmentDetailsForm({
                   <div className="space-y-4">
                     <div className="grid gap-4 grid-cols-1">
                       <div className="w-full">
-                        <Label htmlFor="description_of_test">description of Test</Label>
+                        <Label htmlFor="description_of_test">Description of Test</Label>
                         <div>
                           <Controller
                             name="description_of_test"
@@ -1341,9 +1421,9 @@ export default function EditEquipmentDetailsForm({
                   {/* Annexures Table */}
                   <div className="grid gap-4 grid-cols-1">
                     <AnnexuresTable
-                      propertyList={existingData?.annexures}
+                      propertyList={annexureList}
                       setPropertyList={setAnnexureList}
-                      id={equipment_no}
+                      property_table_type={equipmentNoOptions.find((item) => item.id == existingData?.equipment_no)?.property_table_type}
                     />
                   </div>
                 </div>
@@ -1359,7 +1439,7 @@ export default function EditEquipmentDetailsForm({
                   <div className="grid gap-4 grid-cols-1 w-full">
                     <div className="grid grid-cols-[400px_1fr]  gap-4">
                       <Label htmlFor="defect_description" className="mt-3 leading-5">Identification of any part found to have a defect which is or could become a danger to persons and a description of the defect:</Label>
-                      <Input  maxLength={50} id="defect_description" className='my-auto' {...register('defect_description')} />
+                      <Input  maxLength={40} id="defect_description" className='my-auto' {...register('defect_description')} />
                       {errors.defect_description && (
                         <p className="text-red-500 text-[12px] ">{errors.defect_description.message}</p>
                       )}

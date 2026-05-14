@@ -23,34 +23,33 @@ interface EquipmentDetail {
   annexure: string
 }
 
-export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:string,propertyList:any,setPropertyList:any}) {
-  const [equipmentDetails, setEquipmentDetails] = useState<EquipmentDetail[]>([])
- 
+export default function AnnexuresTable({property_table_type,propertyList,setPropertyList}:{property_table_type:string,propertyList:any,setPropertyList:any}) {
   const [annexureData, setAnnexureData] = useState<Annexure[]>([])
+  const [previousPropertyTableType, setPreviousPropertyTableType] = useState<string>('')
+  const [initialLoad, setInitialLoad] = useState(true)
  
+  // Fetch annexure based on property_table_type
   useEffect(() => {
-    makeApiCall(()=>new MasterService().fetchEquipmentDetails(id),{afterSuccess:(data: EquipmentDetail[])=>{
-      setEquipmentDetails(data)
-    }})
-  }, [id])
-
-  useEffect(() => {
-    if (equipmentDetails[0]?.annexure) {
-      makeApiCall(()=>new MasterService().getAnnexures(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
-       
-        setAnnexureData(data)
+    if (property_table_type) {
+      makeApiCall(()=>new MasterService().getAnnexureByPropertyTableType(property_table_type),{afterSuccess:(data: any)=>{
+        if (data && data.length > 0) {
+          setAnnexureData(data)
+          
+          // Fetch property list for this annexure
+          const hasPropertyTableTypeChanged = property_table_type !== previousPropertyTableType && previousPropertyTableType !== '';
+          const shouldFetch = (!propertyList || propertyList.length === 0) || hasPropertyTableTypeChanged;
+          
+          if (shouldFetch) {
+            makeApiCall(()=>new MasterService().getPropertyList(data[0].id),{afterSuccess:(propertyData: Annexure[])=>{
+              setPropertyList(propertyData)
+            }})
+          }
+        }
       }})
+      
+      setPreviousPropertyTableType(property_table_type);
     }
-  }, [equipmentDetails])
-
-  useEffect(() => {
-    if (equipmentDetails[0]?.annexure) {
-      makeApiCall(()=>new MasterService().getPropertyList(equipmentDetails[0].annexure),{afterSuccess:(data: Annexure[])=>{
-    
-        setPropertyList(data)
-      }})
-    }
-  }, [equipmentDetails])
+  }, [property_table_type])
 
   const handleReset = () => {
     setPropertyList(propertyList.map((item:any) => ({
@@ -128,7 +127,7 @@ export default function AnnexuresTable({id,propertyList,setPropertyList}:{id:str
                     type="text"
                     className="w-full bg-gray-50 border-0 focus:outline-none rounded p-1"
                     placeholder="Enter remarks"
-                    value={item.remarks}
+                    value={item.remarks || ''}
                     onChange={(e) => handleRemarksChange(item.id, e.target.value)}
                   />
                 </TableCell>

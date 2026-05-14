@@ -21,6 +21,7 @@ import { MasterService } from '@/services/api/masters-service';
 import DeleteDialogue from '@/components/ui/delete-dialog';
 import DeleteIcon from '@/components/icons/DeleteIcon';
 import { formatDateWithHyphen, generateRows } from '@/lib/utils';
+import { toastWithTimeout, ToastVariant } from '@/components/ui/use-toast';
 // import Manufacturer from '../../../../masters/(subtopics)/manufacturer/_components/AddEquipment'
 // import Location from '../../../../masters/(subtopics)/location/_components/AddEquipment'
 // import Equipment from '../../../../masters/(subtopics)/equipment/_components/AddEquipment'
@@ -39,6 +40,8 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
   const [standardOptions, setStandardOptions] = useState<any>([]);
   const [equipmentOptions, setEquipmentOptions] = useState<any>([]);
   const [serialNo, setSerialNo] = useState<any>([]);
+  const [surveyorOptions, setSurveyorOptions] = useState<any>([]);
+  const [authorityOptions, setAuthorityOptions] = useState<any>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,12 +50,16 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
       const sites = await getAllSingleSubtopic('site');
       const owners = await getAllSingleSubtopic('owner');
       const standards = await getAllSingleSubtopic('standard');
+      const surveyors = await getAllSingleSubtopic('surveyor');
+      const authorities = await getAllSingleSubtopic('authority');
 
       if (jobOrders) setJobOrderNoOptions(jobOrders);
       if (equipments) setEquipmentOptions(equipments?.filter((item: any) => item.status === "ACTIVE"));
       if (sites) setSiteOptions(sites?.filter((item: any) => item.status === "ACTIVE"));
       if (owners) setOwnerOptions(owners?.filter((item: any) => item.status === "ACTIVE"));
       if (standards) setStandardOptions(standards?.filter((item: any) => item.status === "ACTIVE"));
+      if (surveyors) setSurveyorOptions(surveyors);
+      if (authorities) setAuthorityOptions(authorities?.filter((item: any) => item.status === "ACTIVE"));
     };
     fetchData();
   }, [getAllSingleSubtopic]);
@@ -115,7 +122,16 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           let cssText = await cssResponse.text();
 
           // Replace placeholders in HTML:
-          // Adjust these replacements to match your actual placeholders and data
+          // {{seven}}: Surveyor name with qualification (like multi-gear implementation)
+          // {{eight}}: Authority name
+          const surveyor = surveyorOptions.find((s: any) => s.id == item.surveyor);
+          const surveyorName = surveyor?.surveyor || '';
+          const surveyorQualification = surveyor?.qualification || 'Not Available';
+          const authorityName = authorityOptions.find((a: any) => a.id == item.authority)?.authority || '';
+          htmlString = htmlString.replace(/\{\{type_exam\}\}/g, item?.type_of_exam || '');
+          htmlString = htmlString.replace(/\{\{seven\}\}/g, surveyorName);
+          htmlString = htmlString.replace(/\{\{seven_qualification\}\}/g, surveyorQualification);
+          htmlString = htmlString.replace(/\{\{eight\}\}/g, authorityName);
           htmlString = htmlString.replace(/\{\{one\}\}/g, item?.certificate_no || '');
           htmlString = htmlString.replace(/\{\{two\}\}/g, jobOrderNoOptions.find((job: any) => job.id == item.job_order_no)?.job_no || '');
           htmlString = htmlString.replace(/\{\{three\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_id)?.owner || '');
@@ -130,13 +146,14 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
          htmlString = htmlString.replace(/\{\{six1\}\}/g,  manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer);
          htmlString = htmlString.replace(/\{\{six12\}\}/g,  item?.year_of_manufacture.split('-')[0]);
 
-         htmlString = htmlString.replace(/\{\{six2\}\}/g,  equipment.property_table_type == "ELEVATOR CERTIFICATE" ? item?.owner_name : equipment?.registration_no || '');
+         htmlString = htmlString.replace(/\{\{six2\}\}/g,  equipment.property_table_type == "ELEVATOR CERTIFICATE" ? (ownerOptions.find((owner: any) => owner.id == item.owner_id)?.code || '') : (equipment?.registration_no || ''));
           htmlString = htmlString.replace(/\{\{six3\}\}/g, equipment.property_table_type == "ELEVATOR CERTIFICATE" ? manufacturerOptions.find((manufacturer: any) => manufacturer.id == item.manufacturer)?.manufacturer : data[0]?.serial_no || '');
           htmlString = htmlString.replace(/\{\{six4\}\}/g, equipment?.model_no || '');
-          htmlString = htmlString.replace(/\{\{six5\}\}/g, item?.owner_name || '');
+          htmlString = htmlString.replace(/\{\{six5\}\}/g, ownerOptions.find((owner: any) => owner.id == item.owner_id)?.code || '');
+          htmlString = htmlString.replace(/\{\{six6\}\}/g, item?.serial_no || '');
+          htmlString = htmlString.replace(/\{\{six7\}\}/g, item?.lift_location || '');
+          htmlString = htmlString.replace(/\{\{twentyfive\}\}/g, item?.equipment_description);
 
-          htmlString = htmlString.replace(/\{\{seven\}\}/g, item?.equipment_description || '');
-          htmlString = htmlString.replace(/\{\{eight\}\}/g, item?.description || '');
 
           function splitIntoChunks(text: string, chunkSize: number = 6): string {
             const chunks = [];
@@ -147,23 +164,23 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
         }
         
         const conditions = (item?.properties?.map((p: any) => p.CONDITION) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((condition: string) => `<li>${splitIntoChunks(condition)}</li>`);
         
         const boomLengths = (item?.properties?.map((p: any) => p["BOOM LENGTH"]) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((boomLength: string) => `<li>${splitIntoChunks(boomLength)}</li>`);
         
         const radii = (item?.properties?.map((p: any) => p.RADIUS) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((radius: string) => `<li>${splitIntoChunks(radius)}</li>`);
         
         const testLoads = (item?.properties?.map((p: any) => p["TEST LOAD"]) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((testLoad: string) => `<li>${splitIntoChunks(testLoad)}</li>`);
         
             const swls = (item?.properties?.map((p: any) => p.SWL) || [])
-            .filter((v: any) => v != null)
+            .filter((v: any) => v != null && v !== '')
             .map((swl: string) => {
                 const chunks = [];
                 for (let i = 0; i < swl.length; i += 6) {
@@ -178,8 +195,11 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
           htmlString = htmlString.replace(/\{\{eleven\}\}/g, radii.length ? `<ul>${radii.join('')}</ul>` : '');
           htmlString = htmlString.replace(/\{\{twelve\}\}/g, testLoads.length ? `<ul>${testLoads.join('')}</ul>` : '');
           htmlString = htmlString.replace(/\{\{twelve1\}\}/g, swls.length ? `<ul>${swls.join('')}</ul>` : '');
+          // New: Equipment Details body content (Parameter Description)
+          htmlString = htmlString.replace(/\{\{parameter_description\}\}/g, (item?.description || ''));
 
           htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.version);
+          htmlString = htmlString.replace(/\{\{four2\}\}/g, item?.updated_at ? formatDateWithHyphen(item.updated_at) : '');
 
           // htmlString = htmlString.replace(/\{\{thirteen\}\}/g, formatDateWithHyphen(item?.last_test_exam) || '');
           // htmlString = htmlString.replace(/\{\{forteen\}\}/g,  formatDateWithHyphen(item?.next_test_exam) || '');
@@ -271,54 +291,60 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
   const printAnnexure = async (item: any) => {
     let content: string = ""
 
-    item?.annexures?.forEach((item: { property: string, property_group: string, remarks: string }) => {
+    item?.annexures?.forEach((annexureItem: { property: string, property_group: string, remarks: string }, index: number) => {
       let height = 0;
-      // console.log(item.property_group?.length);
-      if (item.property?.length > item.property_group?.length) {
-        height = item.property?.length
+      // console.log(annexureItem.property_group?.length);
+      if (annexureItem.property?.length > annexureItem.property_group?.length) {
+        height = annexureItem.property?.length
       } else {
-        height = item.property_group?.length
+        height = annexureItem.property_group?.length
       }
 
       // Ensure remarks has a fallback value to prevent "undefined" from appearing
-      const remarks = item?.remarks || '';
+      const remarks = annexureItem?.remarks || '';
       
       if (height < remarks.length) {
         height = remarks.length
       }
-      // console.log(height, item?.property?.length, item?.property_group?.length, remarks.length)
-      // console.log(height - item?.property?.length, height - item?.property_group?.length, height - remarks.length);
+      // console.log(height, annexureItem?.property?.length, annexureItem?.property_group?.length, remarks.length)
+      // console.log(height - annexureItem?.property?.length, height - annexureItem?.property_group?.length, height - remarks.length);
 
 
       content += `
-        <div style="display: flex;  width:100%; border-bottom: 1px solid black;"> 
-          <section style="width: 32.5%;  
-                          height: fit-content; padding-left: 15px; 
-                          padding-top: 7.5px; padding-bottom: 7.5px; color: black;
+        <div style="display: flex; align-items: stretch; width:100%; border-bottom: 1px solid black; box-sizing: border-box;"> 
+          <section style="width: 10%;  
+                          padding: 7.5px 15px; color: black;
                           border-right: 1px solid black;
-                          ">
-           ${item?.property}<span style="color:white">${'-'?.repeat(height - item?.property?.length)}</span>
+                          text-align: center;
+                          word-break: break-word; overflow-wrap: anywhere;
+                          box-sizing: border-box;">
+           ${index + 1}
           </section>
-          <section style="width: 28.80%;  
-                          height: fit-content; padding-left: 15px; 
-                          padding-top: 7.5px; padding-bottom: 7.5px; color: black;
+          <section style="width: 35%;  
+                          padding: 7.5px 15px; color: black;
                           border-right: 1px solid black;
-                          ">
-           ${item?.property_group}<span style="color:white">${'-'?.repeat(height - item?.property_group?.length)}</span>
+                          word-break: break-word; overflow-wrap: anywhere;
+                          box-sizing: border-box;">
+           ${annexureItem?.property}
           </section>
-          <section style="width: 38.734%;  
-                          height: fit-content; padding-left: 15px; 
-                          padding-top: 7.5px; padding-bottom: 7.5px; color: black;
-                          
-                          ">
-            
-            ${remarks}<span style="color:white">${'-'?.repeat(height - remarks.length)}</span>
+          <section style="width: 27.5%;  
+                          padding: 7.5px 15px; color: black;
+                          border-right: 1px solid black;
+                          word-break: break-word; overflow-wrap: anywhere;
+                          box-sizing: border-box;">
+           ${annexureItem?.property_group}
+          </section>
+          <section style="width: 27.5%;  
+                          padding: 7.5px 15px; color: black;
+                          word-break: break-word; overflow-wrap: anywhere;
+                          box-sizing: border-box;">
+            ${remarks}
           </section>
         </div>
       `;
     });
     const data = generateRows(item?.annexures)
-    // console.log("data",data,item)
+    console.log("data",data,item)
     const response = await fetch("/finalbackside/index.html");
     let htmlString = await response.text();
     equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "CRANE CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "CRANE CERTIFICATE") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "MEWP AND FORKLIFT" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "MEWP AND FORKLIFT") : equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.property_table_type == "ELEVATOR CERTIFICATE" ? htmlString = htmlString.replace(/\{\{name\}\}/g, "ELEVATOR CERTIFICATE") : htmlString = htmlString.replace(/\{\{name\}\}/g, "EARTH MOVING");
@@ -326,6 +352,8 @@ export default function EquipmentTable({ setIsSite, setIsArea, setIsLocation, se
     htmlString = htmlString.replace(/\{\{html\}\}/g, data.rowsHtml);
     //  htmlString = htmlString.replace(/\{\{css\}\}/g, data.rowsCss);
     htmlString = htmlString.replace(/\{\{four\}\}/g, item?.version);
+    htmlString = htmlString.replace(/\{\{four1\}\}/g, item?.updated_at ? formatDateWithHyphen(item.updated_at) : '');
+    htmlString = htmlString.replace(/\{\{six\}\}/g, item?.type_of_exam);
     //  htmlString = htmlString.replace(/\{\{five\}\}/g, item?.revision_date);
     htmlString = htmlString.replace(/\{\{datas\}\}/g, content)
     htmlString = htmlString.replace(/\{\{one\}\}/g, formatDateWithHyphen(item?.inspection_date));
@@ -775,9 +803,9 @@ position: absolute;
   top: 165px;
   left: 43.563px;
   font-family: Inter, var(--default-font-family);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  line-height: 22.4px;
+  line-height: 20.4px;
   text-align: left;
   z-index: 25;
 }
@@ -992,8 +1020,8 @@ position: absolute;
             <TableHead className="py-4">Title</TableHead>
             <TableHead className="py-4">Equipment ID</TableHead>
             <TableHead className="py-4">Inspection Date</TableHead>
-            <TableHead className="py-4">Next Thorough Date</TableHead>
-            <TableHead className="py-4">Inspection Date</TableHead>
+            <TableHead className="py-4">Next Exam Date</TableHead>
+            <TableHead className="py-4">Last Exam Date</TableHead>
             <TableHead className="py-4">Status</TableHead>
             <TableHead className="py-4"></TableHead>
             <TableHead className="py-4"></TableHead>
@@ -1004,13 +1032,13 @@ position: absolute;
             currentData?.map((item: any, idx: number) => (
               <React.Fragment key={item.id}>
                 <TableRow>
-                  <TableCell className="py-4">{currentPage * pageSize + idx + 1}</TableCell>
+                  <TableCell className="py-4">{(currentPage - 1) * pageSize + idx + 1}</TableCell>
                   <TableCell className="py-4">{item?.title}</TableCell>
                   <TableCell className="py-4">{equipmentOptions?.find((equipment: any) => equipment.id == item.equipment_no)?.equipment_no}</TableCell>
 
                   <TableCell className="py-4">{item?.inspection_date}</TableCell>
-                  <TableCell className="py-4">{item?.next_thorough_exam}</TableCell>
-                  <TableCell className="py-4">{item?.inspection_date}</TableCell>
+                  <TableCell className="py-4">{item?.next_thorough_exam || 'Not Applicable'}</TableCell>
+                  <TableCell className="py-4">{item?.last_thorough_exam}</TableCell>
                   <TableCell className="py-4">{item?.result}</TableCell>
                   <TableCell
                     className={`py-4 ${item.approval_status == 'true'
@@ -1030,7 +1058,10 @@ position: absolute;
                       <DropdownMenuContent>
                         <DropdownMenuItem onClick={() => handleEditClick(item.id)}>Edit</DropdownMenuItem>
                         <DeleteDialogue
-                          onConfirm={async () => await deleteRecord(item.id)}
+                          onConfirm={async () => {
+                            await deleteRecord(item.id);
+                            toastWithTimeout(ToastVariant.Success, "Equipment deleted successfully.");
+                          }}
                           triggerButton={
                             <button className="relative w-full flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                               Delete
@@ -1069,8 +1100,8 @@ position: absolute;
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={9} className="p-2 text-center text-gray-500">
-                No data to display
+              <TableCell colSpan={9}>
+                <div className="text-center text-gray-400 py-8">NO DATA AVAILABLE</div>
               </TableCell>
             </TableRow>
           )}
