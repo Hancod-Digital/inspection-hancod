@@ -1,5 +1,14 @@
 import { Supabase } from "./utils";
 
+type StudentSearchType = "name" | "card";
+
+interface GetStudentsOptions {
+    page?: number;
+    pageSize?: number;
+    searchValue?: string;
+    searchType?: StudentSearchType;
+}
+
 export class StudentService extends Supabase {
     constructor() {
         super();
@@ -63,40 +72,54 @@ export class StudentService extends Supabase {
         return data;
     }
      
-    async getStudents(is_card:boolean, is_qrl?:boolean) {
+    async getStudents(is_card: boolean, is_qrl: boolean = false, options: GetStudentsOptions = {}) {
         await this.ensureAuthenticated();
-        if(is_card){
-            const { data, error } = await this.supabase
+
+        const page = Math.max(1, options.page ?? 1);
+        const pageSize = Math.max(1, options.pageSize ?? 6);
+        const start = (page - 1) * pageSize;
+        const end = start + pageSize - 1;
+        const searchValue = options.searchValue?.trim();
+
+        let query = this.supabase
             .from('students_credentials')
-            .select('*')
-            .order('created_at', { ascending: false })
-            if (error) {
-                return false;
-            }
-            return data;
-        }else if(is_qrl){
-            const { data, error } = await this.supabase
-            .from('students_credentials')
-            .select('*')
-            .not('qr_url', 'is', null)
-            .order('created_at', { ascending: false }); // Replace 'card' with your field name
-            if (error) {
-                return false;
-            }
-            return data;
-        }else{
-            const { data, error } = await this.supabase
-            .from('students_credentials')
-            .select('*')
-            .not('card_url', 'is', null)
-            .order('created_at', { ascending: false }); // Replace 'card' with your field name
-            if (error) {
-                return false;
-            }
-            return data;
+            .select('*', { count: 'exact' });
+
+        if (!is_card) {
+            query = is_qrl
+                ? query.not('qr_url', 'is', null)
+                : query.not('card_url', 'is', null);
         }
-       
-        
+
+        if (searchValue) {
+            if (options.searchType === "card") {
+                const escaped = searchValue
+                    .replace(/,/g, '\\,')
+                    .replace(/\(/g, '\\(')
+                    .replace(/\)/g, '\\)');
+
+                query = query.or(
+                    `id_no.ilike.%${escaped}%,card_no.ilike.%${escaped}%,model_level.ilike.%${escaped}%,company.ilike.%${escaped}%`
+                );
+            } else {
+                query = query.ilike('name', `%${searchValue}%`);
+            }
+        }
+
+        const { data, error, count } = await query
+            .order('created_at', { ascending: false })
+            .range(start, end);
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return {
+            data: data ?? [],
+            count: count ?? 0,
+            page,
+            pageSize,
+        };
     }
    
     async updateStudentQRUrl(id: number, qr_url: string) {

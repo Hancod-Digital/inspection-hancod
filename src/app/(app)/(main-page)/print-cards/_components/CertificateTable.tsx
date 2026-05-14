@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Table,
@@ -21,9 +21,26 @@ import { AvatarFallback } from '@/components/ui/avatar';
 import { formatDateWithHyphen, splitDesignation } from '@/lib/utils';
 import AvatarWithTooltip from './AvatarQr';
 import { PaginationDemo } from '@/components/pagination-demo';
-import usePagination from '@/hooks/usePagination';
 
-export default function CertificateTable({ data, changed, setChanged }: { data: any, changed: boolean, setChanged: any }) {
+export default function CertificateTable({
+    data,
+    changed,
+    setChanged,
+    currentPage,
+    totalPages,
+    onPreviousPage,
+    onNextPage,
+    onPageChange
+}: {
+    data: any,
+    changed: boolean,
+    setChanged: any,
+    currentPage: number,
+    totalPages: number,
+    onPreviousPage: () => void,
+    onNextPage: () => void,
+    onPageChange: (page: number) => void
+}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
     const [htmlContent, setHtmlContent] = useState('');
     const [isGenerating, setIsGenerating] = useState<number | null>(null);
@@ -681,9 +698,6 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
             };
         };
     };
-    const {currentPage, totalPages, handlePreviousPage, handleNextPage, setCurrentPage, currentData, goToPage} = usePagination(data)
-
-
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto relative">
             <Table className="w-full">
@@ -700,7 +714,7 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {currentData?.map((item: any, idx: number) => (
+                    {data?.map((item: any, idx: number) => (
                         <React.Fragment key={idx + 1}>
                             <TableRow>
                                 <TableCell className="py-4">{item?.id}</TableCell>
@@ -783,9 +797,9 @@ export default function CertificateTable({ data, changed, setChanged }: { data: 
                 <PaginationDemo 
                     currentPage={currentPage} 
                     totalPages={totalPages} 
-                    onPreviousPage={handlePreviousPage} 
-                    onNextPage={handleNextPage} 
-                    onPageChange={goToPage} 
+                    onPreviousPage={onPreviousPage} 
+                    onNextPage={onNextPage} 
+                    onPageChange={onPageChange} 
                 />
             </div>
         </div>

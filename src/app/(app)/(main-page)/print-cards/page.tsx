@@ -10,16 +10,21 @@ import CertificateTable from "./_components/CertificateTable";
 import { makeApiCall } from "@/lib/apicaller";
 import { StudentService } from "@/services/api/students-service";
 import Layout from "./_components/BulkWright/_components/Layout";
-import Map from "./_components/BulkWright/_components/Map";
+
+const PAGE_SIZE = 6;
+
 const LiftingGearMulti = () => {
   const [activeTab, setActiveTab] = useState("User Details");
   const [changed, setChanged] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
   const [data, setData] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
   const [isBulk, setIsBulk] = useState(false);
-
-  const [searchParams, setSearchParams] = useState({ value: "", type: "name" }); //for sorted search
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchParams, setSearchParams] = useState<{ value: string; type: "name" | "card" }>({
+    value: "",
+    type: "name",
+  });
 
   const handleCloseAdd = () => {
     setIsAdd(false);
@@ -29,47 +34,54 @@ const LiftingGearMulti = () => {
   };
 
   useEffect(() => {
-    makeApiCall(() => new StudentService().getStudents(activeTab === "User Details" ? true : false,activeTab === "Certificate" && true), {
-      afterSuccess: (data:any) => {
-        setData(data);
-      },
-    });
-  }, [changed, activeTab,isBulk]);
+    setCurrentPage(1);
+  }, [activeTab, isBulk, searchParams]);
 
-  const rearrangedData = data
-  ? data.filter((item: any) => {
-      const search = searchParams.value.toLowerCase();
+  useEffect(() => {
+    makeApiCall(
+      () =>
+        new StudentService().getStudents(
+          activeTab === "User Details",
+          activeTab === "Certificate",
+          {
+            page: currentPage,
+            pageSize: PAGE_SIZE,
+            searchValue: searchParams.value,
+            searchType: searchParams.type,
+          }
+        ),
+      {
+        afterSuccess: (response: any) => {
+          const items = response?.data ?? [];
+          const count = response?.count ?? 0;
+          const nextTotalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
 
-      if (!search) return true; // if search is empty, show all
+          setTotalPages(nextTotalPages);
 
-      if (searchParams.type === "name") {
-        // Search by Name
-        return item.name?.toLowerCase().includes(search);
-      } else if (searchParams.type === "card") {
-        // Search by Card/Model Level (across multiple fields)
-        const combinedFields = [
-          item.id_no,    // ID No
-          item.card_no,   // Card No
-          item.model_level, // Model/Level
-          item.company    // Company
-        ]
-          .filter(Boolean)        // remove undefined/null
-          .join(" ")              // combine fields into one string
-          .toLowerCase();         // make it case insensitive
+          if (currentPage > nextTotalPages) {
+            setData(items);
+            setCurrentPage(nextTotalPages);
+            return;
+          }
 
-        return combinedFields.includes(search);
+          setData(items);
+        },
       }
+    );
+  }, [changed, activeTab, isBulk, currentPage, searchParams]);
 
-      return false;
-    })
-  : [];
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
 
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
-  // const rearrangedData  = data
-  //   ? data.filter((item: any) =>
-  //       item.name.toLowerCase().includes(searchValue.toLowerCase())
-  //     )
-  //   : [];
+  const goToPage = (page: number) => {
+    const nextPage = Math.max(1, Math.min(page, totalPages));
+    setCurrentPage(nextPage);
+  };
 
 
 
@@ -144,7 +156,9 @@ const LiftingGearMulti = () => {
             <Header 
             onOpen={handleOpenAdd} 
             setIsBulk={setIsBulk} 
-            onSearchChange={(value: string, type: string) => setSearchParams({ value, type })} 
+            onSearchChange={(value: string, type: string) =>
+              setSearchParams({ value, type: type === "card" ? "card" : "name" })
+            } 
           /> 
           {/* //for sorted search */}
             {/* <Header onOpen={handleOpenAdd} setIsBulk={setIsBulk} onSearchChange={setSearchValue} /> */}
@@ -164,11 +178,38 @@ const LiftingGearMulti = () => {
             transition={{ duration: 0.5 }}
           >
             {activeTab === "User Details" ? (
-              <Table data={rearrangedData} setChanged={setChanged} changed={changed} />
+              <Table
+                data={data}
+                setChanged={setChanged}
+                changed={changed}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPreviousPage={handlePreviousPage}
+                onNextPage={handleNextPage}
+                onPageChange={goToPage}
+              />
             ) : activeTab === "Print Cards" ? (
-              <PrintCardTable data={rearrangedData} changed={changed} setChanged={setChanged} />
+              <PrintCardTable
+                data={data}
+                changed={changed}
+                setChanged={setChanged}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPreviousPage={handlePreviousPage}
+                onNextPage={handleNextPage}
+                onPageChange={goToPage}
+              />
             ) : (
-              <CertificateTable data={rearrangedData} setChanged={setChanged} changed={changed} />
+              <CertificateTable
+                data={data}
+                setChanged={setChanged}
+                changed={changed}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPreviousPage={handlePreviousPage}
+                onNextPage={handleNextPage}
+                onPageChange={goToPage}
+              />
             )}
           </motion.div>
         )  : (

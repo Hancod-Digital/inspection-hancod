@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Table,
@@ -27,11 +27,28 @@ import { AvatarFallback } from '@/components/ui/avatar';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import TableSpinner from '@/components/animated/TableSpinner';
 import { PaginationDemo } from '@/components/pagination-demo';
-import usePagination from '@/hooks/usePagination';
 import AvatarWithTooltip from './AvatarQr';
 import DeletePopup from '@/components/ui/delete-popup';
 
-export default function EquipmentTable({ data, setChanged, changed }: { data: any, setChanged: any, changed: boolean }) {
+export default function EquipmentTable({
+    data,
+    setChanged,
+    changed,
+    currentPage,
+    totalPages,
+    onPreviousPage,
+    onNextPage,
+    onPageChange
+}: {
+    data: any,
+    setChanged: any,
+    changed: boolean,
+    currentPage: number,
+    totalPages: number,
+    onPreviousPage: () => void,
+    onNextPage: () => void,
+    onPageChange: (page: number) => void
+}) {
     const [editingRow, setEditingRow] = useState<any>(null);
     const [deletePopupOpen, setDeletePopupOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<any>(null);
@@ -46,12 +63,12 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
     const handleCloseEdit = () => {
         setEditingRow(null);
     };
- const [isGenerating, setIsGenerating] = useState<boolean>(false);
+    const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
-    const generateQr = async (item:any) => {
+    const generateQr = async (item: any) => {
         setIsGenerating(item?.id);
         try {
-           
+
             // Create an HTML template for the card
             const htmlElement = document.createElement('div');
             htmlElement.innerHTML = await fetchHtml(item);
@@ -60,7 +77,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
             document.body.appendChild(htmlElement);
             await loadImages(htmlElement);
 
-          
+
 
             // Convert the HTML element to a PNG image
             const dataUrl = await toPng(htmlElement, {
@@ -84,7 +101,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     () => new StudentService().updateStudentCardUrl(item?.id, cardImageUrl),
                     {
                         afterSuccess: (data: any) => {
-                        
+
                         },
                     }
                 );
@@ -107,7 +124,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                         () => new StudentService().updateStudentQRUrl(item?.id, qrImageUrl),
                         {
                             afterSuccess: (data: any) => {
-                         
+
                             },
                         }
                     );
@@ -127,10 +144,10 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
         setIsGenerating(false);
     };
 
-    
 
-    
-    const deleteRecord = async (id:number) => {
+
+
+    const deleteRecord = async (id: number) => {
         makeApiCall(
             () => new StudentService().deleteStudent(id.toString()),
             {
@@ -174,7 +191,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                         res = data
                     },
                 }
-            ); 
+            );
 
             return res?.fullPath
                 ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
@@ -184,12 +201,9 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
             return null;
         }
     };
-    const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(data);
-
-
     return (
         <div className="px-8 py-3 bg-white w-[98%] mx-auto relative">
-            
+
             <Table className="w-full ">
                 <TableHeader>
                     <TableRow>
@@ -203,7 +217,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {currentData?.map((item: any, idx: number) => (
+                    {data?.map((item: any, idx: number) => (
                         <React.Fragment key={idx + 1}>
                             <TableRow className=''>
                                 <TableCell className="py-4">{item.id}</TableCell>
@@ -214,16 +228,16 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                 </TableCell>
                                 <TableCell className="py-4">{item.added_by}</TableCell>
                                 <TableCell className="py-4">
-                                <Avatar className="mb-2 w-16 h-16">
-                  <AvatarImage
-                    className="object-cover w-full h-full"
-                    alt="User's avatar"
-                    src={item?.avatar}
-                  />
-                  <AvatarFallback>{item?.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
-                                {/* <AvatarWithTooltip item={userItem} tooltipPosition="top" /> */}
-                </TableCell>
+                                    <Avatar className="mb-2 w-16 h-16">
+                                        <AvatarImage
+                                            className="object-cover w-full h-full"
+                                            alt="User's avatar"
+                                            src={item?.avatar}
+                                        />
+                                        <AvatarFallback>{item?.name?.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    {/* <AvatarWithTooltip item={userItem} tooltipPosition="top" /> */}
+                                </TableCell>
                                 <TableCell className="py-4">
                                     <div>ID No: {item.id_no}</div>
                                     <div>Card No: {item.card_no}</div>
@@ -231,14 +245,14 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                     <div>Company: {item.company}</div>
                                 </TableCell>
                                 <TableCell className="py-4">
-                                
+
                                     {isGenerating === item?.id ? (
                                         <TableSpinner />
                                     ) : item.qr_url ? (
                                         <AvatarWithTooltip item={item} tooltipPosition="top" />
-                                      
+
                                     ) : (
-                                        
+
                                         <button
                                             onClick={() => generateQr(item)}
                                             className="bg-white p-1 px-2 flex rounded-md  border-primary border text-primary"
@@ -249,8 +263,8 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                 </TableCell>
                                 <TableCell className="py-4">
                                     <div className='flex flex-col items-center gap-2'>
-                                    <button
-                                           onClick={() => handleEditClick(idx + 1)}
+                                        <button
+                                            onClick={() => handleEditClick(idx + 1)}
                                             className="bg-white p-1 px-2 flex rounded-md  border-primary border text-primary"
                                         >
                                             Edit
@@ -259,7 +273,7 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                                             onClick={() => handleDeleteClick(item)}
                                             className="bg-white p-1 px-2 flex rounded-md  border-primary border text-primary"
                                         >
-                                              Delete
+                                            Delete
                                         </button>
                                     </div>
                                     {/* <DropdownMenu>
@@ -309,15 +323,15 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
                 </TableBody>
             </Table>
             <div className='mt-4 flex justify-center pb-4'>
-                <PaginationDemo 
-                    currentPage={currentPage} 
-                    totalPages={totalPages} 
-                    onPreviousPage={handlePreviousPage} 
-                    onNextPage={handleNextPage} 
-                    onPageChange={goToPage} 
+                <PaginationDemo
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPreviousPage={onPreviousPage}
+                    onNextPage={onNextPage}
+                    onPageChange={onPageChange}
                 />
             </div>
-            
+
             <DeletePopup
                 isOpen={deletePopupOpen}
                 onClose={handleDeleteCancel}
@@ -330,4 +344,4 @@ export default function EquipmentTable({ data, setChanged, changed }: { data: an
 }
 
 
- 
+
