@@ -1,0 +1,10 @@
+open /Users/hancod/.supabase/profile: no such file or directory
+Loading project ref from file: supabase/.temp/project-ref
+Using connection pooler: postgresql://postgres.seqptsvnihezsfbnpkpz@aws-0-ap-south-1.pooler.supabase.com:5432/postgres
+Initialising login role...
+Using access token for profile: supabase
+Supabase CLI 2.78.1
+Using profile: supabase (supabase.co)
+Dumping schemas from remote database...
+exec /usr/local/bin/docker-entrypoint.sh: exec format error
+error running container: exit 1
