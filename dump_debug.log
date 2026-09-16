@@ -1,6 +1,6 @@
 open /Users/hancod/.supabase/profile: no such file or directory
 Loading project ref from file: supabase/.temp/project-ref
-Using connection pooler: postgresql://postgres.seqptsvnihezsfbnpkpz@aws-0-ap-south-1.pooler.supabase.com:5432/postgres
+Using connection pooler: postgresql://postgres.kwrxajdgwqxnvuyrkndp@aws-0-ap-south-1.pooler.supabase.com:5432/postgres
 Initialising login role...
 Using access token for profile: supabase
 Supabase CLI 2.78.1

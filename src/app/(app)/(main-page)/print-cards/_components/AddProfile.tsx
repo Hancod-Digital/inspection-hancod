@@ -190,7 +190,7 @@ type UserFormInput = TypeOf<typeof userFormSchema>;
   const onSubmitHandler: SubmitHandler<UserFormInput> = async (values) => {
     setLoading(true);
     try {
-      const avatarUrl = croppedFile ? "https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/"+await uploadImage() : '';
+      const avatarUrl = croppedFile ? "https://kwrxajdgwqxnvuyrkndp.supabase.co/storage/v1/object/public/"+await uploadImage() : '';
      
       const value = {
         name: values.name,

@@ -51,7 +51,7 @@ export default function SurveyorCompetencyPopup({
       ); 
 
       if (res?.fullPath) {
-        return `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`;
+        return `https://kwrxajdgwqxnvuyrkndp.supabase.co/storage/v1/object/public/${res.fullPath}`;
       } else {
         console.error('Invalid response from upload:', res);
         return null;

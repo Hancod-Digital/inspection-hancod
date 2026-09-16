@@ -51,7 +51,11 @@ export default function Component() {
     return (
         <header className="flex h-16 px-10  items-center fixed top-0 left-0 right-0 justify-between border-b bg-white z-[14]">
             <div className="flex items-center gap-4">
-                <img src="/images/logo.svg" alt="" />
+                <img
+                    src="/images/han-inspection.png"
+                    alt="Han Inspection"
+                    className="h-14 w-28 object-cover object-center"
+                />
             </div>
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">

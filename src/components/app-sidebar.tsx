@@ -319,7 +319,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
                 <div className="  w-full   bg-white   rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <img src="/images/logo.svg" className=" mr-auto " alt="" />
+                <img
+                  src="/images/han-inspection.png"
+                  className="mr-auto h-14 w-28 object-cover object-center"
+                  alt="Han Inspection"
+                />
                 </div>
                
               </a>

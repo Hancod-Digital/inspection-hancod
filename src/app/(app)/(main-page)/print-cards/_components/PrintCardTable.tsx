@@ -85,7 +85,7 @@ export default function PrintCardTable({
       );
 
       return res?.fullPath
-        ? `https://seqptsvnihezsfbnpkpz.supabase.co/storage/v1/object/public/${res.fullPath}`
+        ? `https://kwrxajdgwqxnvuyrkndp.supabase.co/storage/v1/object/public/${res.fullPath}`
         : null;
     } catch (error) {
       console.error("Error uploading image:", error);

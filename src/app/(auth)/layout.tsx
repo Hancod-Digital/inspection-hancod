@@ -46,7 +46,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* Left Section */}
             <div className="flex w-1/2 flex-col justify-center p-8 md:p-16 lg:p-20">
               <div className="mb-8 flex items-center">
-                <img src="/images/logo.svg" alt="Logo" className="h-12 w-auto" />
+                <img
+                  src="/images/han-inspection.png"
+                  alt="Han Inspection"
+                  className="h-20 w-40 object-cover object-center"
+                />
               </div>
               <div className="flex-1 overflow-auto">
                 {children}
