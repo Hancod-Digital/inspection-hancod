@@ -1,0 +1,42 @@
+/* Tooltip container */
+.tooltip {
+    
+    display: inline-block;
+  }
+  
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 160px; /* Adjusted width for the image */
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 160;
+    opacity: 0;
+    transition: opacity 0.3s;
+    top: 100%; /* Positions the tooltip below the avatar */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  /* Show the tooltip text when hovering */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  /* Optional: Position the tooltip on top */
+  .tooltip.top .tooltiptext {
+    bottom: 100%;
+    top: auto;
+  }
+  
+  /* Optional: Position the tooltip on bottom */
+  .tooltip.bottom .tooltiptext {
+    top: 100%;
+    bottom: auto;
+  }
+  
