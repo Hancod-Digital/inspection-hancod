@@ -11,7 +11,7 @@ import {
   LifeBuoy,
   Map,
   PieChart,
-  RefreshCcw,
+  // RefreshCcw,
   Send,
   Settings2,
   Square,
@@ -256,17 +256,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             },
           ],
         },
-        {
-          title: "Reports",
-          url: "/reports",
-          identifier: "reports",
-          icon: (
-            <RefreshCcw
-                className={`me-2 ${currentPath === "/reports" ? "text-primary" : "text-[#75829C]"}`}
-                size="1.3em"
-            />
-        ),
-        },
+        // Reports tab temporarily hidden; keep this block for future re-enabling.
+        // {
+        //   title: "Reports",
+        //   url: "/reports",
+        //   identifier: "reports",
+        //   icon: (
+        //     <RefreshCcw
+        //         className={`me-2 ${currentPath === "/reports" ? "text-primary" : "text-[#75829C]"}`}
+        //         size="1.3em"
+        //     />
+        //   ),
+        // },
         {
           title: "Job Orders",
           url: "/job-orders",
