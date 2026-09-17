@@ -5,12 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const majorCategoryDataRange = [{from:'equipment_type',to:'equipment_type'}]
-export const siteDataRange = [{from:'area',to:'area'}]
- 
+export const majorCategoryDataRange = [{ from: 'equipment_type', to: 'equipment_type' }]
+export const siteDataRange = [{ from: 'area', to: 'area' }]
 
-export const locationDataRange = [{from:'site',to:'site'}]
-export const minorCategoryDataRange = [{from:'major_category',to:'major_category'},{from:'standard',to:'standard'}]
+
+export const locationDataRange = [{ from: 'site', to: 'site' }]
+export const minorCategoryDataRange = [{ from: 'major_category', to: 'major_category' }, { from: 'standard', to: 'standard' }]
 export function generateRows(rows: any[]) {
   // Base top values for the first row
   const baseTopStatus = 4.129;
@@ -35,12 +35,12 @@ export function generateRows(rows: any[]) {
     const remarkTop = (baseTopRemark + offset).toFixed(3);
 
     // Destructure with default empty strings
-    const { 
-      condition = '', 
-      property = '', 
-      slNo = '', 
-      remarks = '', 
-      remark = '' 
+    const {
+      condition = '',
+      property = '',
+      slNo = '',
+      remarks = '',
+      remark = ''
     } = rowData;
 
     // Determine the serial number to display
@@ -68,7 +68,7 @@ export function generateRows(rows: any[]) {
 
 
 
-export const fetchCertificateHtml = async (item:any) => {
+export const fetchCertificateHtml = async (item: any) => {
   const htmlString = `
   <!DOCTYPE html>
   <html lang="en">
@@ -241,7 +241,7 @@ export const fetchCertificateHtml = async (item:any) => {
                     </div>
                     <div class="meta-values">
                       <p>${item?.certificate_no}</p>
-                      <p>${item?.course_duration+" " || 2+" "}day</p>
+                      <p>${item?.course_duration + " " || 2 + " "}day</p>
                       <p>${item?.issued_on}</p>
                       <p>${item?.valid_untill}</p>
                     </div>
@@ -268,7 +268,7 @@ export const fetchCertificateHtml = async (item:any) => {
 };
 
 
-export function generateEquipmentCertificateHTML(item:any):string {
+export function generateEquipmentCertificateHTML(item: any): string {
   return `
 </style></head><body style="margin: 0px; background: rgb(244, 253, 255); overflow-x: hidden;" dark-scroll="">
   <input type="hidden" id="anPageName" name="page" value="certificate-of-thorough-examination-of-lifting-gear">
@@ -313,8 +313,8 @@ export function generateEquipmentCertificateHTML(item:any):string {
       <p class="qube-safety-inspection-services-co-wll-lyLXxs valign-text-middle body-small-1" data-id="277:153">Qube Safety Inspection &amp; Services Co WLL</p>
       <p class="cr-134005-office-04-lyLXxs valign-text-middle body-small-4" data-id="277:154">
         <span>
-          <span class="span0-oKe1YJ body-small-4">CR# 134005, Office 04, 1st Floor, Bldg No. 154, St 204, Zone 56<br>Salwa Road, P.O. Box 201438, Doha-Qatar, Ph: +974 3149 9334<br></span>
-          <span class="span1-oKe1YJ body-small-1">info@qubeinspection.com I www.qubeinspection.com<br></span>
+          <span class="span0-oKe1YJ body-small-4"><br></span>
+          <span class="span1-oKe1YJ body-small-1">info@hancod.com I www.hancod.com<br></span>
         </span>
       </p>
       <div class="date-of-inspection-29-sep-2024-lyLXxs valign-text-middle body-large-2" data-id="277:155">
@@ -441,7 +441,7 @@ export function generateEquipmentCertificateHTML(item:any):string {
   `;
 }
 
-export function generateEquipmentCertificateHTMLBody(item:any):string {
+export function generateEquipmentCertificateHTMLBody(item: any): string {
   return `
   <html><head><style type="text/css">.turbo-progress-bar {
     position: fixed;
@@ -2042,7 +2042,7 @@ export function generateEquipmentCertificateHTMLBody(item:any):string {
   
   .certificate-of-thorough-examination-of-lifting-gear .vector-lyLXxs {
     height: 12px;
-    ${!item?.first_examination ? "left: 513px" :"left: 433px"};
+    ${!item?.first_examination ? "left: 513px" : "left: 433px"};
     top: 961px;
     width: 20px;
   }
@@ -2061,7 +2061,7 @@ export function generateEquipmentCertificateHTMLBody(item:any):string {
   
   .certificate-of-thorough-examination-of-lifting-gear .vector-4RajHW {
     height: 14px;
-    ${!item?.first_examination ? "left: 1054px;" :"left: 974px;"}
+    ${!item?.first_examination ? "left: 1054px;" : "left: 974px;"}
     top: 843px;
     width: 18px;
   }
@@ -2080,7 +2080,7 @@ export function generateEquipmentCertificateHTMLBody(item:any):string {
   
   .certificate-of-thorough-examination-of-lifting-gear .vector-9WsDNS {
     height: 14px;
-    ${item?.twelve_month_interval ? "left: 979px" :"left: 1059px"};
+    ${item?.twelve_month_interval ? "left: 979px" : "left: 1059px"};
     top: 890px;
     width: 18px;
   }
@@ -2099,7 +2099,7 @@ export function generateEquipmentCertificateHTMLBody(item:any):string {
   
   .certificate-of-thorough-examination-of-lifting-gear .vector-uywPwW {
     height: 12px;
-     ${item?.examination_scheme? "left: 979px":"left: 1059px"};
+     ${item?.examination_scheme ? "left: 979px" : "left: 1059px"};
     top: 937px;
     width: 18px;
   }
@@ -2118,7 +2118,7 @@ export function generateEquipmentCertificateHTMLBody(item:any):string {
   
   .certificate-of-thorough-examination-of-lifting-gear .vector-yyauHm {
     height: 14px;
-    ${item?.safe_to_use ? "left: 979px" :"left: 1059px"};
+    ${item?.safe_to_use ? "left: 979px" : "left: 1059px"};
     top: 1120px;
     width: 18px;
   }
@@ -2137,7 +2137,7 @@ export function generateEquipmentCertificateHTMLBody(item:any):string {
   
   .certificate-of-thorough-examination-of-lifting-gear .vector-Y5tY8J {
     height: 12px;
-    ${item?.exceptional_circumstances ? "left: 1054px" :"left: 1134px"};
+    ${item?.exceptional_circumstances ? "left: 1054px" : "left: 1134px"};
     top: 984px;
     width: 18px;
   }
@@ -2684,13 +2684,13 @@ ${generateEquipmentCertificateHTML(item)}
 
 export function replaceHyphen(str: string) {
   if (str.includes('-')) {
-      return str.replace(/-/g, '_');  // Replace all hyphens with underscores
+    return str.replace(/-/g, '_');  // Replace all hyphens with underscores
   } else {
-      return str;  // Return string as is if no hyphens are present
+    return str;  // Return string as is if no hyphens are present
   }
 }
 
-export const fetchHtml = async (item:any) => {
+export const fetchHtml = async (item: any) => {
   const htmlString = `
   <!DOCTYPE html>
 <html lang="en">
@@ -2979,7 +2979,7 @@ Level:<br />Course Duration:</span
 <span class="issued-expiry">Issued Date: <br />Expiry Date:</span
 ><span class="date">${item?.issued_on}<br />${item?.valid_untill}</span
 ><span class="contact-info"
->+974 31499334 | Info@qubeinspection.com | www.qubeinspection.com</span
+>info@hancod.com | www.hancod.com</span
 >
 </div>
 <!-- Generated by Codia AI - https://codia.ai/ -->
@@ -2987,18 +2987,18 @@ Level:<br />Course Duration:</span
 </html>
 
   `
-  
+
   return htmlString;
 };
 
 // export function getSubTopicOne(str: string) {
-   
-  
+
+
 //   const parts = str.split('/');
-  
+
 //   // Check if there are at least 3 parts to ensure the second slash exists and has a word after it
 //   if (parts.length > 1) {
-    
+
 //       return replaceHyphen(parts[1]); // The word after the second slash
 //   } else {
 //       return null; // Return null if the word after the second slash doesn't exist
@@ -3012,13 +3012,13 @@ Level:<br />Course Duration:</span
 // }
 
 // export function getSubTopic(str: string) {
- 
-  
+
+
 //   const parts = str.split('/');
-  
+
 //   // Check if there are at least 3 parts to ensure the second slash exists and has a word after it
 //   if (parts.length > 2) {
-    
+
 //       return replaceHyphen(parts[2]); // The word after the second slash
 //   } else {
 //       return null; // Return null if the word after the second slash doesn't exist
@@ -3029,7 +3029,7 @@ Level:<br />Course Duration:</span
 //   return locations?.map(location => {
 //       // Find the site record that matches the location's site ID
 //       const matchedSite = sites.find(site => site.id === location.site);
-      
+
 //       // Return a new object that includes the location data and the site name
 //       return {
 //           ...location,
@@ -7557,21 +7557,21 @@ Level:<br />Course Duration:</span
 // </html>
 
 //   `
-  
+
 //   return htmlString;
 // };
 
 export function getSubTopicOne(str: string) {
-   
-  
+
+
   const parts = str.split('/');
-  
+
   // Check if there are at least 3 parts to ensure the second slash exists and has a word after it
   if (parts.length > 1) {
-    
-      return replaceHyphen(parts[1]); // The word after the second slash
+
+    return replaceHyphen(parts[1]); // The word after the second slash
   } else {
-      return null; // Return null if the word after the second slash doesn't exist
+    return null; // Return null if the word after the second slash doesn't exist
   }
 }
 export function getLastTwoDigitsOfCurrentYear(): string {
@@ -7582,29 +7582,29 @@ export function getLastTwoDigitsOfCurrentYear(): string {
 }
 
 export function getSubTopic(str: string) {
- 
-  
+
+
   const parts = str.split('/');
-  
+
   // Check if there are at least 3 parts to ensure the second slash exists and has a word after it
   if (parts.length > 2) {
-    
-      return replaceHyphen(parts[2]); // The word after the second slash
+
+    return replaceHyphen(parts[2]); // The word after the second slash
   } else {
-      return null; // Return null if the word after the second slash doesn't exist
+    return null; // Return null if the word after the second slash doesn't exist
   }
 }
 
 export function joinFunctions(locations: any[], sites: any[]) {
   return locations?.map(location => {
-      // Find the site record that matches the location's site ID
-      const matchedSite = sites.find(site => site.id === location.site);
-      
-      // Return a new object that includes the location data and the site name
-      return {
-          ...location,
-          join: matchedSite ? matchedSite.name : 'Unknown Site' // Add site name or fallback to 'Unknown Site'
-      };
+    // Find the site record that matches the location's site ID
+    const matchedSite = sites.find(site => site.id === location.site);
+
+    // Return a new object that includes the location data and the site name
+    return {
+      ...location,
+      join: matchedSite ? matchedSite.name : 'Unknown Site' // Add site name or fallback to 'Unknown Site'
+    };
   });
 }
 
@@ -7614,14 +7614,14 @@ export async function loadImages(element: any) {
   const promises = [];
 
   for (let img of images) {
-      if (!img.complete) {
-          promises.push(
-              new Promise((resolve, reject) => {
-                  img.onload = resolve;
-                  img.onerror = reject;
-              })
-          );
-      }
+    if (!img.complete) {
+      promises.push(
+        new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        })
+      );
+    }
   }
 
   await Promise.all(promises);
@@ -7636,27 +7636,27 @@ export const dataURLtoBlob = (dataUrl: string) => {
   const u8arr = new Uint8Array(n);
 
   while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
+    u8arr[n] = bstr.charCodeAt(n);
   }
 
   return new Blob([u8arr], { type: mime });
 };
 
 export function formatDateWithHyphen(dateString: string | number | Date) {
-  if(dateString == "Not Applicable") return dateString
+  if (dateString == "Not Applicable") return dateString
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
   const year = date.getFullYear();
   return `${day}-${month}-${year}`;
-} 
+}
 
-export function mapDataFields(data:any, mappings:any) {
-  const fieldOccurrences:any = []; // Array to store transformed records
+export function mapDataFields(data: any, mappings: any) {
+  const fieldOccurrences: any = []; // Array to store transformed records
 
   // Process each record in the data array
-  data.forEach((record:any) => {
-    const mappedRecord:any = {}; // Temporary object for each mapped record
+  data.forEach((record: any) => {
+    const mappedRecord: any = {}; // Temporary object for each mapped record
 
     // Map fields according to the mappings object
     for (const key in mappings) {
@@ -7672,8 +7672,8 @@ export function mapDataFields(data:any, mappings:any) {
   return fieldOccurrences; // Return the array of mapped records
 }
 
-export const cssStringUpdated =  (item:any) => {
-   
+export const cssStringUpdated = (item: any) => {
+
   return `
 
 :root {
@@ -8102,26 +8102,26 @@ button {
 
 export const splitCompany = (company: string) => {
   if (!company) return { company1: '', company2: '' };
-  
+
   // Split the company name into words
   const words = company.split(' ');
   let company1 = '';
   let company2 = '';
-  
+
   // If the company name is short enough, keep it all in company1
   if (company.length <= 30) {
     return { company1: company, company2: '' };
   }
-  
+
   // Find the best split point to avoid breaking phrases
   let bestSplitIndex = -1;
   let minDifference = Infinity;
-  
+
   // Try different split points to find the most balanced one
   for (let i = 1; i < words.length; i++) {
     const firstPart = words.slice(0, i).join(' ');
     const secondPart = words.slice(i).join(' ');
-    
+
     if (firstPart.length <= 30 && secondPart.length <= 30) {
       const difference = Math.abs(firstPart.length - secondPart.length);
       if (difference < minDifference) {
@@ -8130,7 +8130,7 @@ export const splitCompany = (company: string) => {
       }
     }
   }
-  
+
   // If we found a good split point, use it
   if (bestSplitIndex > 0) {
     company1 = words.slice(0, bestSplitIndex).join(' ');
@@ -8140,24 +8140,24 @@ export const splitCompany = (company: string) => {
     company1 = company.substring(0, 30);
     company2 = company.substring(30);
   }
-  
+
   return { company1, company2 };
 }
 
 export const splitDesignation = (designation: string) => {
   const words = designation.split(' ');
-    let training = '';
-    let training1 = '';
-    let currentLength = 0;
-    
-    for (const word of words) {
-        const newLength = currentLength + word.length + (training ? 1 : 0);
-        if (newLength <= 25) {
-            training += (training ? ' ' : '') + word;
-            currentLength = newLength;
-        } else {
-            training1 += (training1 ? ' ' : '') + word;
-        }
+  let training = '';
+  let training1 = '';
+  let currentLength = 0;
+
+  for (const word of words) {
+    const newLength = currentLength + word.length + (training ? 1 : 0);
+    if (newLength <= 25) {
+      training += (training ? ' ' : '') + word;
+      currentLength = newLength;
+    } else {
+      training1 += (training1 ? ' ' : '') + word;
     }
-    return {training, training1}
   }
+  return { training, training1 }
+}

@@ -1,5 +1,5 @@
 export const fetchMultiCertificate = (item: any) => {
-    return`
+  return `
         <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -28,10 +28,9 @@ export const fetchMultiCertificate = (item: any) => {
         >
         <div class="company-details">
           <span class="company-details-2"
-            >CR# 134005, Office 04, 1st Floor, Bldg No. 154, St 204, Zone 56<br />Salwa
-            Road, P.O. Box 201438, Doha-Qatar, Ph: +974 3149 9334<br /></span
+            ><br /></span
           ><span class="company-details-3"
-            >info@qubeinspection.com I www.qubeinspection.com<br
+            >info@hancod.com I www.hancod.com<br
           /></span>
         </div>
       </div>
@@ -125,7 +124,7 @@ export const fetchMultiCertificate = (item: any) => {
           <span class="make-dutest-qatar-material-polyester"
             > ${item?.description} </span
           ><span class="dq-dq-dq"
->${item?.serial_no?.map((serial:any) => `${serial}<br />`).join("")}</span
+>${item?.serial_no?.map((serial: any) => `${serial}<br />`).join("")}</span
           ><span class="nil">${item?.proof_load}</span><span class="number-04">${item?.multiequipments ? (item?.multiequipments?.length < 10 ? "0" + item?.multiequipments?.length : item?.multiequipments?.length) : "01"}</span>
         </div>
         <span class="straight-lift"> ${item?.safe_working_load} <br /></span>
@@ -247,8 +246,8 @@ export const fetchMultiCertificate = (item: any) => {
     `
 }
 
-export const fetchMultiCertificateCss = (item:any) => {
-    return`
+export const fetchMultiCertificateCss = (item: any) => {
+  return `
       :root {
   --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
@@ -1724,7 +1723,7 @@ button {
   width: 1.9%;
   height: 15.06%;
   top: -62.89%;
-  ${!item?.first_examination ? "left: 36" :"left: 43.79%"};
+  ${!item?.first_examination ? "left: 36" : "left: 43.79%"};
   background: url(/assets/images/aa6a9154-d0c7-42fb-8f09-9e7b5cd1da5d.png)
     no-repeat center;
   background-size: 100% 100%;

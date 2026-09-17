@@ -14,40 +14,40 @@ export class AuthService extends Supabase {
         if (error) {
             return false
         }
-         
-        
+
+
         return data
     }
     async reset_password(email: string) {
         const { data, error } = await this.supabase.auth.resetPasswordForEmail(email, {
             redirectTo: 'http://localhost:3000/new-password', // URL to handle password reset
-          });
-          if (error) {
-            
+        });
+        if (error) {
+
             throw new Error("An Error Occured")
         }
         return data
     }
-    async change_authenticated_password(password: string){
+    async change_authenticated_password(password: string) {
         const { data, error } = await this.supabase.auth.updateUser({
             password
-          })
-          
-          if (error) {
+        })
+
+        if (error) {
             throw new Error("An Error Occured")
-          } 
-          return data
-          
+        }
+        return data
+
     }
-    async change_password(password: string, accessToken: string){
+    async change_password(password: string, accessToken: string) {
         const { error } = await this.supabase.auth.updateUser({
             password,
-           
-          });
-      
-          if (error) {
+
+        });
+
+        if (error) {
             throw new Error("An Error Occured")
-          } 
+        }
     }
     async userVerify(email: string) {
         const { data, error } = await this.supabase
