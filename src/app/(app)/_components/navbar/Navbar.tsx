@@ -54,7 +54,7 @@ export default function Component() {
                 <img
                     src="/images/han-inspection.png"
                     alt="Han Inspection"
-                    className="h-14 w-28 object-cover object-center"
+                    className="h-14 w-28 object-contain object-center"
                 />
             </div>
             <div className="flex items-center gap-4">

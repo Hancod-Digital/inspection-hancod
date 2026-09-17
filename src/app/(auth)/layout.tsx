@@ -49,7 +49,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <img
                   src="/images/han-inspection.png"
                   alt="Han Inspection"
-                  className="h-20 w-40 object-cover object-center"
+                  className="h-20 w-40 object-contain object-center"
                 />
               </div>
               <div className="flex-1 overflow-auto">
