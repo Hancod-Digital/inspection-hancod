@@ -274,6 +274,10 @@ export default function Component() {
 
   const onSubmit = async (data: any) => {
     const fullMobileNumber = `${countryCode}${data.mobile}`;  // Combine country code with mobile number
+    if (!userDetails?.id) {
+      toastWithTimeout(ToastVariant.Destructive, "Unable to update profile: user details are unavailable.");
+      return;
+    }
     
     makeApiCall(
       async () => new UserService().updateUser({

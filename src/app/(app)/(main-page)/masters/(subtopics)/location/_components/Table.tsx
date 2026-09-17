@@ -14,29 +14,27 @@ import DeleteIcon from '@/components/icons/DeleteIcon';
 import EditPopup from './EditPopup';
 import { useSubtopic } from '@/context/SubtopicContext';
 import DeleteDialogue from '@/components/ui/delete-dialog';
-import Site from '../../site/_components/AddSite';
 import { PaginationDemo } from '@/components/pagination-demo';
 import usePagination from '@/hooks/usePagination';
-import { useQueryClient } from '@tanstack/react-query';
 import { MasterService } from '@/services/api/masters-service';
 
 export default function EquipmentTable({searchValue,setIsChanged,isChanged}:{searchValue:string,setIsChanged:any,isChanged:any}) {
     const [editingRow, setEditingRow] = useState<number | null>(null);
-    const { FetchLocationDetails , deleteRecord} = useSubtopic(); // Assuming this is a hook from your context
+    const { deleteRecord} = useSubtopic();
     const [data, setData] = useState<any>(null);
 
+    const fetchLocations = async () => {
+      try {
+        const datas = await new MasterService().getLocationDetails();
+        setData(datas ?? []);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const datas = await new MasterService().getLocationDetails();
-   
-          setData(datas); // Update state with the fetched data
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-      fetchData();
-    }, [isChanged]); // Empty dependency array ensures this runs once when the component mounts
+      fetchLocations();
+    }, [isChanged]);
   
       
     const handleEditClick = (slNo: number) => {
@@ -45,10 +43,29 @@ export default function EquipmentTable({searchValue,setIsChanged,isChanged}:{sea
 
     const handleCloseEdit = () => {
         setEditingRow(null);
+        setIsChanged((prev: boolean) => !prev);
     };
+
+    const handleDelete = async (locationId: number) => {
+        try {
+            await deleteRecord(locationId);
+        } catch (error) {
+            console.error('Error deleting location:', error);
+        } finally {
+            // Update UI immediately, then refetch so list stays in sync without a full page reload
+            setData((prev: any) =>
+                Array.isArray(prev)
+                    ? prev.filter((item: any) => Number(item.location?.id) !== Number(locationId))
+                    : []
+            );
+            await fetchLocations();
+            setIsChanged((prev: boolean) => !prev);
+        }
+    };
+
     const rearrangedData  = data
     ? data.filter((item: any) =>
-        item.location.name.toLowerCase().includes(searchValue.toLowerCase())
+        item.location?.name?.toLowerCase().includes(searchValue.toLowerCase())
       )
     : [];
     const { currentPage, pageSize, totalPages, currentData, handlePreviousPage, handleNextPage, goToPage,setCurrentPage } = usePagination(rearrangedData);
@@ -60,8 +77,6 @@ export default function EquipmentTable({searchValue,setIsChanged,isChanged}:{sea
                     <TableRow>
                         <TableHead className="py-4">Sl. No.</TableHead>
                         <TableHead className="py-4">Location</TableHead>
-                        {/* <TableHead className="py-4">Site</TableHead> */}
-                         
                         <TableHead className="py-4">Status</TableHead>
                         <TableHead className="py-4">Action</TableHead>
                     </TableRow>
@@ -75,48 +90,46 @@ export default function EquipmentTable({searchValue,setIsChanged,isChanged}:{sea
             </TableCell>
           </TableRow>
         ) : (
-                    currentData?.map((item:any,idx:any) => (
-                        <React.Fragment key={item.id}> 
+                    currentData?.map((item:any,idx:any) => {
+                        const locationId = item.location?.id;
+                        return (
+                        <React.Fragment key={locationId ?? idx}> 
                             <TableRow>
                                 <TableCell className="py-4">{(currentPage - 1) * pageSize + idx + 1}</TableCell>
                                 <TableCell className="py-4">{item?.location?.name}</TableCell>
-                                {/* <TableCell className="py-4">{item?.site?.name}</TableCell> */}
-                             
                                 <TableCell className="py-4">{item?.location?.status}</TableCell>
                                 <TableCell className="py-4">
                                     <div className="flex space-x-2">
                                         <button onClick={() => handleEditClick(idx + 1)} className="text-red-500">
                                             <EditIcon />
                                         </button>
-                                        <DeleteDialogue onConfirm={() => deleteRecord(item.id)} triggerButton={<button className="text-red-500">
+                                        <DeleteDialogue onConfirm={() => handleDelete(locationId)} triggerButton={<button className="text-red-500">
                                             <DeleteIcon />
                                         </button>} />
                                     </div>
                                 </TableCell>
                             </TableRow>
-                            {/* <AnimatePresence>
-                                {editingRow === idx + 1 && (
+                            <AnimatePresence>
+                                {editingRow === idx + 1 && locationId != null && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
                                         exit={{ opacity: 0, height: 0 }}
                                         transition={{ duration: 0.2 }}
                                     >
-                                        <TableCell colSpan={6}>
+                                        <TableCell colSpan={4}>
                                             <div className="overflow-hidden">
-                                                {isSite && (<Site onClose={() => setIsSite(false)} setIsArea={setIsArea} setIsChanged={setIsChanged} isChanged={isChanged} />)}
-                                                {!isSite && (<EditPopup onClose={handleCloseEdit} id={item.location?.id!} setIsSite={setIsSite}/>)}
+                                                <EditPopup onClose={handleCloseEdit} id={locationId} />
                                             </div>
                                         </TableCell>
                                     </motion.tr>
                                 )}
-                            </AnimatePresence> */}
+                            </AnimatePresence>
                         </React.Fragment>
-                    ))
+                    )})
                     )}
                 </TableBody>
             </Table>
-            {/* <PaginationDemo currentPage={currentPage} totalPages={totalPages} onPreviousPage={handlePreviousPage} onNextPage={handleNextPage} onPageChange={setCurrentPage} /> */}
             {data && data.length > 6 && (
                 <div className='absolute bottom-0 right-0'>
                   <PaginationDemo

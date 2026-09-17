@@ -103,6 +103,16 @@ export class AuthService extends Supabase {
             .single()
         return data
     }
+    async getUserDetailsByEmail(email: string) {
+        if (!email) return null;
+        const { data, error } = await this.supabase
+            .from('user')
+            .select('*')
+            .eq('email', email)
+            .maybeSingle();
+        if (error) throw new Error(error.message);
+        return data;
+    }
     async uploadImage(email: string) {
 
     }
@@ -118,8 +128,12 @@ export const fetchUserActiveStatus = async () => {
 
 export const fetchUserDetails = async () => {
     const service = new AuthService();
- 
-    const response = await service.getUserDetails((await service.getActiveUser()).session?.user.id!)
+    const response = await service.getActiveUser();
+    const authUser = response.session?.user;
+    if (!authUser) return null;
 
-    return response
+    const detailsById = await service.getUserDetails(authUser.id);
+    if (detailsById) return detailsById;
+
+    return service.getUserDetailsByEmail(authUser.email || '');
 }

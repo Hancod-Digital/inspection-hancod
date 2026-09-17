@@ -53,7 +53,7 @@ export default function EquipmentDetailsForm({ onClose, id }: EquipmentDetailsFo
         
         // Find the specific location by ID
         const specificLocation = allLocationData?.find((item: any) => 
-          item.location?.id === id
+          Number(item.location?.id) === Number(id)
         );
         
         if (specificLocation) {
