@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (!isLoading && authStatus && pathname !== '/new-password') {
             // Redirect to dashboard if authenticated and not on /new-password
-            router.push('/dashboard');
+            router.replace('/dashboard');
         }
     }, [isLoading, authStatus, router, pathname]);
 

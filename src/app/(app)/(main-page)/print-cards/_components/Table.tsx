@@ -82,6 +82,7 @@ export default function EquipmentTable({
             // Convert the HTML element to a PNG image
             const dataUrl = await toPng(htmlElement, {
                 quality: 0.95,
+                cacheBust: true,
                 width: htmlElement.offsetWidth,
                 height: htmlElement.offsetHeight,
             });
@@ -342,6 +343,5 @@ export default function EquipmentTable({
         </div>
     );
 }
-
 
 

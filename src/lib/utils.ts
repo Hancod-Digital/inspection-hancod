@@ -2792,12 +2792,17 @@ width: 17.31%;
 height: 13.06%;
     top: 35.34%;
     left: 20.09%;
-background: url(${item?.avatar})
-no-repeat center;
-  background-size: cover;
+  background: transparent;
+  overflow: hidden;
   transform: translate(-50.08%, -50.17%);
 z-index: 9;
 border-radius: 15px;
+}
+.profile-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .sheik-hameed-khan {
 display: flex;
@@ -2964,7 +2969,7 @@ z-index: 12;
 >This QR code is authenticated and the results are as below</span
 >
 </div>
-<div class="profile-photo"></div>
+<div class="profile-photo"><img src="${item?.avatar || ''}" alt="User profile" crossorigin="anonymous" /></div>
 <span class="sheik-hameed-khan">${item?.name?.toUpperCase()}</span>
 <div class="nome">
 <span class="apparicio-junior">${item?.certificate_no}<br /><br /></span>
@@ -7815,10 +7820,14 @@ button {
   height: 100%;
   
   left: 0;
-  background: url(${item?.avatar})
-    no-repeat center;
-  background-size: cover;
+  background: transparent;
+  overflow: hidden;
   z-index: 23;
+}
+.profile-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 .vector {

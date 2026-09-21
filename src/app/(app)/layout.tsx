@@ -34,17 +34,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     // Redirect to login if not authenticated
     useEffect(() => {
         if (!isLoading && !authStatus) {
-            router.push("/login");
+            router.replace("/login");
         }
     }, [isLoading, authStatus, router]);
 
-    // Block rendering until the authentication status is determined
-    if (isLoading || !authStatus) {
+    if (isLoading) {
         return <Spinner />; // Display loading state while checking auth
     }
 
     if (isError) {
         return <div>Error fetching authentication status</div>;
+    }
+
+    // Middleware normally handles this redirect before the page renders.
+    // Keep this guard for client-side session expiry as well.
+    if (!authStatus) {
+        return <Spinner />;
     }
 
     // Render protected content only if authenticated

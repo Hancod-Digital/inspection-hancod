@@ -57,7 +57,7 @@ export default function LoginForm() {
             toast,
           
             afterSuccess: () => {
-                router.push('/dashboard')
+                router.replace('/dashboard')
                 router.refresh()       
             },
             

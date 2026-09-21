@@ -1,5 +1,6 @@
 
 import { AxiosError, AxiosResponse } from "axios";
+import { createBrowserClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 
 
@@ -54,8 +55,13 @@ export class Supabase {
         //     throw new Error("Missing Supabase URL or Key");
         // }
 const isServer = typeof window === 'undefined'; 
-        // Create Supabase client
-        this.supabase = createClient(this.supabaseUrl, this.supabaseKey);
+        // Use the SSR browser client in the browser so auth sessions are
+        // stored in cookies and can be read by src/middleware.ts. The plain
+        // client stores sessions in localStorage, which causes middleware and
+        // the client layouts to disagree and repeatedly redirect.
+        this.supabase = typeof window === 'undefined'
+            ? createClient(this.supabaseUrl, this.supabaseKey)
+            : createBrowserClient(this.supabaseUrl, this.supabaseKey);
 
         return this;
     }

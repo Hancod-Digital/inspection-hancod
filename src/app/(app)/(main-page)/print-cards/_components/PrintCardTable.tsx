@@ -108,6 +108,7 @@ export default function PrintCardTable({
       // Convert the HTML element to a PNG image
       const dataUrl = await toPng(htmlElement, {
         quality: 0.95,
+        cacheBust: true,
         width: htmlElement.offsetWidth,
         height: htmlElement.offsetHeight,
       });
@@ -233,7 +234,7 @@ export default function PrintCardTable({
       
       </div>
      
-      <div class="aplicar-estilo"><div class="profile-photo"></div></div>
+      <div class="aplicar-estilo"><div class="profile-photo"><img src="${item?.avatar || ''}" alt="User profile" crossorigin="anonymous" /></div></div>
     
     
       <span style="font-weight: 600;" class="qube-inspection"
@@ -304,7 +305,7 @@ export default function PrintCardTable({
       
       </div>
        
-      <div class="aplicar-estilo"><div class="profile-photo"></div></div>
+      <div class="aplicar-estilo"><div class="profile-photo"><img src="${item?.avatar || ''}" alt="User profile" crossorigin="anonymous" /></div></div>
        
       <span style="font-weight: 600;" class="qube-inspection"
         >: ${item?.id_no}<br />: ${item?.company?.length > 28 ? splitLongString(item?.company)[0] : item?.company}<br />
