@@ -2,9 +2,9 @@
 
 set -Eeuo pipefail
 
-readonly VERCEL_PROD_PROJECT="inspection-hancod"
+readonly VERCEL_PROD_PROJECT="inspection-hancod-multitenent"
 readonly VERCEL_SCOPE="hancods-projects-c95d7587"
-readonly GIT_BRANCH="main"
+readonly GIT_BRANCH="feat/multitenent"
 readonly COMMIT_MESSAGE="fix: latest fix"
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
