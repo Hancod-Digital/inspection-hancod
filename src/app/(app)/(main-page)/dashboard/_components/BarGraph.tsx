@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { DashboardEquipment } from '@/services/api/dashboard-service';
 
 ChartJS.register(
   CategoryScale,
@@ -43,13 +44,19 @@ const BarChart: React.FC<BarChartProps> = ({ data, options }) => {
   return <Bar data={data} options={options} className='bg-white p-10' style={graphStyle} />;
 };
 
-const BarGraph = () => {
+const BarGraph = ({ equipment }: { equipment: DashboardEquipment[] }) => {
+  const counts = equipment.reduce<Record<string, number>>((result, item) => {
+    const type = item.item_type ?? item.property_table_type ?? 'Uncategorized';
+    result[type] = (result[type] ?? 0) + 1;
+    return result;
+  }, {});
+  const labels = Object.keys(counts).slice(0, 10);
   const data = {
-    labels: ['DSL Plate Lifter', 'Container', 'Lifting Equipment', 'Lifting Gear', 'Calibration'],
+    labels,
     datasets: [
       {
         label: 'Equipment Status',
-        data: [6000, 8000, 7000, 5000, 4000],
+        data: labels.map((label) => counts[label]),
         backgroundColor: [
           'rgba(54, 162, 235, 0.5)', // Blue
           'rgba(75, 192, 192, 0.5)', // Green
@@ -57,7 +64,7 @@ const BarGraph = () => {
           'rgba(255, 159, 64, 0.5)', // Orange
           'rgba(153, 102, 255, 0.5)', // Purple
         ],
-        barThickness: 180, // Adjust this value to match the thickness in your image
+        barThickness: 80,
       },
     ],
   };
@@ -87,13 +94,9 @@ const BarGraph = () => {
       },
       y: {
         min: 0,
-        max: 10000,
         beginAtZero: true,
         ticks: {
-          stepSize: 2000, // Set the step size to control the interval of ticks
-          callback: function (value: any) {
-            return value / 1000 + 'K'; // Display y-axis labels as 'K'
-          },
+          precision: 0,
         },
         grid: {
           display: false, // Remove grid lines on the y-axis

@@ -2,14 +2,24 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
+import { DashboardInspection } from '@/services/api/dashboard-service';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const LineGraph = () => {
-  const sampleData = [2000, 2200, 1800, 2400, 1900, 2500, 2300, 2700, 2200, 3000, 2700, 3800];
+const LineGraph = ({ inspections }: { inspections: DashboardInspection[] }) => {
+  const months = Array.from({ length: 6 }, (_, index) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - (5 - index), 1);
+    return date;
+  });
+  const labels = months.map((date) => date.toLocaleString('en-US', { month: 'long' }));
+  const sampleData = months.map((month) => inspections.filter((item) => {
+    const date = new Date(item.inspection_date ?? '');
+    return date.getFullYear() === month.getFullYear() && date.getMonth() === month.getMonth();
+  }).length);
 
   const canvasData = {
-    labels: ['July', 'August', 'September', 'October', 'November'],
+    labels,
     datasets: [
       {
         label: 'Month wise Statistics',
@@ -46,9 +56,9 @@ const LineGraph = () => {
           display: false,
         },
         min: 0,
-        max: 4000,
+        suggestedMax: Math.max(...sampleData, 1),
         ticks: {
-          stepSize: 1000,
+          precision: 0,
           color: '#000000',
           font: {
             family: 'Arial, sans-serif',

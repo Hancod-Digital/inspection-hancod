@@ -1,52 +1,12 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { DashboardInspection } from "@/services/api/dashboard-service"
+import { formatDate } from "@/services/api/utils"
 
-interface ApprovalItem {
-  certID: string
-  certificateNo: string
-  equipmentNo: string
-  result: string
-  inspDate: string
-}
-
-const approvalData: ApprovalItem[] = [
-  {
-    certID: "1556",
-    certificateNo: "488556648852555411",
-    equipmentNo: "ZP 40-D",
-    result: "Certified and color coded",
-    inspDate: "20-10-2024",
-  },
-  {
-    certID: "1556",
-    certificateNo: "488556648852555411",
-    equipmentNo: "ZP 40-D",
-    result: "Certified and color coded",
-    inspDate: "20-10-2024",
-  },
-  {
-    certID: "1556",
-    certificateNo: "488556648852555411",
-    equipmentNo: "ZP 40-D",
-    result: "Certified and color coded",
-    inspDate: "20-10-2024",
-  },
-  {
-    certID: "1556",
-    certificateNo: "488556648852555411",
-    equipmentNo: "ZP 40-D",
-    result: "Certified and color coded",
-    inspDate: "20-10-2024",
-  },
-  {
-    certID: "1556",
-    certificateNo: "488556648852555411",
-    equipmentNo: "ZP 40-D",
-    result: "Certified and color coded",
-    inspDate: "20-10-2024",
-  },
-]
-
-export default function Component() {
+export default function Component({ inspections }: { inspections: DashboardInspection[] }) {
+  const approvalData = inspections.filter((item) => {
+    const status = String(item.approval_status ?? '').toLowerCase();
+    return status === 'pending' || status === 'waiting' || status === 'false' || !status;
+  }).slice(0, 10);
   return (
     <div className="w-full mx-auto p-10 bg-white">
       <h2 className="text-xl font-bold mb-4">Waiting For Approval</h2>
@@ -65,11 +25,11 @@ export default function Component() {
             
             <TableRow key={index} className="py-10">
                  
-    <TableCell className="font-medium"><div className="py-4  ">{item.certID}</div></TableCell>
-    <TableCell><div className="py-4  ">{item.certificateNo}</div></TableCell>
-    <TableCell><div className="py-4  ">{item.equipmentNo}</div></TableCell>
-    <TableCell><div className="py-4  ">{item.result}</div></TableCell>
-    <TableCell className="text-right"><div className="py-4  ">{item.inspDate}</div></TableCell>
+    <TableCell className="font-medium"><div className="py-4">{item.id}</div></TableCell>
+    <TableCell><div className="py-4">{item.certificate_no ?? item.test_cert_coc_no ?? '—'}</div></TableCell>
+    <TableCell><div className="py-4">{item.equipment ?? item.title ?? '—'}</div></TableCell>
+    <TableCell><div className="py-4">{item.result ?? 'Pending approval'}</div></TableCell>
+    <TableCell className="text-right"><div className="py-4">{item.inspection_date ? formatDate(item.inspection_date) : '—'}</div></TableCell>
  
                
             </TableRow> 

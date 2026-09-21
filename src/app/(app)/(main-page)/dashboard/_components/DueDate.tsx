@@ -1,4 +1,6 @@
 import React from 'react'
+import { DashboardEquipment } from '@/services/api/dashboard-service'
+import { formatDate } from '@/services/api/utils'
 import {
   Table,
   TableBody,
@@ -8,23 +10,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-interface EquipmentData {
-  slNo: number
-  equipmentNo: string
-  lastInspDate: string
-  dueDate: string
-  testType: string
-}
-
-const equipmentData: EquipmentData[] = [
-  { slNo: 1, equipmentNo: 'ZP 40-D', lastInspDate: '20-10-2024', dueDate: '20-10-2024', testType: 'Thorough' },
-  { slNo: 2, equipmentNo: 'ZP 40-D', lastInspDate: '20-10-2024', dueDate: '20-10-2024', testType: 'Thorough' },
-  { slNo: 3, equipmentNo: 'ZP 40-D', lastInspDate: '20-10-2024', dueDate: '20-10-2024', testType: 'Thorough' },
-  { slNo: 4, equipmentNo: 'ZP 40-D', lastInspDate: '20-10-2024', dueDate: '20-10-2024', testType: 'Thorough' },
-  { slNo: 5, equipmentNo: 'ZP 40-D', lastInspDate: '20-10-2024', dueDate: '20-10-2024', testType: 'Thorough' },
-]
-
-export default function Component() {
+export default function Component({ equipment }: { equipment: DashboardEquipment[] }) {
+  const equipmentData = equipment
+    .filter((item) => item.next_thorough_date || item.next_test_date)
+    .sort((a, b) => new Date(a.next_thorough_date ?? a.next_test_date ?? '').getTime() - new Date(b.next_thorough_date ?? b.next_test_date ?? '').getTime())
+    .slice(0, 10);
   return (
     <div className="p-10 bg-white">
       <h1 className="text-xl font-bold mb-4">Equipment Due Date</h1>
@@ -39,13 +29,13 @@ export default function Component() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {equipmentData.map((item) => (
-            <TableRow key={item.slNo} className='py-5'>
-              <TableCell><div className="py-4  ">{item.slNo}</div></TableCell>
-              <TableCell><div className="py-4  ">{item.equipmentNo}</div></TableCell>
-              <TableCell><div className="py-4  ">{item.lastInspDate}</div></TableCell>
-              <TableCell><div className="py-4  ">{item.dueDate}</div></TableCell>
-              <TableCell><div className="py-4  ">{item.testType}</div></TableCell>
+          {equipmentData.map((item, index) => (
+            <TableRow key={item.id} className='py-5'>
+              <TableCell><div className="py-4">{index + 1}</div></TableCell>
+              <TableCell><div className="py-4">{item.equipment_no ?? item.equipment ?? item.title ?? '—'}</div></TableCell>
+              <TableCell><div className="py-4">{item.last_thorough_date || item.last_test_date ? formatDate(item.last_thorough_date ?? item.last_test_date ?? '') : '—'}</div></TableCell>
+              <TableCell><div className="py-4">{formatDate(item.next_thorough_date ?? item.next_test_date ?? '')}</div></TableCell>
+              <TableCell><div className="py-4">{item.next_thorough_date ? 'Thorough' : 'Test'}</div></TableCell>
             </TableRow>
           ))}
         </TableBody>

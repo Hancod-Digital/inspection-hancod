@@ -2,14 +2,13 @@ import React from 'react';
 
 const CircularProgress = ({ value, label }:{value:number,label:string}) => (
    
-    <CircularComponent number={200} label={"Equipments"} />
+    <CircularComponent number={value} label={label + (value === 1 ? '' : 's')} />
    
 );
 
 export default CircularProgress;
 
 
- 
 const CircularComponent: React.FC<{ number: number; label: string }> = ({ number, label }) => {
   return (
 //     <div className="outer-border">
@@ -35,5 +34,3 @@ const CircularComponent: React.FC<{ number: number; label: string }> = ({ number
 </div>
   );
 };
-
- 
