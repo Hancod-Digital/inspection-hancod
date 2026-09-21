@@ -1,0 +1,1 @@
+revoke execute on function public.generate_transaction_no(uuid) from public, anon, authenticated;

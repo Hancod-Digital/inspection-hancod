@@ -7,7 +7,7 @@ import { AuthService, fetchUserActiveStatus, fetchUserDetails } from '@/services
 import { makeApiCall } from '@/lib/apicaller';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Spinner from '@/components/animated/Spinner';
 import Link from 'next/link';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from '@/components/ui/breadcrumb';
@@ -17,6 +17,7 @@ import { generateFallbackAvatar } from './Navbar';
 
 export function NavbarHeader() {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const [open, setOpen] = useState(false);
 
     // Using React Query to fetch user active status with object syntax (v5+)
@@ -41,6 +42,7 @@ export function NavbarHeader() {
                 toastContent: "Logout Successful",
                 toast,
                 afterSuccess: () => {
+                    queryClient.clear();
                     router.push('/login');
                     router.refresh();
                 },

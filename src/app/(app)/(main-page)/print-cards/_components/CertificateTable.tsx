@@ -645,7 +645,7 @@ export default function CertificateTable({
         );
 
         return res?.fullPath
-            ? `https://kwrxajdgwqxnvuyrkndp.supabase.co/storage/v1/object/public/${res.fullPath}`
+            ? `${process.env.NEXT_PUBLIC_IMG_URL}${res.fullPath}`
             : null;
     };
     const printCertificate = (certificateUrl: string, item: any) => {

@@ -61,11 +61,6 @@ export class AuthService extends Supabase {
         return data
     }
     async userLogin(email: string, password: string) {
-        const result = await this.userVerify(email)
-        if (!result) {
-            throw new Error("invalid credentials")
-        }
-
         const { data, error } = await this.supabase.auth.signInWithPassword({ email, password })
 
         if (error) {

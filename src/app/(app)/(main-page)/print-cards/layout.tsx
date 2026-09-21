@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
  
 
   return (
-    <SubtopicProvider subtopic={"student_credentials"}>
+    <SubtopicProvider subtopic={"students_credentials"}>
       {children}
     </SubtopicProvider>
   );

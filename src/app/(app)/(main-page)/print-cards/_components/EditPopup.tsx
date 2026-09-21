@@ -190,7 +190,7 @@ const { data: userDetails, isLoading, isError } = useQuery({
         {
           afterSuccess: (data: any) => {
             // Ensure that the full URL is constructed
-            const baseURL = 'https://kwrxajdgwqxnvuyrkndp.supabase.co/storage/v1/object/public/'; // Replace with your actual base URL
+            const baseURL = process.env.NEXT_PUBLIC_IMG_URL;
             resolve(`${baseURL}${data?.fullPath}`);
           },
           afterError: (error: any) => {

@@ -176,6 +176,7 @@ export default function Component() {
       {
         toastContent: "Logout Successful",
         afterSuccess: () => {
+          queryClient.clear();
           router.push('/login');
           router.refresh();
         },

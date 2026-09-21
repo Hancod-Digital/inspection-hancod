@@ -6,7 +6,7 @@ import { AuthService, fetchUserActiveStatus, fetchUserDetails } from '@/services
 import { makeApiCall } from '@/lib/apicaller';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Spinner from '@/components/animated/Spinner';
 import Link from 'next/link';
 
@@ -14,6 +14,7 @@ import Link from 'next/link';
 
 export default function Component() {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const [open, setOpen] = useState(false);
 
     // Using React Query to fetch user active status with obje vct syntax (v5+)
@@ -38,6 +39,7 @@ export default function Component() {
                 toastContent: "Logout Successful",
                 toast,
                 afterSuccess: () => {
+                    queryClient.clear();
                     router.push('/login');
                     router.refresh();
                 },

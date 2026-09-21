@@ -140,7 +140,10 @@ export default function EquipmentTable({
             }
         } catch (error) {
             console.error("Error generating QR code:", error);
-            toastWithTimeout(ToastVariant.Success, "An error occurred while generating the QR code.");
+            toastWithTimeout(
+                ToastVariant.Destructive,
+                error instanceof Error ? error.message : "An error occurred while generating the QR code."
+            );
         }
         setIsGenerating(false);
     };
@@ -195,7 +198,7 @@ export default function EquipmentTable({
             );
 
             return res?.fullPath
-                ? `https://kwrxajdgwqxnvuyrkndp.supabase.co/storage/v1/object/public/${res.fullPath}`
+                ? `${process.env.NEXT_PUBLIC_IMG_URL}${res.fullPath}`
                 : null;
         } catch (error) {
             console.error("Error uploading image:", error);
@@ -343,5 +346,4 @@ export default function EquipmentTable({
         </div>
     );
 }
-
 

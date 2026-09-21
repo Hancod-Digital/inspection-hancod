@@ -72,7 +72,7 @@ export default function SurveyorDetailsForm({ onClose }: SurveyorDetailsFormProp
     ); 
 
     return res?.fullPath
-      ? `https://kwrxajdgwqxnvuyrkndp.supabase.co/storage/v1/object/public/${res.fullPath}`
+      ? `https://opwbtowotocyuravfiuq.supabase.co/storage/v1/object/public/${res.fullPath}`
       : null;
   };
 
